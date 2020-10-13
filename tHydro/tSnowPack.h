@@ -183,6 +183,7 @@ protected:
   double hillalbedo;
   double compactParam, rhoSnFreshkg;
   double minSnTemp;
+  double snliqfrac; // Added by CJC2020
 
   //output variables
   double snDepth,snDepthm; //snow depths (cm,m)
