@@ -74,6 +74,7 @@ void tSnowPack::SetSnowPackVariables(tInputFile &infile, tHydroModel *hydro)
 
   //parameters
   minSnTemp = infile.ReadItem(minSnTemp,"MINSNTEMP");
+  snliqfrac = infile.ReadItem(snliqfrac,"SNLIQFRAC"); // Added by CJC 2020
   hillAlbedoOption = infile.ReadItem(hillAlbedoOption,"HILLALBOPT");
   densityAge = 0.0;
   ETAge = 0.0;
@@ -1279,11 +1280,11 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	
 	    //put in routing bucket 
 	    //THM 2012 used 0.35 instead of 0.06 - this is a calibration factor
-	    if (liqWE > 0.06*iceWE) { // Calibration parameter CJC 2020
+	    if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
 		    
 	      //there is enough water left over
 	      if (liqWE != snWE ) {
-	        liqRoute = (liqWE - 0.06*iceWE);
+	        liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC2020
 	        liqWE = liqWE - liqRoute;
 	        snWE = liqWE + iceWE;
 	      }
