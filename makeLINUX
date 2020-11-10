@@ -38,6 +38,7 @@ STORM    =  $(VP)/tStorm
 NODE     =  $(VP)/tCNode
 GRAPH    =  $(VP)/tGraph
 
+# Add compiler and version needed to have in Linux
 CC       = g++ 
 CMP_OPTS =  -c -g -I$(VP) -fno-inline
 
