@@ -1335,6 +1335,14 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       iceWE = naughttocm*iceWE;
       liqWE = naughttocm*liqWE;
       liqRoute = naughttocm*liqRoute;
+	    
+	// Set ET variables equal to zero CJC2020
+	  cNode->setEvapWetCanopy(0.0);
+	  cNode->setEvapDryCanopy(0.0);
+	  cNode->setEvapSoil(0.0);
+	  cNode->setEvapoTrans(0.0);
+	  cNode->setPotEvap(0.0);
+	  cNode->setActEvap(0.0);
 
 /*      if (ID%100 == 0 && ID > 0)
 	cout << "ID: " << ID << "\tswe: " << snWE << endl;*/
