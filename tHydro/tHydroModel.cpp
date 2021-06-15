@@ -816,7 +816,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 		if (SnOpt) {
 			snWE = cn->getLiqWE() + cn->getIceWE();
 			routeWE = cn->getLiqRouted();
-			if ((snWE > 1e-3) || (routeWE > 0.)) {
+			if ((snWE > 1e-3) || (routeWE > 0.)) { // added "or" case to account for the melt water generated at the timestep when the snowpack completely melts away CJC2021
 				Ractual = 10*routeWE; //have to convert to mm // Changed from R to Ractual CJC2020
 			}
 		}
