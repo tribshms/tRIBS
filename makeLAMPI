@@ -1,0 +1,238 @@
+##############################################################################
+##
+##  		      tRIBS Distributed Hydrologic Model
+##
+##              TIN-based Real-time Integrated Basin Simulator
+##		         Ralph M. Parsons Laboratory
+##  		    Massachusetts Institute of Technology
+##  
+##
+##  Makefile for tRIBS on a parallel LINUX cluster using lampi
+##  Includes option for compiling with debugging information
+##  
+##  - Run 'make -f makeLAMPI'
+##  - Use -ptv option in CMP_OPTS for debugging purposes
+##  - Use -g3 for full debugging information
+##  - Use -O2 -g for better computational performance
+##  - Use -O3 for best computational performance (with/without -g)
+##
+##############################################################################
+
+VP 	 = .
+OBJDIR   =  $(VP)/_Objects_
+HYDRO    =  $(VP)/tHydro
+SIMUL    =  $(VP)/tSimulator
+ARRAY    =  $(VP)/tArray
+RASTIN   =  $(VP)/tRasTin
+INOUT    =  $(VP)/tInOut
+MESHELS  =  $(VP)/tMeshElements
+FLOW     =  $(VP)/tFlowNet
+HEADER   =  $(VP)/Headers
+MESH     =  $(VP)/tMesh
+MESHLIST =  $(VP)/tMeshList
+MATH	 =  $(VP)/Mathutil
+LIST     =  $(VP)/tList
+LISTDATA =  $(VP)/tListInputData
+PTRLIST  =  $(VP)/tPtrList
+STORM    =  $(VP)/tStorm
+NODE     =  $(VP)/tCNode
+GRAPH    =  $(VP)/tGraph
+PARALLEL =  $(VP)/tParallel
+
+CC	 =  g++
+CMP_OPTS =  -c -g -I$(VP) -fno-inline $(MPI_COMPILE_FLAGS) -DGRAPH_TRIBS -DPARALLEL_TRIBS
+LDFLAGS =  -lm $(MPI_LD_FLAGS)
+
+OBJECTS = \
+$(OBJDIR)/main.o \
+$(OBJDIR)/tHydroModel.o \
+$(OBJDIR)/meshElements.o \
+$(OBJDIR)/mathutil.o \
+$(OBJDIR)/tArray.o \
+$(OBJDIR)/tMesh.o \
+$(OBJDIR)/tTriangulator.o \
+$(OBJDIR)/tMeshList.o \
+$(OBJDIR)/tInputFile.o \
+$(OBJDIR)/tListInputData.o \
+$(OBJDIR)/tCNode.o \
+$(OBJDIR)/tList.o \
+$(OBJDIR)/tOutput.o \
+$(OBJDIR)/tPtrList.o \
+$(OBJDIR)/tRunTimer.o \
+$(OBJDIR)/tSimul.o \
+$(OBJDIR)/tControl.o \
+$(OBJDIR)/tPreProcess.o \
+$(OBJDIR)/globalFns.o \
+$(OBJDIR)/tFlowNet.o \
+$(OBJDIR)/tKinemat.o \
+$(OBJDIR)/tFlowResults.o \
+$(OBJDIR)/tRainGauge.o \
+$(OBJDIR)/tRainfall.o \
+$(OBJDIR)/tResample.o \
+$(OBJDIR)/tInvariant.o \
+$(OBJDIR)/tVariant.o \
+$(OBJDIR)/tShelter.o \
+$(OBJDIR)/tIntercept.o \
+$(OBJDIR)/tHydroMet.o \
+$(OBJDIR)/tHydroMetStoch.o \
+$(OBJDIR)/tHydroMetConvert.o \
+$(OBJDIR)/tEvapoTrans.o \
+$(OBJDIR)/tSnowPack.o \
+$(OBJDIR)/tSnowIntercept.o \
+$(OBJDIR)/tWaterBalance.o \
+$(OBJDIR)/tStorm.o \
+$(OBJDIR)/predicates.o \
+$(OBJDIR)/tRestart.o \
+$(OBJDIR)/tGraph.o \
+$(OBJDIR)/tGraphNode.o \
+$(OBJDIR)/tOstream.o \
+$(OBJDIR)/tParallel.o
+
+SOURCES = \
+$(VP)/main.cpp \
+$(HYDRO)/tHydroModel.cpp \
+$(MESHELS)/meshElements.cpp \
+$(MATH)/mathutil.cpp \
+$(ARRAY)/tArray.cpp \
+$(MESH)/tMesh.cpp \
+$(MESH)/tTriangulator.cpp \
+$(MESHLIST)/tMeshList.cpp \
+$(INOUT)/tInputFile.cpp \
+$(LISTDATA)/tListInputData.cpp \
+$(NODE)/tCNode.cpp \
+$(LIST)/tList.cpp \
+$(SIMUL)/tRunTimer.cpp \
+$(SIMUL)/tSimul.cpp \
+$(SIMUL)/tControl.cpp \
+$(SIMUL)/tPreProcess.cpp \
+$(SIMUL)/tRestart.cpp \
+$(PTRLIST)/tPtrList.cpp \
+$(INOUT)/tOutput.cpp \
+$(INOUT)/tOstream.cpp \
+$(HEADER)/globalFns.cpp \
+$(FLOW)/tFlowNet.cpp \
+$(FLOW)/tKinemat.cpp  \
+$(FLOW)/tFlowResults.cpp \
+$(RASTIN)/tRainGauge.cpp  \
+$(RASTIN)/tRainfall.cpp  \
+$(RASTIN)/tResample.cpp \
+$(RASTIN)/tInvariant.cpp \
+$(RASTIN)/tVariant.cpp \
+$(RASTIN)/tShelter.cpp \
+$(HYDRO)/tIntercept.cpp \
+$(HYDRO)/tHydroMet.cpp  \
+$(HYDRO)/tHydroMetStoch.cpp \
+$(HYDRO)/tHydroMetConvert.cpp \
+$(HYDRO)/tEvapoTrans.cpp \
+$(HYDRO)/tSnowPack.cpp \
+$(HYDRO)/tSnowIntercept.cpp \
+$(HYDRO)/tWaterBalance.cpp \
+$(STORM)/tStorm.cpp \
+$(MATH)/predicates.cpp \
+$(GRAPH)/tGraph.cpp \
+$(GRAPH)/tGraphNode.cpp \
+$(INOUT)/tOstream.cpp \
+$(PARALLEL)/tParallel.cpp
+
+VPATH = $(VP):$(OBJDIR):$(MATH):$(ARRAY):$(MESH):$(MESHLIST):$(NODE):$(LIST):$(LISTDATA):$(INOUT):$(PTRLIST):$(SIMUL):$(INOUT):$(FLOW):$(RASTIN):$(HYDRO):$(MESHELS):$(STORM):$(HEADER):$(GRAPH):$(PARALLEL)
+
+PROGRAM = tribs
+
+$(PROGRAM): $(OBJECTS)
+	${CC} -g $(OBJECTS) -o $(PROGRAM) $(LDFLAGS)
+
+$(OBJDIR)/tHydroModel.o: tHydroModel.cpp tHydroModel.h
+	${CC} ${CMP_OPTS} $(VP)/$(HYDRO)/tHydroModel.cpp -o $(OBJDIR)/tHydroModel.o
+$(OBJDIR)/meshElements.o: meshElements.cpp meshElements.h
+	${CC} ${CMP_OPTS} $(VP)/$(MESHELS)/meshElements.cpp -o $(OBJDIR)/meshElements.o
+$(OBJDIR)/mathutil.o: mathutil.cpp mathutil.h
+	${CC} ${CMP_OPTS} $(VP)/$(MATH)/mathutil.cpp -o $(OBJDIR)/mathutil.o
+$(OBJDIR)/tArray.o: tArray.cpp tArray.h
+	${CC} ${CMP_OPTS} $(VP)/$(ARRAY)/tArray.cpp -o $(OBJDIR)/tArray.o
+$(OBJDIR)/tMesh.o: tMesh.cpp tMesh.h
+	${CC} ${CMP_OPTS} $(VP)/$(MESH)/tMesh.cpp -o $(OBJDIR)/tMesh.o
+$(OBJDIR)/tTriangulator.o: tTriangulator.cpp tTriangulator.h
+	${CC} ${CMP_OPTS} $(VP)/$(MESH)/tTriangulator.cpp -o $(OBJDIR)/tTriangulator.o
+$(OBJDIR)/tMeshList.o: tMeshList.cpp tMeshList.h
+	${CC} ${CMP_OPTS} $(VP)/$(MESHLIST)/tMeshList.cpp -o $(OBJDIR)/tMeshList.o
+$(OBJDIR)/tInputFile.o: tInputFile.cpp tInputFile.h
+	${CC} ${CMP_OPTS} $(VP)/$(INOUT)/tInputFile.cpp -o $(OBJDIR)/tInputFile.o
+$(OBJDIR)/tListInputData.o: tListInputData.cpp tListInputData.h
+	${CC} ${CMP_OPTS} $(VP)/$(LISTDATA)/tListInputData.cpp -o $(OBJDIR)/tListInputData.o
+$(OBJDIR)/tCNode.o: tCNode.cpp tCNode.h
+	${CC} ${CMP_OPTS} $(VP)/$(NODE)/tCNode.cpp -o $(OBJDIR)/tCNode.o
+$(OBJDIR)/tList.o: tList.cpp tList.h
+	${CC} ${CMP_OPTS} $(VP)/$(LIST)/tList.cpp -o $(OBJDIR)/tList.o
+$(OBJDIR)/tOutput.o: tOutput.cpp tOutput.h
+	${CC} ${CMP_OPTS} $(VP)/$(INOUT)/tOutput.cpp -o $(OBJDIR)/tOutput.o
+$(OBJDIR)/tOstream.o: tOstream.cpp tOstream.h
+	${CC} ${CMP_OPTS} $(VP)/$(INOUT)/tOstream.cpp -o $(OBJDIR)/tOstream.o
+$(OBJDIR)/tPtrList.o: tPtrList.cpp tPtrList.h
+	${CC} ${CMP_OPTS} $(VP)/$(PTRLIST)/tPtrList.cpp -o $(OBJDIR)/tPtrList.o
+$(OBJDIR)/tRunTimer.o: tRunTimer.cpp tRunTimer.h
+	${CC} ${CMP_OPTS} $(VP)/$(SIMUL)/tRunTimer.cpp -o $(OBJDIR)/tRunTimer.o
+$(OBJDIR)/tSimul.o: tSimul.cpp tSimul.h
+	${CC} ${CMP_OPTS} $(VP)/$(SIMUL)/tSimul.cpp -o $(OBJDIR)/tSimul.o
+$(OBJDIR)/tControl.o: tControl.cpp tControl.h
+	${CC} ${CMP_OPTS} $(VP)/$(SIMUL)/tControl.cpp -o $(OBJDIR)/tControl.o
+$(OBJDIR)/tPreProcess.o: tPreProcess.cpp tPreProcess.h
+	${CC} ${CMP_OPTS} $(VP)/$(SIMUL)/tPreProcess.cpp -o $(OBJDIR)/tPreProcess.o
+$(OBJDIR)/tRestart.o: tRestart.cpp tRestart.h
+	${CC} ${CMP_OPTS} $(VP)/$(SIMUL)/tRestart.cpp -o $(OBJDIR)/tRestart.o
+$(OBJDIR)/globalFns.o: globalFns.cpp globalFns.h
+	${CC} ${CMP_OPTS} $(VP)/$(HEADER)/globalFns.cpp -o $(OBJDIR)/globalFns.o
+$(OBJDIR)/tFlowNet.o: tFlowNet.cpp tFlowNet.h
+	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tFlowNet.cpp -o $(OBJDIR)/tFlowNet.o
+$(OBJDIR)/tKinemat.o: tKinemat.cpp tKinemat.h
+	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tKinemat.cpp -o $(OBJDIR)/tKinemat.o
+$(OBJDIR)/tFlowResults.o: tFlowResults.cpp tFlowResults.h
+	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tFlowResults.cpp -o $(OBJDIR)/tFlowResults.o
+$(OBJDIR)/tRainGauge.o: tRainGauge.cpp tRainGauge.h
+	${CC} ${CMP_OPTS} $(VP)/$(RASTIN)/tRainGauge.cpp -o $(OBJDIR)/tRainGauge.o
+$(OBJDIR)/tRainfall.o: tRainfall.cpp tRainfall.h
+	${CC} ${CMP_OPTS} $(VP)/$(RASTIN)/tRainfall.cpp -o $(OBJDIR)/tRainfall.o
+$(OBJDIR)/tResample.o: tResample.cpp tResample.h
+	${CC} ${CMP_OPTS} $(VP)/$(RASTIN)/tResample.cpp -o $(OBJDIR)/tResample.o
+$(OBJDIR)/tInvariant.o: tInvariant.cpp tInvariant.h
+	${CC} ${CMP_OPTS} $(VP)/$(RASTIN)/tInvariant.cpp -o $(OBJDIR)/tInvariant.o
+$(OBJDIR)/tVariant.o: tVariant.cpp tVariant.h
+	${CC} ${CMP_OPTS} $(VP)/$(RASTIN)/tVariant.cpp -o $(OBJDIR)/tVariant.o
+$(OBJDIR)/tShelter.o: tShelter.cpp tShelter.h
+	${CC} ${CMP_OPTS} $(VP)/$(RASTIN)/tShelter.cpp -o $(OBJDIR)/tShelter.o
+$(OBJDIR)/tIntercept.o: tIntercept.cpp tIntercept.h
+	${CC} ${CMP_OPTS} $(VP)/$(HYDRO)/tIntercept.cpp -o $(OBJDIR)/tIntercept.o
+$(OBJDIR)/tHydroMet.o: tHydroMet.cpp tHydroMet.h
+	${CC} ${CMP_OPTS} $(VP)/$(HYDRO)/tHydroMet.cpp -o $(OBJDIR)/tHydroMet.o
+$(OBJDIR)/tHydroMetStoch.o: tHydroMetStoch.cpp tHydroMetStoch.h
+	${CC} ${CMP_OPTS} $(VP)/$(HYDRO)/tHydroMetStoch.cpp -o $(OBJDIR)/tHydroMetStoch.o
+$(OBJDIR)/tHydroMetConvert.o: tHydroMetConvert.cpp tHydroMetConvert.h
+	${CC} ${CMP_OPTS} $(VP)/$(HYDRO)/tHydroMetConvert.cpp -o $(OBJDIR)/tHydroMetConvert.o
+$(OBJDIR)/tEvapoTrans.o: tEvapoTrans.cpp tEvapoTrans.h
+	${CC} ${CMP_OPTS} $(VP)/$(HYDRO)/tEvapoTrans.cpp -o $(OBJDIR)/tEvapoTrans.o
+$(OBJDIR)/tSnowPack.o: tSnowPack.cpp tSnowPack.h
+	${CC} ${CMP_OPTS} $(VP)/$(HYDRO)/tSnowPack.cpp -o $(OBJDIR)/tSnowPack.o
+$(OBJDIR)/tSnowIntercept.o: tSnowIntercept.cpp tSnowIntercept.h
+	${CC} ${CMP_OPTS} $(VP)/$(HYDRO)/tSnowIntercept.cpp -o $(OBJDIR)/tSnowIntercept.o
+$(OBJDIR)/tWaterBalance.o: tWaterBalance.cpp tWaterBalance.h
+	${CC} ${CMP_OPTS} $(VP)/$(HYDRO)/tWaterBalance.cpp -o $(OBJDIR)/tWaterBalance.o
+$(OBJDIR)/tStorm.o: tStorm.cpp tStorm.h
+	${CC} ${CMP_OPTS} $(VP)/$(STORM)/tStorm.cpp -o $(OBJDIR)/tStorm.o
+$(OBJDIR)/predicates.o: predicates.cpp predicates.h
+	${CC} ${CMP_OPTS} $(VP)/$(MATH)/predicates.cpp -o $(OBJDIR)/predicates.o
+$(OBJDIR)/tGraph.o: tGraph.cpp tGraph.h
+	${CC} ${CMP_OPTS} $(VP)/$(GRAPH)/tGraph.cpp -o $(OBJDIR)/tGraph.o
+$(OBJDIR)/tGraphNode.o: tGraphNode.cpp tGraphNode.h
+	${CC} ${CMP_OPTS} $(VP)/$(GRAPH)/tGraphNode.cpp -o $(OBJDIR)/tGraphNode.o
+$(OBJDIR)/tParallel.o: tParallel.cpp tParallel.h
+	${CC} ${CMP_OPTS} $(VP)/$(PARALLEL)/tParallel.cpp -o $(OBJDIR)/tParallel.o
+$(OBJDIR)/main.o: $(SOURCES)
+	${CC} ${CMP_OPTS} $(VP)/main.cpp -o $(OBJDIR)/main.o
+
+clean:
+	rm -f $(OBJECTS) $(PROGRAM) 
+
+all:
+	cp $(HEADER)/tribs_os_LINUX32.h $(HEADER)/tribs_os.h
+	make -f makeLAMPI clean
+	make -f makeLAMPI
+	
