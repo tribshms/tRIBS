@@ -38,7 +38,7 @@ std::vector<int> tGraph::reach2partition;
 std::vector<int> tGraph::localReach;
 std::vector<int> tGraph::pointsPerReach;
 
-int* tGraph::hid = 0; // Eliminated an extra ; Clizarraga 04/20/2020 
+int* tGraph::hid = 0;
 int* tGraph::oid = 0;
 int* tGraph::aboveid = 0;
 

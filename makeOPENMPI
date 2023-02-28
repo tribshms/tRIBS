@@ -66,8 +66,6 @@ $(OBJDIR)/tPreProcess.o \
 $(OBJDIR)/globalFns.o \
 $(OBJDIR)/tFlowNet.o \
 $(OBJDIR)/tKinemat.o \
-$(OBJDIR)/tReservoir.o \
-$(OBJDIR)/tResData.o \
 $(OBJDIR)/tFlowResults.o \
 $(OBJDIR)/tRainGauge.o \
 $(OBJDIR)/tRainfall.o \
@@ -115,8 +113,6 @@ $(INOUT)/tOstream.cpp \
 $(HEADER)/globalFns.cpp \
 $(FLOW)/tFlowNet.cpp \
 $(FLOW)/tKinemat.cpp  \
-$(FLOW)/tReservoir.cpp  \
-$(FLOW)/tResData.cpp  \
 $(FLOW)/tFlowResults.cpp \
 $(RASTIN)/tRainGauge.cpp  \
 $(RASTIN)/tRainfall.cpp  \
@@ -190,10 +186,6 @@ $(OBJDIR)/tFlowNet.o: tFlowNet.cpp tFlowNet.h
 	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tFlowNet.cpp -o $(OBJDIR)/tFlowNet.o
 $(OBJDIR)/tKinemat.o: tKinemat.cpp tKinemat.h
 	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tKinemat.cpp -o $(OBJDIR)/tKinemat.o
-$(OBJDIR)/tReservoir.o: tReservoir.cpp tReservoir.h
-	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tReservoir.cpp -o $(OBJDIR)/tReservoir.o
-$(OBJDIR)/tResData.o: tResData.cpp tResData.h
-	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tResData.cpp -o $(OBJDIR)/tResData.o
 $(OBJDIR)/tFlowResults.o: tFlowResults.cpp tFlowResults.h
 	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tFlowResults.cpp -o $(OBJDIR)/tFlowResults.o
 $(OBJDIR)/tRainGauge.o: tRainGauge.cpp tRainGauge.h

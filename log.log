@@ -1,0 +1,22 @@
+
+------------------------------------------------------------------------
+
+		 tRIBS Distributed Hydrologic Model
+		 TIN-based Real-time Integrated Basin Simulator
+		 Ralph M. Parsons Laboratory
+		 Massachusetts Institute of Technology 
+
+------------------------------------------------------------------------
+
+
+tRIBS Version 3.0 Revision 33, June 2008
+
+
+
+Part 1: Read Input Parameters from 'HJ_2002-2018.in'
+---------------------------------------------------
+
+
+tInputFile: Unable to open file 'HJ_2002-2018.in'.
+Exiting Program...
+

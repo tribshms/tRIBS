@@ -7,10 +7,10 @@
 ##  		    Massachusetts Institute of Technology
 ##  
 ##
-##  Makefile for tRIBS on a parallel LINUX cluster
+##  Makefile for tRIBS on a LINUX workstation (Ubuntu)
 ##  Includes option for compiling with debugging information
 ##  
-##  - Run 'make -f makeOCOTILLO_PAR'
+##  - Run 'make -f makeLINUX all'
 ##  - Use -ptv option in CMP_OPTS for debugging purposes
 ##  - Use -g3 for full debugging information
 ##  - Use -O2 -g for better computational performance
@@ -37,12 +37,11 @@ PTRLIST  =  $(VP)/tPtrList
 STORM    =  $(VP)/tStorm
 NODE     =  $(VP)/tCNode
 GRAPH    =  $(VP)/tGraph
-PARALLEL =  $(VP)/tParallel
 
-CC	 =  g++ -DOMPI_SKIP_MPICXX 
-CMP_OPTS =  -c -g -I$(VP) -g3 -ansi -Wpedantic -Wno-vla -I/packages/6x/openmpi/1.8.5/gcc/stock/normal/include -fno-inline $(MPI_COMPILE_FLAGS) -DGRAPH_TRIBS -DPARALLEL_TRIBS
+CC       = g++-4.6 
+CMP_OPTS =  -c -g -I$(VP) -fno-inline
 
-LDFLAGS =  -lm $(MPI_LD_FLAGS) -lmpi -lmpi_cxx -L/packages/6x/openmpi/1.8.5/gcc/stock/normal/lib
+LDFLAGS =  -lm
 
 OBJECTS = \
 $(OBJDIR)/main.o \
@@ -65,9 +64,9 @@ $(OBJDIR)/tControl.o \
 $(OBJDIR)/tPreProcess.o \
 $(OBJDIR)/globalFns.o \
 $(OBJDIR)/tFlowNet.o \
-$(OBJDIR)/tKinemat.o \
 $(OBJDIR)/tReservoir.o \
 $(OBJDIR)/tResData.o \
+$(OBJDIR)/tKinemat.o \
 $(OBJDIR)/tFlowResults.o \
 $(OBJDIR)/tRainGauge.o \
 $(OBJDIR)/tRainfall.o \
@@ -88,8 +87,7 @@ $(OBJDIR)/predicates.o \
 $(OBJDIR)/tRestart.o \
 $(OBJDIR)/tGraph.o \
 $(OBJDIR)/tGraphNode.o \
-$(OBJDIR)/tOstream.o \
-$(OBJDIR)/tParallel.o
+$(OBJDIR)/tOstream.o
 
 SOURCES = \
 $(VP)/main.cpp \
@@ -114,9 +112,9 @@ $(INOUT)/tOutput.cpp \
 $(INOUT)/tOstream.cpp \
 $(HEADER)/globalFns.cpp \
 $(FLOW)/tFlowNet.cpp \
-$(FLOW)/tKinemat.cpp  \
 $(FLOW)/tReservoir.cpp  \
 $(FLOW)/tResData.cpp  \
+$(FLOW)/tKinemat.cpp  \
 $(FLOW)/tFlowResults.cpp \
 $(RASTIN)/tRainGauge.cpp  \
 $(RASTIN)/tRainfall.cpp  \
@@ -136,12 +134,11 @@ $(STORM)/tStorm.cpp \
 $(MATH)/predicates.cpp \
 $(GRAPH)/tGraph.cpp \
 $(GRAPH)/tGraphNode.cpp \
-$(INOUT)/tOstream.cpp \
-$(PARALLEL)/tParallel.cpp
+$(INOUT)/tOstream.cpp
 
-VPATH = $(VP):$(OBJDIR):$(MATH):$(ARRAY):$(MESH):$(MESHLIST):$(NODE):$(LIST):$(LISTDATA):$(INOUT):$(PTRLIST):$(SIMUL):$(INOUT):$(FLOW):$(RASTIN):$(HYDRO):$(MESHELS):$(STORM):$(HEADER):$(GRAPH):$(PARALLEL)
+VPATH = $(VP):$(OBJDIR):$(MATH):$(ARRAY):$(MESH):$(MESHLIST):$(NODE):$(LIST):$(LISTDATA):$(INOUT):$(PTRLIST):$(SIMUL):$(INOUT):$(FLOW):$(RASTIN):$(HYDRO):$(MESHELS):$(STORM):$(HEADER):$(GRAPH)
 
-PROGRAM = ptribs
+PROGRAM = tribs
 
 $(PROGRAM): $(OBJECTS)
 	${CC} -g $(OBJECTS) -o $(PROGRAM) $(LDFLAGS)
@@ -188,12 +185,12 @@ $(OBJDIR)/globalFns.o: globalFns.cpp globalFns.h
 	${CC} ${CMP_OPTS} $(VP)/$(HEADER)/globalFns.cpp -o $(OBJDIR)/globalFns.o
 $(OBJDIR)/tFlowNet.o: tFlowNet.cpp tFlowNet.h
 	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tFlowNet.cpp -o $(OBJDIR)/tFlowNet.o
-$(OBJDIR)/tKinemat.o: tKinemat.cpp tKinemat.h
-	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tKinemat.cpp -o $(OBJDIR)/tKinemat.o
 $(OBJDIR)/tReservoir.o: tReservoir.cpp tReservoir.h
 	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tReservoir.cpp -o $(OBJDIR)/tReservoir.o
 $(OBJDIR)/tResData.o: tResData.cpp tResData.h
 	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tResData.cpp -o $(OBJDIR)/tResData.o
+$(OBJDIR)/tKinemat.o: tKinemat.cpp tKinemat.h
+	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tKinemat.cpp -o $(OBJDIR)/tKinemat.o
 $(OBJDIR)/tFlowResults.o: tFlowResults.cpp tFlowResults.h
 	${CC} ${CMP_OPTS} $(VP)/$(FLOW)/tFlowResults.cpp -o $(OBJDIR)/tFlowResults.o
 $(OBJDIR)/tRainGauge.o: tRainGauge.cpp tRainGauge.h
@@ -232,8 +229,6 @@ $(OBJDIR)/tGraph.o: tGraph.cpp tGraph.h
 	${CC} ${CMP_OPTS} $(VP)/$(GRAPH)/tGraph.cpp -o $(OBJDIR)/tGraph.o
 $(OBJDIR)/tGraphNode.o: tGraphNode.cpp tGraphNode.h
 	${CC} ${CMP_OPTS} $(VP)/$(GRAPH)/tGraphNode.cpp -o $(OBJDIR)/tGraphNode.o
-$(OBJDIR)/tParallel.o: tParallel.cpp tParallel.h
-	${CC} ${CMP_OPTS} $(VP)/$(PARALLEL)/tParallel.cpp -o $(OBJDIR)/tParallel.o
 $(OBJDIR)/main.o: $(SOURCES)
 	${CC} ${CMP_OPTS} $(VP)/main.cpp -o $(OBJDIR)/main.o
 
@@ -242,6 +237,6 @@ clean:
 
 all:
 	cp $(HEADER)/tribs_os_LINUX32.h $(HEADER)/tribs_os.h
-	make -f makeOCOTILLO_PAR clean
-	make -f makeOCOTILLO_PAR
-
+	make -f makeLINUX clean
+	make -f makeLINUX
+	

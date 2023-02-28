@@ -35,10 +35,6 @@
   #include <stdlib.h>
   #include <strings.h>
   #include <iostream>
-#elif defined MAC
-  #include <stdlib.h>
-  #include <strings.h>
-  #include <iostream>
 #elif defined WIN
   #ifdef _WIN32
   #define srand48(x) srand(x)

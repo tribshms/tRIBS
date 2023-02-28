@@ -133,7 +133,7 @@ tFlowNet(sPtr, gridRef, infile, timptr)
 	optres = ResReadItem.IterReadItem(infile, tempVariable,"OPTRESERVOIR");
 	resTimeStep = ResReadItem.IterReadItem(infile, tempVariable,"TIMESTEP");
 	resRunTime = ResReadItem.IterReadItem(infile, tempVariable,"RUNTIME");
-	cout<<"OptRES = "<<optres<<endl;
+	// cout<<"OptRES = "<<optres<<endl; // Commented out this line so it doesn't write to output file CJC 2020
 	if (optres == 1) {
 	initialize_values(infile, resTimeStep);
 	}
@@ -734,7 +734,7 @@ void tKinemat::initialize_values(tInputFile &infile, double resTime)
 {
 	LevelPool.setModelTimeStep(resTime*60.0); // Converted to seconds
 	int resArray = resRunTime/(resTimeStep/60); // Converted to hours
-	LevelPool.setResArraySize(resArray+1); // Bug fixed by Giuseppe 2016 - It has to be total of time steps plus 0
+	LevelPool.setResArraySize(resArray);
 	LevelPool.SetResVariables(infile);
 	LevelPool.SetResNodes(infile);
 }
@@ -749,7 +749,7 @@ void tKinemat::Reservoir_Routing(int Rnode)
 			if (checkNode == checkID) {
 				LevelPool.setCurrResNode(x);
 				int typeID = LevelPool.getTypetKinemat(x);
-				LevelPool.setCurrResType(typeID);				
+				LevelPool.setCurrResType(typeID);
 				LevelPool.RunLevelPoolRouting(Qin);
 				Qin = LevelPool.getResDischargeOut();
 				qit = 0.5*Qin;
@@ -798,7 +798,7 @@ void tKinemat::RunRoutingModel(int it, int *check, double timeStep)
 	for (cn=NodesIterH.FirstP(), NodesIterO.First(), NNodesIter.First(), id=0; 
 		 !(NodesIterH.AtEnd()); 
 		 cn=NodesIterH.NextP(),  NodesIterO.Next(),  NNodesIter.Next(),  id++) {
-
+		
 #ifdef GRAPH_TRIBS
     // Process only stream reaches in local partition
     if (tGraph::inLocalPartition(id)) {
@@ -817,7 +817,7 @@ void tKinemat::RunRoutingModel(int it, int *check, double timeStep)
 		// Initialize upper BND condition 
 		AssignQin();
 
-		// Check Reservoir Option - JECR 2015
+		// Check Reservoir Option
 		if (optres == 1) {
 			Reservoir_Routing(cn->getID()); // JECR 2015
 		}

@@ -293,7 +293,7 @@ GetKeyEntry()
 		cout << "orgid destid nextid" << endl;
 		cin >> orgid[i] >> destid[i] >> nextid[i];
 	}
-	for( i=0; i< ntri; i++ ){         // Eliminated extra (), in ntri(). CLizarraga 04/20/2020
+	for( i=0; i< ntri; i++ ){
 		cout << "nodeids (3), edgids (3), triangleids (3)" << endl;
 		cin >> p0[i] >> p1[i] >> p2[i]
 			>> e0[i] >> e1[i] >> e2[i]

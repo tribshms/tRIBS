@@ -174,7 +174,7 @@ int serialSimulation( int argc, char **argv )
 
 	Cout<<"\n\nPart 9: Deleting Objects and Exiting Program"<<endl;
 	Cout<<"------------------------------------------------"<<endl<<endl;
-        return 0; // 04/07/2020 Added this to eliminate warning Clizarraga 
+	return 0; // 09/05/2020 Added this to eliminate warning Clizarraga 
 }
 
 //=========================================================================
@@ -392,7 +392,7 @@ int parallelSimulation(int argc, char **argv)
 
   return(1);
 #endif
-  return 0; // Added this to eliminate warning 04/07/2020 Clizarraga
+  return 0; // 09/05/2020 Added this to eliminate warning Clizarraga 
 }
 
 //=========================================================================

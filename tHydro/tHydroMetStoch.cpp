@@ -200,8 +200,6 @@ void tHydroMetStoch::SetStochasticHydroMet(tInputFile &infile)
 		hout.open("_hydrometout.dat");
 #elif defined LINUX_32
 		hout.open("_hydrometout.dat");
-#elif defined MAC
-		hout.open("_hydrometout.dat");
 #elif defined WIN
 		hout.open("_hydrometout.dat");
 #else 

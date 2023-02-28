@@ -42,7 +42,7 @@ GRAPH    =  $(VP)/tGraph
 ## You can install g++ using brew: https://brew.sh/
 ## brew install gcc
 ##CC	   = /usr/local/Cellar/gcc/9.3.0/bin/g++-9
-CC = /usr/local/bin/g++-9
+CC = /usr/local/Cellar/gcc/10.2.0/bin/g++-10
 CMP_OPTS =  -c -I$(VP) -g3 -ansi -Wpedantic -Wno-vla
 
 LDFLAGS =  -lm

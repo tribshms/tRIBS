@@ -59,7 +59,7 @@ tShelter::tShelter(SimulationControl *simCtrPtr, tMesh<tCNode> * gridPtr,
   readInputGrid(GridInPath);
 
 
-  cout << "initialize grid" << endl;
+  // cout << "initialize grid" << endl; // Commented out this line so it doesn't write to output file CJC 2020
   tempGrid = new double* [NR]; 
   assert(tempGrid != 0);
   

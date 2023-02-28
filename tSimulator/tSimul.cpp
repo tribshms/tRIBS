@@ -282,15 +282,15 @@ void Simulator::end_simulation(tKinemat *Flow)
 	Flow->getResultsPtr()->
 		whenTimeIsOver( timer->getCurrentTime() );
 	
-	double tend  = timer->getEndTime();	
+	double tend  = timer->getEndTime();
 	double spout = timer->getSpatialOutputInterval();
-
+	
 	if (simCtrl->inter_results == 'N' || 
 		(simCtrl->inter_results == 'Y' && spout > tend) ||
 		(simCtrl->inter_results == 'Y' && (tend/spout-floor(tend/spout)) > 0))
 		
 		outp->WriteDynamicVars( timer->getCurrentTime() );
-
+	
 	outp->end_simulation();
 	
 	Cout<<"\nSimulation completed...\n"<<endl;
@@ -937,21 +937,21 @@ void Simulator::writeRestart(char* directory) const
 ***************************************************************************/
 void Simulator::readRestart(tInputFile &InFl)
 {
-  Cout << "READ RESTART at time " << timer->getCurrentTime() << endl << endl;
-
-  char restartFile[kName];
+  Cout << "READ RESTART made it to line 940 \n"<<endl;	
+  //Cout << "READ RESTART at time " << timer->getCurrentTime() << endl;
+  Cout << "READ RESTART made it to line 942 \n";	char restartFile[kName]; 
   InFl.ReadItem(restartFile, "RESTARTFILE");
-
+  Cout << "READ RESTART made it to line 944 \n";
   fstream rStr;
   stringstream sFile;
   sFile << restartFile;
-
+  Cout << "READ RESTART made it to line 948 \n";
 #ifdef PARALLEL_TRIBS
   sFile << "_" << tParallel::getMyProc();
 #endif
-
+  Cout << "READ RESTART made it to line 952 \n";
   rStr.open(sFile.str().c_str(), ios::binary|ios::in);
-
+  Cout << "READ RESTART made it to line 954 \n";
   // Read local simulator information
   BinaryRead(rStr, count);
   BinaryRead(rStr, fState);
@@ -963,10 +963,10 @@ void Simulator::readRestart(tInputFile &InFl)
   BinaryRead(rStr, eti_hour);
   BinaryRead(rStr, GW_label);
   BinaryRead(rStr, searchRain);
-
+  Cout << "READ RESTART made it to line 966 \n";
   // Read information from objects controlled by tRestart
   restart->readRestart(rStr);
-
+  Cout << "READ RESTART made it to line 969 \n";
   rStr.close();
 }
 

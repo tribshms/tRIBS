@@ -171,9 +171,7 @@ template< class NodeType >
 void tMeshList< NodeType >::
 insertAtBoundFront( const NodeType &value )
 {
-        tListNode< NodeType > * newPtr = this->getNewNode( value );
-	// getNewNode was declared out od scope...
-        //  modified to:  this->getNewNode  Clizarraga 04/20/2020
+  tListNode< NodeType > * newPtr = this -> getNewNode( value ); //Added this-> CL 09/05/2020
 	assert( newPtr>0 );
 	assert( this != 0 );
 	
@@ -214,10 +212,7 @@ template< class NodeType >
 void tMeshList< NodeType >::
 insertAtActiveBack( const NodeType &value )
 {
-	tListNode< NodeType > * newPtr = this->getNewNode( value ); 
-        // getNewNode was declared out od scope...
-        //  modified to:  this->getNewNode  Clizarraga 04/20/2020
-
+  tListNode< NodeType > * newPtr = this -> getNewNode( value ); // Added this-> CL 09/05/2020
 	assert( this != 0 );
 	if( this->isEmpty() )
 		this->first = this->last = lastactive = newPtr;
@@ -356,8 +351,8 @@ moveToBack( tListNode< NodeType > * mvnode )
 template< class NodeType >                        
 void tMeshList< NodeType >::
 moveToBack( NodeType * mvnodedata ) {
-                       assert( this->getListNode( mvnodedata )!=0 ); // getListNode was not declared in this scope
-                       moveToBack( this->getListNode( mvnodedata ) ); // modified to this->getListNode. Clizarraga 04/20/2020
+  assert( this -> getListNode( mvnodedata )!=0 ); //Added this -> CL 09/05/2020 
+  moveToBack( this -> getListNode( mvnodedata ) ); // idem
 }
 
 /**************************************************************************

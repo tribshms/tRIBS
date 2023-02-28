@@ -52,7 +52,6 @@
 #include <cassert>
 #include <memory>
 
-
 #elif defined WIN
 #include <stdlib.h>
 #include <stdio.h>

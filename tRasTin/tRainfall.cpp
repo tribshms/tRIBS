@@ -142,9 +142,6 @@ tRainfall::~tRainfall()
 #elif defined LINUX_32
 		if ( infile.is_open() )
 			infile.close();
-#elif defined MAC
-		if ( infile.is_open() )
-			infile.close();
 #elif defined WIN
 		if ( infile )
 			infile.close();
@@ -185,9 +182,6 @@ int tRainfall::Compose_In_Mrain_Name(tRunTimer *t)
     if ( infile )
 		infile.close();
 #elif defined LINUX_32
-    if ( infile.is_open() )
-		infile.close();
-#elif defined MAC
     if ( infile.is_open() )
 		infile.close();
 #elif defined WIN
@@ -239,9 +233,6 @@ int tRainfall::Compose_In_Mrain_Name(tRunTimer *t)
     if ( !infile )
 		return 0;
 #elif defined LINUX_32
-    if ( !(infile.is_open()) )
-		return 0;
-#elif defined MAC
     if ( !(infile.is_open()) )
 		return 0;
 #elif defined WIN

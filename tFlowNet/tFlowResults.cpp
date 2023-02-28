@@ -243,6 +243,7 @@ void tFlowResults::free_results()
 	free(frac);
 	free(fState);
 	// SKY2008Snow from AJR2007
+	cout<<"Memory Freed";
 	free(swe);
 	free(melt);
 	free(stC);

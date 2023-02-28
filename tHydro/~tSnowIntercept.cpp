@@ -565,7 +565,7 @@ double tSnowIntercept::snowFracCalc()
 
   double snowfrac;
 
-  double TMin(-1.1), TMax(3.3); //indices (Wigmosta et al. 1994)
+  double TMin(0), TMax(4); //indices (Wigmosta et al. 1994)
   
   if ( airTemp <= TMin )
 	  snowfrac = 1;//all solid

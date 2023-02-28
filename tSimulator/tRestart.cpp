@@ -72,7 +72,7 @@ void tRestart<tSubNode>::writeRestart(fstream & rStr)
 		snowpack->writeRestart(rStr);
 		snowintercept->writeRestart(rStr); // saving
 	}// Giuseppe DEBUG Restart 2012 - END
-	
+		
 
 }
 

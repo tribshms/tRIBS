@@ -65,22 +65,6 @@ tReservoir::~tReservoir()
 
 /*****************************************************************************\
 **  
-**  tReservoir::SendCout()
-**  
-\*****************************************************************************/
-/*void tReservoir::SendCout()
-{	
-	double test;
-	test = reservoirTypes[1].getResDischarge(40);
-	cout<<"Reading tables is working, this is a value: "<<test<<endl;
-	cout<<"Reading tables again: "<<reservoirNodes[1].getRoutingStep()<<endl;
-	cout<<"Reading first table should be 1: "<<reservoirNodes[0].getRoutingStep()<<endl;
-
-	return;
-}
-*/
-/*****************************************************************************\
-**  
 **  tReservoir::RunLevelPoolRouting()
 **
 **  Runs the Reservoir component using the Level Pool Routing method.
@@ -88,10 +72,10 @@ tReservoir::~tReservoir()
 \*****************************************************************************/
 void tReservoir::RunLevelPoolRouting(double Qin)
 {	
-	/* Defines from which tResData class Type will the code read from */
+	/* Defines from which tResData class TYPE will the code read from */
 	rType = getCurrResType();
-	
-	/* Defines from which tResData class Node will the code read from */
+
+	/* Defines from which tResData class NODE will the code read from */
 	rNode = getCurrResNode();	
 
 	ComputeInflow(Qin);
@@ -116,7 +100,7 @@ void tReservoir::ComputeInflow(double Qinflow)
 
 	if (RStep == 1) {
 		ResQinflow2 = Qinflow;
-		resInflow = 0 + ResQinflow2; // At initial time step inflow = 0
+		resInflow = 0 + ResQinflow2; // At initial time step Inflow = 0
 	}
 
 	else {
@@ -132,38 +116,33 @@ void tReservoir::ComputeInflow(double Qinflow)
 **
 ** tReservoir::ComputeInitialSTQ()
 **
-** Function to compute the inital [2Sj/dt - Qj] based on the inital level 
-** of the Reservoir
+** Function to compute the inital [2Sj/dt - Qj] based on the initial water 
+** level at the Reservoir specified by the user.
+**
+** where S = Storage; dt = timestep; Q = discharge. 
+** (STQ = Storage/Time/Discharge)
 **
 ***************************************************************************/
-void tReservoir::ComputeInitialSTQ() //Will need to read initial H.
+void tReservoir::ComputeInitialSTQ()
 {
 	lengthH = reservoirTypes[rType].getResLines();
 
 	//Read provided table for Elevation-Storage-Discharge data
 	initialH = reservoirNodes[rNode].getInitial_H();
-
+	
 	for (int h=0; h!=lengthH; h++) {
 		elevData = reservoirTypes[rType].getResElev(h);
-		if (initialH >= elevData) // Modified by Giuseppe from > to >=
+		if (initialH > elevData)
 			continue;
 		else
 			interNum = h;
 			break;
 	}
-	cout << "interNum is " << interNum << endl; // Giuseppe
 	
 	//Get Discharge Q and Storage S at elevation H by linear interpolation.
-	if (interNum == 0) {
-		resQ = reservoirTypes[rType].getResDischarge(interNum); // Modified by Giuseppe
-		resH = reservoirTypes[rType].getResElev(interNum);  // Modified by Giuseppe
-		resS = reservoirTypes[rType].getResStorage(interNum);}  // Modified by Giuseppe
-	else {
-		resQ = reservoirTypes[rType].getResDischarge(interNum-1);
-		resH = reservoirTypes[rType].getResElev(interNum-1);
-		resS = reservoirTypes[rType].getResStorage(interNum-1);
-	}
-
+	resQ = reservoirTypes[rType].getResDischarge(interNum-1);
+	resH = reservoirTypes[rType].getResElev(interNum-1);
+	resS = reservoirTypes[rType].getResStorage(interNum-1);
 	resQ2 = reservoirTypes[rType].getResDischarge(interNum);
 	resH2 = reservoirTypes[rType].getResElev(interNum);
 	resS2 = reservoirTypes[rType].getResStorage(interNum);
@@ -186,14 +165,15 @@ void tReservoir::ComputeInitialSTQ() //Will need to read initial H.
 ** Function to compute the [2Sj+1/dt - Qj+1] based on the Outflow.
 **
 ***************************************************************************/
-void tReservoir::ComputeSTQnext()
+void tReservoir::ComputeSTQnext() 
 {
+	// Computes discharge for initial conditions or subsequent time steps
 	if (RStep == 1){
 		ComputeInitialSTQ();
 		ComputeResQ();
 
 		STQnext = STQ_0 - 2.0*Q_0;
-		reservoirNodes[rNode].setSTQnext(STQnext, RStep); /** Verify that it is set up correctly ********/
+		reservoirNodes[rNode].setSTQnext(STQnext, RStep);
 	}
 	
 	else {
@@ -201,9 +181,9 @@ void tReservoir::ComputeSTQnext()
 		ComputeResQ();
 
 		STQnext = STQ - 2.0*Q_0;
-		reservoirNodes[rNode].setSTQnext(STQnext, RStep); /** Verify that it is set up correctly ********/
+		reservoirNodes[rNode].setSTQnext(STQnext, RStep);
 	}
-		// Print value to Table?
+		
 	return;
 }
 
@@ -242,19 +222,13 @@ void tReservoir::ComputeResQ()
 	else {
 		for (int x=0; x!=lengthH; x++) {
 			EDSdata = reservoirTypes[rType].getResEDS(x);
-			//cout << "Giuseppe - EDSdata is " << EDSdata << " STQ is " << STQ << endl; // Giuseppe test 2016						
-			if (STQ >= EDSdata) // Modified by Giuseppe from > to >=
+			if (STQ > EDSdata)
 				continue;
 			else
 				interNum2 = x;
 				break;
 		}
 
-	if (RStep == 2){
-		cout << "Giuseppe - Check ComputeResQ interNum2 is " << interNum2 << endl; // Giuseppe test 2016
-		}
-	// Note: interNum2 cannot be 0 because (interNum2-1) would be -1 and cause a memory leak
-	
 	resQ = reservoirTypes[rType].getResDischarge(interNum2-1);
 	resQ2 = reservoirTypes[rType].getResDischarge(interNum2);
 	EDSdata = reservoirTypes[rType].getResEDS(interNum2-1);
@@ -321,11 +295,13 @@ void tReservoir::SetResNodes(tInputFile &inFile)
 ** Format for the Reservoir Polygon ID File:
 **
 ** Header:
-** nReservoirs nNodeParams (3)
+** nReservoirs	nNodeParams (3)
 **
 ** Body:
-** NodeID ResNodeType Initial_H
+** NodeID	ResNodeType	Initial_H
 **
+** Description:
+** nReservoirs = # of Reservoirs; nNodeParams = # of parameters (3)
 ** NodeID       (int)	 Node selected by the user to be a Reservoir
 ** ResNodeType  (int)    Type of Reservoir associated to the Node
 ** Initial_H   (double)  Initial Water Surface Elevation at the Reservoir [m]
@@ -391,6 +367,8 @@ void tReservoir::readResNodeFile(char *resNodeFile)
 ** Body:
 ** Type# Elevation Discharge Storage
 **
+** Description:
+** nTypes = # of different types of reservoirs; nResParams = # of parameters (4)
 ** Type#       	     (int)	1->N
 ** Elevation   	     (double)  	Stage or water elevation at the Reservoir [m]
 ** Discharge   	     (double)  	Discharge for each elevation  [m^3/s]
@@ -416,15 +394,11 @@ void tReservoir::readReservoirFile(char *resfile)
 
 	readFile >> nTypes;
 	readFile >> nResParams;
-	
-	cout << "Giuseppe --- nTypes "<<nTypes<<" Giuseppe --- nResParams " << nResParams << endl; // Giuseppe Test
 
-	reservoirTypes = new tResData[nTypes]; //////////////////////// maybe we need to initialize two of them here?? Giuseppe
+	reservoirTypes = new tResData[nTypes];
 	nLines = reservoirTypes[0].getnumLines(resfile);
-
-	cout << "Giuseppe --- nLines "<<nLines<< endl; // Giuseppe Test
-
 	assert(reservoirTypes != 0);
+
 	int currType = 0; //Initializes Reservoir Type
 	reservoirTypes[currType].setRNum(0);
 
@@ -432,35 +406,28 @@ void tReservoir::readReservoirFile(char *resfile)
 		for (int ct=0;ct < nResParams;ct++) { // Reads parameters from each line (4)
 			if (ct==0) {
 				readFile >> ResType;
-				cout << "Giuseppe --- ResType "<<ResType << endl; // Giuseppe Test
 				if (ResType != currType) {
 					currType++;
-					cout << "Giuseppe --- currType "<< currType << endl; // Giuseppe Test
-					reservoirTypes[currType].setRNum(0); // Giuseppe Test
 					reservoirTypes[currType].setResType(ResType);
 				}
 				else {
 					reservoirTypes[currType].setResType(ResType);
-					//int NumType = reservoirTypes[currType].getRNum();
+					int NumType = reservoirTypes[currType].getRNum();
 				}
 			}
 			if (ct==1) {
 				readFile >> rElev;
-				cout << "Giuseppe --- rElev "<< rElev << endl; // Giuseppe Test
 				reservoirTypes[currType].setResElev(rElev);
 			}
 			if (ct==2) {
 				readFile >> rDischarge;
-				cout << "Giuseppe --- rDischarge "<< rDischarge << endl; // Giuseppe Test
 				reservoirTypes[currType].setResDischarge(rDischarge);
-				//int NumDis = reservoirTypes[currType].getRNum();
+				int NumDis = reservoirTypes[currType].getRNum();
 			}
 			if (ct==3) {
 				readFile >> rStorage;
-				cout << "Giuseppe --- rStorage "<< rStorage << endl; // Giuseppe Test
 				reservoirTypes[currType].setResLines(reservoirTypes[currType].getRNum());
-				// Giuseppe test: The following instruction stores rStorage and increments setNum
-				reservoirTypes[currType].setResStorage(rStorage); 
+				reservoirTypes[currType].setResStorage(rStorage);
 			}
 		}
 	}

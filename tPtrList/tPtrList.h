@@ -35,8 +35,6 @@
   #include <assert.h>
 #elif defined LINUX_32
   #include <cassert>
-#elif defined MAC
-  #include <cassert>
 #elif defined WIN
   #include <assert.h>
 #else 

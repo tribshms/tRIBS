@@ -74,7 +74,6 @@ void tSnowPack::SetSnowPackVariables(tInputFile &infile, tHydroModel *hydro)
 
   //parameters
   minSnTemp = infile.ReadItem(minSnTemp,"MINSNTEMP");
-  snliqfrac = infile.ReadItem(snliqfrac,"SNLIQFRAC"); // Added by CJC 2020
   hillAlbedoOption = infile.ReadItem(hillAlbedoOption,"HILLALBOPT");
   densityAge = 0.0;
   ETAge = 0.0;
@@ -932,12 +931,12 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     //not in stochastic mode
     if (!rainPtr->getoptStorm()) {
       if(metdataOption == 1){
-		thisStation = assignedStation[count];
-		newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
-		cout<<"atmPress retrieved = "<<atmPress<<"\n";
+	thisStation = assignedStation[count];
+	newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
       }
       else if(metdataOption == 2){
-		newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
+      //resampleGrids(timerET); // read in met grid data -- inherited function
+      newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
       }
 	
       // SKY2008Snow, AJR2007
@@ -955,6 +954,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       cNode->setWindSpeed(windSpeed);
       cNode->setAirPressure(atmPress);
       cNode->setShortRadIn(RadGlbObs);
+
       //Set Soil/Surface Temperature
       if(hourlyTimeStep == 0) {
         cNode->setSoilTemp(Tlo - 273.15);
@@ -1132,7 +1132,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         L = H = G = Prec = Utotold = 0.0;
 
         //initialize and record energy balance
-        Utot = dUint = iceWE*rhoicekg*cpicekJ*snTempC // Changed to use rhoicekg CJC 2020
+        Utot = dUint = iceWE*rholiqkg*cpicekJ*snTempC // Changed to use rhoicekg CJC 2020
 		+ liqWE*rholiqkg*latFreezekJ;
 
       }
@@ -1219,7 +1219,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         else {
 
 	  //find initial state of energy
-	  Utot = Utotold = iceWE*rhoicekg*cpicekJ*snTempC // I am pretty sure this should be rhoicekg CJC 2020
+	  Utot = Utotold = iceWE*rholiqkg*cpicekJ*snTempC // I am pretty sure this should be rhoicekg CJC 2020
 			    + liqWE*rholiqkg*latFreezekJ;
 	  //adjust albedo for age
 	  albedo = agingAlbedo();
@@ -1244,10 +1244,10 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 
 	    //calculate sn temperature, modified THM 2012
 	    if (iceWE < 0.1 && iceWE > 0){
-	      iceTempC = Usn/(cpicekJ*rhoicekg*0.1); // I am pretty sure this should be rhoicekg CJC 2020 
+	      iceTempC = Usn/(cpicekJ*rholiqkg*0.1); // I am pretty sure this should be rhoicekg CJC 2020 
 	    }
 	    else
-	      iceTempC = Usn/(cpicekJ*rhoicekg*snWE); // I am pretty sure this should be rhoicekg CJC 2020 
+	      iceTempC = Usn/(cpicekJ*rholiqkg*snWE); // I am pretty sure this should be rhoicekg CJC 2020 
 		
 	    //adjust to minimum snow temperature
 	    //	RMK: THIS IS A KLUGE THAT IS NECESSARY B/C OF THE 
@@ -1280,12 +1280,12 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	    iceWE = snWE - liqWE;	
 	
 	    //put in routing bucket 
-	    //THM 2012 used 0.35 instead of 0.06 - this is a calibration factor snliqfrac
-	    if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC 2020
+	    //THM 2012 used 0.35 instead of 0.06 - this is a calibration factor
+	    if (liqWE > 0.06*iceWE) {
 		    
 	      //there is enough water left over
 	      if (liqWE != snWE ) {
-	        liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC 2020
+	        liqRoute = (liqWE - 0.06*iceWE);
 			cout<<"liqWE before routing="<<liqWE<<",   liqRoute = "<< liqRoute<<"\n";
 	        liqWE = liqWE - liqRoute;
 	        snWE = liqWE + iceWE;
@@ -1605,7 +1605,7 @@ double tSnowPack::latentHFCalc(double Kaero)
 {
 
   double lhf;
-  cout<<"atmPress, LHF Calc = "<<atmPress<<"\n";
+
   if (snTempC == 0.0)
     lhf = (latVapkJ*0.622*rhoAir*Kaero*(vPress - 6.111)/atmPress); //evaporation by THM 2012
   else
@@ -1632,9 +1632,10 @@ double tSnowPack::sensibleHFCalc(double Kaero)
 {
 
   double shf;
-  shf =  (0.622*rhoAir*cpairkJ*Kaero*((airTemp+273.15) - (snTempC+273.15))); // Changed to kelvin but this doesn't actually matter because snTempC is always <0 CJC 2020
-  //cout<<"Sensible Heat Flux = rhoAir*cpairkJ*Kaero*((airTemp+273.15) - (snTempC+273.15)))\n";
-  //cout<<"rhoAir = "<<rhoAir<<",  cpairkJ = "<<cpairkJ<<",  Kaero = "<<Kaero<<",  airTemp = "<<airTemp<<",  snTempC = "<<snTempC<<"\n\n";
+  
+  shf =  (rhoAir*cpairkJ*Kaero*((airTemp+273.15) - (snTempC+273.15)));
+  cout<<"Sensible Heat Flux = rhoAir*cpairkJ*Kaero*((airTemp+273.15) - (snTempC+273.15)))\n";
+  cout<<"rhoAir = "<<rhoAir<<",  cpairkJ = "<<cpairkJ<<",  Kaero = "<<Kaero<<",  airTemp = "<<airTemp<<",  snTempC = "<<snTempC<<"\n\n";
   return shf;
 }
 
@@ -1657,7 +1658,7 @@ double tSnowPack::snowFracCalc()
 
   double snowfrac;
 
-  double TMin(-1.1), TMax(3.3); //indices (Wigmosta et al. 1994)
+  double TMin(0), TMax(4); //indices (Wigmosta et al. 1994)
   
   if ( airTemp <= TMin )
 	  snowfrac = 1; // all ice
@@ -1917,14 +1918,8 @@ double tSnowPack::resFactCalc()
     windSpeedC = 0.01;    //Minimum wind speed (m/s)
   else
     windSpeedC = windSpeed;
-
-  // Compute below canopy windspeed at snow surface following equation Moreno et al. (2016) CJC 2020
-  if (snDepthm < coeffH ) {
-  windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));	// Applying this means I need to change aerodynamic resistance calculation? CJC 2020
-  cout<<"Wind Speed before reduction = "<<windSpeed<<"\n";	
-  cout<<"Wind Speed After reduction = "<<windSpeedC<<"\n";	
-  }
-  
+	
+  cout<<"windSpeedC = "<<windSpeedC<<"\n";	
   // Compute aerodynamic resistance for vegetation
   zm = 2.0 + vegHeight;
   zom = 0.13*vegHeight;
@@ -2157,12 +2152,8 @@ double tSnowPack::inShortWaveSn(tCNode *cNode)
     }
 
     // Account for vegetation
-    if ((evapotransOption == 1)||(snowOption)) {
+    if ((evapotransOption == 1)||(snowOption))
       Iv = Is*coeffKt*coeffV + Is*(1.0-coeffV);
-	  cout<<"Incoming Solar before = "<<Iv<<"\n";
-	  Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016)
-	  cout<<"Incoming Solar after = "<<Iv<<"\n";
-	}
     else
       Iv = Is;
 
@@ -2452,7 +2443,7 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
   //calculate emelt THM 2012 / Latent Heat Leaving the Snowpack due to melt
   if (Utot > 0) {
     // emelt=-liqWE*latFreezekJ*rholiqkg/timeSteps; // Changed /3600 to /timeSteps CJC2020
-	emelt=-latHeatFreezeCalc()*1000*(Utot/(latFreezekJ*rholiqkg))/timeSteps; // Changed /3600 to /timeSteps CJC2020 // Changed to use latHeatFreezeCalc() instead of 334 CJC 2020
+	emelt=-latHeatFreezeCalc()*1000*(Utot/(latFreezekJ*rholiqkg))/timeSteps; // Changed /3600 to /timeSteps CJC2020
   }
   else {
     emelt= 0;

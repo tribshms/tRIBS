@@ -797,7 +797,7 @@ void tFlowNet::SurfaceFlow()
 		if (cn->getSoilMoistureSC() >= 1)
 			res->store_saturation(0.0, AreaF, 3);
 		// Mean groundwater level
-		res->store_saturation(0.0, AreaF*cn->getNwtNew(), 4);
+		res->store_saturation(0.0, AreaF*cn->getSurfTemp(), 4);
 		//Mean Evapotranspiration
 		res->store_saturation(0.0, AreaF*cn->getEvapoTrans(), 5);
 
