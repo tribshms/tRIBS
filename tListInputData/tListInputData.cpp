@@ -293,9 +293,7 @@ GetKeyEntry()
 		cout << "orgid destid nextid" << endl;
 		cin >> orgid[i] >> destid[i] >> nextid[i];
 	}
-	//  Clizarraga 04/05/2020. Modified next line: Error expression cannot be used as a function
-	//	for( i=0; i< ntri(); i++ ){
-	for( i=0; i< ntri; i++ ){	// CLizarraga  
+	for( i=0; i< ntri; i++ ){         // Eliminated extra (), in ntri(). CLizarraga 04/20/2020
 		cout << "nodeids (3), edgids (3), triangleids (3)" << endl;
 		cin >> p0[i] >> p1[i] >> p2[i]
 			>> e0[i] >> e1[i] >> e2[i]

@@ -1,5 +1,6 @@
-This is the tRIBS model version 3.1 Revision 1, April 2020
+This is the tRIBS_grid version 3.1 Revision 1, April 2020
 
+Main Contributors: Enrique Vivoni, Giuseppe Mascaro, Ara Ko, ... among others
 
 This version compiles with latest g++ in:
 *  Linux (make -f makeLINUX all) and  
@@ -8,7 +9,18 @@ This version compiles with latest g++ in:
 
 (Other Parallel versions have not been tested yet)
 
-Some minor bugs were fixed to compile in newer versions of g++
+Major code changes that superseed previous tRIBS file versions are:
 
+tCNode/tCNode.h
+tCNode/tCNode.cpp
+tFlowNet/tKinemat.cpp
+tFlowNet/tReservoir.cpp
+tHydro/tEvapotrans.cpp
+tHydro/tHydroModel.cpp
+tRasTin/tInvariant.h
+tRasTin/tInvariant.cpp
+tSimulator/tPreProcess.cpp
+
+Files with *.orig, are last previous versions, and are kept for historic revisions.   
 ---------------------------------------------------------------------------------
 Updated: Carlos Lizarraga 04/22/2020 

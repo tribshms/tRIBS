@@ -298,7 +298,7 @@ public:
   tListNode< NodeType > * getListNode( NodeType * ); // rtns ptr to node #
   tListNode< NodeType > * getCurrentItem();          //rtns ptr to currentitem
     
- protected:
+protected:
   int nNodes;                          	// # of items on list
   tListNode< NodeType > * first;       	// ptr to first node
   tListNode< NodeType > * last;        	// ptr to last node

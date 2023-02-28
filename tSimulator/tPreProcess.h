@@ -22,8 +22,8 @@
 #include "Headers/Inclusions.h"
 
 #ifdef ALPHA_64
-#elif defined MAC
 #elif defined LINUX_32
+#elif defined MAC
   #ifndef _WIN32
   #include <unistd.h>
   #endif

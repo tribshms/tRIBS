@@ -107,7 +107,7 @@ protected:
   double Q_0, H_0; // Outflow and elev from the Reservoir
   int RStep;
   int NumRes;
-  double ResTimeDt;
+  double ResTimeDt; // Eliminated extra , CLizarraga 04/20/2020
   int ResTyp, ResNID, ArraySize;
   double ResOutflow, ResOutElev;
 

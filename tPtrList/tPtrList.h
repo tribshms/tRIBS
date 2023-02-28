@@ -1028,7 +1028,7 @@ Prev(){
    for( tempnode = ptrlistPtr->first;
         tempnode->next->Ptr->getID() != curptrnode->Ptr->getID();
         tempnode = tempnode->next );
-   curptrnode = tempnode;  // Clizarraga 04/06/2020. Fixed an indentation in this line
+     curptrnode = tempnode;
    assert( curptrnode != 0 );
    counter--;
    return 1;

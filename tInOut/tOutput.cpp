@@ -5,9 +5,9 @@
 **              TIN-based Real-time Integrated Basin Simulator
 **		         Ralph M. Parsons Laboratory
 **  		    Massachusetts Institute of Technology
-**  
 **
-**  tOutput.cpp: Functions for output objects for classes tOutput and 
+**
+**  tOutput.cpp: Functions for output objects for classes tOutput and
 **               tCOutput (see tOutput.h)
 **
 *************************************************************************/
@@ -44,10 +44,10 @@ tOutput<tSubNode>::tOutput(SimulationControl *simCtrPtr,
 						   tResample *resamp)
 {
 	assert(gridPtr > 0);
-	g = gridPtr;  
+	g = gridPtr;
 	respPtr = resamp;
 	simCtrl = simCtrPtr;
-	
+
 	Cout<<"\nOutput Files:"<<endl<<endl;
 	infile.ReadItem(baseName, "OUTFILENAME" );    //basename of output
 	infile.ReadItem(nodeFile, "NODEOUTPUTLIST");  //pathname of node output
@@ -56,7 +56,7 @@ tOutput<tSubNode>::tOutput(SimulationControl *simCtrPtr,
    vizOption = infile.ReadItem(vizOption, "OPTVIZ");
    if (this->vizOption > 0)
 	    infile.ReadItem(vizName, "OUTVIZFILENAME" );
-	
+
 #ifdef PARALLEL_TRIBS
   // Nodes, edges, triangles, and Z files are only written
   // by the Master node
@@ -67,20 +67,20 @@ tOutput<tSubNode>::tOutput(SimulationControl *simCtrPtr,
 	char edgesext[10] = ".edges";
 	char trisext[10] = ".tri";
 	char zofsext[10] = ".z";
-	
+
 	CreateAndOpenFile( &nodeofs, nodesext );
 	CreateAndOpenFile( &edgofs,  edgesext );
 	CreateAndOpenFile( &triofs,  trisext );
 	CreateAndOpenFile( &zofs,    zofsext );
-	
+
 	nodeofs.setf( ios::fixed, ios::floatfield);
 	zofs.setf   ( ios::fixed, ios::floatfield);
-	
+
 #ifdef PARALLEL_TRIBS
   }
 #endif
 
-	ReadNodeOutputList(); 
+	ReadNodeOutputList();
 	CreateAndOpenPixel();
 	dynvars = NULL;
 }
@@ -96,25 +96,25 @@ tOutput<tSubNode>::tOutput(SimulationControl *simCtrPtr,
 *************************************************************************/
 template< class tSubNode >
 tOutput<tSubNode>::tOutput( SimulationControl *simCtrPtr,
-							tMesh<tSubNode> * gridPtr, 
+							tMesh<tSubNode> * gridPtr,
                             tInputFile &infile, tResample *resamp,
                             tRunTimer * timptr )
 {
 	assert(gridPtr > 0);
-	g = gridPtr;        
-	timer = timptr;    
+	g = gridPtr;
+	timer = timptr;
 	respPtr = resamp;
 	simCtrl = simCtrPtr;
-	
+
 	Cout<<"\nOutput Files:"<<endl<<endl;
-	infile.ReadItem( baseName, "OUTFILENAME" );          
-	infile.ReadItem( nodeFile, "NODEOUTPUTLIST");  
-	
+	infile.ReadItem( baseName, "OUTFILENAME" );
+	infile.ReadItem( nodeFile, "NODEOUTPUTLIST");
+
 	// Binary viz output
    vizOption = infile.ReadItem(vizOption, "OPTVIZ");
    if (this->vizOption > 0)
 	    infile.ReadItem(vizName, "OUTVIZFILENAME" );
-	
+
 #ifdef PARALLEL_TRIBS
   // Nodes, edges, triangles, and Z files are only written
   // by the Master node
@@ -125,20 +125,20 @@ tOutput<tSubNode>::tOutput( SimulationControl *simCtrPtr,
 	char edgesext[10] = ".edges";
 	char trisext[10] = ".tri";
 	char zofsext[10] = ".z";
-	
+
 	CreateAndOpenFile( &nodeofs, nodesext);
 	CreateAndOpenFile( &edgofs,  edgesext);
 	CreateAndOpenFile( &triofs,  trisext);
 	CreateAndOpenFile( &zofs,    zofsext);
-	
+
 	nodeofs.setf( ios::fixed, ios::floatfield);
 	zofs.setf   ( ios::fixed, ios::floatfield);
-	
+
 #ifdef PARALLEL_TRIBS
   }
 #endif
 
-	ReadNodeOutputList(); 
+	ReadNodeOutputList();
 	CreateAndOpenPixel();
 	dynvars = NULL;
 }
@@ -156,7 +156,7 @@ tOutput<tSubNode>::~tOutput()
 		delete [] pixinfo;
 	if (dynvars)
 		delete [] dynvars;
-	
+
 	Cout<<"tOutput Object has been destroyed..."<<endl<<flush;
 }
 
@@ -189,10 +189,10 @@ void tOutput<tSubNode>::CreateAndOpenFile( ofstream *theOFStream,
                                            char *extension )
 {
 	char fullName[kMaxNameSize+6];
-	
+
 	strcpy( fullName, baseName );
 	strcat( fullName, extension );
-	
+
 #ifdef PARALLEL_TRIBS
 // Add processor extension if running in parallel
   char procex[10];
@@ -201,10 +201,10 @@ void tOutput<tSubNode>::CreateAndOpenFile( ofstream *theOFStream,
 #endif
 
 	theOFStream->open( fullName );
-	
+
 	if ( !theOFStream->good() )
 		cerr << "File "<<fullName<<" not created.";
-	
+
 /*SMM
 	Cout<<"Creating Output File: \t '"<<fullName<<"' "<<endl;
 */
@@ -214,28 +214,28 @@ void tOutput<tSubNode>::CreateAndOpenFile( ofstream *theOFStream,
 template< class tSubNode >
 void tOutput<tSubNode>::CreateAndOpenVizFile( ofstream *theOFStream,
                                            char *extension )
-{ 
+{
 	char procex[10];
 	char fullName[kMaxNameSize+6];
-   
+
 	strcpy( fullName, vizName );
 	strcat( fullName, extension );
 #ifdef PARALLEL_TRIBS
 	sprintf( procex, ".%-d", tParallel::getMyProc());
 	strcat(fullName, procex);
 #else
-	sprintf( procex, " "); // Clizarraga 04/06/2020: Added a space in ""
+	sprintf( procex, " "); // Format error, had zero lenght "". Clizarraga 04/20/2020
 	strcat(fullName, procex);
-#endif 
-  
+#endif
+
 	theOFStream->open( fullName, ios::binary );
-  
+
 	if ( !theOFStream->good() )
 		cerr << "File "<<fullName<<" not created.";
-  
+
 	Cout<<"Creating Output File: \t '"<<fullName<<"' "<<endl;
 	return;
-} 
+}
 
 /*************************************************************************
 **
@@ -249,7 +249,7 @@ void tOutput<tSubNode>::CreateAndOpenVizFile( ofstream *theOFStream,
 *************************************************************************/
 template< class tSubNode >
 void tOutput<tSubNode>::ReadNodeOutputList() {
-	
+
 	ifstream readNOL(nodeFile);
 	if (!readNOL) {
 		Cout << "\nFile "<<nodeFile<<" not found..."<<endl;
@@ -258,12 +258,12 @@ void tOutput<tSubNode>::ReadNodeOutputList() {
 		numNodes = 0;
 		return;
 	}
-	
+
 	readNOL >> numNodes;
 	nodeList = new int[numNodes];
 	uzel = new tSubNode*[numNodes];
 	pixinfo = new ofstream[numNodes];
-	
+
 #ifdef PARALLEL_TRIBS
   // Initialize to NULL
   for (int i = 0; i < numNodes; i++)
@@ -271,9 +271,9 @@ void tOutput<tSubNode>::ReadNodeOutputList() {
 #endif
 
 	for (int i = 0; i < numNodes; i++) {
-		readNOL >> nodeList[i]; 
+		readNOL >> nodeList[i];
 	}
-	
+
 	readNOL.close();
 	return;
 }
@@ -283,7 +283,7 @@ void tOutput<tSubNode>::ReadNodeOutputList() {
 **  tOutput::CreateAndOpenPixel()
 **
 **  Write the header for the *.pixel output file.
-** 
+**
 *************************************************************************/
 template< class tSubNode >
 void tOutput<tSubNode>::CreateAndOpenPixel()
@@ -291,7 +291,7 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 	if ( nodeList ) {
 		char pixelext[10] = ".pixel";
 		char nodeNum[10], pixelnode[100];
-		
+
       //SMM - Set interior nodes, added 08132008
       SetInteriorNode();
 
@@ -304,10 +304,10 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 #endif
 				sprintf(nodeNum,"%d",nodeList[i]);
 				strcpy(pixelnode, nodeNum);
-				strcat(pixelnode, pixelext);		 
-				
+				strcat(pixelnode, pixelext);
+
 				CreateAndOpenFile( &pixinfo[i], pixelnode );
-				
+
 				if (simCtrl->Header_label == 'Y') {
 					pixinfo[i]<<"1-NodeID  "
 					<<"2-Time,hr  "
@@ -322,16 +322,16 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					<<"11-GWflx,m3/h  "
 					<<"12-Srf,mm  "
 					<<"13-Rain,mm/h  "
-					//<<"14-SoilMoist,d/l " 
+					//<<"14-SoilMoist,d/l "
 					<<"14-SoilMoist,[]  " // SKYnGM2008LU
-					//<<"15-RootMoist,d/l  " 
+					//<<"15-RootMoist,d/l  "
 					<<"15-RootMoist,[]  " // SKYnGM2008LU
 					<<"16-AirT,oC  "
 					<<"17-DewT,oC  "
 					<<"18-SurfT,oC  "
 					<<"19-SoilT,oC  "
 					<<"20-Press,Pa  "
-					//<<"21-RelHum,d/l  " 
+					//<<"21-RelHum,d/l  "
 					<<"21-RelHum,[]  " // SKYnGM2008LU
 					//<<"22-SkyCov,d/l  "
 					<<"22-SkyCov,[]  " // SKYnGM2008LU
@@ -354,7 +354,7 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					<<"39-HFlux,W/m2  "
 					<<"40-Lflux,W/m2  "
 					<<"41-NetPrecip,mm/hr  "
-					
+
 
 					// SKY2008Snow from AJR2007
 					<<"42-LiqWE,cm  "		//added by AJR 2007 @ NMT
@@ -412,7 +412,7 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					<<"\n";
 				}
 				pixinfo[i].setf( ios::right, ios::adjustfield );
-				pixinfo[i].setf( ios::fixed, ios::floatfield);  
+				pixinfo[i].setf( ios::fixed, ios::floatfield);
 			}
 		}
 	}
@@ -423,18 +423,18 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 **
 **  tOutput::CreateAndOpenDynVar()
 **
-**  Opens a number of files for selected dynamic variables 
-** 
+**  Opens a number of files for selected dynamic variables
+**
 *************************************************************************/
 template< class tSubNode >
 void tOutput<tSubNode>::CreateAndOpenDynVar()
 {
 	if (g->getNodeList()->getActiveSize() < 0) {
-		
+
 		// Allocate memory for ofstream objects
 		//dynvars = new ofstream[19];
 		dynvars = new ofstream[36]; // SKY2008Snow, AJR2008
-		
+
 		char Nwt[10] = "_Nwt";
 		char Nf[10]  = "_Nf";
 		char Nt[10]  = "_Nt";
@@ -454,7 +454,7 @@ void tOutput<tSubNode>::CreateAndOpenDynVar()
 		char Eso[10]  = "_Eso";
 		char NetP[10] = "_NetP";
 		char Qbot[10] = "_Qbot";
-	
+
 		// SKY2008Snow from AJR2007
 		char SnWE[10] = "_SnWE";	    //added by AJR 2007 @ NMT
 		char SnTempC[10] = "_snTempC";  //added by AJR 2007 @ NMT
@@ -585,11 +585,11 @@ void tOutput<tSubNode>::WriteOutput( double time )
 	tMeshListIter<tSubNode> niter( g->getNodeList() );
 	tMeshListIter<tEdge>    eiter( g->getEdgeList() );
 	tListIter<tTriangle>    titer( g->getTriList() );
-	
+
 	int nnodes = g->getNodeList()->getSize();
 	int nedges = g->getEdgeList()->getSize();
 	int ntri   = g->getTriList()->getSize();
-	
+
 #ifdef PARALLEL_TRIBS
 	// If running parallel, sum sizes on all processors
 	int nGlobalActiveNodes = g->getNodeList()->getGlobalActiveSize();
@@ -599,17 +599,17 @@ void tOutput<tSubNode>::WriteOutput( double time )
 
 	cout<<"Proc " << tParallel::getMyProc()
 	    <<": tOutput Characteristics:"<<endl;
-  
+
 	cout<<"Proc " << tParallel::getMyProc()
 	    <<": Number of nodes: \t\t"<<nnodes<<endl;
 	cout<<"Proc " << tParallel::getMyProc()
 	    <<": Number of edges: \t\t"<<nedges<<endl;
-  
+
 	cout<<"Proc " << tParallel::getMyProc()
 	    <<": Number of active nodes: \t"<<nActiveNodes<<endl<<flush;
 	cout<<"Proc " << tParallel::getMyProc()
 	    <<": Number of active edges: \t"<<nActiveEdges<<endl<<flush;
-  
+
 	cout<<"Proc " << tParallel::getMyProc()
 	    <<": Number of global active nodes: \t"<<nGlobalActiveNodes<<endl<<flush;
 	cout<<"Proc " << tParallel::getMyProc()
@@ -642,41 +642,41 @@ void tOutput<tSubNode>::WriteOutput( double time )
 	zofs.setf   (ios::fixed, ios::floatfield);
 	edgofs.setf (ios::fixed, ios::floatfield);
 	triofs.setf (ios::fixed, ios::floatfield);
-	
-	// Write 'node' file and 'z' file 
+
+	// Write 'node' file and 'z' file
 	nodeofs<<" "<<time<<"\n"<<nnodes<<"\n";
 	zofs   <<" "<<time<<"\n"<<nnodes<<"\n";
-	
+
 	for ( cn=niter.FirstP(); !(niter.AtEnd()); cn=niter.NextP() ) {
 		nodeofs<<cn->getX()<<" "<<cn->getY()<<" "
 		<<cn->getEdg()->getID()<<" "<<cn->getBoundaryFlag()<<"\n";
 		zofs   <<cn->getZ()<<"\n";
 	}
-	
-	// Write 'edge' file 
+
+	// Write 'edge' file
 	edgofs<<" "<<time<<"\n"<<nedges<<"\n";
 	for ( ce=eiter.FirstP(); !(eiter.AtEnd()); ce=eiter.NextP() )
 		edgofs <<ce->getOriginPtrNC()->getID()<<" "
 			<<ce->getDestinationPtrNC()->getID()<<" "
 			<<ce->getCCWEdg()->getID()<<"\n";
-	
-	// Write 'triangle' file 
+
+	// Write 'triangle' file
 	int i;
 	triofs<<" "<<time<<"\n"<<ntri<<"\n";
 	for ( ct=titer.FirstP(); !(titer.AtEnd()); ct=titer.NextP() )  {
 		for ( i=0; i<=2; i++ )
 			triofs<<ct->pPtr(i)->getID()<<" ";
 		for ( i=0; i<=2; i++ )  {
-			if ( ct->tPtr(i) ) 
+			if ( ct->tPtr(i) )
 				triofs<<ct->tPtr(i)->getID()<<" ";
-			else 
+			else
 				triofs<<"-1 ";
 		}
-		triofs << ct->ePtr(0)->getID() << " " 
-			<< ct->ePtr(1)->getID() << " " 
+		triofs << ct->ePtr(0)->getID() << " "
+			<< ct->ePtr(1)->getID() << " "
 			<< ct->ePtr(2)->getID() << "\n";
 	}
-	
+
 #ifdef PARALLEL_TRIBS
   }
 #endif
@@ -684,7 +684,7 @@ void tOutput<tSubNode>::WriteOutput( double time )
 
 	// Set interior nodes
 	SetInteriorNode();
-	
+
 	return;
 }
 
@@ -692,15 +692,15 @@ void tOutput<tSubNode>::WriteOutput( double time )
 **
 **  tOutput::SetInteriorNode()
 **
-**  Initializes pointers to basin interior outlets 
-** 
+**  Initializes pointers to basin interior outlets
+**
 *************************************************************************/
 template< class tSubNode >
 void tOutput<tSubNode>::SetInteriorNode()
 {
 	tSubNode * cnn;
 	tMeshListIter<tSubNode> niter( g->getNodeList() );
-	
+
 	if (nodeList) {  // <--- If the node list in NOT empty
 		for (int i=0; i < numNodes; i++) {
 			if (nodeList[i] >= 0) {
@@ -711,7 +711,7 @@ void tOutput<tSubNode>::SetInteriorNode()
 				for ( cnn=niter.FirstP(); !(niter.AtEnd()); cnn=niter.NextP() ) {
 #endif
 					if (cnn->getID() == nodeList[i]) {
-						uzel[i] = cnn;   // <=== Defining node of interest 
+						uzel[i] = cnn;   // <=== Defining node of interest
 						cout<<"\nNode of Interest ID: \t"<<nodeList[i]
 							<<" has been set up..."<<endl<<flush;
 					}
@@ -730,45 +730,45 @@ void tOutput<tSubNode>::SetInteriorNode()
 //
 //=========================================================================
 template< class tSubNode >
-void tOutput<tSubNode>::WriteNodeData( double ) 
+void tOutput<tSubNode>::WriteNodeData( double )
 {
-	cout<<"tOutput:WriteNodeData VOID function!"<<endl; 
+	cout<<"tOutput:WriteNodeData VOID function!"<<endl;
 }
 
 template< class tSubNode >
 void tOutput<tSubNode>::WriteNodeData( double , tResample *)
 {
-	cout<<"tOutput:WriteNodeData VOID function!"<<endl; 
+	cout<<"tOutput:WriteNodeData VOID function!"<<endl;
 }
 
 template< class tSubNode >
 void tOutput<tSubNode>::WriteGeometry( tResample *)
 {
-	cout<<"tOutput:WriteNodeData VOID function!"<<endl; 
+	cout<<"tOutput:WriteNodeData VOID function!"<<endl;
 }
 
 template< class tSubNode >
 void tOutput<tSubNode>::WriteDynamicVars( double )
 {
-	cout<<"tOutput:WriteDynamicVars VOID function!"<<endl; 
+	cout<<"tOutput:WriteDynamicVars VOID function!"<<endl;
 }
 
 template< class tSubNode >
 void tOutput<tSubNode>::WriteDynamicVarsBinary( double )
 {
-	cout<<"tOutput:WriteDynamicVarsBinary VOID function!"<<endl; 
+	cout<<"tOutput:WriteDynamicVarsBinary VOID function!"<<endl;
 }
 
 template< class tSubNode >
-void tOutput<tSubNode>::WriteDynamicVar( double time ) 
+void tOutput<tSubNode>::WriteDynamicVar( double time )
 {
-	cout<<"tOutput:WriteDynamicVar VOID function!"<<endl; 
+	cout<<"tOutput:WriteDynamicVar VOID function!"<<endl;
 }
 
 template< class tSubNode >
 void tOutput<tSubNode>::WritePixelInfo( double )
 {
-	cout<<"tOutput:WritePixelInfo VOID function!"<<endl; 
+	cout<<"tOutput:WritePixelInfo VOID function!"<<endl;
 }
 
 template< class tSubNode >
@@ -780,7 +780,7 @@ void tOutput<tSubNode>::end_simulation()
     if ( (uzel[i] != NULL) && (nodeList[i] >= 0) )
 #endif
 		pixinfo[i].close();
-	return;  
+	return;
 }
 
 //=========================================================================
@@ -795,15 +795,15 @@ void tOutput<tSubNode>::end_simulation()
 **
 **  tCOutput::Constructors and Destructor
 **
-**  Constructor for the derived tCNode class. In addition to the 
+**  Constructor for the derived tCNode class. In addition to the
 **  inhereted constructor functions, it also opens a _voi file for
 **  writing the voronoi mesh points as a ArcInfo generate file
 **
 *************************************************************************/
 template< class tSubNode >
-tCOutput<tSubNode>::tCOutput(SimulationControl *simCtrPtr, tMesh<tSubNode> *g, 
-							 tInputFile &infile, tResample *resamp, 
-							 tRunTimer *timptr) 
+tCOutput<tSubNode>::tCOutput(SimulationControl *simCtrPtr, tMesh<tSubNode> *g,
+							 tInputFile &infile, tResample *resamp,
+							 tRunTimer *timptr)
 : tOutput<tSubNode>(simCtrPtr, g, infile, resamp, timptr)
 {
 	simCtrl = simCtrPtr;
@@ -811,7 +811,7 @@ tCOutput<tSubNode>::tCOutput(SimulationControl *simCtrPtr, tMesh<tSubNode> *g,
 	char vorofsext[10] = "_voi";
 	char widthsext[10] = "_width";
 	char drarsext[16] = "_area";
-	
+
 	// Set up interior outlets and open .qout files
 	infile.ReadItem( outletName, "OUTHYDROFILENAME");
 	infile.ReadItem( nodeFileO, "OUTLETNODELIST" );
@@ -826,40 +826,40 @@ tCOutput<tSubNode>::tCOutput(SimulationControl *simCtrPtr, tMesh<tSubNode> *g,
 	CreateAndOpenOutlet();
 	SetInteriorOutlet();
 #endif
-	
+
 	// Create files to output vertices of Voronoi
 	// polygons and contributing area values
 	this->CreateAndOpenFile( &vorofs, vorofsext);
 	this->CreateAndOpenFile( &drareaofs, drarsext );
 	this->CreateAndOpenFile( &widthsofs, widthsext );
-	
+
 	WriteNodeData( 0, resamp );
 }
 
 template< class tSubNode >
-tCOutput<tSubNode>::tCOutput(SimulationControl *simCtrPtr, tMesh<tSubNode> *g, 
-							 tInputFile &infile, tResample *resamp ) 
+tCOutput<tSubNode>::tCOutput(SimulationControl *simCtrPtr, tMesh<tSubNode> *g,
+							 tInputFile &infile, tResample *resamp )
 : tOutput<tSubNode>(simCtrPtr, g, infile, resamp, this->timptr)
-{   
+{
 	char vorofsext[10] = "_voi";
 	this->CreateAndOpenFile( &vorofs, vorofsext);
 }
 
 template< class tSubNode >
-tCOutput<tSubNode>::~tCOutput() 
+tCOutput<tSubNode>::~tCOutput()
 {
 
 	// GMnSKY2008MLE to fix memory leaks
-	if (numOutlets > 0) { 
-		for (int j=0; j < numOutlets; j++) 
+	if (numOutlets > 0) {
+		for (int j=0; j < numOutlets; j++)
 #ifdef PARALLEL_TRIBS
     if ( (Outlets[j] != NULL) && (OutletList[j] > 0) )
 #endif
-			outletinfo[j].close(); 
-		delete [] OutletList; 
-		delete [] Outlets; 
-		delete [] outletinfo; 
-	}       
+			outletinfo[j].close();
+		delete [] OutletList;
+		delete [] Outlets;
+		delete [] outletinfo;
+	}
 
     Cout<<"tCOutput Object has been destroyed..."<<endl<<flush;
 }
@@ -870,7 +870,7 @@ tCOutput<tSubNode>::~tCOutput()
 **
 **  Writes the voronoi vertices to a file *_voi in a format compatible
 **  with ArcInfo generate files for input and transformation into
-**  a polygon coverage. The output format should be readable by ArcInfo 
+**  a polygon coverage. The output format should be readable by ArcInfo
 **  & Matlab
 **
 *************************************************************************/
@@ -879,18 +879,18 @@ void tCOutput<tSubNode>::WriteNodeData( double time )
 {
 	tSubNode *cn;
 	tEdge * firstedg;
-	tEdge * curedg; 
+	tEdge * curedg;
 	tMeshListIter<tSubNode> ni( this->g->getNodeList() );
 	tArray< double > xy, xy1, xy2, xy3, xy4;
-	
-	// Writing to a file voronoi vertices  of the current node 
+
+	// Writing to a file voronoi vertices  of the current node
 	// The output format should be readable by ArcInfo & Matlab
 	vorofs.setf( ios::fixed, ios::floatfield);
 	if (time == 0) {
 		cn = ni.FirstP();
-		
+
 		while (ni.IsActive()) {
-			
+
 			vorofs<<cn->getID()<<','<<cn->getX()<<','<<cn->getY()<<"\n";
 			firstedg = cn->getFlowEdg();
 			xy = firstedg->getRVtx();
@@ -905,7 +905,7 @@ void tCOutput<tSubNode>::WriteNodeData( double time )
 			cn = ni.NextP();
 		}
 		vorofs<<"END"<<"\n";
-		
+
 	}
 	vorofs.close();
 	return;
@@ -917,36 +917,36 @@ void tCOutput<tSubNode>::WriteNodeData( double time )
 **
 **  - Writes a file containing voronoi vertices: reads arrays
 **    from the tResample object
-**  
+**
 **  - Writes a file containing drainage areas for stream network
-** 
+**
 *************************************************************************/
 template< class tSubNode >
 void tCOutput<tSubNode>::WriteNodeData( double time, tResample *tresamp )
 {
 	tSubNode *cn;
 	tMeshListIter<tSubNode> ni( this->g->getNodeList() );
-	
+
 	int k, i;
 	i = 0;
-	
-	// Writing to a file voronoi vertices  of the current node 
+
+	// Writing to a file voronoi vertices  of the current node
 	// The output format should be readable by ArcInfo & Matlab
 	vorofs.setf   (ios::fixed, ios::floatfield);
 	drareaofs.setf(ios::fixed, ios::floatfield);
 	widthsofs.setf(ios::fixed, ios::floatfield);
-	
+
 	if (time == 0) {
 		cn = ni.FirstP();
 		drareaofs<<"ID\tX\tY\tCArea"<<"\n";
 		widthsofs<<"ID\tX\tY\tWidth\tEdgL\tSlp"<<"\n";
-		
+
 		while (ni.IsActive()) {
 			vorofs<<cn->getID()<<','<<cn->getX()<<','<<cn->getY()<<"\n";
 			for (k=0; k < tresamp->nPoints[i]; k++)
 				vorofs<<tresamp->vXs[i][k]<<","<<tresamp->vYs[i][k]<<"\n";
 			vorofs<<"END"<<"\n";
-			
+
 			if (cn->getBoundaryFlag() == 3) {
 				drareaofs<<cn->getID()
 				<<"\t"<<cn->getX()<<"\t"<<cn->getY()
@@ -959,7 +959,7 @@ void tCOutput<tSubNode>::WriteNodeData( double time, tResample *tresamp )
 			}
 			i++;
 			cn = ni.NextP();
-		} 
+		}
 
 		// Write geometry and static information for visualizer
 		if (this->vizOption == 1)
@@ -1082,22 +1082,22 @@ void tCOutput<tSubNode>::WriteGeometry(tResample* tresamp)
 **  tCOutput::WritePixelInfo()
 **
 **  Writes the dynamic variables of node of interest to a *.pixel file
-**  The output format should be readable by ArcInfo & Matlab 
+**  The output format should be readable by ArcInfo & Matlab
 **
 *************************************************************************/
 template< class tSubNode >
 void tCOutput<tSubNode>::WritePixelInfo( double time )
-{ 
+{
 	if (this->numNodes > 0) {
 		int hour, minute;
 		char extension[20];
-		
+
 		hour   = (int)floor(time);
 		minute = (int)((time-hour)*100);
 		sprintf(extension,"%04d.%02d", hour, minute);
-		
-		// Writing to a file dynamic variables of node of interest  
-		// The output format should be readable by ArcInfo & Matlab 
+
+		// Writing to a file dynamic variables of node of interest
+		// The output format should be readable by ArcInfo & Matlab
 		for (int i = 0; i < this->numNodes; i++) {
 #ifdef PARALLEL_TRIBS
   // Doesn't need to be less than active size
@@ -1108,58 +1108,58 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				this->pixinfo[i]<<setw(8)<<this->nodeList[i]
 				<<setw(13)<<extension<<" "
 				/* 3 */   <<setw(10)<<(this->uzel[i]->getNwtNew())<<" "
-				
+
 				<<setprecision(1)
 				<<setw(6)<<this->uzel[i]->getNfNew()<<" "
 				/* 5 */	  <<setw(6)<<this->uzel[i]->getNtNew()<<" "
-				
+
 				<<setprecision(5)
 				<<setw(7)<<this->uzel[i]->getMuNew()<<" "
 				<<setw(7)<<this->uzel[i]->getMiNew()<<"   "
-				
+
 				<<setprecision(7)
 				<<setw(10)<<this->uzel[i]->getQpout()*1.E-6/this->uzel[i]->getVArea()<<"  "
-				<<setw(10)<<this->uzel[i]->getQpin() *1.E-6/this->uzel[i]->getVArea()<<"   "   
+				<<setw(10)<<this->uzel[i]->getQpin() *1.E-6/this->uzel[i]->getVArea()<<"   "
 				/* 10 */  <<setw(10)<<this->uzel[i]->getTransmiss()*1.E-6<<"    "
 				<<setw(10)<<this->uzel[i]->getGwaterChng()*1.E-9<<"  "
-				
+
 				<<setprecision(5)
 				<<setw(8) <<this->uzel[i]->getSrf()<<"  "
 				<<setw(10)<<this->uzel[i]->getRain()<<"  "
 				<<setw(10)<<this->uzel[i]->getSoilMoistureSC()<<"  "
 				/* 15 */  <<setw(10)<<this->uzel[i]->getRootMoistureSC()<<" "
-				
+
 				<<setprecision(3)
 				<<this->uzel[i]->getAirTemp()<<" "
 				<<this->uzel[i]->getDewTemp()<<" "
 				<<this->uzel[i]->getSurfTemp()<<" "
 				<<this->uzel[i]->getSoilTemp()<<" "
-				
+
 				/* 20 */  <<this->uzel[i]->getAirPressure()<<" "
 				<<this->uzel[i]->getRelHumid()<<" "
 				<<this->uzel[i]->getSkyCover()<<" "
 				<<this->uzel[i]->getWindSpeed()<<" "
 				<<this->uzel[i]->getNetRad()<<" "
-				
+
 				/* 25 */  <<this->uzel[i]->getShortRadIn()<< " "
 				<<this->uzel[i]->getShortRadIn_dir()<< " "
 				<<this->uzel[i]->getShortRadIn_dif()<< " "
 				<<this->uzel[i]->getShortAbsbVeg()<< " "
 				<<this->uzel[i]->getShortAbsbSoi()<< " "
-				
+
 				/* 30 */  <<this->uzel[i]->getLongRadIn()<< " "
 				<<this->uzel[i]->getLongRadOut()<< " "
 				<<this->uzel[i]->getPotEvap()<<" "
 				<<this->uzel[i]->getActEvap()<<" "
 				<<this->uzel[i]->getEvapoTrans()<<" "
-				
+
 				/* 35 */  <<this->uzel[i]->getEvapWetCanopy()<<" "
 				<<this->uzel[i]->getEvapDryCanopy()<<" "
 				<<this->uzel[i]->getEvapSoil()<<" "
 				<<this->uzel[i]->getGFlux()<<" "
 				<<this->uzel[i]->getHFlux()<<" "
 				/* 40 */  <<this->uzel[i]->getLFlux()<<" "
-				
+
 				<<this->uzel[i]->getNetPrecipitation()<<" "
 
 				// SKY2008Snow from AJR2007
@@ -1182,7 +1182,7 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				<<this->uzel[i]->getIntSWE()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getIntSub()<<" "	//added by AJR 2007 @ NMT
 				/* 60 */ <<this->uzel[i]->getIntSnUnload()<<" " //added by AJR 2007 @ NMT
-			
+
 				<<this->uzel[i]->getCanStorage()<<" "
 				<<this->uzel[i]->getCumIntercept()<<" "
 				<<this->uzel[i]->getInterceptLoss()<<" "
@@ -1197,7 +1197,7 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				else
 					//this->pixinfo[i]<<"0.0 0.0"<<endl<<flush;
 					this->pixinfo[i]<<"0.0 0.0 "; // SKYnGM2008LU
-				
+
 				// SKYnGM2008LU
 				this->pixinfo[i]<<setprecision(7)
 				/* 69 */ <<setw(10)<<this->uzel[i]->getCanStorParam()<<" "
@@ -1225,24 +1225,24 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 **
 **  Writes a file containing dynamic variables for all the nodes
 **  The option is turned on with the '-R' option in the command line
-**  
+**
 *************************************************************************/
 template< class tSubNode >
 void tCOutput<tSubNode>::WriteDynamicVars( double time )
 {
 	tSubNode *cn;
 	tMeshListIter<tSubNode> ni( this->g->getNodeList() );
-	
+
 #ifdef PARALLEL_TRIBS
    int nActiveNodes = this->g->getNodeList()->getGlobalActiveSize();
 #else
    int nActiveNodes = this->g->getNodeList()->getActiveSize();
 #endif
 	int nnodes       = this->g->getNodeList()->getSize();
-	
+
 	int hour, minute;
 	char extension[20];
-	
+
 	hour   = (int)floor(time);
 	minute = (int)floor((time-hour)*60);
 
@@ -1255,25 +1255,25 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 
 	sprintf(extension,".%04d_%02dd", hour, minute);
 	this->CreateAndOpenFile( &arcofs, extension);  //Opens file for writing
-	
+
 	if (simCtrl->Header_label == 'Y') {
 		arcofs<<"ID"<<','<<"Z"<<','<<"S"<<','<<"CAr"<<','<<"Nwt"<<','<<"Mu"<<','
 		<<"Mi"<<','<<"Nf"<<','<<"Nt"<<','<<"Qpout"<<','<<"Qpin"<<','
 		<<"Srf"<<','<<"Rain"<<','
-		
+
 		// SKY2008Snow from AJR2007
 		<<"SWE"<<','//added by AJR 2007 @ NMT
 		<<"ST"<<','<<"IWE"<<','<<"LWE"<<','<<"DU"<<','<<"Upack"<<','//added by AJR 2007 @ NMT
 		<<"sLHF"<<','<<"sSHF"<<','<<"sGHF"<<','<<"sPHF"<<','//added by AJR 2007 @ NMT
 		<<"sRLo"<<','<<"sRLi"<<','<<"sRSi"<<','<<"Uerr"<<','//added by AJR 2007 @ NMT
-		<<"IntSWE"<<','<<"IntSub"<<','<<"IntUnl"<<','//added by AJR 2007 @ NMT	
-		
+		<<"IntSWE"<<','<<"IntSub"<<','<<"IntUnl"<<','//added by AJR 2007 @ NMT
+
 		<<"SoilMoist"<<','<<"RootMoist"<<','<<"CanStorage"<<','
 		<<"ActEvp"<<','<<"EvpSoil"<<','<<"ET"<<','<<"GFlux"<<','
 		<<"HFlux"<<','<<"LFlux"<<','<<"Qstrm"<<','<<"Hlev"<<','
 		//<<"FlwVlc";
 		<<"FlwVlc"<<','
-		
+
 		// SKYnGM2008LU
 		<<"CanStorParam"<<','<<"IntercepCoeff"<<','<<"ThroughFall"<<','<<"CanFieldCap"<<','
 		<<"DrainCoeff"<<','<<"DrainExpPar"<<','<<"LandUseAlb"<<','<<"VegHeight"<<','
@@ -1282,9 +1282,9 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		if ( time == 0 )
 			arcofs<<','<<"SoilID"<<','<<"LUseID"<<endl<<flush;
 		else
-			arcofs<<"\n";    
+			arcofs<<"\n";
 	}
-	
+
 	cn = ni.FirstP();
 	while (ni.IsActive()) {
 
@@ -1354,12 +1354,12 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		if ( time == 0 )
 			arcofs<<','<<setprecision(0)<<cn->getSoilID()<<','
 				<<setprecision(0)<<cn->getLandUse()<<endl;
-		else 
+		else
 			arcofs<<"\n";
 		cn = ni.NextP();
 	}
 	arcofs.close();
-	
+
 	// Call another output function only at the beginning
 	// and end of simulation
 	if ( time == 0.0 || this->timer->IsFinished() )
@@ -1368,7 +1368,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 	// Write binary information that varies with time step for visualizer
 	if (this->vizOption == 1)
 		WriteDynamicVarsBinary(time);
-	
+
 	return;
 }
 
@@ -1457,23 +1457,23 @@ void tCOutput<tSubNode>::WriteDynamicVarsBinary( double time )
 **
 **  Writes files containing various dynamic variables for all the nodes
 **  The option is turned on with the '-R' option in the command line
-**  
+**
 *************************************************************************/
 template< class tSubNode >
 void tCOutput<tSubNode>::WriteDynamicVar( double time )
 {
 	if (this->g->getNodeList()->getActiveSize() < 0) {
-		
+
 		int hour, minute;
 		char extension[20];
-		
+
 		tSubNode *cn;
 		tMeshListIter<tSubNode> ni( this->g->getNodeList() );
-		
+
 		hour   = (int)floor(time);
 		minute = (int)(time-hour)*100;
 		sprintf(extension,"%04d.%02d", hour, minute);
-		
+
 		//for (int i = 0; i < 19; i++) {
 		for (int i = 0; i < 36; i++) {  // SKY2008Snow from AJR2007
 			this->dynvars[i]<<extension<<" ";
@@ -1601,7 +1601,7 @@ void tCOutput<tSubNode>::WriteDynamicVar( double time )
 **
 **  Writes a file containing variables that contain integrated variables
 **  The option is turned on with the '-R' option in the command line
-**  
+**
 *************************************************************************/
 template< class tSubNode >
 void tCOutput<tSubNode>::WriteIntegrVars( double time )
@@ -1612,13 +1612,13 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 	double avRate, tmp1, tmp2;
 	tSubNode *cn;
 	tMeshListIter<tSubNode> ni( this->g->getNodeList() );
-	
+
 	hour   = (int)floor(time);
 	minute = (int)floor((time-hour)*60);
-	
+
 	sprintf(extension,".%04d_%02di", hour, minute);
 	this->CreateAndOpenFile(&intofs, extension);
-	
+
 	if (simCtrl->Header_label == 'Y') {
 		intofs<<"ID"<<','<<"BndCd"<<','<<"Z"<<','<<"VAr"<<','<<"CAr"<<','<<"Curv"
 		<<','<<"EdgL"<<','<<"Slp"
@@ -1654,8 +1654,9 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 
 		<<"\n";
 	}
-	
+
 	cn = ni.FirstP();
+
 	while (ni.IsActive()) {
 		
 		intofs<<cn->getID()<<','<<cn->getBoundaryFlag()<<','
@@ -1672,17 +1673,18 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 		<<setprecision(7)<<cn->getSheltFact()<<','//added by AJR 2007 @ NMT
 		<<cn->getLandFact()<<','//added by AJR 2007 @ NMT
 		<<setprecision(4);
-		
-		tmp1 = floor(cn->getAvSoilMoisture())*1.E-4; 
+        
+
+		tmp1 = floor(cn->getAvSoilMoisture())*1.E-4;
 		tmp2 = (cn->getAvSoilMoisture()-floor(cn->getAvSoilMoisture()))*1.E+1;
 		intofs<<tmp1<<','<<tmp2<<',';
-		
+
 		// -----------
 		Occur = (int)((cn->hsrfOccur-floor(cn->hsrfOccur))*1.E+6);
 		if (Occur > 0) {
 			avRate = floor(cn->hsrfOccur)/1000.0/Occur;
 			prec = 3;
-			if (avRate>100.0) 
+			if (avRate>100.0)
 				prec++;
 		}
 		else {
@@ -1690,13 +1692,13 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			prec = 0;
 		}
 		intofs<<setprecision(6)<<Occur<<setprecision(prec)<<','<<avRate<<',';
-		
+
 		// -----------
 		Occur = (int)((cn->sbsrfOccur-floor(cn->sbsrfOccur))*1.E+6);
 		if (Occur > 0) {
 			avRate = floor(cn->sbsrfOccur)/1000.0/Occur;
 			prec = 3;
-			if (avRate>100.) 
+			if (avRate>100.)
 				prec++;
 		}
 		else {
@@ -1704,13 +1706,13 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			prec = 0;
 		}
 		intofs<<setprecision(6)<<Occur<<setprecision(prec)<<','<<avRate<<',';
-		
+
 		// -----------
 		Occur = (int)((cn->psrfOccur-floor(cn->psrfOccur))*1.E+6);
 		if (Occur > 0) {
 			avRate = floor(cn->psrfOccur)/1000./Occur;
 			prec = 3;
-			if (avRate>100.) 
+			if (avRate>100.)
 				prec++;
 		}
 		else {
@@ -1718,13 +1720,13 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			prec = 0;
 		}
 		intofs<<setprecision(6)<<Occur<<setprecision(prec)<<','<<avRate<<',';
-		
+
 		// -----------
 		Occur = (int)((cn->satsrfOccur-floor(cn->satsrfOccur))*1.E+6);
 		if (Occur > 0) {
 			avRate = floor(cn->satsrfOccur)/1000./Occur;
 			prec = 3;
-			if (avRate>100.) 
+			if (avRate>100.)
 				prec++;
 		}
 		else {
@@ -1744,7 +1746,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			<<setprecision(7)<<cn->getCumMelt()<<','//added by AJR 2007 @ NMT
 			<<setprecision(7)<<cn->getCumSHF()<<','//added by AJR 2007 @ NMT
 			<<setprecision(7)<<cn->getCumPHF()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumRLin()<<','//added by AJR 2007 @ NMT -- corrected from getCumRLout call, SKY2008Snow 
+			<<setprecision(7)<<cn->getCumRLin()<<','//added by AJR 2007 @ NMT -- corrected from getCumRLout call, SKY2008Snow
 			<<setprecision(7)<<cn->getCumRLout()<<','//added by AJR 2007 @ NMT -- corrected from getCumRLin call, SKY2008Snow
 			<<setprecision(7)<<cn->getCumRSin()<<','//added by AJR 2007 @ NMT
 			<<setprecision(7)<<cn->getCumGHF()<<','//added by AJR 2007 @ NMT
@@ -1765,15 +1767,15 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			<<setprecision(7)<<cn->getAvCanFieldCap()<<','
 			<<setprecision(7)<<cn->getAvDrainCoeff()<<','
 			<<setprecision(7)<<cn->getAvDrainExpPar()<<','
-			<<setprecision(7)<<cn->getAvLandUseAlb()<<',' 
-			<<setprecision(7)<<cn->getAvVegHeight()<<',' 
-			<<setprecision(7)<<cn->getAvOptTransmCoeff()<<',' 
-			<<setprecision(7)<<cn->getAvStomRes()<<',' 
+			<<setprecision(7)<<cn->getAvLandUseAlb()<<','
+			<<setprecision(7)<<cn->getAvVegHeight()<<','
+			<<setprecision(7)<<cn->getAvOptTransmCoeff()<<','
+			<<setprecision(7)<<cn->getAvStomRes()<<','
 			<<setprecision(7)<<cn->getAvVegFraction()<<','
-			<<setprecision(7)<<cn->getAvLeafAI();			
+			<<setprecision(7)<<cn->getAvLeafAI();
 
 		intofs<<setprecision(6)<<"\n";
-		
+
 		cn = ni.NextP();
 	}
 	intofs.close();
@@ -1785,8 +1787,8 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 **  WriteOutletInfo( double time )
 **
 **  Writes a file containing simulated streamflow and stage values
-**  The output format should be readable by ArcInfo & Matlab 
-**  
+**  The output format should be readable by ArcInfo & Matlab
+**
 *************************************************************************/
 template< class tSubNode >
 void tCOutput<tSubNode>::WriteOutletInfo( double time )
@@ -1794,11 +1796,11 @@ void tCOutput<tSubNode>::WriteOutletInfo( double time )
 	if (numOutlets > 0) {
 		int hour, minute;
 		char extension[20];
-		
-		hour   = (int)floor(time); 
+
+		hour   = (int)floor(time);
 		minute = (int)((time-hour)*100);
 		sprintf(extension,"%04d.%02d", hour, minute);
-		
+
 		for (int i = 0; i < numOutlets; i++) {
 #ifdef PARALLEL_TRIBS
       // Node ID does not have to be less than the active size
@@ -1835,14 +1837,14 @@ void tCOutput<tSubNode>::ReadOutletNodeList(char *nodeFileO)
 		numOutlets = 0;
 		return;
 	}
-	
+
 	readOUL>>numOutlets;
 	OutletList  = new int[numOutlets];
 	Outlets     = new tSubNode*[numOutlets];
 	outletinfo  = new ofstream[numOutlets];
 	for (int i = 0; i < numOutlets; i++)
-		readOUL>>OutletList[i]; 
-	
+		readOUL>>OutletList[i];
+
 #ifdef PARALLEL_TRIBS
   // Initialize Outlets to NULL, used to determine local Outlets
   for (int i = 0; i < numOutlets; i++)
@@ -1858,7 +1860,7 @@ void tCOutput<tSubNode>::ReadOutletNodeList(char *nodeFileO)
 **  tOutput::CreateAndOpenOutlet()
 **
 **  Write the header for the *.iout output file.
-** 
+**
 *************************************************************************/
 template< class tSubNode >
 void tCOutput<tSubNode>::CreateAndOpenOutlet()
@@ -1869,7 +1871,7 @@ void tCOutput<tSubNode>::CreateAndOpenOutlet()
 			char pixelext[10] = ".qout";
 			char nodeNum[10], pixelnode[100];
 			char fullName[kMaxNameSize+6];
-		
+
 			for (int i = 0; i < numOutlets; i++) {
 #ifdef PARALLEL_TRIBS
        // Check if outlet node is on this processor
@@ -1880,19 +1882,19 @@ void tCOutput<tSubNode>::CreateAndOpenOutlet()
 					sprintf(nodeNum,"_%d", OutletList[i]);
 					strcpy(pixelnode, nodeNum);
 					strcat(pixelnode, pixelext);
-				
+
 					strcpy( fullName, outletName );
 					strcat( fullName, pixelnode );
-				
+
 					outletinfo[i].open( fullName );
-				
+
 					if ( !outletinfo[i].good() )
 						cerr<<"File "<<fullName<<"can not be created.";
 					else
 /*SMM
 						Cout<<"Creating Output File: \t '"<<fullName<<"' "<<endl;
 */
-					
+
 					if (simCtrl->Header_label == 'Y') {
 						outletinfo[i]<<"1-Time,hr\t "
 						<<"2-Qstrm,m3/s\t"
@@ -1910,8 +1912,8 @@ void tCOutput<tSubNode>::CreateAndOpenOutlet()
 **
 **  tOutput::SetInteriorOutlet()
 **
-**  Initializes pointers to basin interior outlets 
-** 
+**  Initializes pointers to basin interior outlets
+**
 *************************************************************************/
 template< class tSubNode >
 void tCOutput<tSubNode>::SetInteriorOutlet()
@@ -1928,7 +1930,7 @@ void tCOutput<tSubNode>::SetInteriorOutlet()
 				for (cnn=niter.FirstP(); !(niter.AtEnd()); cnn=niter.NextP() ) {
 #endif
 					if (cnn->getID() == OutletList[i]) {
-						Outlets[i] = cnn;   //Defining node of interest 
+						Outlets[i] = cnn;   //Defining node of interest
 						Cout<<"\nOutlet of Interest ID: \t"<<OutletList[i]
 							<<" has been set up..."<<endl<<flush;
 					}
@@ -1954,7 +1956,7 @@ void tCOutput<tSubNode>::SetInteriorOutlet()
 **
 **  Used to update data members of tOutput when a new simulation run
 **  is to be carried out (option -ON of the command line)
-** 
+**
 **  Input: infile -- reference to an open input file, assumed valid
 **
 *************************************************************************/
@@ -1963,19 +1965,19 @@ void tCOutput<tSubNode>::UpdateForNewRun( tInputFile &infile )
 {
 	int j;
 	char nodeFileO[kMaxNameSize];
-	
-	infile.ReadItem( this->baseName, "OUTFILENAME" ); 
+
+	infile.ReadItem( this->baseName, "OUTFILENAME" );
 	infile.ReadItem( outletName, "OUTHYDROFILENAME" );
-	infile.ReadItem( this->nodeFile, "NODEOUTPUTLIST" );  
+	infile.ReadItem( this->nodeFile, "NODEOUTPUTLIST" );
 	infile.ReadItem( nodeFileO, "OUTLETNODELIST" );
-	
+
 	cout<<"\ntOutput basename: \t"<<this->baseName<<endl<<endl;
-	
+
 	this->nodeofs.close();
 	this->edgofs.close();
 	this->triofs.close();
 	this->zofs.close();
-	
+
 	if (this->numNodes > 0) {
 		for (j=0; j < this->numNodes; j++)
 			this->pixinfo[j].close();
@@ -1984,7 +1986,7 @@ void tCOutput<tSubNode>::UpdateForNewRun( tInputFile &infile )
 		delete [] this->pixinfo;
 	}
 	this->numNodes = 0;
-	
+
 	if (numOutlets > 0) {
 		for (j=0; j < numOutlets; j++)
 			outletinfo[j].close();
@@ -1993,17 +1995,17 @@ void tCOutput<tSubNode>::UpdateForNewRun( tInputFile &infile )
 		delete [] outletinfo;
 	}
 	numOutlets = 0;
-	
+
 	// Open pixel files
-	this->ReadNodeOutputList(); 
+	this->ReadNodeOutputList();
 	this->CreateAndOpenPixel();
 	this->SetInteriorNode();
-	
+
 	// Open outlet files
 	ReadOutletNodeList(nodeFileO);
 	CreateAndOpenOutlet();
 	SetInteriorOutlet();
-	
+
 	return;
 }
 
