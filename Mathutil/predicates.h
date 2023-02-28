@@ -39,6 +39,10 @@
   #include <cstdio> 
   #include <cmath> 
   #include <ctime> 
+#elif defined MAC
+  #include <cstdio> 
+  #include <cmath> 
+  #include <ctime> 
 #elif defined WIN
   #include <stdio.h> 
   #include <math.h> 

@@ -31,6 +31,13 @@
   #include <iomanip>
   #include <cassert>
   #include <cstdio>
+#elif defined MAC
+  #include <cmath>
+  #include <iostream>
+  #include <cstdlib>
+  #include <iomanip>
+  #include <cassert>
+  #include <cstdio>
 #elif defined WIN
   #include <math.h>
   #include<iostream.h>

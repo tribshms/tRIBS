@@ -411,6 +411,8 @@ void tHydroMetConvert::writeSDF(int Option)
     system(command);
 #elif defined LINUX_32
     unlink(sdfFile);
+#elif defined MAC
+    unlink(sdfFile);
 #elif defined WIN
 #else 
     sprintf(command, "rm %s", sdfFile);
@@ -489,6 +491,8 @@ void tHydroMetConvert::writeGaugeSDF(int Option)
     sprintf(command, "rm %s", sdfFile);
     system(command);
 #elif defined LINUX_32
+    unlink(sdfFile);
+#elif defined MAC
     unlink(sdfFile);
 #elif defined WIN
 #else 

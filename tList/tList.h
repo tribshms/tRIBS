@@ -38,6 +38,9 @@
 #elif defined LINUX_32
   #include <iostream>
   #include <cassert>
+#elif defined MAC
+  #include <iostream>
+  #include <cassert>
 #elif defined WIN
   #include <iostream.h>
   #include <assert.h>
@@ -295,7 +298,7 @@ public:
   tListNode< NodeType > * getListNode( NodeType * ); // rtns ptr to node #
   tListNode< NodeType > * getCurrentItem();          //rtns ptr to currentitem
     
-protected:
+ protected:
   int nNodes;                          	// # of items on list
   tListNode< NodeType > * first;       	// ptr to first node
   tListNode< NodeType > * last;        	// ptr to last node

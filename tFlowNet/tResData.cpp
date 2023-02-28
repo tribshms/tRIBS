@@ -14,10 +14,6 @@
 #include "tFlowNet/tResData.h"
 #include "Headers/globalIO.h"
 
-#ifdef PARALLEL_TRIBS
-#include "tParallel/tParallel.h"
-#endif
-
 //=========================================================================
 //
 //
@@ -42,6 +38,7 @@ tResData::tResData()
 	int ResIDtype = 0;
 	double ResInElev = 0;
 	int rStep = 0;
+
 	rSTQnext = new double[1000]; //1000 is just in the initialization (See: 'setResArraySize()')
 
 }

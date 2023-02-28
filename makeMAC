@@ -7,10 +7,10 @@
 ##  		    Massachusetts Institute of Technology
 ##  
 ##
-##  Makefile for tRIBS on a multi-core, multi-processor MacOs workstation with mpich
+##  Makefile for tRIBS on a MAC workstation (MacOS High Sierra)
 ##  Includes option for compiling with debugging information
 ##  
-##  - Run 'make -f makeMAC_PAR'
+##  - Run 'make -f makeMAC all'
 ##  - Use -ptv option in CMP_OPTS for debugging purposes
 ##  - Use -g3 for full debugging information
 ##  - Use -O2 -g for better computational performance
@@ -38,8 +38,12 @@ STORM    =  $(VP)/tStorm
 NODE     =  $(VP)/tCNode
 GRAPH    =  $(VP)/tGraph
 
-CC       = g++ 
-CMP_OPTS =  -c -g -I$(VP) -fno-inline
+## Tested in MacOS HighSierra and Catalina with GCC-9
+## You can install g++ using brew: https://brew.sh/
+## brew install gcc
+##CC	   = /usr/local/Cellar/gcc/9.3.0/bin/g++-9
+CC = /usr/local/bin/g++-9
+CMP_OPTS =  -c -I$(VP) -g3 -ansi -Wpedantic -Wno-vla
 
 LDFLAGS =  -lm
 
@@ -236,7 +240,7 @@ clean:
 	rm -f $(OBJECTS) $(PROGRAM) 
 
 all:
-	cp $(HEADER)/tribs_os_LINUX32.h $(HEADER)/tribs_os.h
-	make -f makeLINUX clean
-	make -f makeLINUX
+	cp $(HEADER)/tribs_os_MAC.h $(HEADER)/tribs_os.h
+	make -f makeMAC clean
+	make -f makeMAC
 	

@@ -260,19 +260,6 @@ tCNode::tCNode(tInputFile &infile) :tNode() {
 	horizonAngle3375 = 0.0; 
 	sfact = 0.0;
 	lfact = 0.0;
-    
-    // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
-    Ks = 0.0;
-    ThetaS = 0.0;
-    ThetaR = 0.0;
-    PoreSize = 0.0;
-    AirEBubPres = 0.0;
-    DecayF = 0.0;
-    SatAnRatio = 0.0;
-    UnsatAnRatio = 0.0;
-    Porosity = 0.0;
-    VolHeatCond = 0.0;
-    SoilHeatCap = 0.0;
 
 }
 
@@ -543,22 +530,7 @@ double tCNode::getHorAngle3375() {return horizonAngle3375;}//initialized state
 double tCNode::getSheltFact() {return sfact;}//derived
 double tCNode::getLandFact() {return lfact;}//derived
 
-// Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
-double tCNode::getKs() {return Ks;}
-double tCNode::getThetaS() {return ThetaS;}
-double tCNode::getThetaR() {return ThetaR;}
-double tCNode::getPoreSize() {return PoreSize;}
-double tCNode::getAirEBubPres() {return AirEBubPres;}
-double tCNode::getDecayF() {return DecayF;}
-double tCNode::getSatAnRatio() {return SatAnRatio;}
-double tCNode::getUnsatAnRatio() {return UnsatAnRatio;}
-double tCNode::getPorosity() {return Porosity;}
-double tCNode::getVolHeatCond() {return VolHeatCond;}
-double tCNode::getSoilHeatCap() {return SoilHeatCap;}
-
-
-
-// Set Functions
+// Set Functions 
 
 void tCNode::setMuOld(double value)  { MuOld = value; }
 void tCNode::setMuNew(double value)  { MuNew = value; }
@@ -792,20 +764,6 @@ void tCNode::setAvOptTransmCoeff(double value) { AvOptTransmCoeff = value; }
 void tCNode::setAvStomRes(double value) { AvStomRes = value; }
 void tCNode::setAvVegFraction(double value) { AvVegFraction = value; }
 void tCNode::setAvLeafAI(double value) { AvLeafAI = value; }
-
-// Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
-void tCNode::setKs(double value) { Ks = value;}
-void tCNode::setThetaS(double value) { ThetaS = value;}
-void tCNode::setThetaR(double value) { ThetaR = value;}
-void tCNode::setPoreSize(double value) { PoreSize = value;}
-void tCNode::setAirEBubPres(double value) { AirEBubPres = value;}
-void tCNode::setDecayF(double value) { DecayF = value;}
-void tCNode::setSatAnRatio(double value) { SatAnRatio = value;}
-void tCNode::setUnsatAnRatio(double value) { UnsatAnRatio = value;}
-void tCNode::setPorosity(double value) { Porosity = value;}
-void tCNode::setVolHeatCond(double value) { VolHeatCond = value;}
-void tCNode::setSoilHeatCap(double value) { SoilHeatCap = value;}
-
 
 // Add Functions
 
@@ -1326,19 +1284,7 @@ void tCNode::writeRestart(fstream& rStr) const
   BinaryWrite(rStr, cumIntSub);
   BinaryWrite(rStr, cumIntUnl);
   BinaryWrite(rStr, cumHrsSnow);
-    
-  BinaryWrite(rStr, Ks); // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
-  BinaryWrite(rStr, ThetaS);
-  BinaryWrite(rStr, ThetaR);
-  BinaryWrite(rStr, PoreSize);
-  BinaryWrite(rStr, AirEBubPres);
-  BinaryWrite(rStr, DecayF);
-  BinaryWrite(rStr, SatAnRatio);
-  BinaryWrite(rStr, UnsatAnRatio);
-  BinaryWrite(rStr, Porosity);
-  BinaryWrite(rStr, VolHeatCond);
-  BinaryWrite(rStr, SoilHeatCap);
-  
+
   int size;
   if (TimeInd != 0) {
     size = TimeInd->getSize();
@@ -1584,19 +1530,6 @@ void tCNode::readRestart(fstream& rStr)
   BinaryRead(rStr, cumIntSub);
   BinaryRead(rStr, cumIntUnl);
   BinaryRead(rStr, cumHrsSnow);
-    
-  BinaryRead(rStr, Ks); // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
-  BinaryRead(rStr, ThetaS);
-  BinaryRead(rStr, ThetaR);
-  BinaryRead(rStr, PoreSize);
-  BinaryRead(rStr, AirEBubPres);
-  BinaryRead(rStr, DecayF);
-  BinaryRead(rStr, SatAnRatio);
-  BinaryRead(rStr, UnsatAnRatio);
-  BinaryRead(rStr, Porosity);
-  BinaryRead(rStr, VolHeatCond);
-  BinaryRead(rStr, SoilHeatCap);
-    
 
   int size;
   int timeInd;
@@ -1816,18 +1749,6 @@ void tCNode::printVariables()
   cout << " cumIntSub " << cumIntSub;
   cout << " cumIntUnl " << cumIntUnl;
   cout << " cumHrsSnow " << cumHrsSnow;
-    
-  cout << " Ks " << Ks; // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
-  cout << " ThetaS " << ThetaS;
-  cout << " ThetaR " << ThetaR;
-  cout << " PoreSize " << PoreSize;
-  cout << " AirEBubPres " << AirEBubPres;
-  cout << " DecayF " << DecayF;
-  cout << " SatAnRatio " << SatAnRatio;
-  cout << " UnsatAnRatio " << UnsatAnRatio;
-  cout << " Porosity " << Porosity;
-  cout << " VolHeatCond " << VolHeatCond;
-  cout << " SoilHeatCap " << SoilHeatCap;
 }
 
 

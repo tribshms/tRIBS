@@ -7,10 +7,10 @@
 ##  		    Massachusetts Institute of Technology
 ##  
 ##
-##  Makefile for tRIBS on a multi-core, multi-processor MacOs workstation with mpich
+##  Makefile for tRIBS on a LINUX workstation (Ubuntu)
 ##  Includes option for compiling with debugging information
 ##  
-##  - Run 'make -f makeMAC_PAR'
+##  - Run 'make -f makeLINUX all'
 ##  - Use -ptv option in CMP_OPTS for debugging purposes
 ##  - Use -g3 for full debugging information
 ##  - Use -O2 -g for better computational performance
@@ -38,8 +38,11 @@ STORM    =  $(VP)/tStorm
 NODE     =  $(VP)/tCNode
 GRAPH    =  $(VP)/tGraph
 
-CC       = g++-4.6
-CMP_OPTS =  -c -g -I$(VP) -fno-inline
+#CC       = g++-mp-5
+#CC       = g++ -Wpedantic -std=gnu++98 -fno-strict-aliasing -mstackrealign -Wno-vla
+CC       = g++ 
+#CMP_OPTS =  -c -g3 -I$(VP) -fno-inline -fpermissive -Wpedantic -std=gnu++98 -Wno-vla
+CMP_OPTS =  -c -I$(VP) -g3 -ansi -Wpedantic -Wno-vla
 
 LDFLAGS =  -lm
 

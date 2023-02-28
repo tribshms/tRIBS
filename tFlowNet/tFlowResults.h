@@ -44,6 +44,12 @@
   #include <cstring>
   #include <iostream>
   #include <cstdio>
+#elif defined MAC
+  #include <cmath>
+  #include <cstdlib>
+  #include <cstring>
+  #include <iostream>
+  #include <cstdio>
 #elif defined WIN
   #include <math.h>
   #include <stdlib.h>

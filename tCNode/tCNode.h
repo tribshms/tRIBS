@@ -43,6 +43,11 @@
   #include <fstream>
   #include <cassert>
   #include <cmath>
+#elif defined MAC
+  #include <iostream>
+  #include <fstream>
+  #include <cassert>
+  #include <cmath>
 #elif defined WIN
   #include <iostream.h>
   #include <fstream.h>
@@ -305,19 +310,6 @@ public:
   int getLandUse();
   int NoMoreTracers();
   int getReach();
-  // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
-  double getKs();
-  double getThetaS();
-  double getThetaR();
-  double getPoreSize();
-  double getAirEBubPres();
-  double getDecayF();
-  double getSatAnRatio();
-  double getUnsatAnRatio();
-  double getPorosity();
-  double getVolHeatCond();
-  double getSoilHeatCap();
-    
   
   double getCentroidX();				// Geometric Methods
   double getCentroidY();
@@ -356,22 +348,6 @@ public:
   void setSoilID(int);                 //Invariant Members
   void setLandUse(int);               
   void setReach(int);
-  
-  // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
-  void setKs(double);
-  void setThetaS(double);
-  void setThetaR(double);
-  void setPoreSize(double);
-  void setAirEBubPres(double);
-  void setDecayF(double);
-  void setSatAnRatio(double);
-  void setUnsatAnRatio(double);
-  void setPorosity(double);
-  void setVolHeatCond(double);
-  void setSoilHeatCap(double);
-
-    
-    
   void setTTime(double);               //Routing Members
   void setHillPath(double);   
   void setStreamPath(double); 
@@ -550,8 +526,6 @@ public:
   void setRecharge(double);  
   void setUnSatFlowOut(double);
   void setUnSatFlowIn(double);
-    
-  
 
   void addGwaterChng(double);
   void addQpin(double);
@@ -793,21 +767,6 @@ protected:
   double Width;
   double Roughness;
   double FlowVelocity;
-    
-  // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
-  double Ks;
-  double ThetaS;
-  double ThetaR;
-  double PoreSize;
-  double AirEBubPres;
-  double DecayF;
-  double SatAnRatio;
-  double UnsatAnRatio;
-  double Porosity;
-  double VolHeatCond;
-  double SoilHeatCap;
-
-
 
   // double CanopyStorage;         //tWaterBalance Members
   // SKYnGM2008LU: CanopyStorage now replaced by CanopyStorVol below

@@ -282,15 +282,15 @@ void Simulator::end_simulation(tKinemat *Flow)
 	Flow->getResultsPtr()->
 		whenTimeIsOver( timer->getCurrentTime() );
 	
-	double tend  = timer->getEndTime();	
+	double tend  = timer->getEndTime();
 	double spout = timer->getSpatialOutputInterval();
-
+	
 	if (simCtrl->inter_results == 'N' || 
 		(simCtrl->inter_results == 'Y' && spout > tend) ||
 		(simCtrl->inter_results == 'Y' && (tend/spout-floor(tend/spout)) > 0))
 		
 		outp->WriteDynamicVars( timer->getCurrentTime() );
-
+	
 	outp->end_simulation();
 	
 	Cout<<"\nSimulation completed...\n"<<endl;

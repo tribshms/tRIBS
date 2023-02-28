@@ -35,6 +35,9 @@
 #elif defined LINUX_32
   #include <iostream>
   #include <cmath>
+#elif defined MAC
+  #include <iostream>
+  #include <cmath>
 #elif defined WIN
   #include <iostream.h>
   #include <math.h>

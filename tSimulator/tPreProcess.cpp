@@ -103,7 +103,6 @@ void tPreProcess::CheckInputFile(tInputFile &infile)
 	int optmesh, optrain, optrock, optconv, optmet;
 
 	int optres;// JECR 2015
-	int optsoil;// JorgeGiuseppe 2015
 
 	// SKY2008Snow from AJR2007
 	int optradshelt; //, optwindshelt;
@@ -163,8 +162,7 @@ void tPreProcess::CheckInputFile(tInputFile &infile)
   	optpar=optgraph=optrest=0;
 
 	optres=0; // JECR 2015
-	optsoil=0; // JorgeGiuseppe 2015
-
+	
 	optmesh  = IterReadItem(infile, optmesh, "OPTMESHINPUT");
 	optrain  = IterReadItem(infile, optrain, "RAINSOURCE");
 	optmet   = IterReadItem(infile, optmet,  "METDATAOPTION");
@@ -185,7 +183,6 @@ void tPreProcess::CheckInputFile(tInputFile &infile)
 	//optgw    = IterReadItem(infile, optgw,   "OPTGWFILE");
 	
 	optres = IterReadItem(infile, tempVariable,"OPTRESERVOIR"); // JECR 2015
-	optsoil = IterReadItem(infile, tempVariable,"OPTSOILTYPE"); // JorgeGiuseppe 2015	
 
 	if (optmesh == 1) {
 		IterReadItem(infile, tempString,  "INPUTDATAFILE");
@@ -207,12 +204,6 @@ void tPreProcess::CheckInputFile(tInputFile &infile)
 		IterReadItem   (infile, tempString,"RESDATA");    //Reservoir parameters
 		CheckFileExists(infile, tempString,"RESDATA");
 	}
-
-	if (optsoil == 1) {	 //JorgeGiuseppe2015
-		IterReadItem   (infile, tempString,"SCGRID");    //File with soil grid paths
-		CheckFileExists(infile, tempString,"SCGRID");	
-	}
-
 	/******************** End of modifications by JECR 2015 *********************/
 
 	IterReadItem   (infile, tempString,"SOILTABLENAME");    //Watershed grids
@@ -443,6 +434,8 @@ void tPreProcess::CheckPathNameCorrect(tInputFile &infile, char* filename,
 #ifdef ALPHA_64
 			remove(bname);
 #elif defined LINUX_32
+			unlink(bname);
+#elif defined MAC
 			unlink(bname);
 #elif defined WIN
 			remove(bname);

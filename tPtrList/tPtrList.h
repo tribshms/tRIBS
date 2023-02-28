@@ -35,6 +35,8 @@
   #include <assert.h>
 #elif defined LINUX_32
   #include <cassert>
+#elif defined MAC
+  #include <cassert>
 #elif defined WIN
   #include <assert.h>
 #else 
@@ -1026,7 +1028,7 @@ Prev(){
    for( tempnode = ptrlistPtr->first;
         tempnode->next->Ptr->getID() != curptrnode->Ptr->getID();
         tempnode = tempnode->next );
-     curptrnode = tempnode;
+   curptrnode = tempnode;  // Clizarraga 04/06/2020. Fixed an indentation in this line
    assert( curptrnode != 0 );
    counter--;
    return 1;

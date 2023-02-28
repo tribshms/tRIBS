@@ -41,6 +41,18 @@
 #include <cassert>
 #include <memory>
 
+#elif defined MAC
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <string>
+#include <cassert>
+#include <memory>
+
+
 #elif defined WIN
 #include <stdlib.h>
 #include <stdio.h>

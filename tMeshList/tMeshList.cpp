@@ -171,7 +171,7 @@ template< class NodeType >
 void tMeshList< NodeType >::
 insertAtBoundFront( const NodeType &value )
 {
-	tListNode< NodeType > * newPtr = getNewNode( value );
+        tListNode< NodeType > * newPtr = this->getNewNode( value );  // Clizarraga 04/06/2020 changed to "this->getNewNode"
 	assert( newPtr>0 );
 	assert( this != 0 );
 	
@@ -212,7 +212,7 @@ template< class NodeType >
 void tMeshList< NodeType >::
 insertAtActiveBack( const NodeType &value )
 {
-	tListNode< NodeType > * newPtr = getNewNode( value );
+	tListNode< NodeType > * newPtr = this->getNewNode( value ); // Clizarraga 04/06/2020 changed to "this->getNewNode"
 	assert( this != 0 );
 	if( this->isEmpty() )
 		this->first = this->last = lastactive = newPtr;
@@ -351,8 +351,8 @@ moveToBack( tListNode< NodeType > * mvnode )
 template< class NodeType >                        
 void tMeshList< NodeType >::
 moveToBack( NodeType * mvnodedata ) {
-	assert( getListNode( mvnodedata )!=0 );  
-	moveToBack( getListNode( mvnodedata ) );
+	assert( this->getListNode( mvnodedata )!=0 );  
+	moveToBack( this->getListNode( mvnodedata ) );
 }
 
 /**************************************************************************
