@@ -1,0 +1,14 @@
+This is the tRIBS model version 3.1 Revision 1, April 2020
+
+
+This version compiles with latest g++ in:
+*  Linux (make -f makeLINUX all) and  
+*  MAC (make -f makeMAC all)
+*  AGAVE (make -f makeAGAVE_PAR all)
+
+(Other Parallel versions have not been tested yet)
+
+Some minor bugs were fixed to compile in newer versions of g++
+
+---------------------------------------------------------------------------------
+Updated: Carlos Lizarraga 04/22/2020 

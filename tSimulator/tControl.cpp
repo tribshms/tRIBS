@@ -38,7 +38,8 @@ SimulationControl::SimulationControl(int argc, char **argv)
 	Cout<<"-----------------------------------------------------------------"
 		<<"-------"<<endl;
 	
-	char VERSION[50] = "3.0 Revision 33, June 2008";
+	//	char VERSION[50] = "3.0 Revision 33, June 2008";
+	char VERSION[50] = "3.1 Revision 1, April 2020"; // Updates for new compilers CLizarraga 04/22/2020
 	
 	Cout <<"\n\ntRIBS Version "<< VERSION <<endl<<endl;
 	

@@ -434,7 +434,7 @@ void tPreProcess::CheckPathNameCorrect(tInputFile &infile, char* filename,
 #ifdef ALPHA_64
 			remove(bname);
 #elif defined LINUX_32
-			unlink(bname);
+			remove(bname); // Replaced unlink with remove. Clizarraga 04/22/2020
 #elif defined MAC
 			unlink(bname);
 #elif defined WIN
