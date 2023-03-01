@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Merged_tRIBS",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Merged_tRIBS::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Merged_tRIBS-Debug-be3e64f1fec38e7ccf12.json",
+					"name" : "Merged_tRIBS",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/wr/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS/cmake-build-debug",
+		"source" : "/Users/wr/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}
