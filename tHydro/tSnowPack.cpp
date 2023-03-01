@@ -647,96 +647,96 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	  {
 	    cNode->setLandUseAlb( cNode->getLandUseAlbInPrevGrid()+
 		     (cNode->getLandUseAlbInUntilGrid() - cNode->getLandUseAlbInPrevGrid())*
-		      (timer->getCurrentTime() - double(ALgridhours[NowTillWhichALgrid-1])/
-		      (double(ALgridhours[NowTillWhichALgrid])-double(ALgridhours[NowTillWhichALgrid-1])) ) );	
+		     (timer->getCurrentTime() - double(ALgridhours[NowTillWhichALgrid-1]))/
+		     (double(ALgridhours[NowTillWhichALgrid])-double(ALgridhours[NowTillWhichALgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"TF")==0) && (NowTillWhichTFgrid > 1) &&
 		    ( NowTillWhichTFgrid < (numTFfiles+1) ) ) 
 	  {
 	    cNode->setThroughFall( cNode->getThroughFallInPrevGrid()+
 		      (cNode->getThroughFallInUntilGrid() - cNode->getThroughFallInPrevGrid())*
-		      (timer->getCurrentTime() - double(TFgridhours[NowTillWhichTFgrid-1])/
-		      (double(TFgridhours[NowTillWhichTFgrid])-double(TFgridhours[NowTillWhichTFgrid-1])) ) );
+		      (timer->getCurrentTime() - double(TFgridhours[NowTillWhichTFgrid-1]))/
+		      (double(TFgridhours[NowTillWhichTFgrid])-double(TFgridhours[NowTillWhichTFgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"VH")==0) && (NowTillWhichVHgrid > 1) &&
 		    ( NowTillWhichVHgrid < (numVHfiles+1) ) ) 
 	  {
 	    cNode->setVegHeight( cNode->getVegHeightInPrevGrid()+
 		      (cNode->getVegHeightInUntilGrid() - cNode->getVegHeightInPrevGrid())*
-		      (timer->getCurrentTime() - double(VHgridhours[NowTillWhichVHgrid-1])/
-		      (double(VHgridhours[NowTillWhichVHgrid])-double(VHgridhours[NowTillWhichVHgrid-1])) ) );
+		      (timer->getCurrentTime() - double(VHgridhours[NowTillWhichVHgrid-1]))/
+		      (double(VHgridhours[NowTillWhichVHgrid])-double(VHgridhours[NowTillWhichVHgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"SR")==0) && (NowTillWhichSRgrid > 1) &&
 		    ( NowTillWhichSRgrid < (numSRfiles+1) ) ) 
 	  {
 	    cNode->setStomRes( cNode->getStomResInPrevGrid()+
 		      (cNode->getStomResInUntilGrid() - cNode->getStomResInPrevGrid())*
-		      (timer->getCurrentTime() - double(SRgridhours[NowTillWhichSRgrid-1])/
-		      (double(SRgridhours[NowTillWhichSRgrid])-double(SRgridhours[NowTillWhichSRgrid-1])) ) );
+		      (timer->getCurrentTime() - double(SRgridhours[NowTillWhichSRgrid-1]))/
+		      (double(SRgridhours[NowTillWhichSRgrid])-double(SRgridhours[NowTillWhichSRgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"VF")==0) && (NowTillWhichVFgrid > 1) &&
 		    ( NowTillWhichVFgrid < (numVFfiles+1) ) ) 
 	  {
 	    cNode->setVegFraction( cNode->getVegFractionInPrevGrid()+
 		      (cNode->getVegFractionInUntilGrid() - cNode->getVegFractionInPrevGrid())*
-		      (timer->getCurrentTime() - double(VFgridhours[NowTillWhichVFgrid-1])/
-		      (double(VFgridhours[NowTillWhichVFgrid])-double(VFgridhours[NowTillWhichVFgrid-1])) ) );
+		      (timer->getCurrentTime() - double(VFgridhours[NowTillWhichVFgrid-1]))/
+		      (double(VFgridhours[NowTillWhichVFgrid])-double(VFgridhours[NowTillWhichVFgrid-1])) ) ; // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"CS")==0) && (NowTillWhichCSgrid > 1) &&
 		    ( NowTillWhichCSgrid < (numCSfiles+1) ) ) 
 	  {
 	    cNode->setCanStorParam( cNode->getCanStorParamInPrevGrid()+
 		      (cNode->getCanStorParamInUntilGrid() - cNode->getCanStorParamInPrevGrid())*
-		      (timer->getCurrentTime() - double(CSgridhours[NowTillWhichCSgrid-1])/
-		      (double(CSgridhours[NowTillWhichCSgrid])-double(CSgridhours[NowTillWhichCSgrid-1])) ) );
+		      (timer->getCurrentTime() - double(CSgridhours[NowTillWhichCSgrid-1]))/
+		      (double(CSgridhours[NowTillWhichCSgrid])-double(CSgridhours[NowTillWhichCSgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"IC")==0) && (NowTillWhichICgrid > 1) &&
 		    ( NowTillWhichICgrid < (numICfiles+1) ) ) 
 	  {
 	    cNode->setIntercepCoeff( cNode->getIntercepCoeffInPrevGrid()+
 		      (cNode->getIntercepCoeffInUntilGrid() - cNode->getIntercepCoeffInPrevGrid())*
-		      (timer->getCurrentTime() - double(ICgridhours[NowTillWhichICgrid-1])/
-		      (double(ICgridhours[NowTillWhichICgrid])-double(ICgridhours[NowTillWhichICgrid-1])) ) );
+		      (timer->getCurrentTime() - double(ICgridhours[NowTillWhichICgrid-1]))/
+		      (double(ICgridhours[NowTillWhichICgrid])-double(ICgridhours[NowTillWhichICgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"CC")==0) && (NowTillWhichCCgrid > 1) &&
 		    ( NowTillWhichCCgrid < (numCCfiles+1) ) ) 
 	  {
 	    cNode->setCanFieldCap( cNode->getCanFieldCapInPrevGrid()+
 		      (cNode->getCanFieldCapInUntilGrid() - cNode->getCanFieldCapInPrevGrid())*
-		      (timer->getCurrentTime() - double(CCgridhours[NowTillWhichCCgrid-1])/
-		      (double(CCgridhours[NowTillWhichCCgrid])-double(CCgridhours[NowTillWhichCCgrid-1])) ) );
+		      (timer->getCurrentTime() - double(CCgridhours[NowTillWhichCCgrid-1]))/
+		      (double(CCgridhours[NowTillWhichCCgrid])-double(CCgridhours[NowTillWhichCCgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"DC")==0) && (NowTillWhichDCgrid > 1) &&
 		    ( NowTillWhichDCgrid < (numDCfiles+1) ) ) 
 	  {
 	    cNode->setDrainCoeff( cNode->getDrainCoeffInPrevGrid()+
 		      (cNode->getDrainCoeffInUntilGrid() - cNode->getDrainCoeffInPrevGrid())*
-		      (timer->getCurrentTime() - double(DCgridhours[NowTillWhichDCgrid-1])/
-		      (double(DCgridhours[NowTillWhichDCgrid])-double(DCgridhours[NowTillWhichDCgrid-1])) ) );
+		      (timer->getCurrentTime() - double(DCgridhours[NowTillWhichDCgrid-1]))/
+		      (double(DCgridhours[NowTillWhichDCgrid])-double(DCgridhours[NowTillWhichDCgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"DE")==0) && (NowTillWhichDEgrid > 1) &&
 		    ( NowTillWhichDEgrid < (numDEfiles+1) ) ) 
 	  {
 	    cNode->setDrainExpPar( cNode->getDrainExpParInPrevGrid()+
 		      (cNode->getDrainExpParInUntilGrid() - cNode->getDrainExpParInPrevGrid())*
-		      (timer->getCurrentTime() - double(DEgridhours[NowTillWhichDEgrid-1])/
-		      (double(DEgridhours[NowTillWhichDEgrid])-double(DEgridhours[NowTillWhichDEgrid-1])) ) );
+		      (timer->getCurrentTime() - double(DEgridhours[NowTillWhichDEgrid-1]))/
+		      (double(DEgridhours[NowTillWhichDEgrid])-double(DEgridhours[NowTillWhichDEgrid-1])) ) ; // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"OT")==0) && (NowTillWhichOTgrid > 1) &&
 		    ( NowTillWhichOTgrid < (numOTfiles+1) ) ) 
 	  {
 	    cNode->setOptTransmCoeff( cNode->getOptTransmCoeffInPrevGrid()+
 		      (cNode->getOptTransmCoeffInUntilGrid() - cNode->getOptTransmCoeffInPrevGrid())*
-		      (timer->getCurrentTime() - double(OTgridhours[NowTillWhichOTgrid-1])/
-		      (double(OTgridhours[NowTillWhichOTgrid])-double(OTgridhours[NowTillWhichOTgrid-1])) ) );
+		      (timer->getCurrentTime() - double(OTgridhours[NowTillWhichOTgrid-1]))/
+		      (double(OTgridhours[NowTillWhichOTgrid])-double(OTgridhours[NowTillWhichOTgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"LA")==0) && (NowTillWhichLAgrid > 1) &&
 		    ( NowTillWhichLAgrid < (numLAfiles+1) ) ) 
 	  {
 	    cNode->setLeafAI( cNode->getLeafAIInPrevGrid()+
 		      (cNode->getLeafAIInUntilGrid() - cNode->getLeafAIInPrevGrid())*
-		      (timer->getCurrentTime() - double(LAgridhours[NowTillWhichLAgrid-1])/
-		      (double(LAgridhours[NowTillWhichLAgrid])-double(LAgridhours[NowTillWhichLAgrid-1])) ) );
+		      (timer->getCurrentTime() - double(LAgridhours[NowTillWhichLAgrid-1]))/
+		      (double(LAgridhours[NowTillWhichLAgrid])-double(LAgridhours[NowTillWhichLAgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	} // end for loop
       } // end luInterpOption if
@@ -1338,6 +1338,15 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       iceWE = naughttocm*iceWE;
       liqWE = naughttocm*liqWE;
       liqRoute = naughttocm*liqRoute;
+      
+      // Set ET variables equal to zero CJC2020
+		  cNode->setEvapWetCanopy(0.0);
+		  cNode->setEvapDryCanopy(0.0);
+		  cNode->setEvapSoil(0.0);
+		  cNode->setEvapoTrans(0.0);
+		  cNode->setPotEvap(0.0);
+		  cNode->setActEvap(0.0);
+
 	  cout<<"liqRouteCM = "<<liqRoute<<"\n";
 
 /*      if (ID%100 == 0 && ID > 0)

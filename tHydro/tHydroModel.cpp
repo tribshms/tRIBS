@@ -774,6 +774,9 @@ void tHydroModel::UnSaturatedZone(double dt)
 		(alpha > 0.0 ? Cos = fabs(cos(alpha)) : Cos = 1.0);
 		(alpha > 0.0 ? Sin = fabs(sin(alpha)) : Sin = 0.0);
 
+		// Get Bedrock depth for computing Nwt
+		DtoBedrock = cn->getBedrockDepth(); // Added by CJC2020
+
 		// Get Actual Rainfall after ET and I
 		EvapSoi = cn->getEvapSoil();
 		EvapVeg = cn->getEvapDryCanopy();
@@ -2942,6 +2945,9 @@ void tHydroModel::SaturatedZone(double dtGW)
 
 		Area = cn->getVArea();   // M^2;
 
+		// Get Bedrock depth for computing Nwt
+		DtoBedrock = cn->getBedrockDepth(); // added by CJC2020
+
 		// Calculate approximate water table depth (Cos to get actual area)
 		NwtNew = NwtOld + dtGW*(cn->getGwaterChng()*1.0E-6)*Cos/(Area*Ths);
 		if (NwtNew < 0.0) {
@@ -3818,7 +3824,7 @@ double tHydroModel::Newton(double dM, double Nwt)
 	int i;
 	double C1, C2, C3;
 	double fvalue, fdvalue, x, dx;
-	double xinit, xup;
+	double xinit, xup, Nwt_estim;
 
 	C1 = Ths-Thr;
 	C2 = C1*pow((-Psib),PoreInd)/(PoreInd-1.0);
@@ -3855,14 +3861,18 @@ double tHydroModel::Newton(double dM, double Nwt)
 				if (simCtrl->Verbose_label == 'Y') {
 					cout <<"\nWarning! NEWTON 1: derivative fell below minimum!"
 					<<" ID = "<<ID<<endl<<endl;
-					return(x);
+					// return(x); // commented out by CJC2020
 				}
+				Nwt_estim = x; // added by CJC2020
+				break; // added by CJC2020
 			}
 
 			dx = fvalue/fdvalue;
 
 			if (fabs(dx) < DX_TOL) {
-				return(x);
+				Nwt_estim = x; // added by CJC2020
+				break; // added by CJC2020
+				// return(x); // commented out by CJC2020
 			}
 		}
 
@@ -3876,8 +3886,17 @@ double tHydroModel::Newton(double dM, double Nwt)
 				<<"\nInitial value is kept..."
 				<<endl<<endl<<flush;
 		}
+
+		if (fabs(fdvalue) < DMIN) { // added by CJC2020
+			x = Nwt_estim;
+		}
+		else if (fabs(dx) < DX_TOL) { // added by CJC2020
+			x = Nwt_estim;
+		}
+		else { // added by CJC2020
 		x = Nwt;
 	}
+	
 	if (x > DtoBedrock)
 		x = DtoBedrock;
 	return (x);
