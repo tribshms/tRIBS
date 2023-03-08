@@ -38,9 +38,6 @@
 #elif defined LINUX_32
   #include <iostream>
   #include <cassert>
- #elif defined MAC
-  #include <iostream>
-  #include <cassert>
 #elif defined WIN
   #include <iostream.h>
   #include <assert.h>

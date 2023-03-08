@@ -33,6 +33,7 @@
 #include "Headers/Inclusions.h"
 #include "Mathutil/predicates.h"
 #include "tFlowNet/tKinemat.h"
+#include "tFlowNet/tReservoir.h" // JECR2014
 #include "tRasTin/tRainfall.h"
 #include "tRasTin/tShelter.h" // SKY2008Snow from AJR2007
 #include "tSimulator/tSimul.h"
@@ -174,7 +175,6 @@ int serialSimulation( int argc, char **argv )
 
 	Cout<<"\n\nPart 9: Deleting Objects and Exiting Program"<<endl;
 	Cout<<"------------------------------------------------"<<endl<<endl;
-	return 0; // 09/05/2020 Added this to eliminate warning Clizarraga 
 }
 
 //=========================================================================
@@ -392,7 +392,6 @@ int parallelSimulation(int argc, char **argv)
 
   return(1);
 #endif
-  return 0; // 09/05/2020 Added this to eliminate warning Clizarraga 
 }
 
 //=========================================================================

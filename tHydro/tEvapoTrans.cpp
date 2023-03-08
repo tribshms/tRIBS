@@ -681,8 +681,12 @@ void tEvapoTrans::callEvapoPotential()
 	  if (luOption == 1) {
 	    newLUGridData(cNode);
 	    if (gFluxOption == 1 || gFluxOption == 2) {
-	      coeffKs = soilPtr->getSoilProp(10);
-	      coeffCs = soilPtr->getSoilProp(11);
+			// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
+            //	      coeffKs = soilPtr->getSoilProp(10);
+            //	      coeffCs = soilPtr->getSoilProp(11);
+            coeffKs = cNode->getVolHeatCond();
+            coeffCs = cNode->getSoilHeatCap();
+			// Giuseppe 2016 - End changes to allow reading soil properties from grids
 	    }
 	  }
 	  else{
@@ -886,7 +890,7 @@ double tEvapoTrans::ApproximateEP()
 void tEvapoTrans::setCoeffs(tCNode* cNode) 
 { 
 	landPtr->setLandPtr(cNode->getLandUse());
-	soilPtr->setSoilPtr(cNode->getSoilID());
+	//soilPtr->setSoilPtr(cNode->getSoilID()); // Giuseppe 2016 - Changes to allow reading soil properties from grids
 
 	if (snowOption == 1)
 		coeffLAI = landPtr->getLandProp(12);
@@ -906,9 +910,14 @@ void tEvapoTrans::setCoeffs(tCNode* cNode)
 		coeffV  = landPtr->getLandProp(11);
     
 	if (gFluxOption == 1 || gFluxOption == 2) {
-		coeffKs = soilPtr->getSoilProp(10);
-		coeffCs = soilPtr->getSoilProp(11);
+		// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
+        //		coeffKs = soilPtr->getSoilProp(10);
+        //		coeffCs = soilPtr->getSoilProp(11);
+        coeffKs = cNode->getVolHeatCond();
+        coeffCs = cNode->getSoilHeatCap();
+		// Giuseppe 2016 - End changes to allow reading soil properties from grids
 	}
+	
 	return;
 }
 
@@ -1024,9 +1033,13 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		if (luOption == 1) {
 			newLUGridData(cNode); 
 			if (gFluxOption == 1 || gFluxOption == 2) {
-			        coeffKs = soilPtr->getSoilProp(10);
-				coeffCs = soilPtr->getSoilProp(11);
-			     }
+				// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
+                //			        coeffKs = soilPtr->getSoilProp(10);
+                //				coeffCs = soilPtr->getSoilProp(11);
+                coeffKs = cNode->getVolHeatCond();
+                coeffCs = cNode->getSoilHeatCap();
+				// Giuseppe 2016 - End changes to allow reading soil properties from grids
+            }
 		}
 		else{
 		  setCoeffs(cNode);
@@ -1129,6 +1142,8 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		cNode->setEvapDryCanopy(evapDryCanopy);
 		cNode->setEvapSoil(evapSoil);
 		cNode->setEvapoTrans(evapoTranspiration);
+		cNode->addTotEvap(evapoTranspiration); // add to cumulative totals CJC2020
+		cNode->addBarEvap(evapSoil); // add to cumulative totals CJC2020
 		
 		// Update average ET rate from an element
 		double te = (double)timer->getElapsedETISteps(timer->getCurrentTime());
@@ -2351,6 +2366,8 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	// Set the snow fluxes to zero
 	cNode->setSnLHF(0.0);
 	cNode->setSnSHF(0.0);
+	cNode->setSnSub(0.0); // CJC2020
+	cNode->setSnEvap(0.0); // CJC2020
 	cNode->setSnPHF(0.0);
 	cNode->setSnGHF(0.0);
 	cNode->setSnRLin(0.0);
@@ -2370,9 +2387,14 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 \*****************************************************************************/
 void tEvapoTrans::HeatTransferProperties(tCNode* cNode)
 {
-	soilPtr->setSoilPtr(cNode->getSoilID());
-	SoilHeatCondTh = soilPtr->getSoilProp(10);      // Conductivity [W m^-1 K^-1]
-	SoilHeatCpctTh = soilPtr->getSoilProp(11);      // Capacity     [J m^-3 K^-1]
+    // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
+	//	soilPtr->setSoilPtr(cNode->getSoilID());
+    //	SoilHeatCondTh = soilPtr->getSoilProp(10);      // Conductivity [W m^-1 K^-1]
+    //	SoilHeatCpctTh = soilPtr->getSoilProp(11);      // Capacity     [J m^-3 K^-1]
+    SoilHeatCondTh = cNode->getVolHeatCond(); // Conductivity [W m^-1 K^-1]
+    SoilHeatCpctTh = cNode->getSoilHeatCap(); // Capacity     [J m^-3 K^-1]
+	// Giuseppe 2016 - End changes to allow reading soil properties from grids
+	
 	SoilHeatDiffTh = SoilHeatCondTh/SoilHeatCpctTh; // Diffusivity  [m^2 s^-1]
 	return;
 }
@@ -2466,7 +2488,7 @@ double tEvapoTrans::rtsafe_mod_energy(tCNode* cNode, double x1, double x2,
 		else
 			xh=rts;
 	}
-	cerr<<"\n\t\ttEvapotrans: Energy balance: NO convergence in "<<MAXITER<<" steps\n";
+	cerr<<"\n\t\ttEvapotrans: Energy balance: NO convergence in "<<MAXITER<<"\n";
 	cerr<<"\t ERROR = "<<f
 		<<";  Initial = "<<xguess
 		<<";  Last estimate = "<<rts<<";  ID = "<<ID
@@ -2917,9 +2939,13 @@ void tEvapoTrans::betaFunc(tCNode* cNode)
 {
 	double beta, Ths, Thr, Th, ratio, Th_star;
 	
-	soilPtr->setSoilPtr( cNode->getSoilID() );
-	Ths = soilPtr->getSoilProp(2);
-	Thr = soilPtr->getSoilProp(3);
+	// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
+	//soilPtr->setSoilPtr( cNode->getSoilID() );
+    //	Ths = soilPtr->getSoilProp(2);
+    //	Thr = soilPtr->getSoilProp(3);
+    Ths = cNode->getThetaS(); // Saturation moisture content
+    Thr = cNode->getThetaR(); // Residual moisture content
+	// Giuseppe 2016 - End changes to allow reading soil properties from grids
 
 	// Start of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
 	// Objective: read the critical soil moisture as vegetation paramater
@@ -2973,9 +2999,13 @@ void tEvapoTrans::betaFuncT(tCNode* cNode)
 {
 	double beta, Ths, Thw, Th, ratio, Th_star;
 	
-	soilPtr->setSoilPtr( cNode->getSoilID() );
-	Ths = soilPtr->getSoilProp(2);
-	Thw = soilPtr->getSoilProp(3);
+    // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
+	//	soilPtr->setSoilPtr( cNode->getSoilID() );
+    //	Ths = soilPtr->getSoilProp(2);
+    //	Thw = soilPtr->getSoilProp(3);
+    Ths = cNode->getThetaS(); // Saturation moisture content
+    Thw = cNode->getThetaR(); // Residual moisture content
+	// Giuseppe 2016 - End changes to allow reading soil properties from grids
 
 	// Start of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
 	// Objective: read the critical soil moisture as vegetation paramater
@@ -5264,6 +5294,20 @@ void tEvapoTrans::writeRestart(fstream & rStr) const
   BinaryWrite(rStr, SunHour);
   BinaryWrite(rStr, BasAltitude);
   BinaryWrite(rStr, AtFirstTimeStepLUFlag);
+    
+    // to get right time vegetation parameters after reading restart files. Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichALgrid); 
+    BinaryWrite(rStr, NowTillWhichTFgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichVHgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichSRgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichVFgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichCSgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichICgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichCCgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichDCgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichDEgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichOTgrid); // Ara Ko 2017
+    BinaryWrite(rStr, NowTillWhichLAgrid); // Ara Ko 2017
 
   if (evapotransOption != 0) {
     for (int i = 0; i < 3; i++) 
@@ -5423,6 +5467,19 @@ void tEvapoTrans::readRestart(fstream & rStr)
   BinaryRead(rStr, SunHour);
   BinaryRead(rStr, BasAltitude);
   BinaryRead(rStr, AtFirstTimeStepLUFlag);
+  BinaryRead(rStr, NowTillWhichALgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichTFgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichVHgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichSRgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichVFgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichCSgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichICgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichCCgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichDCgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichDEgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichOTgrid); // Ara Ko 2017
+  BinaryRead(rStr, NowTillWhichLAgrid); // Ara Ko 2017
+
 
   if (evapotransOption != 0) {
     for (int i = 0; i < 3; i++) 

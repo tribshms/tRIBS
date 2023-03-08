@@ -41,12 +41,6 @@
   #include <cassert>
   #include <string> 
   #include <cstdlib>
-#elif defined MAC
-  #include <iostream>
-  #include <fstream>
-  #include <cassert>
-  #include <string> 
-  #include <cstdlib>
 #elif defined WIN
   #include <iostream.h>
   #include <fstream.h>

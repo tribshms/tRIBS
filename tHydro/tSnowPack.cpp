@@ -638,8 +638,9 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
   cNode = nodeIter.FirstP(); // SKY2008Snow, AJR2008 
   while(nodeIter.IsActive()){
 
+	  
     // SKYnGM2008LU
-    if (luOption == 1) { 
+     if (luOption == 1) { 
       if ( luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values
 	for (int ct=0;ct<nParmLU;ct++) { 
 	  if ( (strcmp(LUgridParamNames[ct],"AL")==0) && (NowTillWhichALgrid > 1) &&
@@ -647,8 +648,8 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	  {
 	    cNode->setLandUseAlb( cNode->getLandUseAlbInPrevGrid()+
 		     (cNode->getLandUseAlbInUntilGrid() - cNode->getLandUseAlbInPrevGrid())*
-		     (timer->getCurrentTime() - double(ALgridhours[NowTillWhichALgrid-1]))/
-		     (double(ALgridhours[NowTillWhichALgrid])-double(ALgridhours[NowTillWhichALgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
+		      (timer->getCurrentTime() - double(ALgridhours[NowTillWhichALgrid-1]))/
+		      (double(ALgridhours[NowTillWhichALgrid])-double(ALgridhours[NowTillWhichALgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
 	  }
 	  if ( (strcmp(LUgridParamNames[ct],"TF")==0) && (NowTillWhichTFgrid > 1) &&
 		    ( NowTillWhichTFgrid < (numTFfiles+1) ) ) 
@@ -920,7 +921,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     else {
       shelterFactorGlobal = 1; //no sheltering
     }
-
+	
     setCoeffs(cNode);
     if (luOption == 1) {
 	    newLUGridData(cNode);
@@ -932,12 +933,12 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     //not in stochastic mode
     if (!rainPtr->getoptStorm()) {
       if(metdataOption == 1){
-		thisStation = assignedStation[count];
-		newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
-		cout<<"atmPress retrieved = "<<atmPress<<"\n";
+	thisStation = assignedStation[count];
+	newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
       }
       else if(metdataOption == 2){
-		newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
+      //resampleGrids(timerET); // read in met grid data -- inherited function
+      newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
       }
 	
       // SKY2008Snow, AJR2007
@@ -955,6 +956,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       cNode->setWindSpeed(windSpeed);
       cNode->setAirPressure(atmPress);
       cNode->setShortRadIn(RadGlbObs);
+
       //Set Soil/Surface Temperature
       if(hourlyTimeStep == 0) {
         cNode->setSoilTemp(Tlo - 273.15);
@@ -1021,6 +1023,8 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       rain += snUnload*ctom;
       snTempC = 0.0; // reinitialize snTemp
       snWE = 0.0; // reinitialize snWE
+	  snSub = 0.0; // No sublimation occurs CJC2020
+	  snEvap = 0.0; // No evaporation occurs CJC2020
       dUint = RLin = RLout = RSin = H = L = G = Prec = 0.0; //reinitialize energy terms
       
       //From tEvapoTrans::callEvapoPotential() and tEvapoTrans::callEvapoTrans()
@@ -1108,9 +1112,11 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	  //liq WE update
 	  liqWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) + 
 		cmtonaught*((mtoc*rain)*(1 - snowFracCalc()))*timeSteps/3600; // Removed snUnload term CJC2020
+	  snEvap = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ)*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
 	
 	  //solid WE update
 	  iceWE += cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	  snSub = 0.0; // No sublimation occurs CJC2020
         }
 	
 	//sublimate solid from frozen pack
@@ -1122,10 +1128,12 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	
 	  //liq WE update
 	  liqWE += cmtonaught*(mtoc*(rain*(1 - snowFracCalc())))*timeSteps/3600; // Removed snUnload term CJC2020
+	  snEvap = 0.0; // No evaporation occurs CJC2020
 
 	  //ice WE update
 	  iceWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) + 
 		cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	  snSub = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ)*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
         }
 	
 	//set other fluxes
@@ -1172,9 +1180,11 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	  //liq WE update
 	  liqWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) + 
 		cmtonaught*((mtoc*rain)*(1 - snowFracCalc()))*timeSteps/3600; // Removed snUnload term CJC2020
+	  snEvap = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ)*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
 	
 	  //ice WE update
 	  iceWE += cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	  snSub = 0.0; // No sublimation occurs CJC2020
 	  
         }
 
@@ -1187,10 +1197,12 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	
 	  //liq WE update
 	  liqWE += cmtonaught*(mtoc*(rain*(1 - snowFracCalc())))*timeSteps/3600; // Removed snUnload term CJC2020
-
+	  snEvap = 0.0; // No evaporation occurs CJC2020
+	  
 	  //ice WE update
 	  iceWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) + 
 		cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	  snSub = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ)*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
 	  
         }	
 	
@@ -1267,12 +1279,10 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	
 	    Uwat = Utot;
 	    Usn = 0.0;
-		cout << "liqWE b4 Lm = " <<liqWE<<"\n";
 		liqWE += Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
 		
 	    //make sure that there is enough SWE in the pack for the melt
 	    if (liqWE >= snWE) {
-			cout << "liwWE is > than snWE, liqWE = " <<liqWE<< ",  snWE = " <<snWE<<'\n';
 	        liqWE = snWE; // this is here because the liqWE += term above
 		}				  //  can result in liqWE > snWE
 		
@@ -1280,13 +1290,12 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	    iceWE = snWE - liqWE;	
 	
 	    //put in routing bucket 
-	    //THM 2012 used 0.35 instead of 0.06 - this is a calibration factor snliqfrac
-	    if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC 2020
+	    //THM 2012 used 0.35 instead of 0.06 - this is a calibration factor
+	    if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
 		    
 	      //there is enough water left over
 	      if (liqWE != snWE ) {
-	        liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC 2020
-			cout<<"liqWE before routing="<<liqWE<<",   liqRoute = "<< liqRoute<<"\n";
+	        liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC2020
 	        liqWE = liqWE - liqRoute;
 	        snWE = liqWE + iceWE;
 	      }
@@ -1294,7 +1303,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	      //there is no more pack
 	      else {
 	        liqRoute = snWE;
-			cout<<"liqRoute no more snowpack= "<< liqRoute<<"\n";
 	        liqWE = 0.0;
 	        iceWE = 0.0;
 	        snWE = 0.0;
@@ -1338,17 +1346,15 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       iceWE = naughttocm*iceWE;
       liqWE = naughttocm*liqWE;
       liqRoute = naughttocm*liqRoute;
-      
-      // Set ET variables equal to zero CJC2020
-		  cNode->setEvapWetCanopy(0.0);
-		  cNode->setEvapDryCanopy(0.0);
-		  cNode->setEvapSoil(0.0);
-		  cNode->setEvapoTrans(0.0);
-		  cNode->setPotEvap(0.0);
-		  cNode->setActEvap(0.0);
-
-	  cout<<"liqRouteCM = "<<liqRoute<<"\n";
-
+	  
+	  // Set ET variables equal to zero CJC2020
+      cNode->setEvapWetCanopy(0.0);
+      cNode->setEvapDryCanopy(0.0);
+      cNode->setEvapSoil(0.0);
+      cNode->setEvapoTrans(0.0);
+      cNode->setPotEvap(0.0);
+      cNode->setActEvap(0.0);
+	  
 /*      if (ID%100 == 0 && ID > 0)
 	cout << "ID: " << ID << "\tswe: " << snWE << endl;*/
       
@@ -1488,6 +1494,8 @@ void tSnowPack::setToNodeSnP(tCNode* node)
   node->setCrustAge(crustAge);
   node->setDensityAge(densityAge);
   node->setEvapoTransAge(ETAge);
+  node->setSnSub(snSub); // Snowpack sublimation CJC2020
+  node->setSnEvap(snEvap); // Snowpack evaporation CJC2020
 
   //mass flux
   node->setLiqRouted(liqRoute);
@@ -1539,6 +1547,8 @@ void tSnowPack::setToNodeSnP(tCNode* node)
   
   //cumulative outputs
   node->addLatHF(L);
+  node->addSnSub(snSub); // cumulative snow sublimation CJC2020
+  node->addSnEvap(snEvap); // cumulative snow evaporation CJC2020
   node->addMelt(liqRoute);
   node->addSHF(H*timeSteps);
   node->addPHF(Prec*timeSteps);
@@ -1614,7 +1624,6 @@ double tSnowPack::latentHFCalc(double Kaero)
 {
 
   double lhf;
-  cout<<"atmPress, LHF Calc = "<<atmPress<<"\n";
   if (snTempC == 0.0)
     lhf = (latVapkJ*0.622*rhoAir*Kaero*(vPress - 6.111)/atmPress); //evaporation by THM 2012
   else
@@ -1641,9 +1650,8 @@ double tSnowPack::sensibleHFCalc(double Kaero)
 {
 
   double shf;
-  shf =  (0.622*rhoAir*cpairkJ*Kaero*((airTemp+273.15) - (snTempC+273.15))); // Changed to kelvin but this doesn't actually matter because snTempC is always <0 CJC 2020
-  //cout<<"Sensible Heat Flux = rhoAir*cpairkJ*Kaero*((airTemp+273.15) - (snTempC+273.15)))\n";
-  //cout<<"rhoAir = "<<rhoAir<<",  cpairkJ = "<<cpairkJ<<",  Kaero = "<<Kaero<<",  airTemp = "<<airTemp<<",  snTempC = "<<snTempC<<"\n\n";
+  
+  shf =  (rhoAir*cpairkJ*Kaero*((airTemp+273.15) - (snTempC+273.15)));
   return shf;
 }
 
@@ -1666,7 +1674,7 @@ double tSnowPack::snowFracCalc()
 
   double snowfrac;
 
-  double TMin(-1.1), TMax(3.3); //indices (Wigmosta et al. 1994)
+  double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)
   
   if ( airTemp <= TMin )
 	  snowfrac = 1; // all ice
@@ -1875,9 +1883,9 @@ double tSnowPack::agingAlbedo()
   double alb;
 
   if (liqWE < 1e-5)
-    alb = 0.85*pow(0.94,pow(crustAge/24,0.58)); // dry snow
+    alb = 0.88*pow(0.94,pow(crustAge/24,0.58)); // dry snow //R66: 0.78, 0.84
   else
-    alb = 0.85*pow(0.82,pow(crustAge/24,0.46)); // wet snow
+    alb = 0.85*pow(0.84,pow(crustAge/24,0.46)); // wet snow //R66: 0.73, 0.65 //R69: 0.80, 0.78
 
   return alb;
 }
@@ -1898,7 +1906,7 @@ double tSnowPack::resFactCalc()
   
   double rf, ra;
   double vonKarm = 0.41;
-  double vegHeight, vegFrac, vegBare;
+  double vegHeight, vegFrac, vegBare, windSpeedBare;
   double zm, zom, zov, d, rav, ras;
 
   if(coeffH == 0)
@@ -1919,7 +1927,8 @@ double tSnowPack::resFactCalc()
   else
     vegHeight = 0.1; // aka height of snow
 	 
-  vegBare = 0.1; // height of bare soil
+  vegBare = 0.1; // height of bare soilc
+	
   vegFrac = coeffV;
 
   if(windSpeed == 0.0 || fabs(windSpeed-9999.99)<1e-3)
@@ -1928,11 +1937,9 @@ double tSnowPack::resFactCalc()
     windSpeedC = windSpeed;
 
   // Compute below canopy windspeed at snow surface following equation Moreno et al. (2016) CJC 2020
-  if (snDepthm < coeffH ) {
-  windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));	// Applying this means I need to change aerodynamic resistance calculation? CJC 2020
-  cout<<"Wind Speed before reduction = "<<windSpeed<<"\n";	
-  cout<<"Wind Speed After reduction = "<<windSpeedC<<"\n";	
-  }
+  //if (snDepthm < coeffH ) {
+	//windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));	
+  //}
   
   // Compute aerodynamic resistance for vegetation
   zm = 2.0 + vegHeight;
@@ -1940,15 +1947,14 @@ double tSnowPack::resFactCalc()
   zov = 0.013*vegHeight;
   d = 0.67*vegHeight;
   rav = log((zm-d)/zom)*log((zm-d)/zov)/(windSpeedC*pow(vonKarm,2));
-	cout<<"vegResistance = "<<rav<<"\n";
 
   // Compute aerodynamic resistance for bare soil
   zm = 2.0 + vegBare;
   zom = 0.13*vegBare;
   zov = 0.013*vegBare;
   d = 0.67*vegBare;
+  
   ras = log((zm-d)/zom)*log((zm-d)/zov)/(windSpeedC*pow(vonKarm,2));
-	cout<<"bareSoilResistance = "<<ras<<"\n";	
 	
   ra = (1-vegFrac)*ras + vegFrac*rav;
   rf = 1/ra; // Otherwise known as kaero
@@ -2134,7 +2140,6 @@ double tSnowPack::inShortWaveSn(tCNode *cNode)
     //
     //Modified by Rinehart 2007 @ New Mexico Tech
     //
-
     if (hillAlbedoOption == 0) {
 	hillalbedo = albedo; }
     else if (hillAlbedoOption == 1) {
@@ -2168,9 +2173,7 @@ double tSnowPack::inShortWaveSn(tCNode *cNode)
     // Account for vegetation
     if ((evapotransOption == 1)||(snowOption)) {
       Iv = Is*coeffKt*coeffV + Is*(1.0-coeffV);
-	  cout<<"Incoming Solar before = "<<Iv<<"\n";
-	  Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016)
-	  cout<<"Incoming Solar after = "<<Iv<<"\n";
+	  //Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016) CJC 2020
 	}
     else
       Iv = Is;
@@ -2435,7 +2438,7 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
   double v1;
   double emelt; //THM 2012
 
-  if (shelterOption > 0 && shelterOption < 3)
+  if (shelterOption > 0 && shelterOption < 3) 
       v1 = shelterFactorGlobal;
   else
       v1 = 1;
@@ -2456,7 +2459,11 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
   //atmospheric heat flux
   RSin = naughttokilo*inShortWaveSn(node); // AJR2008, SKY2008Snow
   RLin = naughttokilo*inLongWave(node); // AJR2008, SKY2008Snow
-  RLout = -naughttokilo*v1*emmisSn()*sigma*pow(snTempK,4.0);
+  RLout = -naughttokilo*v1*emmisSn()*sigma*pow(snTempK,4.0); 
+  
+  
+  
+  // Outgoing long wave radiation is controlled by how much of the sky can be seen at that point?? Is this true?
 
   //calculate emelt THM 2012 / Latent Heat Leaving the Snowpack due to melt
   if (Utot > 0) {
@@ -2496,14 +2503,9 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
 
   //calculate total dU over given timestep, updated by THM 2012
   dUint = (H + Rn + L + Prec + G + emelt)*timeSteps; // Changed *3600 to *timeSteps CJC2020
-  cout<<"Energy Balance Components in kJ per sqm:\n";
-  cout<<"Utot_i-1 = "<<Utot<<",  dUint = "<<dUint<<",  H = "<<H*timeSteps<<",  Rn = "<<Rn*timeSteps<<",  L = "<<L*timeSteps<<",  Prec = "<<Prec*timeSteps<<",  emelt = "<<emelt*timeSteps<<"\n\n";
-  cout<<"Energy Balance Components in W? per sqm:\n";
-  cout<<"Utot_i-1 = "<<Utot<<",  dUint = "<<dUint<<",  H = "<<H<<",  Rn = "<<Rn<<",  L = "<<L<<",  Prec = "<<Prec<<",  emelt = "<<emelt<<"\n\n";
   
   //find new energy state of snow
   Utot +=  dUint;
-  cout<<"Utot_i-1 after new energy state found = "<<Utot<<"\n";
   return;
 }
 

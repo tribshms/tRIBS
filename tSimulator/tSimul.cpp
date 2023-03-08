@@ -518,9 +518,11 @@ void Simulator::OutputSimulatedVars(tKinemat *Flow)
 		else 
 			forenum=1;
 		
-		if ((simCtrl->hydrog_results == 'Y') && (timer->getCurrentTime())) {
+		if ((simCtrl->hydrog_results == 'Y') && (timer->getCurrentTime())) { // CJC 2020 Write mrf file before tRIBS crashes while using -H. Remove later
+			if ((timer->getCurrentTime() == 8760) || (timer->getCurrentTime() == 17520) || (timer->getCurrentTime() == 26280) || (timer->getCurrentTime() == 35040) || (timer->getCurrentTime() == 43800) || (timer->getCurrentTime() == 52560) || (timer->getCurrentTime() == 61320) || (timer->getCurrentTime() == 70080) || (timer->getCurrentTime() == 78840) || (timer->getCurrentTime() == 87600) || (timer->getCurrentTime() == 96360) || (timer->getCurrentTime() == 105120) || (timer->getCurrentTime() == 113880) || (timer->getCurrentTime() == 122640) || (timer->getCurrentTime() == 131400) || (timer->getCurrentTime() == 140160) || (timer->getCurrentTime() == 148920) || (timer->getCurrentTime() == 157680) || (timer->getCurrentTime() == 166440) || (timer->getCurrentTime() == 175200)){
 			Flow->getResultsPtr()->
 			writeAndUpdate( timer->getCurrentTime(), forenum );
+			}
 		}
 		
 		// Write selected dynamic variables
@@ -937,21 +939,21 @@ void Simulator::writeRestart(char* directory) const
 ***************************************************************************/
 void Simulator::readRestart(tInputFile &InFl)
 {
-  Cout << "READ RESTART made it to line 940 \n"<<endl;	
-  //Cout << "READ RESTART at time " << timer->getCurrentTime() << endl;
-  Cout << "READ RESTART made it to line 942 \n";	char restartFile[kName]; 
+  Cout << "READ RESTART at time " << timer->getCurrentTime() << endl << endl;
+
+  char restartFile[kName];
   InFl.ReadItem(restartFile, "RESTARTFILE");
-  Cout << "READ RESTART made it to line 944 \n";
+
   fstream rStr;
   stringstream sFile;
   sFile << restartFile;
-  Cout << "READ RESTART made it to line 948 \n";
+
 #ifdef PARALLEL_TRIBS
   sFile << "_" << tParallel::getMyProc();
 #endif
-  Cout << "READ RESTART made it to line 952 \n";
+
   rStr.open(sFile.str().c_str(), ios::binary|ios::in);
-  Cout << "READ RESTART made it to line 954 \n";
+
   // Read local simulator information
   BinaryRead(rStr, count);
   BinaryRead(rStr, fState);
@@ -963,10 +965,10 @@ void Simulator::readRestart(tInputFile &InFl)
   BinaryRead(rStr, eti_hour);
   BinaryRead(rStr, GW_label);
   BinaryRead(rStr, searchRain);
-  Cout << "READ RESTART made it to line 966 \n";
+
   // Read information from objects controlled by tRestart
   restart->readRestart(rStr);
-  Cout << "READ RESTART made it to line 969 \n";
+
   rStr.close();
 }
 

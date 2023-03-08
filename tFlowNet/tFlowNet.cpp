@@ -200,6 +200,7 @@ void tFlowNet::SetFlowVariables(tInputFile &infile)
 	
 	flowout   = 0.0;
 	streamvel = 0.0;
+	maxttimeInitial = 0.0; // added by Ara Ko 2017
 	return;
 }
 
@@ -214,8 +215,9 @@ int tFlowNet::MaxTravel()
 {
 	flowboxes = (int)ceil( (maxttime + timespan)/dOtp );
 	Cout<<"Hydrograph array size: \t\t"<<flowboxes<<endl; 
-	
-	return flowboxes;
+	if (maxttimeInitial == 0.0)	// added by Ara Ko 2017	
+	   maxttimeInitial=maxttime; // added by Ara Ko 2017	
+	return flowboxes; 
 }
 
 /*****************************************************************************
@@ -667,12 +669,13 @@ void tFlowNet::initializeTravelTimeOnly()
 *****************************************************************************/
 void tFlowNet::setMaxTravelTime() 
 {
-	maxttime = dist_hill_max/hillvel + dist_stream_max/streamvel; //SECONDS
+	// Update the limit time of simulation added Ara Ko in 2017
+	res->limit = flowboxes =(int)ceil( (timer->RemainingTime(0.0) + maxttimeInitial)/dOtp); 	
 	
+	maxttime = dist_hill_max/hillvel + dist_stream_max/streamvel; //SECONDS
 	res->iimax = timer->getResStep(maxttime/(3600.0));
 	
 	// Set MAX index in hydrograph
-	
 	if (res->iimax > res->limit || res->iimax < 0) {
 		Cout<<"\nError: setTravelTime(): iimax > limit,  iimax = "
         <<res->iimax<<"; limit = "<<res->limit
@@ -836,6 +839,10 @@ void tFlowNet::SurfaceFlow()
 		else
 			val = 0.0;
 		res->store_saturation(0.0, AreaF*val,20);//added by AJR 2007 @ NMT -- SCA
+			//Mean SnSub
+		res->store_saturation(0.0, AreaF*cn->getSnSub(),21);// Calculated mean snowpack sublimation CJC2020 
+			//Mean SnSub
+		res->store_saturation(0.0, AreaF*cn->getSnEvap(),22);// Calculated mean snowpack sublimation CJC2020 
 
 	}
 	return;

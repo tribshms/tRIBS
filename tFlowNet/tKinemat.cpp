@@ -133,7 +133,7 @@ tFlowNet(sPtr, gridRef, infile, timptr)
 	optres = ResReadItem.IterReadItem(infile, tempVariable,"OPTRESERVOIR");
 	resTimeStep = ResReadItem.IterReadItem(infile, tempVariable,"TIMESTEP");
 	resRunTime = ResReadItem.IterReadItem(infile, tempVariable,"RUNTIME");
-	// cout<<"OptRES = "<<optres<<endl; // Commented out this line so it doesn't write to output file CJC 2020
+	// cout<<"OptRES = "<<optres<<endl;
 	if (optres == 1) {
 	initialize_values(infile, resTimeStep);
 	}

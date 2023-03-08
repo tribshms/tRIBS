@@ -217,6 +217,8 @@ void tIntercept::InterceptGray(tCNode *cNode)
 	
 	SetIntercpParameters( cNode );
 	
+	
+	
 	rainfall = cNode->getRain();
 	
 	if (rainfall <= minRainAmount)                //Modify InterStorm Length
@@ -321,7 +323,6 @@ void tIntercept::InterceptRutter(tCNode *cNode, double evaporation)
 		// Drainage represents an average value over the interval
 		// For the _VEGETATED_ fraction of a cell:
 		netPrecipitation = drainage + throughfall;
-		cout<<"drainage + throughfall = "<<netPrecipitation<<"\n";
 		
 		if (netPrecipitation <= rainfall)
 			interception = rainfall - netPrecipitation;
@@ -330,7 +331,6 @@ void tIntercept::InterceptRutter(tCNode *cNode, double evaporation)
 		
 		// Rate for the _ENTIRE_ cell:
 		netPrecipitation = coeffV*netPrecipitation + (1-coeffV)*rainfall;
-		cout<<"netPrecipitation for the _ENTIRE_ cell = "<<netPrecipitation<<"\n";
 		
 		// Check numerical integration errors: absorb the imbalance
 		can_flx = rainfall -  
@@ -339,8 +339,6 @@ void tIntercept::InterceptRutter(tCNode *cNode, double evaporation)
 			if (fabs(can_flx)/rainfall*100.0 > 0.5)
 				netPrecipitation += can_flx;
 		}
-		
-		cout<<"netPrecipitation b4 writing to node = "<<netPrecipitation<<"\n";
 		
 		// Set the dynamic variables to tCNode
 		cNode->setNetPrecipitation(netPrecipitation); //For the _ENTIRE_ fract
@@ -480,7 +478,7 @@ void tIntercept::SetIntercpParameters(tCNode *cNode)
 			}
 		}
 	}
-
+	
 	return;
 }
 

@@ -148,6 +148,7 @@ protected:
   
   //state variables (intrinsic)
   double liqWE, iceWE, snWE; //cm
+  double snSub, snEvap; //cm added by CJC2020
   double canWE; //cm
   double liqRoute; //cm
   double liqWEm, iceWEm, snWEm; //m
@@ -183,7 +184,7 @@ protected:
   double hillalbedo;
   double compactParam, rhoSnFreshkg;
   double minSnTemp;
-  double snliqfrac; // Added by CJC 2020
+  double snliqfrac; // Added by CJC2020
 
   //output variables
   double snDepth,snDepthm; //snow depths (cm,m)

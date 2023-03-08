@@ -61,13 +61,7 @@ tRunTimer::tRunTimer( double duration, int opint )
 tRunTimer::tRunTimer( tInputFile &infile )
 {
 	int  cum = 0;
-	
 	int tmp[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-	if (floor(year/4) == year/4) {
-		int tmp[] = { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-		cout<<"It is a leap year\n";
-	}		
-	
 	
 	for (int k=0; k < 13; k++) {  // Initialization of arrays
 		cum += tmp[k];

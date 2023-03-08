@@ -44,6 +44,10 @@ CMP_OPTS =  -c -g -I$(VP) -I/packages/6x/openmpi/1.8.5/gcc/stock/normal/include 
 
 LDFLAGS =  -lm $(MPI_LD_FLAGS) -lmpi -lmpi_cxx -L/packages/6x/openmpi/1.8.5/gcc/stock/normal/lib
 
+## CMP_OPTS =  -c -g -I$(VP) -I/packages/7x/openmpi/1.8.5/gcc/4.4.7/normal/include -fno-inline $(MPI_COMPILE_FLAGS) -DGRAPH_TRIBS -DPARALLEL_TRIBS
+
+## LDFLAGS =  -lm $(MPI_LD_FLAGS) -lmpi -lmpi_cxx -L/packages/7x/openmpi/1.8.5/gcc/4.4.7/normal/lib
+
 OBJECTS = \
 $(OBJDIR)/main.o \
 $(OBJDIR)/tHydroModel.o \

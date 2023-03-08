@@ -32,10 +32,6 @@
   #include <iostream>
   #include <fstream>
   #include <cassert>
-#elif defined MAC
-  #include <iostream>
-  #include <fstream>
-  #include <cassert>
 #elif defined WIN
   #include <iostream.h>
   #include <fstream.h>

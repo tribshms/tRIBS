@@ -1070,6 +1070,7 @@ void tResample::readInputGrid(char *GridIn)
 	ifstream Inp0(GridIn);
 	if (!Inp0) {
 		cout <<"File "<<GridIn<<" not found!!!"<<endl;
+		cout<<", tResample.cpp Error Location"<<endl;
 		exit(2);
 	}
 	

@@ -35,13 +35,6 @@
   #include <ctime>
   #include <cassert>
   #include <iostream>
-#elif defined MAC
-  #include <cmath>
-  #include <fstream>
-  #include <cstdlib>
-  #include <ctime>
-  #include <cassert>
-  #include <iostream>
 #elif defined WIN
   #include <math.h>
   #include <fstream.h>

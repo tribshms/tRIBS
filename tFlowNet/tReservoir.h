@@ -107,7 +107,7 @@ protected:
   double Q_0, H_0; // Outflow and elev from the Reservoir
   int RStep;
   int NumRes;
-  double ResTimeDt;
+  double ResTimeDt, ;
   int ResTyp, ResNID, ArraySize;
   double ResOutflow, ResOutElev;
 

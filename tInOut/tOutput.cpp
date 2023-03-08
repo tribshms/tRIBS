@@ -224,7 +224,7 @@ void tOutput<tSubNode>::CreateAndOpenVizFile( ofstream *theOFStream,
 	sprintf( procex, ".%-d", tParallel::getMyProc());
 	strcat(fullName, procex);
 #else
-	sprintf( procex, " ");
+	sprintf( procex, "");
 	strcat(fullName, procex);
 #endif 
   
@@ -360,32 +360,34 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					<<"42-LiqWE,cm  "		//added by AJR 2007 @ NMT
 					<<"43-IceWE,cm  "		//added by AJR 2007 @ NMT
 					<<"44-SnWE,cm  "		//added by AJR 2007 @ NMT
-					<<"45-U,kJ/m2 "		//added by AJR 2007 @ NMT
-					<<"46-RouteWE,cm  "		//added by AJR 2007 @ NMT
-					<<"47-SnTemp,C  "		//added by AJR 2007 @ NMT
-					<<"48-SurfAge,h "		//added by AJR 2007 @ NMT
-					<<"49-DU,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"50-snLHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"51-snSHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"52-snGHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"53-snPHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"54-snRLout,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"55-snRLin,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"56-snRSin,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"57-Uerror,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"58-IntSWEq,cm "		//added by AJR 2007 @ NMT
-					<<"59-IntSub,cm "		//added by AJR 2007 @ NMT
-					<<"60-IntSnUnload,cm "		//added by AJR 2007 @ NMT
+					<<"45-SnSub,cm "		//added by CJC2020
+					<<"46-SnEvap,cm "		//added by CJC2020
+					<<"47-U,kJ/m2 "		//added by AJR 2007 @ NMT
+					<<"48-RouteWE,cm  "		//added by AJR 2007 @ NMT
+					<<"49-SnTemp,C  "		//added by AJR 2007 @ NMT
+					<<"50-SurfAge,h "		//added by AJR 2007 @ NMT
+					<<"51-DU,kJ/m2/etistep "		//added by AJR 2007 @ NMT
+					<<"52-snLHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
+					<<"53-snSHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
+					<<"54-snGHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
+					<<"55-snPHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
+					<<"56-snRLout,kJ/m2/etistep "		//added by AJR 2007 @ NMT
+					<<"57-snRLin,kJ/m2/etistep "		//added by AJR 2007 @ NMT
+					<<"58-snRSin,kJ/m2/etistep "		//added by AJR 2007 @ NMT
+					<<"59-Uerror,kJ/m2/etistep "		//added by AJR 2007 @ NMT
+					<<"60-IntSWEq,cm "		//added by AJR 2007 @ NMT
+					<<"61-IntSub,cm "		//added by AJR 2007 @ NMT
+					<<"62-IntSnUnload,cm "		//added by AJR 2007 @ NMT
 
 					// SKY2008Snow
-					<<"61-CanStorage,mm  "
-					<<"62-CumIntercept,mm  "
-					<<"63-Interception,mm  "
-					<<"64-Recharge,mm/hr  "
-					<<"65-RunOn,mm  "
-					<<"66-Srf_Hour,mm  "
-					<<"67-Qstrm,m3/s  "
-					<<"68-Hlevel,m"
+					<<"63-CanStorage,mm  "
+					<<"64-CumIntercept,mm  "
+					<<"65-Interception,mm  "
+					<<"66-Recharge,mm/hr  "
+					<<"67-RunOn,mm  "
+					<<"68-Srf_Hour,mm  "
+					<<"69-Qstrm,m3/s  "
+					<<"70-Hlevel,m"
 					//<<"42-CanStorg,mm  "
 					//<<"43-CumIntercept,mm  "
 					//<<"44-Intercept,mm  "
@@ -396,18 +398,18 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					//<<"49-Hlev,m"
 
 					// SKYnGM2008LU
-					<<"69-CanStorParam,mm  "
-					<<"70-IntercepCoeff,[]  "
-					<<"71-ThroughFall,[]  "
-					<<"72-CanFieldCap,mm  "
-					<<"73-DrainCoeff,mm/hr  "
-					<<"74-DrainExpPar,1/mm  "
-					<<"75-LandUseAlb,[] "
-					<<"76-VegHeight, m "
-					<<"77-OptTransmCoeff,[]"
-					<<"78-StomRes,s/m"
-					<<"79-VegFraction,[] "
-					<<"80-LeafAI,[] "
+					<<"71-CanStorParam,mm  "
+					<<"72-IntercepCoeff,[]  "
+					<<"73-ThroughFall,[]  "
+					<<"74-CanFieldCap,mm  "
+					<<"75-DrainCoeff,mm/hr  "
+					<<"76-DrainExpPar,1/mm  "
+					<<"77-LandUseAlb,[] "
+					<<"78-VegHeight,m "
+					<<"79-OptTransmCoeff,[]"
+					<<"80-StomRes,s/m"
+					<<"81-VegFraction,[] "
+					<<"82-LeafAI,[] "
 
 					<<"\n";
 				}
@@ -1166,30 +1168,32 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				<<this->uzel[i]->getLiqWE()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getIceWE()<<" "	//added by AJR 2007 @ NMT
 				<<(this->uzel[i]->getLiqWE()+this->uzel[i]->getIceWE())<<" "    //added by AJR 2007 @ NMT
-				/* 45 */ <<this->uzel[i]->getUnode()<<" "	//added by AJR 2007 @ NMT
+				/* 45 */ << this->uzel[i]->getSnSub()<<" "	// added by CJC2020
+				<< this->uzel[i]->getSnEvap()<<" "	// added by CJC2020
+				<<this->uzel[i]->getUnode()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getLiqRouted()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getSnTempC()<<" "	//added by AJR 2007 @ NMT
-				<<this->uzel[i]->getCrustAge()<<" "	//added by AJR 2007 @ NMT
+				/* 50 */ <<this->uzel[i]->getCrustAge()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getDU()<<" "		//added by AJR 2007 @ NMT
-				/* 50 */ <<this->uzel[i]->getSnLHF()<<" "	//added by AJR 2007 @ NMT
+				<<this->uzel[i]->getSnLHF()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getSnSHF()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getSnGHF()<<" "	//added by AJR 2007 @ NMT
-				<<this->uzel[i]->getSnPHF()<<" "	//added by AJR 2007 @ NMT
+				/* 55 */ <<this->uzel[i]->getSnPHF()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getSnRLout()<<" "	//added by AJR 2007 @ NMT
-				/* 55 */ <<this->uzel[i]->getSnRLin()<<" "	//added by AJR 2007 @ NMT
+				<<this->uzel[i]->getSnRLin()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getSnRSin()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getUerror()<<" "	//added by AJR 2007 @ NMT
-				<<this->uzel[i]->getIntSWE()<<" "	//added by AJR 2007 @ NMT
+				/* 60 */ <<this->uzel[i]->getIntSWE()<<" "	//added by AJR 2007 @ NMT
 				<<this->uzel[i]->getIntSub()<<" "	//added by AJR 2007 @ NMT
-				/* 60 */ <<this->uzel[i]->getIntSnUnload()<<" " //added by AJR 2007 @ NMT
+				<<this->uzel[i]->getIntSnUnload()<<" " //added by AJR 2007 @ NMT
 			
 				<<this->uzel[i]->getCanStorage()<<" "
 				<<this->uzel[i]->getCumIntercept()<<" "
-				<<this->uzel[i]->getInterceptLoss()<<" "
+				/* 65 */ <<this->uzel[i]->getInterceptLoss()<<" "
 				<<this->uzel[i]->getRecharge()<<" "
-				/* 65 */ <<this->uzel[i]->getRunOn()<<" "
+				<<this->uzel[i]->getRunOn()<<" "
 				<<this->uzel[i]->getSrf_Hr()<<" ";
-
+				/* 69 */ 
 				if (this->uzel[i]->getBoundaryFlag() == kStream)
 					this->pixinfo[i]<<setw(10)<<this->uzel[i]->getQstrm()<<" "
 						//<<setw(6)<<this->uzel[i]->getHlevel()<<endl<<flush;
@@ -1200,18 +1204,18 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				
 				// SKYnGM2008LU
 				this->pixinfo[i]<<setprecision(7)
-				/* 69 */ <<setw(10)<<this->uzel[i]->getCanStorParam()<<" "
+				<<setw(10)<<this->uzel[i]->getCanStorParam()<<" "
 				<< this->uzel[i]->getIntercepCoeff()<<" "
 				<< this->uzel[i]->getThroughFall()<<" "
 				<< this->uzel[i]->getCanFieldCap()<<" "
-				<< this->uzel[i]->getDrainCoeff()<<" "
+				/* 75 */ << this->uzel[i]->getDrainCoeff()<<" "
 				<< this->uzel[i]->getDrainExpPar()<<" "
-				/* 75 */ << this->uzel[i]->getLandUseAlb()<<" "
+				<< this->uzel[i]->getLandUseAlb()<<" "
 				<< this->uzel[i]->getVegHeight()<<" "
 				<< this->uzel[i]->getOptTransmCoeff()<<" "
-				<< this->uzel[i]->getStomRes()<<" "
+				/* 80 */ << this->uzel[i]->getStomRes()<<" "
 				<< this->uzel[i]->getVegFraction()<<" "
-				/* 80 */ << this->uzel[i]->getLeafAI()<<endl<< flush;
+				<< this->uzel[i]->getLeafAI()<<endl<< flush;
 
 			}
 		}
@@ -1263,7 +1267,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		
 		// SKY2008Snow from AJR2007
 		<<"SWE"<<','//added by AJR 2007 @ NMT
-		<<"ST"<<','<<"IWE"<<','<<"LWE"<<','<<"DU"<<','<<"Upack"<<','//added by AJR 2007 @ NMT
+		<<"ST"<<','<<"IWE"<<','<<"LWE"<<','<<"SnSub"<<','<<"SnEvap"<<','<<"DU"<<','<<"Upack"<<','//added by AJR 2007 @ NMT // Adjusted by CJC2020
 		<<"sLHF"<<','<<"sSHF"<<','<<"sGHF"<<','<<"sPHF"<<','//added by AJR 2007 @ NMT
 		<<"sRLo"<<','<<"sRLi"<<','<<"sRSi"<<','<<"Uerr"<<','//added by AJR 2007 @ NMT
 		<<"IntSWE"<<','<<"IntSub"<<','<<"IntUnl"<<','//added by AJR 2007 @ NMT	
@@ -1301,7 +1305,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		<<setprecision(5)
 		<<cn->getQpout()*1.E-6/cn->getVArea()<<','
 		<<cn->getQpin()*1.E-6/cn->getVArea()<<','
-		<<setprecision(4)<<cn->getSrf()<<','
+		<<setprecision(4)<<cn->getCumSrf()<<','
 		<<setprecision(3)<<cn->getRain()<<','
 
 		// SKY2008Snow from AJR2007
@@ -1309,8 +1313,10 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		<<setprecision(3)<<cn->getSnTempC()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getIceWE()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getLiqWE()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getDU()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getUnode()<<','//added by AJR 2007 @ NMT
+		<<setprecision(7)<<cn->getCumSnSub()<<','//added by CJC2020
+		<<setprecision(7)<<cn->getCumSnEvap()<<','//added by CJC2020
+		<<setprecision(7)<<cn->getCumMelt()<<','//changed to cumulative melt CJC2021 <<setprecision(5)<<cn->getDU()<<','//added by AJR 2007 @ NMT
+		<<setprecision(7)<<cn->getCumHrsSnow()<<','//changed to cumulative hours snow CJC2021	<<setprecision(5)<<cn->getUnode()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getSnLHF()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getSnSHF()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getSnGHF()<<','//added by AJR 2007 @ NMT
@@ -1319,16 +1325,16 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		<<setprecision(5)<<cn->getSnRLin()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getSnRSin()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getUerror()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getIntSWE()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getIntSub()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getIntSnUnload()<<','//added by AJR 2007 @ NMT
+		<<setprecision(5)<<cn->getIntSWE()<<','//added by AJR 2007 @ NMT 
+		<<setprecision(5)<<cn->getCumIntSub()<<','//added by AJR 2007 @ NMT			
+		<<setprecision(7)<<cn->getCumIntUnl()<<','//changed to cumulative unload CJC2021	<<setprecision(5)<<cn->getIntSnUnload()<<','//added by AJR 2007 @ NMT
 
 		<<setprecision(3)<<cn->getSoilMoistureSC()<<','
 		<<setprecision(3)<<cn->getRootMoistureSC()<<','
 		<<setprecision(3)<<cn->getCanStorage()<<','
 		<<setprecision(3)<<cn->getActEvap()<<','
-		<<setprecision(3)<<cn->getEvapSoil()<<','
-		<<setprecision(3)<<cn->getEvapoTrans()<<','
+		<<setprecision(5)<<cn->getCumBarEvap()<<',' // change to cumulative outputs CJC2020
+		<<setprecision(5)<<cn->getCumTotEvap()<<',' // change to cumulative outputs CJC2020
 		<<setprecision(3)<<cn->getGFlux()<<','
 		<<setprecision(3)<<cn->getHFlux()<<','
 		<<setprecision(3)<<cn->getLFlux()<<','
@@ -1642,7 +1648,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 		<<','<<"cRSIn"<<','<<"cGHF"//added by AJR 2007 @ NMT
 		<<','<<"cUErr"<<','<<"cHrsSun"<<','<<"cHrsSnow"//added by AJR 2007 @ NMT
 		<<','<<"persTime"<<','<<"peakWE"<<','<<"initTime"<<','<<"peakTime"
-		<<','<<"cIntSub"<<','<<"cIntUnl"//added by AJR 2007 @ NMT
+		<<','<<"cIntSub"<<','<<"cSnSub"<<','<<"cSnEvap"<<','<<"cIntUnl"//added by AJR 2007 @ NMT 
 
 		// SKYnGM2008LU
 		<<','<<"AvCanStorParam"<<','<<"AvIntercCoeff"
@@ -1756,6 +1762,8 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			<<setprecision(7)<<cn->getInitPackTime()<<',' //added by AJR 2007 @ NMT
 			<<setprecision(7)<<cn->getPeakPackTime()<<',' //added by AJR 2007 @ NMT
 			<<setprecision(7)<<cn->getCumIntSub()<<','//added by AJR 2007 @ NMT
+			<<setprecision(7)<<cn->getCumSnSub()<<','//added by CJC2020
+			<<setprecision(7)<<cn->getCumSnEvap()<<','//added by CJC2020			
 			<<setprecision(7)<<cn->getCumIntUnl()<<','//added by AJR 2007 @ NMT
 
 			// SKYnGM2008LU

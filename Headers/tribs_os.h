@@ -1,6 +1,6 @@
 #ifndef TRIBS_OS_H
 #define TRIBS_OS_H
 
-#define  MAC
+#define  LINUX_32
 
 #endif
