@@ -172,7 +172,7 @@ void tMeshList< NodeType >::
 insertAtBoundFront( const NodeType &value )
 {
 	tListNode< NodeType > * newPtr = this -> getNewNode( value ); //Added this-> CL 09/05/2020
-	assert( newPtr>0 );
+	assert( newPtr != nullptr ); //updated to reflect new c++ standards -WR
 	assert( this != 0 );
 	
 	if( this->isEmpty() )  
@@ -321,7 +321,7 @@ template< class NodeType >
 void tMeshList< NodeType >::
 moveToBack( tListNode< NodeType > * mvnode ) 
 {
-	assert( mvnode>0 );
+	assert( mvnode != nullptr ); //updated to new c++ standards -WR
 	tListNode< NodeType > * prev;
 	if( mvnode != this->last ){
 		if( InActiveList( mvnode ) )

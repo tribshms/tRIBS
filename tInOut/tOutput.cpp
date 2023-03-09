@@ -100,7 +100,7 @@ tOutput<tSubNode>::tOutput( SimulationControl *simCtrPtr,
                             tInputFile &infile, tResample *resamp,
                             tRunTimer * timptr )
 {
-	assert(gridPtr > 0);
+	assert(gridPtr != nullptr); //Updated to new c++ standards -WR
 	g = gridPtr;        
 	timer = timptr;    
 	respPtr = resamp;

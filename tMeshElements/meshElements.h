@@ -129,7 +129,7 @@ public:
   double getVArea() const;            // returns Voronoi area
   double getVArea_Rcp() const;        // returns 1/Voronoi area
   int getBoundaryFlag() const;        // returns boundary code
-  tEdge * getEdg();                   // returns ptr to one spoke
+  tEdge* getEdg();                   // returns ptr to one spoke
   void getVoronoiVertexList( tList<Point2D> * );    // Returns list of V vertices
   void getVoronoiVertexXYZList( tList<Point3D> * ); // As above plus interp z
 
@@ -183,7 +183,7 @@ protected:
   double varea;     			// Voronoi cell area
   double varea_rcp; 			//  1/varea
   int boundary;     			// Boundary status code
-  tEdge * edg;      			// Ptr to one edge
+  tEdge* edg;      			    // Ptr to one edge
   tPtrList< tEdge > spokeList; 		// list of connected edges (spokes)
 
   int resIndex;               // tResample index (parallel only)
@@ -567,8 +567,9 @@ inline void tNode::set3DCoords( double val1, double val2, double val3 ){
    setZ( val3 );
 }
 
-inline void tNode::setEdg( tEdge * theEdg ){
-   assert( theEdg > 0 );
+inline void tNode::setEdg( tEdge* theEdg ){
+   //assert( theEdg > 0 );
+   assert( theEdg != nullptr); // assuming above statement is to make sure the pointer is not null? -WR
    edg = theEdg;
 }
 
@@ -800,8 +801,8 @@ inline void tEdge::setFlowAllowed( int val ){
    flowAllowed = val;
 }
 
-inline void tEdge::setCCWEdg( tEdge * edg ){
-   assert( edg > 0 );
+inline void tEdge::setCCWEdg( tEdge* edg ){
+   assert( edg != nullptr ); //Updated to reflect c++ standards by replacing < 0 with != nullptr -WR
    ccwedg = edg;
 }
 
@@ -931,7 +932,7 @@ inline tTriangle::tTriangle( const tTriangle &init ) :
 inline tTriangle::tTriangle( int num, tNode* n0, tNode* n1, tNode* n2 ) :
   id(num)
 {
-   assert( n0 > 0 && n1 > 0 && n2 > 0 );
+   assert( n0 != nullptr && n1 != nullptr && n2 != nullptr ); // Updated to new c++(17) standards -WR
    p[0] = n0;
    p[1] = n1;
    p[2] = n2;

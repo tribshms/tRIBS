@@ -1547,7 +1547,7 @@ MakePointFromFileArcInfoGen( tInputFile &infile )
 		nbpnts++;
 		filepnt>>x>>y>>z;
 		filepnt>>oneline; 
-		delete x,y,z;  
+		delete (x,y,z);
 	}
 	filepnt.close();
 	
@@ -1573,7 +1573,7 @@ MakePointFromFileArcInfoGen( tInputFile &infile )
 		numbound++; 
 		for(i=0;i<25;i++)
 			oneline[i] = x[i];
-		delete x,y,z;
+		delete (x,y,z); // delete x,y,z only deletes z? -WR
 	}
 	numbound--;      
 	filelin.close();
@@ -3701,8 +3701,8 @@ LocateTriangle( double x, double y )
 {
 	int n, lv=0;
 	tListIter< tTriangle > triIter( triList );  
-	tTriangle *lt = ( mSearchOriginTriPtr > 0 ) ? mSearchOriginTriPtr
-												: triIter.FirstP();
+	tTriangle *lt = ( mSearchOriginTriPtr != nullptr ) ? mSearchOriginTriPtr
+												: triIter.FirstP(); //Updated to new c++ standards
 	double a, b, c;
 	int online = -1;
 	tArray< double > xy1, xy2;
@@ -4751,7 +4751,7 @@ UpdateMesh()
 		}
 		assert( len>0.0 );
 		curedg = elist.NextP();
-		assert( curedg > 0 ); // failure = complementary edges not consecutive
+		assert( curedg != nullptr ); // failure = complementary edges not consecutive, compiler error indicates comparison between pointer and zero, so replaced with null pter -WR
 		curedg->setLength( len );
 	} while( curedg=elist.NextP() );
 	

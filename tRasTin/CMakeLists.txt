@@ -1,0 +1,1 @@
+add_library(tRasTin tVariant.cpp tRainfall.cpp tResample.cpp tShelter.cpp tRainGauge.cpp tInvariant.cpp)

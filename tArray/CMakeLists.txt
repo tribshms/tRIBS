@@ -1,0 +1,1 @@
+add_library(tArray tArray.cpp tMatrix.cpp)

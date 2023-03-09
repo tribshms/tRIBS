@@ -1,0 +1,488 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17
+					],
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						14
+					]
+				},
+				{
+					"build" : "tArray",
+					"jsonFile" : "directory-tArray-Debug-23255b537915cf40accd.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tArray",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "tGraph",
+					"jsonFile" : "directory-tGraph-Debug-3ec40bc1600c6c86b9a1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tGraph",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "tHydro",
+					"jsonFile" : "directory-tHydro-Debug-1f794a1a4085b51aa2fc.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tHydro",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "tInOut",
+					"jsonFile" : "directory-tInOut-Debug-3308941cce7c895a2571.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tInOut",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "tMesh",
+					"jsonFile" : "directory-tMesh-Debug-482739137286b94e2a13.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tMesh",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "tMeshElements",
+					"jsonFile" : "directory-tMeshElements-Debug-96c09eb5203db7c9d1c1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tMeshElements",
+					"targetIndexes" : 
+					[
+						11
+					]
+				},
+				{
+					"build" : "tMeshList",
+					"jsonFile" : "directory-tMeshList-Debug-7e266f974aa0da59fa35.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tMeshList",
+					"targetIndexes" : 
+					[
+						12
+					]
+				},
+				{
+					"build" : "tRasTin",
+					"jsonFile" : "directory-tRasTin-Debug-a8e9b3b53e41057f45c6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tRasTin",
+					"targetIndexes" : 
+					[
+						15
+					]
+				},
+				{
+					"build" : "tSimulator",
+					"jsonFile" : "directory-tSimulator-Debug-188c426307268363d91c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tSimulator",
+					"targetIndexes" : 
+					[
+						16
+					]
+				},
+				{
+					"build" : "tStorm",
+					"jsonFile" : "directory-tStorm-Debug-22fdd576fec1bcd1ed19.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tStorm",
+					"targetIndexes" : 
+					[
+						17
+					]
+				},
+				{
+					"build" : "tCNode",
+					"jsonFile" : "directory-tCNode-Debug-3ceffac50feb31ff2582.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tCNode",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "Mathutil",
+					"jsonFile" : "directory-Mathutil-Debug-b31f5bc65d3de638ad69.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "Mathutil",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "tFlowNet",
+					"jsonFile" : "directory-tFlowNet-Debug-a0f1009f272cbe02810e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tFlowNet",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "tList",
+					"jsonFile" : "directory-tList-Debug-febf70ccdbb467931b54.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tList",
+					"targetIndexes" : 
+					[
+						8
+					]
+				},
+				{
+					"build" : "tListInputData",
+					"jsonFile" : "directory-tListInputData-Debug-e5b771fed121c5131e8c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tListInputData",
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"build" : "tParallel",
+					"jsonFile" : "directory-tParallel-Debug-7b32e28d4b262b0180f2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "tParallel",
+					"targetIndexes" : 
+					[
+						13
+					]
+				},
+				{
+					"build" : "Utilities",
+					"jsonFile" : "directory-Utilities-Debug-df9f0cb74b968da6f6e8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "Utilities",
+					"targetIndexes" : 
+					[
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17
+					],
+					"name" : "tRIBS",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 12,
+					"id" : "Mathutil::@bf84a237c02a48385d6f",
+					"jsonFile" : "target-Mathutil-Debug-4297d2f192e20d359fe3.json",
+					"name" : "Mathutil",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 17,
+					"id" : "Utilities::@e5cfef13bd836c54df78",
+					"jsonFile" : "target-Utilities-Debug-2a9cc01346f01fa96b3e.json",
+					"name" : "Utilities",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tArray::@8edd67aaa49468595769",
+					"jsonFile" : "target-tArray-Debug-8d2d9c7b6f6ba26c04f2.json",
+					"name" : "tArray",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 11,
+					"id" : "tCNode::@3da22fd7be1556c3435e",
+					"jsonFile" : "target-tCNode-Debug-abb4bc039df4006b2e98.json",
+					"name" : "tCNode",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 13,
+					"id" : "tFlowNet::@f5e4b036ec75373db789",
+					"jsonFile" : "target-tFlowNet-Debug-2984766f6b2dd6403e3e.json",
+					"name" : "tFlowNet",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "tGraph::@defbbf29955c0fe811fd",
+					"jsonFile" : "target-tGraph-Debug-ba886fa6df4ed437b73c.json",
+					"name" : "tGraph",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "tHydro::@69bba0cd9fe34aeb18e1",
+					"jsonFile" : "target-tHydro-Debug-5957bef590efabe9b76a.json",
+					"name" : "tHydro",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "tInOut::@e6c1eda7bb2b3e39b3a0",
+					"jsonFile" : "target-tInOut-Debug-e385f7e0ebc2ccf0f717.json",
+					"name" : "tInOut",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 14,
+					"id" : "tList::@6e3071c37f8827e5504f",
+					"jsonFile" : "target-tList-Debug-7e84763ff478fd30a4b6.json",
+					"name" : "tList",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 15,
+					"id" : "tListInputData::@d5c2e817107ac65f9b5d",
+					"jsonFile" : "target-tListInputData-Debug-574c2f6f546e102fe9c4.json",
+					"name" : "tListInputData",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "tMesh::@6a402cc456b6ee91e5c0",
+					"jsonFile" : "target-tMesh-Debug-eebf2f534bbc73ed9299.json",
+					"name" : "tMesh",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "tMeshElements::@98a408f3991618efbc24",
+					"jsonFile" : "target-tMeshElements-Debug-4fd62f00cd2a3df1d97a.json",
+					"name" : "tMeshElements",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "tMeshList::@ce92a16baa073b88879b",
+					"jsonFile" : "target-tMeshList-Debug-e864bce9afbd5caadc95.json",
+					"name" : "tMeshList",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 16,
+					"id" : "tParallel::@118a0f8fb51b2d093e60",
+					"jsonFile" : "target-tParallel-Debug-0fc280e94eaf4cfe0b5d.json",
+					"name" : "tParallel",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tRIBS::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tRIBS-Debug-c1ca30388889d576ae18.json",
+					"name" : "tRIBS",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "tRasTin::@01e48f0e8541f6d9e05c",
+					"jsonFile" : "target-tRasTin-Debug-59ee4c8616b2f0a9c070.json",
+					"name" : "tRasTin",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "tSimulator::@846a07f0a916473dd21f",
+					"jsonFile" : "target-tSimulator-Debug-9dbad0fb7693f8d4e1c3.json",
+					"name" : "tSimulator",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "tStorm::@56c502f3e7f730056d19",
+					"jsonFile" : "target-tStorm-Debug-3f5f3a0e0dc12faa693f.json",
+					"name" : "tStorm",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/wr/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS/cmake-build-debug",
+		"source" : "/Users/wr/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

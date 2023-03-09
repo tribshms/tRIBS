@@ -1,0 +1,1 @@
+add_library(tParallel tParallel.cpp tTimings.cpp tTimer.cpp)

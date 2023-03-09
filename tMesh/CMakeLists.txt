@@ -1,0 +1,1 @@
+add_library(tMesh tTriangulator.cpp tMesh.cpp)
