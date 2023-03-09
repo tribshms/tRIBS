@@ -871,7 +871,7 @@ DataCopy()
    
    for( curr=iter.FirstP(); !(iter.AtEnd()); curr=iter.NextP() ){
       newitem = new NodeType( *curr );
-      newlist.insertAtBack( newitem );
+      //newlist.insertAtBack( newitem );// Commented out for now, need to figure out -WR
    }
    return newlist;
 }

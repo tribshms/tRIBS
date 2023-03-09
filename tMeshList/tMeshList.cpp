@@ -351,8 +351,8 @@ moveToBack( tListNode< NodeType > * mvnode )
 template< class NodeType >                        
 void tMeshList< NodeType >::
 moveToBack( NodeType * mvnodedata ) {
-	assert( getListNode( mvnodedata )!=0 );  
-	moveToBack( getListNode( mvnodedata ) );
+	assert( this -> getListNode( mvnodedata )!=0 ); //Fix implemented by Carlos in 2020 for version where soil params are not gridded -WR
+	moveToBack( this -> getListNode( mvnodedata ) ); // same as above -WR
 }
 
 /**************************************************************************
