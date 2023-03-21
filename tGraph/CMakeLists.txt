@@ -1,1 +1,0 @@
-add_library(tGraph tGraph.cpp tGraphNode.cpp)

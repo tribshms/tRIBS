@@ -1095,7 +1095,7 @@ int tFlowNet::FindLakeNodeOutlet( tCNode *node )
 	{
 		// If it passes this test, it's a valid outlet
 		dn = (tCNode *) ce->getDestinationPtrNC();
-		assert( dn>0 );
+		assert( dn != nullptr );
 		
 		// If the node checked IS Outlet - the outlet has been found
 		if (dn->getBoundaryFlag() == kOpenBoundary) {

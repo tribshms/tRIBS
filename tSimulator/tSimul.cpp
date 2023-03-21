@@ -61,10 +61,10 @@ Simulator::Simulator(SimulationControl *simctrlptr, tRainfall *rainptr,
 
 Simulator::~Simulator() 
 {  
-	simCtrl = NULL;
-	rainIn = NULL;
-	timer = NULL;
-	outp = NULL;
+	simCtrl = nullptr;
+	rainIn = nullptr;
+	timer = nullptr;
+	outp = nullptr;
     
 	Cout<<"Simulator Object has been destroyed..."<<endl<<flush;
 }

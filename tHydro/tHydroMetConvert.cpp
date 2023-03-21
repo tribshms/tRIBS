@@ -808,7 +808,7 @@ void tHydroMetConvert::writeGaugeMDF(int ct)
 		double lineWrite[11];
 		
 		//<--- Compose Year, Month, Day
-		sprintf(pDate,"%f",currentDate); 
+		sprintf(pDate,"%f",currentDate);
 		for(int i = 0; i<4; i++)
 			tmpChar[i] = pDate[i];
 		yearStr = tmpChar;;
@@ -840,8 +840,9 @@ void tHydroMetConvert::writeGaugeMDF(int ct)
 				if(strcmp(param[lookFor[sc]],"PP")==0)   // for rain gauge mdf
 					if(value[lookFor[sc]] >= 0)     
 						lineWrite[4] = value[lookFor[sc]]*25.4;  //conversion from in to mm
-					else
-						lineWrite[4] = 9999.99;        //convert null values
+					else {
+                        lineWrite[4] = 9999.99;        //convert null values
+                    }
 			}
 		}
 		

@@ -253,7 +253,7 @@ double tNode::ComputeVoronoiArea()
 	
 	ce = edg;
 	do{
-		assert( ce>0 );
+		assert( ce != nullptr );
 		vedgList.insertAtBack( ce );
 		ce = ce->getCCWEdg();
 	} while( ce != edg );

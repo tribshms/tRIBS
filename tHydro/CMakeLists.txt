@@ -1,1 +1,0 @@
-add_library(tHydro tSnowPack.cpp tHydroMetStoch.cpp tHydroMetConvert.cpp tEvapoTrans.cpp tIntercept.cpp tSnowIntercept.cpp tWaterBalance.cpp tHydroModel.cpp tHydroMet.cpp)

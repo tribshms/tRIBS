@@ -80,11 +80,11 @@ double EstimateAR1Var(double, double, double, double);
 
 // Functions and data for creating random variables from Beta d-n 
 float genbet(float aa,float bb);
-float ranf(void);
-long ignlgi(void);
+float ranf();
+long ignlgi();
 void setall(long iseed1,long iseed2);
 void initgn(long isdtyp);
-void inrgcm(void);
+void inrgcm();
 long mltmod(long a,long s,long m);
 void gssst(long getset,long *qset);
 void gsrgs(long getset,long *qvalue);
@@ -93,8 +93,8 @@ void gscgn(long getset,long *g);
 // Functions and data for creating random variables from Gamm d-n 
 float gengam(float a,float r);
 float sgamma(float a);
-float snorm(void);
-float sexpo(void);
+float snorm();
+float sexpo();
 float fsign( float num, float sign );
 void  ftnstop(char* msg);
 

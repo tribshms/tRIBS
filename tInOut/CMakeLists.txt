@@ -1,1 +1,0 @@
-add_library(tInOut tOstream.cpp tOutput.cpp tInputFile.cpp)

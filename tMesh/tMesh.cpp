@@ -1476,7 +1476,7 @@ MakePointFromFileArcInfo( tInputFile &infile ){
 	}
 	outfile.close();
 	outtextfile.close();
-	delete parray;
+	delete parray; //TODO delete[]? WR 'delete' applied to a pointer that was allocated with 'new[]'; did you mean 'delete[]'? [-Wmismatched-new-delete]
 }
 
 /***************************************************************************** 
@@ -1912,7 +1912,7 @@ MakePointFromFileArcInfoGen( tInputFile &infile )
 	delete [] rix; delete[] riy; delete[] riz; 
 	delete [] pdx; delete[] pdy; delete[] pdz;
 	delete [] rdx; delete[] rdy; delete[] rdz;
-	delete xstream, ystream, zstream, xbound, ybound, zbound;
+	delete xstream, ystream, zstream, xbound, ybound, zbound; // TODO: update delete here -WR  warning: 'delete' applied to a pointer that was allocated with 'new[]'; did you mean 'delete[]'? [-Wmismatched-new-delete]
 	delete xinterior, yinterior, zinterior;
 	delete bstream, bbound, binterior;
 	delete cnumx, cnumy, cnumz, enumx, enumy, enumz;
@@ -4753,7 +4753,7 @@ UpdateMesh()
 		curedg = elist.NextP();
 		assert( curedg != nullptr ); // failure = complementary edges not consecutive, compiler error indicates comparison between pointer and zero, so replaced with null pter -WR
 		curedg->setLength( len );
-	} while( curedg=elist.NextP() );
+	} while( curedg=elist.NextP() );//TODO: is this correct or semantic error? WR warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
 	
 	MakeCCWEdges();
 	
