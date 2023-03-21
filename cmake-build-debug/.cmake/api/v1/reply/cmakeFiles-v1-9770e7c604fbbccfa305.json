@@ -145,57 +145,6 @@
 			"isCMake" : true,
 			"isExternal" : true,
 			"path" : "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake"
-		},
-		{
-			"path" : "tArray/CMakeLists.txt"
-		},
-		{
-			"path" : "tGraph/CMakeLists.txt"
-		},
-		{
-			"path" : "tHydro/CMakeLists.txt"
-		},
-		{
-			"path" : "tInOut/CMakeLists.txt"
-		},
-		{
-			"path" : "tMesh/CMakeLists.txt"
-		},
-		{
-			"path" : "tMeshElements/CMakeLists.txt"
-		},
-		{
-			"path" : "tMeshList/CMakeLists.txt"
-		},
-		{
-			"path" : "tRasTin/CMakeLists.txt"
-		},
-		{
-			"path" : "tSimulator/CMakeLists.txt"
-		},
-		{
-			"path" : "tStorm/CMakeLists.txt"
-		},
-		{
-			"path" : "tCNode/CMakeLists.txt"
-		},
-		{
-			"path" : "Mathutil/CMakeLists.txt"
-		},
-		{
-			"path" : "tFlowNet/CMakeLists.txt"
-		},
-		{
-			"path" : "tList/CMakeLists.txt"
-		},
-		{
-			"path" : "tListInputData/CMakeLists.txt"
-		},
-		{
-			"path" : "tParallel/CMakeLists.txt"
-		},
-		{
-			"path" : "Utilities/CMakeLists.txt"
 		}
 	],
 	"kind" : "cmakeFiles",
