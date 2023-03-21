@@ -21,92 +21,75 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9369c57-035d-413d-99c4-60d89ad3af5e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Headers/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mathutil/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Headers/Inclusions.h" beforeDir="false" afterPath="$PROJECT_DIR$/Headers/Inclusions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Headers/globalFns.h" beforeDir="false" afterPath="$PROJECT_DIR$/Headers/globalFns.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Headers/tribs_os.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Headers/tribs_os_ALPHA64.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Headers/tribs_os_LINUX32.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Mathutil/mathutil.h" beforeDir="false" afterPath="$PROJECT_DIR$/Mathutil/mathutil.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/globalFns.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/main.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/mathutil.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/meshElements.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/predicates.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tArray.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tCNode.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tControl.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tEvapoTrans.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tFlowNet.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tFlowResults.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tGraph.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tGraphNode.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tHydroMet.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tHydroMetConvert.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tHydroMetStoch.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tHydroModel.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tInputFile.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tIntercept.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tInvariant.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tKinemat.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tList.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tListInputData.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tMesh.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tMeshList.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tOstream.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tOutput.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tParallel.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tPreProcess.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tPtrList.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tRainGauge.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tRainfall.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tResData.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tResample.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tReservoir.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tRestart.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tRunTimer.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tShelter.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tSimul.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tSnowIntercept.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tSnowPack.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tStorm.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tTriangulator.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tVariant.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_Objects_/tWaterBalance.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mathutil/predicates.h" beforeDir="false" afterPath="$PROJECT_DIR$/Mathutil/predicates.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/Headers/globalFns.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/Headers/globalFns.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/Mathutil/mathutil.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/Mathutil/mathutil.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/Mathutil/predicates.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/Mathutil/predicates.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tArray/tArray.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tArray/tArray.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tArray/tMatrix.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tArray/tMatrix.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tCNode/tCNode.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tCNode/tCNode.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowNet.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowNet.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowResults.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowResults.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tKinemat.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tKinemat.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tResData.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tResData.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tReservoir.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tFlowNet/tReservoir.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tGraph/tGraph.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tGraph/tGraph.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tEvapoTrans.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tEvapoTrans.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMet.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMet.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetConvert.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetConvert.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetStoch.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetStoch.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tHydroModel.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tHydroModel.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tIntercept.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tIntercept.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tSnowIntercept.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tSnowIntercept.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tSnowPack.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tSnowPack.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tWaterBalance.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tHydro/tWaterBalance.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tInOut/tInputFile.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tInOut/tInputFile.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tInOut/tOutput.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tInOut/tOutput.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tList/tList.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tList/tList.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tListInputData/tListInputData.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tListInputData/tListInputData.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tMesh/tMesh.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tMesh/tMesh.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tMesh/tTriangulator.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tMesh/tTriangulator.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tMeshElements/meshElements.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tMeshElements/meshElements.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tMeshList/tMeshList.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tMeshList/tMeshList.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tInvariant.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tInvariant.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tRainGauge.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tRainGauge.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tRainfall.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tRainfall.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tResample.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tResample.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tShelter.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tShelter.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tVariant.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tRasTin/tVariant.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tControl.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tControl.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tPreProcess.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tPreProcess.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tRestart.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tRestart.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tRunTimer.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tRunTimer.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tSimul.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tSimulator/tSimul.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tStorm/tStorm.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/tRIBSgrid.dir/tStorm/tStorm.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_exec/ptribs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_exec/ptribs_working" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_exec/tribs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeAGAVE_PAR" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeALPHA" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeG5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeIBM" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeLAMPI" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeLINUX" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeLINUX_PAR" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeMAC_PAR" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeOCOTILLO_PAR" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeOCOTILLO_PAR_CJC2020" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeOCOTILLO_PAR_Orig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeOPENMPI" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeSAGUARO_PAR" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeSGI" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old_makes/makeSUN" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tArray/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tCNode/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tFlowNet/#tFlowNet.cpp#" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tFlowNet/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tFlowNet/tFlowNet.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tFlowNet/tFlowNet.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tGraph/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tGraph/tGraph.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tGraph/tGraph.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tHydro/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tHydro/tHydroMetConvert.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tHydro/tHydroMetConvert.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tInOut/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tList/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tListInputData/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tMesh/tMesh.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tMesh/tMesh.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tMeshElements/meshElements.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tMeshElements/meshElements.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tRasTin/tResample.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tRasTin/tResample.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tSimulator/tSimul.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/tSimulator/tSimul.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/tRIBSgrid" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/tRIBSgrid" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tArray/tArray.h" beforeDir="false" afterPath="$PROJECT_DIR$/tArray/tArray.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tCNode/tCNode.h" beforeDir="false" afterPath="$PROJECT_DIR$/tCNode/tCNode.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tFlowNet/tFlowResults.h" beforeDir="false" afterPath="$PROJECT_DIR$/tFlowNet/tFlowResults.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tHydro/tHydroMetConvert.h" beforeDir="false" afterPath="$PROJECT_DIR$/tHydro/tHydroMetConvert.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tHydro/tHydroMetStoch.h" beforeDir="false" afterPath="$PROJECT_DIR$/tHydro/tHydroMetStoch.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tInOut/tInputFile.h" beforeDir="false" afterPath="$PROJECT_DIR$/tInOut/tInputFile.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tList/tList.h" beforeDir="false" afterPath="$PROJECT_DIR$/tList/tList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tMesh/tMesh.h" beforeDir="false" afterPath="$PROJECT_DIR$/tMesh/tMesh.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tMesh/tTriangulator.h" beforeDir="false" afterPath="$PROJECT_DIR$/tMesh/tTriangulator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tMeshElements/meshElements.h" beforeDir="false" afterPath="$PROJECT_DIR$/tMeshElements/meshElements.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tPtrList/tPtrList.h" beforeDir="false" afterPath="$PROJECT_DIR$/tPtrList/tPtrList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tRasTin/tRainfall.h" beforeDir="false" afterPath="$PROJECT_DIR$/tRasTin/tRainfall.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tSimulator/tControl.h" beforeDir="false" afterPath="$PROJECT_DIR$/tSimulator/tControl.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tSimulator/tPreProcess.h" beforeDir="false" afterPath="$PROJECT_DIR$/tSimulator/tPreProcess.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tSimulator/tRunTimer.h" beforeDir="false" afterPath="$PROJECT_DIR$/tSimulator/tRunTimer.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +110,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
@@ -186,6 +169,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

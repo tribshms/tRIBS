@@ -26,7 +26,6 @@
 //
 //=========================================================================
 
-#include "Headers/tribs_os.h"
 #include "tMeshElements/meshElements.h"
 #include "tInOut/tInputFile.h"
 #include "Headers/globalFns.h"
@@ -43,6 +42,13 @@
   #include <fstream>
   #include <cassert>
   #include <cmath>
+
+#elif defined MAC
+  #include <iostream>
+  #include <fstream>
+  #include <cassert>
+  #include <cmath>
+
 #elif defined WIN
   #include <iostream.h>
   #include <fstream.h>

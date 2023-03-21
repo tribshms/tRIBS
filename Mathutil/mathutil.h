@@ -17,7 +17,6 @@
 #ifndef MATHUTIL_H
 #define MATHUTIL_H
 
-#include "Headers/tribs_os.h"
 
 #ifdef ALPHA_64
   #include <math.h>
@@ -25,6 +24,13 @@
   #include<iomanip.h>
   #include<assert.h>
 #elif defined LINUX_32
+  #include <cmath>
+  #include <iostream>
+  #include <cstdlib>
+  #include <iomanip>
+  #include <cassert>
+  #include <cstdio>
+#elif defined MAC
   #include <cmath>
   #include <iostream>
   #include <cstdlib>

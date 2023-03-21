@@ -14,7 +14,6 @@
 #ifndef INCLUSIONS_H
 #define INCLUSIONS_H
 
-#include "Headers/tribs_os.h"
 
 // INCLUDED LIBRARY HEADER FILES
 
@@ -31,6 +30,17 @@
 #include <memory.h>
 
 #elif defined LINUX_32
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <string>
+#include <cassert>
+#include <memory>
+
+#elif defined MAC
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>

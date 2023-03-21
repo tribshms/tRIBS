@@ -26,7 +26,6 @@
 //
 //=========================================================================
 
-#include "Headers/tribs_os.h"
 
 #ifdef ALPHA_64
   #include <iostream.h>
@@ -36,6 +35,12 @@
   #include <iostream>
   #include <cstdio>
   #include <cstdlib>
+
+#elif defined MAC
+  #include <iostream>
+  #include <cstdio>
+  #include <cstdlib>
+
 #elif defined WIN
   #include <iostream.h>
   #include <stdio.h>

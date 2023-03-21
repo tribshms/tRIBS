@@ -26,7 +26,6 @@
 //
 //=========================================================================
 
-#include "Headers/tribs_os.h"
 #include "tSimulator/tRunTimer.h"
 #include "tSimulator/tControl.h"
 #include "tInOut/tInputFile.h"
@@ -44,6 +43,14 @@
   #include <cstring>
   #include <iostream>
   #include <cstdio>
+
+#elif defined MAC
+  #include <cmath>
+  #include <cstdlib>
+  #include <cstring>
+  #include <iostream>
+  #include <cstdio>
+
 #elif defined WIN
   #include <math.h>
   #include <stdlib.h>

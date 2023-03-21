@@ -29,7 +29,6 @@
 #ifndef TPTRLIST_H
 #define TPTRLIST_H
 
-#include "Headers/tribs_os.h"
 
 #ifdef ALPHA_64
   #include <assert.h>

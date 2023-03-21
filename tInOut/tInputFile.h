@@ -25,7 +25,6 @@
 #ifndef TINPUTFILE_H
 #define TINPUTFILE_H
 
-#include "Headers/tribs_os.h"
 #include "Headers/Definitions.h"
 #include "Headers/Classes.h"
 
@@ -40,6 +39,12 @@
   #include <fstream>
   #include <cassert>
   #include <string> 
+  #include <cstdlib>
+#elif defined MAC
+  #include <iostream>
+  #include <fstream>
+  #include <cassert>
+  #include <string>
   #include <cstdlib>
 #elif defined WIN
   #include <iostream.h>

@@ -24,7 +24,6 @@
 #ifndef TMESH_H
 #define TMESH_H
 
-#include "Headers/tribs_os.h"
 #include "Headers/Inclusions.h"
 #include "tMesh/tTriangulator.h"
 
