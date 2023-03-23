@@ -3,13 +3,24 @@ project(tRIBSgrid)
 add_executable(tRIBSgrid main.cpp)
 set(CMAKE_CXX_STANDARD 17)
 
+# setup for compiling with parallelization feature requires MPI
+#set(CMAKE_PREFIX_PATH "/opt/homebrew/Cellar/open-mpi/4.1.5/lib")
+find_package(MPI REQUIRED) #Note: changes to MPI path etc may require reset of CMakeCache.txt
+if (MPI_FOUND)
+    include_directories(${MPI_INCLUDE_PATH})
+    target_link_libraries(tRIBSgrid PUBLIC MPI::MPI_CXX)
+    set(CMAKE_CXX_COMPILER mpicxx)
+else (MPI_FOUND)
+    message(SEND_ERROR "This application cannot compile without MPI")
+endif (MPI_FOUND)
+
 # used while testing and developing
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(DCMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g") # different options available for using Sanitizer
 
 # currently
-if(APPLE)
+if(APPLE) # not sure though if loading libraries are any different for linux--windows don't know
     target_compile_definitions(tRIBSgrid
             PRIVATE
             MAC
@@ -92,12 +103,12 @@ target_sources(
         tMeshElements/meshElements.h
         tMeshList/tMeshList.cpp
         tMeshList/tMeshList.h
-        # tParallel/tParallel.cpp
-        # tParallel/tParallel.h
-        # tParallel/tTimer.cpp
-        # tParallel/tTimer.h
-        # tParallel/tTimings.cpp
-        # tParallel/tTimings.h
+         tParallel/tParallel.cpp
+         tParallel/tParallel.h
+         tParallel/tTimer.cpp
+         tParallel/tTimer.h
+         tParallel/tTimings.cpp
+         tParallel/tTimings.h
         tPtrList/tPtrList.cpp
         tPtrList/tPtrList.h
         tRasTin/tInvariant.cpp

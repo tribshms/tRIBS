@@ -1,4 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S "/Users/wr/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS" -B "/Users/wr/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS/cmake-build-debug"
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S "/Users/lraming/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS" -B "/Users/lraming/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS/cmake-build-debug"
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/wr/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS/cmake-build-debug
+-- Build files have been written to: /Users/lraming/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS/cmake-build-debug

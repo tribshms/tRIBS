@@ -13,6 +13,11 @@
 **
 ***************************************************************************/
 
+// header file was missing not sure how this was previously compiled WR
+#include "tParallel/tTimings.h"
+
+
+
 // static data members of tTimings class
 tTimings::TimerList_t tTimings::TimerList;
 tTimings::TimerMap_t  tTimings::TimerMap;

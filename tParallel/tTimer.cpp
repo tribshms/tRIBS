@@ -35,6 +35,9 @@
 #define TIMEROFF	0
 #define TIMERON		1
 
+// Header file was missing WR not sure how?
+#include "tParallel/tTimer.h"
+
 /************************************************************************/
 /*									*/
 /*			FUNCTION tTimer					*/

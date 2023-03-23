@@ -1,5 +1,5 @@
 Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
-Compiler: /Library/Developer/CommandLineTools/usr/bin/cc 
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc 
 Build flags: 
 Id flags:  
 
@@ -10,7 +10,7 @@ clang: error: linker command failed with exit code 1 (use -v to see invocation)
 
 
 Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: /Library/Developer/CommandLineTools/usr/bin/c++ 
+Compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ 
 Build flags: 
 Id flags:  
 
