@@ -1612,7 +1612,7 @@ double vCell::convertToVoronoiFormat(int flag)
 	int Vert_sumInOrOut(0);
 
 	int dirXint, dirYint;
-	int InOrOut[3]; //1 is In, 0 is out
+	int InOrOut[4]; //1 is In, 0 is out; Prior to 3/23/2023 InOrOut was creating and address error, or should have as it was InOrOut[3] -WR
 					//initialize InOrOut to all 0s
 	for (int i = 0; i < 4; i++)
 		InOrOut[i] = 0;   

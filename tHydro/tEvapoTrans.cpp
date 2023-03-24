@@ -344,7 +344,7 @@ void tEvapoTrans::DeleteEvapoTrans()
 				delete vaporpressure;
 				
 				for (int sz=0;sz<nParm;sz++) {
-					delete [] gridParamNames[sz];
+					delete [] gridParamNames[sz]; //TODO: EXC_BAD_ACCESS (code=1, address=0x0) -WR
 					delete [] gridBaseNames[sz];
 					delete [] gridExtNames[sz];
 				}
@@ -2949,12 +2949,13 @@ void tEvapoTrans::betaFunc(tCNode* cNode)
 
 	// Start of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
 	// Objective: read the critical soil moisture as vegetation paramater
-	Th_star = landPtr->getLandProp(13); 
+	Th_star = landPtr->getLandProp(13);
+
 	// Check that Thw <= Th_star <= Ths
 	if ((Th_star > Ths) || (Th_star < Thr))
 		{ 
-		printf("Th_star out of the range residual Th_r-Th_s in land cover class %d\n", cNode->getLandUse());
-		printf("Modify the value of the land cover class");
+		printf("Th_star %d out of the range residual Th_r-Th_s in land cover class %d\n", Th_star, cNode->getLandUse());
+		printf("Modify the value of the land cover class\n");
 		exit(1);
 		}
 	// End of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
