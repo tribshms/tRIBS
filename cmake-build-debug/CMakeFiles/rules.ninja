@@ -6,7 +6,7 @@
 # It is included in the main 'build.ninja'.
 
 # =============================================================================
-# Project: tRIBS_nogrid
+# Project: tRIBSgrid
 # Configurations: Debug
 # =============================================================================
 # =============================================================================
@@ -14,18 +14,18 @@
 #############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__tRIBS_nogrid_Debug
+rule CXX_COMPILER__tRIBSgrid_Debug
   depfile = $DEP_FILE
   deps = gcc
-  command = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = mpicxx $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building CXX object $out
 
 
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__tRIBS_nogrid_Debug
-  command = $PRE_LINK && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $FLAGS -Wl,-search_paths_first -Wl,-headerpad_max_install_names $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
+rule CXX_EXECUTABLE_LINKER__tRIBSgrid_Debug
+  command = $PRE_LINK && mpicxx $FLAGS -Wl,-search_paths_first -Wl,-headerpad_max_install_names $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
 
@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S"/Users/lraming/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS" -B"/Users/lraming/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS/cmake-build-debug"
+  command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -B/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug
   description = Re-running CMake...
   generator = 1
 

@@ -1,0 +1,25 @@
+##############################################################################
+##
+##                   tRIBS Distributed Hydrologic Model
+##
+##              TIN-based Real-time Integrated Basin Simulator
+##                       Ralph M. Parsons Laboratory
+##                  Massachusetts Institute of Technology
+##  
+##
+##  template_run        Run Command Template 
+##
+##  Format:	<Full pathname of executable> <input.in> <-Options>
+##
+##  Options:     -A   Automatic listing of rainfall fields    (default = off)
+## 		 -R   Write intermediate states (spat. output)(default = off) 
+## 		 -G   Run groundwater model                   (default = off) 
+##               -F   Measured and forecasted rain            (default = off) 
+##               -M   Do NOT write headers in output files    (default = off) 
+##               -V   [NodeID] Verbose mode (run-time info)   (default = off) 
+##               -O   On after completion, waiting user input (default = off) 
+##               -K   Check input file for consistency        (default = on) 
+##               -H   Write intermediate hydrographs (*.mrf)  (default = off)
+##
+##############################################################################
+./tribs ./smallbasin.in -G -R -A -M > small.out

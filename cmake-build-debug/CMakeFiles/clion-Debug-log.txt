@@ -1,19 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" -S "/Users/lraming/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS" -B "/Users/lraming/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS/cmake-build-debug"
--- The C compiler identification is AppleClang 14.0.0.14000029
--- The CXX compiler identification is AppleClang 14.0.0.14000029
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Check for working C compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc - skipped
--- Detecting C compile features
--- Detecting C compile features - done
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ - skipped
--- Detecting CXX compile features
--- Detecting CXX compile features - done
--- Found MPI_C: /opt/homebrew/Cellar/open-mpi/4.1.5/lib/libmpi.dylib (found version "3.1") 
--- Found MPI_CXX: /opt/homebrew/Cellar/open-mpi/4.1.5/lib/libmpi.dylib (found version "3.1") 
--- Found MPI: TRUE (found version "3.1")  
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/lraming/Documents/tRIBSdev/Merged_tRIBS -B /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/lraming/Library/CloudStorage/GoogleDrive-wren.raming@gmail.com/My Drive/Work/Actionable/Hydro/tRIBS/Merged_tRIBS/cmake-build-debug
+-- Build files have been written to: /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug

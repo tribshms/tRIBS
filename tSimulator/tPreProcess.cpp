@@ -22,7 +22,10 @@
 //
 //=========================================================================
 
-tPreProcess::tPreProcess(){}
+tPreProcess::tPreProcess()
+{
+
+}
 
 tPreProcess::tPreProcess(SimulationControl *simCtrPtr, tInputFile &infile) {
 	

@@ -1,0 +1,92 @@
+8
+
+dir
+13
+svn://epscor.nmt.edu/benchmarkExamples/SMALL_BENCH
+svn://epscor.nmt.edu/benchmarkExamples
+
+
+
+2008-11-26T09:33:57.852026Z
+13
+giuseppe.mascaro
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+daab4510-54be-464e-b41f-853b0c9b420e
+
+Input
+dir
+
+Weather
+dir
+
+Output
+dir
+
+readme_SMALL_BENCH.txt
+file
+
+
+
+
+2008-11-26T16:56:50.187500Z
+4bcf4eab87d6914e6317d075e8f749aa
+2008-11-26T09:33:57.852026Z
+13
+giuseppe.mascaro
+has-props
+
+smallbasin_parallel.run
+file
+
+
+
+
+2008-11-26T16:56:50.203125Z
+b7b1a16b4ca51636c26af38008419957
+2008-11-26T09:33:57.852026Z
+13
+giuseppe.mascaro
+has-props
+
+smallbasin.run
+file
+
+
+
+
+2008-11-26T16:56:50.203125Z
+f35fa8cc73ee206c9abb9c03d21906e0
+2008-11-26T09:33:57.852026Z
+13
+giuseppe.mascaro
+has-props
+
+Rain
+dir
+
+smallbasin.in
+file
+
+
+
+
+2008-11-26T16:56:50.218750Z
+af7be9444e3064cc5e21b484f1c7c7d4
+2008-11-26T09:33:57.852026Z
+13
+giuseppe.mascaro
+has-props
+
