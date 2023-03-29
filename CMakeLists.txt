@@ -13,12 +13,13 @@ set(CMAKE_CXX_STANDARD 17)
 # used while testing and developing
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(DCMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g") # different options available for using Sanitizer
+### sanitizer finds leaks in parallel version--open mpi is known to have leaks
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g") # different options available for using Sanitizer
 
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
 
 # set to ON to compile parallel version, set to OFF to compile serial version
-if(OFF)
+if(ON)
     message(WARNING "Compiling parallel version of tRIBS")
 
     target_compile_definitions(${exe}
@@ -26,6 +27,8 @@ if(OFF)
             PARALLEL_TRIBS
             PRIVATE
             GRAPH_TRIBS
+            PRIVATE
+            LINUX_32
             )
 
     find_package(MPI REQUIRED) #Note: changes to MPI path etc may require reset of CMakeCache.txt
@@ -153,6 +156,11 @@ else()
         target_compile_definitions(${exe}
                 PRIVATE
                 MAC
+                )
+    else()
+        target_compile_definitions(${exe}
+                PRIVATE
+                LINUX_32
                 )
     endif()
 

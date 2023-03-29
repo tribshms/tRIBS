@@ -296,6 +296,15 @@ tRIBSgrid_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 tRIBSgrid_SOURCE_DIR:STATIC=/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
 
+//Value Computed by CMake
+tRIBSpargrid_BINARY_DIR:STATIC=/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug
+
+//Value Computed by CMake
+tRIBSpargrid_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+tRIBSpargrid_SOURCE_DIR:STATIC=/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
+
 
 ########################
 # INTERNAL cache entries

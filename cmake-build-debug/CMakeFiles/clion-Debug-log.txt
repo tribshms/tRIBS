@@ -1,6 +1,6 @@
 /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/lraming/Documents/tRIBSdev/Merged_tRIBS -B /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug
-CMake Warning at CMakeLists.txt:150 (message):
-  Compiling serial version of tRIBS
+CMake Warning at CMakeLists.txt:22 (message):
+  Compiling parallel version of tRIBS
 
 
 -- Configuring done
