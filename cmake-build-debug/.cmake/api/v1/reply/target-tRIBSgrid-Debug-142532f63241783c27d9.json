@@ -11,18 +11,12 @@
 		"commands" : 
 		[
 			"add_executable",
-			"target_link_libraries",
-			"set_property",
-			"_MPI_create_imported_target",
-			"find_package",
 			"target_compile_definitions",
-			"include_directories",
 			"target_sources"
 		],
 		"files" : 
 		[
-			"CMakeLists.txt",
-			"/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindMPI.cmake"
+			"CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -32,53 +26,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 3,
+				"line" : 6,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 11,
+				"line" : 153,
 				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 8,
-				"parent" : 0
-			},
-			{
-				"file" : 1,
-				"parent" : 3
-			},
-			{
-				"command" : 3,
-				"file" : 1,
-				"line" : 1640,
-				"parent" : 4
 			},
 			{
 				"command" : 2,
-				"file" : 1,
-				"line" : 1230,
-				"parent" : 5
-			},
-			{
-				"command" : 5,
 				"file" : 0,
-				"line" : 24,
-				"parent" : 0
-			},
-			{
-				"command" : 6,
-				"file" : 0,
-				"line" : 10,
-				"parent" : 0
-			},
-			{
-				"command" : 7,
-				"file" : 0,
-				"line" : 32,
+				"line" : 159,
 				"parent" : 0
 			}
 		]
@@ -95,7 +55,7 @@
 			"defines" : 
 			[
 				{
-					"backtrace" : 7,
+					"backtrace" : 2,
 					"define" : "MAC"
 				}
 			],
@@ -106,11 +66,6 @@
 				},
 				{
 					"path" : "/Users/lraming/Documents/tRIBSdev/Merged_tRIBS"
-				},
-				{
-					"backtrace" : 8,
-					"isSystem" : true,
-					"path" : "/opt/homebrew/Cellar/open-mpi/4.1.5/include"
 				}
 			],
 			"language" : "CXX",
@@ -160,10 +115,7 @@
 				88,
 				90,
 				92,
-				94,
-				96,
-				98,
-				100
+				94
 			]
 		}
 	],
@@ -179,16 +131,6 @@
 			{
 				"fragment" : "",
 				"role" : "flags"
-			},
-			{
-				"backtrace" : 2,
-				"fragment" : "-L/opt/homebrew/Cellar/libevent/2.1.12/lib",
-				"role" : "flags"
-			},
-			{
-				"backtrace" : 6,
-				"fragment" : "/opt/homebrew/Cellar/open-mpi/4.1.5/lib/libmpi.dylib",
-				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"
@@ -250,10 +192,7 @@
 				88,
 				90,
 				92,
-				94,
-				96,
-				98,
-				100
+				94
 			]
 		},
 		{
@@ -310,10 +249,7 @@
 				89,
 				91,
 				93,
-				95,
-				97,
-				99,
-				101
+				95
 			]
 		}
 	],
@@ -326,554 +262,521 @@
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "Headers/Classes.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "Headers/Definitions.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "Headers/Inclusions.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "Headers/TemplDefinitions.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "Headers/globalFns.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "Headers/globalFns.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "Headers/globalIO.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "Mathutil/geometry.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "Mathutil/mathutil.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "Mathutil/mathutil.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "Mathutil/predicates.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "Mathutil/predicates.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tArray/tArray.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tArray/tArray.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tArray/tMatrix.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tArray/tMatrix.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tCNode/tCNode.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tCNode/tCNode.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tFlowNet/tFlowNet.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tFlowNet/tFlowNet.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tFlowNet/tFlowResults.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tFlowNet/tFlowResults.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tFlowNet/tKinemat.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tFlowNet/tKinemat.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tFlowNet/tResData.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tFlowNet/tResData.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tFlowNet/tReservoir.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tFlowNet/tReservoir.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tGraph/tGraph.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tGraph/tGraph.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tGraph/tGraphNode.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tGraph/tGraphNode.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tHydro/tEvapoTrans.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tHydro/tEvapoTrans.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tHydro/tHydroMet.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tHydro/tHydroMet.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tHydro/tHydroMetConvert.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tHydro/tHydroMetConvert.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tHydro/tHydroMetStoch.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tHydro/tHydroMetStoch.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tHydro/tHydroModel.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tHydro/tHydroModel.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tHydro/tIntercept.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tHydro/tIntercept.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tHydro/tSnowIntercept.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tHydro/tSnowIntercept.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tHydro/tSnowPack.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tHydro/tSnowPack.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tHydro/tWaterBalance.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tHydro/tWaterBalance.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tInOut/tInputFile.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tInOut/tInputFile.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tInOut/tOstream.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tInOut/tOstream.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tInOut/tOutput.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tInOut/tOutput.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tList/tList.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tList/tList.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tListInputData/tListInputData.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tListInputData/tListInputData.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tMesh/heapsort.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tMesh/tMesh.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tMesh/tMesh.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tMesh/tTriangulator.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tMesh/tTriangulator.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tMeshElements/meshElements.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tMeshElements/meshElements.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tMeshList/tMeshList.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tMeshList/tMeshList.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
-			"compileGroupIndex" : 0,
-			"path" : "tParallel/tParallel.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 9,
-			"path" : "tParallel/tParallel.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 9,
-			"compileGroupIndex" : 0,
-			"path" : "tParallel/tTimer.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 9,
-			"path" : "tParallel/tTimer.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 9,
-			"compileGroupIndex" : 0,
-			"path" : "tParallel/tTimings.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 9,
-			"path" : "tParallel/tTimings.h",
-			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tPtrList/tPtrList.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tPtrList/tPtrList.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tRasTin/tInvariant.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tRasTin/tInvariant.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tRasTin/tRainGauge.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tRasTin/tRainGauge.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tRasTin/tRainfall.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tRasTin/tRainfall.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tRasTin/tResample.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tRasTin/tResample.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tRasTin/tShelter.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tRasTin/tShelter.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tRasTin/tVariant.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tRasTin/tVariant.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tSimulator/tControl.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tSimulator/tControl.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tSimulator/tPreProcess.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tSimulator/tPreProcess.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tSimulator/tRestart.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tSimulator/tRestart.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tSimulator/tRunTimer.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tSimulator/tRunTimer.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tSimulator/tSimul.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tSimulator/tSimul.h",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"compileGroupIndex" : 0,
 			"path" : "tStorm/tStorm.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 9,
+			"backtrace" : 3,
 			"path" : "tStorm/tStorm.h",
 			"sourceGroupIndex" : 1
 		}

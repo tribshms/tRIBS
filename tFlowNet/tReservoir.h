@@ -79,6 +79,7 @@ class tReservoir
   void setResArraySize(int);
   int  getResArraySize();
 
+  // needed to make these public since they are created when tKinemat is called, even if opsres ==0, problem is they should be set as null in this case -WR
   tResData* reservoirNodes;
   tResData* reservoirTypes;
 
