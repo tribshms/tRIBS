@@ -10,16 +10,25 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #set standard
 set(CMAKE_CXX_STANDARD 17)
 
+#set compiler if necessary
+#set (CMAKE_CXX_COMPILER <specify compiler here>)
+#if(CMAKE_CXX_COMPILER_LOADED)
+#    message(STATUS "Configured for C++, with compiler: ")
+#    message(STATUS "${CMAKE_CXX_COMPILER_VERSION}}")
+#endif()
+
+
 # used while testing and developing
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(DCMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
 ### sanitizer finds leaks in parallel version--open mpi is known to have leaks
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g") # different options available for using Sanitizer
 
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
 
 # set to ON to compile parallel version, set to OFF to compile serial version
-if(ON)
+if(OFF)
     message(WARNING "Compiling parallel version of tRIBS")
 
     target_compile_definitions(${exe}
@@ -32,10 +41,10 @@ if(ON)
             )
 
     find_package(MPI REQUIRED) #Note: changes to MPI path etc may require reset of CMakeCache.txt
-    if (MPI_FOUND)
+    if (MPI_FOUND) #Note:this should find whichever implementation of MPI is installed (i.e. Open MPI, Intel, mpich)
         include_directories(${MPI_INCLUDE_PATH})
         target_link_libraries(${exe} PUBLIC MPI::MPI_CXX)
-        set(CMAKE_CXX_COMPILER mpicxx)
+        set(CMAKE_CXX_COMPILER MPICXX)
     else (MPI_FOUND)
         message(SEND_ERROR "This application cannot compile without MPI")
     endif (MPI_FOUND)
@@ -149,7 +158,7 @@ if(ON)
     )
 
 else()
-    # currently only tested on new macs (M1 chips)
+    # currently only tested on new macs (M1 and M2 chips)
     message(WARNING "Compiling serial version of tRIBS")
 
     if(APPLE) # not sure though if loading libraries are any different for linux--windows don't know

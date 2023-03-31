@@ -31,7 +31,7 @@
 #ifdef ALPHA_64
   #include <iostream.h>
   #include <math.h>
-#elif defined LINUX_32
+#elif defined LINUX_32 //TODO update to LINUX
   #include <iostream>
   #include <cmath>
 

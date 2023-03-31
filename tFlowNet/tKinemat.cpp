@@ -139,8 +139,7 @@ tFlowNet(sPtr, gridRef, infile, timptr)
 	}
     else
     {
-    std::cerr<< "optres is set to 0\n"; // TODO: debug:
-    /*
+    /*// TODO: debug
      * The way the reservoir setup is currently LevelPool is created in the tKinemat.h so that functions that can use LevelPool can later be used.
      * In the process the call creates tReservoir, which then calls pointers to two instances of tResData with reservoirType not having an address (least as far as I cant tell).
      * Later when LevelPool is destructed it also trys to destruct pointers from reservoirType--which as far as I can tell don't actually point to anything. In this case I set both pointers to null.

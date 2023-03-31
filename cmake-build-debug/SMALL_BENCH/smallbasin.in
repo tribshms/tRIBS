@@ -29,7 +29,7 @@ STARTDATE:      Starting time 			 	 (MM/DD/YYYY/HH)
 9/24/1996/00/00
 
 RUNTIME:     	Run duration				 (hours) 100
-24
+1800
 
 TIMESTEP:    	Unsaturated zone computational time step (mins)
 3.75

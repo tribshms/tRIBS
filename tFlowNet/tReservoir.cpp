@@ -32,7 +32,7 @@
 *****************************************************************************/
 tReservoir::tReservoir()
 {
-    std::cerr << "Constructing tReservoir object \n"; //-WR debug
+
 }
 
 

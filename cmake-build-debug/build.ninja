@@ -47,386 +47,362 @@ cmake_ninja_workdir = /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build
 build cmake_object_order_depends_target_tRIBSgrid: phony || CMakeFiles/tRIBSgrid.dir
 
 build CMakeFiles/tRIBSgrid.dir/main.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/main.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/main.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir
 
 build CMakeFiles/tRIBSgrid.dir/Headers/globalFns.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/Headers/globalFns.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/Headers/globalFns.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/Headers
 
 build CMakeFiles/tRIBSgrid.dir/Mathutil/mathutil.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/Mathutil/mathutil.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/Mathutil/mathutil.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/Mathutil
 
 build CMakeFiles/tRIBSgrid.dir/Mathutil/predicates.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/Mathutil/predicates.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/Mathutil/predicates.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/Mathutil
 
 build CMakeFiles/tRIBSgrid.dir/tArray/tArray.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tArray/tArray.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tArray/tArray.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tArray
 
 build CMakeFiles/tRIBSgrid.dir/tArray/tMatrix.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tArray/tMatrix.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tArray/tMatrix.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tArray
 
 build CMakeFiles/tRIBSgrid.dir/tCNode/tCNode.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tCNode/tCNode.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tCNode/tCNode.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tCNode
 
 build CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowNet.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tFlowNet/tFlowNet.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowNet.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tFlowNet
 
 build CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowResults.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tFlowNet/tFlowResults.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowResults.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tFlowNet
 
 build CMakeFiles/tRIBSgrid.dir/tFlowNet/tKinemat.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tFlowNet/tKinemat.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tFlowNet/tKinemat.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tFlowNet
 
 build CMakeFiles/tRIBSgrid.dir/tFlowNet/tResData.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tFlowNet/tResData.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tFlowNet/tResData.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tFlowNet
 
 build CMakeFiles/tRIBSgrid.dir/tFlowNet/tReservoir.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tFlowNet/tReservoir.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tFlowNet/tReservoir.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tFlowNet
 
 build CMakeFiles/tRIBSgrid.dir/tGraph/tGraph.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tGraph/tGraph.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tGraph/tGraph.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tGraph
 
 build CMakeFiles/tRIBSgrid.dir/tGraph/tGraphNode.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tGraph/tGraphNode.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tGraph/tGraphNode.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tGraph
 
 build CMakeFiles/tRIBSgrid.dir/tHydro/tEvapoTrans.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tHydro/tEvapoTrans.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tHydro/tEvapoTrans.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tHydro
 
 build CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMet.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tHydro/tHydroMet.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMet.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tHydro
 
 build CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetConvert.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tHydro/tHydroMetConvert.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetConvert.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tHydro
 
 build CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetStoch.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tHydro/tHydroMetStoch.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetStoch.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tHydro
 
 build CMakeFiles/tRIBSgrid.dir/tHydro/tHydroModel.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tHydro/tHydroModel.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tHydro/tHydroModel.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tHydro
 
 build CMakeFiles/tRIBSgrid.dir/tHydro/tIntercept.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tHydro/tIntercept.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tHydro/tIntercept.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tHydro
 
 build CMakeFiles/tRIBSgrid.dir/tHydro/tSnowIntercept.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tHydro/tSnowIntercept.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tHydro/tSnowIntercept.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tHydro
 
 build CMakeFiles/tRIBSgrid.dir/tHydro/tSnowPack.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tHydro/tSnowPack.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tHydro/tSnowPack.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tHydro
 
 build CMakeFiles/tRIBSgrid.dir/tHydro/tWaterBalance.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tHydro/tWaterBalance.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tHydro/tWaterBalance.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tHydro
 
 build CMakeFiles/tRIBSgrid.dir/tInOut/tInputFile.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tInOut/tInputFile.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tInOut/tInputFile.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tInOut
 
 build CMakeFiles/tRIBSgrid.dir/tInOut/tOstream.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tInOut/tOstream.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tInOut/tOstream.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tInOut
 
 build CMakeFiles/tRIBSgrid.dir/tInOut/tOutput.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tInOut/tOutput.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tInOut/tOutput.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tInOut
 
 build CMakeFiles/tRIBSgrid.dir/tList/tList.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tList/tList.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tList/tList.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tList
 
 build CMakeFiles/tRIBSgrid.dir/tListInputData/tListInputData.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tListInputData/tListInputData.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tListInputData/tListInputData.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tListInputData
 
 build CMakeFiles/tRIBSgrid.dir/tMesh/tMesh.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tMesh/tMesh.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tMesh/tMesh.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tMesh
 
 build CMakeFiles/tRIBSgrid.dir/tMesh/tTriangulator.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tMesh/tTriangulator.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tMesh/tTriangulator.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tMesh
 
 build CMakeFiles/tRIBSgrid.dir/tMeshElements/meshElements.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tMeshElements/meshElements.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tMeshElements/meshElements.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tMeshElements
 
 build CMakeFiles/tRIBSgrid.dir/tMeshList/tMeshList.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tMeshList/tMeshList.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tMeshList/tMeshList.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tMeshList
 
-build CMakeFiles/tRIBSgrid.dir/tParallel/tParallel.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tParallel/tParallel.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
-  DEP_FILE = CMakeFiles/tRIBSgrid.dir/tParallel/tParallel.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
-  OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
-  OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tParallel
-
-build CMakeFiles/tRIBSgrid.dir/tParallel/tTimer.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tParallel/tTimer.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
-  DEP_FILE = CMakeFiles/tRIBSgrid.dir/tParallel/tTimer.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
-  OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
-  OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tParallel
-
-build CMakeFiles/tRIBSgrid.dir/tParallel/tTimings.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tParallel/tTimings.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
-  DEP_FILE = CMakeFiles/tRIBSgrid.dir/tParallel/tTimings.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
-  OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
-  OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tParallel
-
 build CMakeFiles/tRIBSgrid.dir/tPtrList/tPtrList.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tPtrList/tPtrList.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tPtrList/tPtrList.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tPtrList
 
 build CMakeFiles/tRIBSgrid.dir/tRasTin/tInvariant.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tRasTin/tInvariant.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tRasTin/tInvariant.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tRasTin
 
 build CMakeFiles/tRIBSgrid.dir/tRasTin/tRainGauge.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tRasTin/tRainGauge.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tRasTin/tRainGauge.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tRasTin
 
 build CMakeFiles/tRIBSgrid.dir/tRasTin/tRainfall.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tRasTin/tRainfall.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tRasTin/tRainfall.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tRasTin
 
 build CMakeFiles/tRIBSgrid.dir/tRasTin/tResample.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tRasTin/tResample.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tRasTin/tResample.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tRasTin
 
 build CMakeFiles/tRIBSgrid.dir/tRasTin/tShelter.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tRasTin/tShelter.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tRasTin/tShelter.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tRasTin
 
 build CMakeFiles/tRIBSgrid.dir/tRasTin/tVariant.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tRasTin/tVariant.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tRasTin/tVariant.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tRasTin
 
 build CMakeFiles/tRIBSgrid.dir/tSimulator/tControl.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tSimulator/tControl.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tSimulator/tControl.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tSimulator
 
 build CMakeFiles/tRIBSgrid.dir/tSimulator/tPreProcess.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tSimulator/tPreProcess.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tSimulator/tPreProcess.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tSimulator
 
 build CMakeFiles/tRIBSgrid.dir/tSimulator/tRestart.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tSimulator/tRestart.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tSimulator/tRestart.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tSimulator
 
 build CMakeFiles/tRIBSgrid.dir/tSimulator/tRunTimer.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tSimulator/tRunTimer.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tSimulator/tRunTimer.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tSimulator
 
 build CMakeFiles/tRIBSgrid.dir/tSimulator/tSimul.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tSimulator/tSimul.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tSimulator/tSimul.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tSimulator
 
 build CMakeFiles/tRIBSgrid.dir/tStorm/tStorm.cpp.o: CXX_COMPILER__tRIBSgrid_Debug /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/tStorm/tStorm.cpp || cmake_object_order_depends_target_tRIBSgrid
-  DEFINES = -DGRAPH_TRIBS -DLINUX_32 -DPARALLEL_TRIBS
+  DEFINES = -DMAC
   DEP_FILE = CMakeFiles/tRIBSgrid.dir/tStorm/tStorm.cpp.o.d
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -fcolor-diagnostics
-  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS -isystem /opt/homebrew/Cellar/open-mpi/4.1.5/include
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS/cmake-build-debug -I/Users/lraming/Documents/tRIBSdev/Merged_tRIBS
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   OBJECT_FILE_DIR = CMakeFiles/tRIBSgrid.dir/tStorm
 
@@ -438,10 +414,8 @@ build CMakeFiles/tRIBSgrid.dir/tStorm/tStorm.cpp.o: CXX_COMPILER__tRIBSgrid_Debu
 #############################################
 # Link the executable tRIBSgrid
 
-build tRIBSgrid: CXX_EXECUTABLE_LINKER__tRIBSgrid_Debug CMakeFiles/tRIBSgrid.dir/main.cpp.o CMakeFiles/tRIBSgrid.dir/Headers/globalFns.cpp.o CMakeFiles/tRIBSgrid.dir/Mathutil/mathutil.cpp.o CMakeFiles/tRIBSgrid.dir/Mathutil/predicates.cpp.o CMakeFiles/tRIBSgrid.dir/tArray/tArray.cpp.o CMakeFiles/tRIBSgrid.dir/tArray/tMatrix.cpp.o CMakeFiles/tRIBSgrid.dir/tCNode/tCNode.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowNet.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowResults.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tKinemat.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tResData.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tReservoir.cpp.o CMakeFiles/tRIBSgrid.dir/tGraph/tGraph.cpp.o CMakeFiles/tRIBSgrid.dir/tGraph/tGraphNode.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tEvapoTrans.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMet.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetConvert.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetStoch.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tHydroModel.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tIntercept.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tSnowIntercept.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tSnowPack.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tWaterBalance.cpp.o CMakeFiles/tRIBSgrid.dir/tInOut/tInputFile.cpp.o CMakeFiles/tRIBSgrid.dir/tInOut/tOstream.cpp.o CMakeFiles/tRIBSgrid.dir/tInOut/tOutput.cpp.o CMakeFiles/tRIBSgrid.dir/tList/tList.cpp.o CMakeFiles/tRIBSgrid.dir/tListInputData/tListInputData.cpp.o CMakeFiles/tRIBSgrid.dir/tMesh/tMesh.cpp.o CMakeFiles/tRIBSgrid.dir/tMesh/tTriangulator.cpp.o CMakeFiles/tRIBSgrid.dir/tMeshElements/meshElements.cpp.o CMakeFiles/tRIBSgrid.dir/tMeshList/tMeshList.cpp.o CMakeFiles/tRIBSgrid.dir/tParallel/tParallel.cpp.o CMakeFiles/tRIBSgrid.dir/tParallel/tTimer.cpp.o CMakeFiles/tRIBSgrid.dir/tParallel/tTimings.cpp.o CMakeFiles/tRIBSgrid.dir/tPtrList/tPtrList.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tInvariant.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tRainGauge.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tRainfall.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tResample.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tShelter.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tVariant.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tControl.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tPreProcess.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tRestart.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tRunTimer.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tSimul.cpp.o CMakeFiles/tRIBSgrid.dir/tStorm/tStorm.cpp.o | /opt/homebrew/Cellar/open-mpi/4.1.5/lib/libmpi.dylib
-  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk
-  LINK_FLAGS = -L/opt/homebrew/Cellar/libevent/2.1.12/lib
-  LINK_LIBRARIES = /opt/homebrew/Cellar/open-mpi/4.1.5/lib/libmpi.dylib
+build tRIBSgrid: CXX_EXECUTABLE_LINKER__tRIBSgrid_Debug CMakeFiles/tRIBSgrid.dir/main.cpp.o CMakeFiles/tRIBSgrid.dir/Headers/globalFns.cpp.o CMakeFiles/tRIBSgrid.dir/Mathutil/mathutil.cpp.o CMakeFiles/tRIBSgrid.dir/Mathutil/predicates.cpp.o CMakeFiles/tRIBSgrid.dir/tArray/tArray.cpp.o CMakeFiles/tRIBSgrid.dir/tArray/tMatrix.cpp.o CMakeFiles/tRIBSgrid.dir/tCNode/tCNode.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowNet.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tFlowResults.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tKinemat.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tResData.cpp.o CMakeFiles/tRIBSgrid.dir/tFlowNet/tReservoir.cpp.o CMakeFiles/tRIBSgrid.dir/tGraph/tGraph.cpp.o CMakeFiles/tRIBSgrid.dir/tGraph/tGraphNode.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tEvapoTrans.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMet.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetConvert.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tHydroMetStoch.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tHydroModel.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tIntercept.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tSnowIntercept.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tSnowPack.cpp.o CMakeFiles/tRIBSgrid.dir/tHydro/tWaterBalance.cpp.o CMakeFiles/tRIBSgrid.dir/tInOut/tInputFile.cpp.o CMakeFiles/tRIBSgrid.dir/tInOut/tOstream.cpp.o CMakeFiles/tRIBSgrid.dir/tInOut/tOutput.cpp.o CMakeFiles/tRIBSgrid.dir/tList/tList.cpp.o CMakeFiles/tRIBSgrid.dir/tListInputData/tListInputData.cpp.o CMakeFiles/tRIBSgrid.dir/tMesh/tMesh.cpp.o CMakeFiles/tRIBSgrid.dir/tMesh/tTriangulator.cpp.o CMakeFiles/tRIBSgrid.dir/tMeshElements/meshElements.cpp.o CMakeFiles/tRIBSgrid.dir/tMeshList/tMeshList.cpp.o CMakeFiles/tRIBSgrid.dir/tPtrList/tPtrList.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tInvariant.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tRainGauge.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tRainfall.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tResample.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tShelter.cpp.o CMakeFiles/tRIBSgrid.dir/tRasTin/tVariant.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tControl.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tPreProcess.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tRestart.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tRunTimer.cpp.o CMakeFiles/tRIBSgrid.dir/tSimulator/tSimul.cpp.o CMakeFiles/tRIBSgrid.dir/tStorm/tStorm.cpp.o
+  FLAGS = -O0 -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk
   OBJECT_DIR = CMakeFiles/tRIBSgrid.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -491,14 +465,14 @@ build all: phony tRIBSgrid
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindMPI.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindMPI/test_mpi.c /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPackageMessage.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPkgConfig.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake CMakeFiles/FindMPI/test_mpi.cpp
+build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindMPI.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindMPI/test_mpi.c /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPackageHandleStandardArgs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPackageMessage.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/FindPkgConfig.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake CMakeFiles/FindMPI/test_mpi.cpp: phony
+build /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-C.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /Users/lraming/Documents/tRIBSdev/Merged_tRIBS/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake: phony
 
 
 #############################################
