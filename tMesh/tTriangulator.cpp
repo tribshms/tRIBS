@@ -853,7 +853,8 @@ void tt_build_elem_table(int npoints, const point *p,
 				int ielem_current = -1;
 				if (edges[iedge].lef == -1) {
 					assert(edges[iedge].let == -1);
-				} else {
+				}
+                else {
 					// don't bother with orientation at the moment
 					ielem_current = ielem;
 					elems[ielem].e1 = iedge;

@@ -1476,7 +1476,7 @@ MakePointFromFileArcInfo( tInputFile &infile ){
 	}
 	outfile.close();
 	outtextfile.close();
-	delete parray; //TODO delete[]? WR 'delete' applied to a pointer that was allocated with 'new[]'; did you mean 'delete[]'? [-Wmismatched-new-delete]
+	delete [] parray; //TODO delete[]? WR 'delete' applied to a pointer that was allocated with 'new[]'; did you mean 'delete[]'? [-Wmismatched-new-delete]
 }
 
 /***************************************************************************** 
@@ -1547,7 +1547,9 @@ MakePointFromFileArcInfoGen( tInputFile &infile )
 		nbpnts++;
 		filepnt>>x>>y>>z;
 		filepnt>>oneline; 
-		delete (x,y,z);
+		delete [] x;
+        delete [] y;
+        delete [] z;
 	}
 	filepnt.close();
 	
@@ -1572,8 +1574,12 @@ MakePointFromFileArcInfoGen( tInputFile &infile )
 		filelin>>x>>y>>z;
 		numbound++; 
 		for(i=0;i<25;i++)
-			oneline[i] = x[i];
-		delete (x,y,z); // delete x,y,z only deletes z? -WR
+        {
+            oneline[i] = x[i];
+        }
+        delete [] x;
+        delete [] y;
+        delete [] z;
 	}
 	numbound--;      
 	filelin.close();
@@ -1696,11 +1702,13 @@ MakePointFromFileArcInfoGen( tInputFile &infile )
 					flagd = 1;
 				}
 			}
+
 			if(flag==0 && flagb==0 && flagd==0){
 				psx[ct] = new char[25]; psy[ct] = new char[25]; psz[ct] = new char[25]; 
 				psx[ct]=rx[cta]; psy[ct]=ry[cta]; psz[ct]=rz[cta];
-				ct++;} 
-			cta++;
+				ct++;
+            }
+            cta++;
 		}   
 		filelin4 >> oneline;
 		filelin4 >> oneline;
@@ -1889,22 +1897,31 @@ MakePointFromFileArcInfoGen( tInputFile &infile )
 	
 	outfile.close();
 	outtextfile.close();
-	
-	for(i=0;i<numstream;i++){
-		delete psx[i]; delete psy[i]; delete psz[i];
-		delete rx[i]; delete ry[i]; delete rz[i];
-	}
+
+    // TODO - WR there is some odd behavior deleting variables here, mostly because of the pointers pointing to pointers, could update to make more clear and make sure is up to date with current practices
+    //delete rx, ry, rz first since psx... etc point to them first
+    for(i=0; i < cta; i++){
+        delete [] rx[i];
+        delete [] ry[i];
+        delete [] rz[i];
+    }
+
 	for(i=0;i<numbound;i++){
-		delete pbx[i]; delete pby[i]; delete pbz[i];
+		delete pbx[i];
+        delete pby[i];
+        delete pbz[i];
 	}
-	for(i=0;i<numinterior;i++){
-		delete rix[i]; delete riy[i]; delete riz[i];
-		delete pix[i]; delete piy[i]; delete piz[i];
+	for(i=0;i<nbpnts;i++){
+		delete rix[i];
+        delete riy[i];
+        delete riz[i];
 	}
-	for(i=0;i<numring;i++){
-		delete pdx[i]; delete pdy[i]; delete pdz[i];
-		delete rdx[i]; delete rdy[i]; delete rdz[i];
+	for(i=0;i<cdta;i++){
+		delete rdx[i];
+        delete rdy[i];
+        delete rdz[i];
 	}
+
 	delete [] psx; delete[]  psy; delete[] psz;
 	delete [] rx; delete[] ry; delete[] rz;
 	delete [] pbx; delete[] pby; delete[] pbz;
@@ -1912,10 +1929,15 @@ MakePointFromFileArcInfoGen( tInputFile &infile )
 	delete [] rix; delete[] riy; delete[] riz; 
 	delete [] pdx; delete[] pdy; delete[] pdz;
 	delete [] rdx; delete[] rdy; delete[] rdz;
-	delete xstream, ystream, zstream, xbound, ybound, zbound; // TODO: update delete here -WR  warning: 'delete' applied to a pointer that was allocated with 'new[]'; did you mean 'delete[]'? [-Wmismatched-new-delete]
+	delete xstream, ystream, zstream, xbound, ybound, zbound; //
 	delete xinterior, yinterior, zinterior;
 	delete bstream, bbound, binterior;
-	delete cnumx, cnumy, cnumz, enumx, enumy, enumz;
+//	delete[] cnumx;
+//  delete[] cnumy;
+//  delete[] cnumz;
+//  delete[] enumx;
+//  delete[] enumy;
+//  delete[] enumz;
 	
 	return;
 }
