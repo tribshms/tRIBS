@@ -21,7 +21,8 @@ set(CMAKE_CXX_STANDARD 17)
 # used while testing and developing
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0") # no optimization here
+
 ### sanitizer finds leaks in parallel version--open mpi is known to have leaks
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g") # different options available for using Sanitizer
 

@@ -1333,7 +1333,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		<<setprecision(3)<<cn->getRootMoistureSC()<<','
 		<<setprecision(3)<<cn->getCanStorage()<<','
 		<<setprecision(3)<<cn->getActEvap()<<','
-		<<setprecision(5)<<cn->getCumBarEvap()<<',' // change to cumulative outputs CJC2020
+		<<setprecision(5)<<cn->getCumBarEvap()<<',' // change to cumulative outputs CJC2020 TODO review cumulative output added by josh
 		<<setprecision(5)<<cn->getCumTotEvap()<<',' // change to cumulative outputs CJC2020
 		<<setprecision(3)<<cn->getGFlux()<<','
 		<<setprecision(3)<<cn->getHFlux()<<','
