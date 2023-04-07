@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - CMake functionality (CMakeLists.txt)
-- Merged fixes from different versions of tRIBS code including from Josh Cederstrom, Carlos Lizarraga, and Xiaoyang Tang
+- Merged fixes from different versions of tRIBS code including from Josh Cederstrom, Ara Ko, Carlos Lizarraga, and Xiaoyang Tang
 - added #include "tTimer.h" to tTimer.cpp
 - markdown (md) sub directory to display markdown files on github
 
