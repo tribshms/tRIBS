@@ -5,7 +5,8 @@ This version of tRIBS has been updated with a [CMake](https://cmake.org/) build 
 
 Click [here](./md/CMake.md) for instructions using CMake to compile tRIBS.
 
-To see the latest changes incorporated into this verison of tRIBS see the[CHANGELOG.](./md/CHANGELOG.md)
+To see the latest changes incorporated into this version of tRIBS see the[CHANGELOG.](./md/CHANGELOG.md) and for information on upcoming updates and tasks for tRIBS development see [TODO](./md/TODO).
+
 
 <!-- This verison of tRIBS incorporates significant developement, with the latest modifications made by Josh Cederstrom over the course of his degree. This version also includes fixes from Ara Ko, Carlos Lizarraga, and Xiaoyang. It does not include updates to make files, as a current goal is to bypass this step by using CMake.
 
