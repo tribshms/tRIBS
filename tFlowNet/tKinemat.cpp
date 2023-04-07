@@ -37,7 +37,7 @@
 *****************************************************************************/
 tKinemat::tKinemat(SimulationControl *sPtr, tMesh<tCNode> *gridRef, tInputFile &infile, 
 				   tRunTimer *timptr)
-:  ais(NULL), bis(NULL), his(NULL), reis(NULL), siis(NULL), rifis(NULL),
+:  ais(NULL), bis(NULL), his(NULL), reis(NULL), siis(NULL), rifis(NULL), // what is the : doing here?
 sumis(NULL), C(NULL), Y1(NULL), Y2(NULL), Y3(NULL),
 tFlowNet(sPtr, gridRef, infile, timptr)
 {
@@ -48,7 +48,7 @@ tFlowNet(sPtr, gridRef, infile, timptr)
 	char fullName2[kMaxNameSize+20];
 	
 	n = m = m1 = 0;
-	cHead = cOutlet = NULL;  
+	cHead = cOutlet = nullptr;
 	TimeSteps = 0;    // Time steps elapsed 
 	qit=Qin=H0=Qout=dt=0;
 	
@@ -133,87 +133,98 @@ tFlowNet(sPtr, gridRef, infile, timptr)
 	optres = ResReadItem.IterReadItem(infile, tempVariable,"OPTRESERVOIR");
 	resTimeStep = ResReadItem.IterReadItem(infile, tempVariable,"TIMESTEP");
 	resRunTime = ResReadItem.IterReadItem(infile, tempVariable,"RUNTIME");
-	// cout<<"OptRES = "<<optres<<endl;
+	cout<<"OptRES = "<<optres<<endl;
 	if (optres == 1) {
-	initialize_values(infile, resTimeStep);
+	    initialize_values(infile, resTimeStep);
 	}
+    else
+    {
+    /*// TODO: debug
+     * The way the reservoir setup is currently LevelPool is created in the tKinemat.h so that functions that can use LevelPool can later be used.
+     * In the process the call creates tReservoir, which then calls pointers to two instances of tResData with reservoirType not having an address (least as far as I cant tell).
+     * Later when LevelPool is destructed it also trys to destruct pointers from reservoirType--which as far as I can tell don't actually point to anything. In this case I set both pointers to null.
+     * I think this works, but may not as I imagine, hence the todo above -WR
+     */
+    LevelPool.reservoirTypes = nullptr;
+    LevelPool.reservoirNodes = nullptr;
+    }
 	/******** Edits by JECR 2015 End *******/
 
 }
-
-/****************************************************************************
-**  
-**  tKinemat::tKinemat()
-**
-**  Constructor for testing purposes
-**
-*****************************************************************************/
-tKinemat::tKinemat() : ais(NULL), bis(NULL), his(NULL), reis(NULL), 
-siis(NULL), rifis(NULL), sumis(NULL), C(NULL), 
-Y1(NULL), Y2(NULL), Y3(NULL)
-{  
-	ControlOut.open("h-cntr.stream");
-	
-	if ( !ControlOut.good() ) {
-		cout<<"\nWarning: Simulation control file not created... "
-		<<"\nExiting program..."<<endl<<flush;
-		exit(2);
-	}
-	
-	GeomtFile.open("artif_chann.dat");
-	
-	if (!GeomtFile) {
-		cout<<"\nError: File artif_chann.dat not found!\nExiting Program..."<<endl;
-		exit(2);
-	}
-	
-	theOFStream.open("_Outlet.qout");
-	if ( !theOFStream.good() ) {
-		cout<<"\nWarning: Output file not created... "
-		<<"\nExiting program..."<<endl<<flush;
-		exit(2);
-	}
-	if (simCtrl->Header_label == 'Y')
-		theOFStream<<"1-Time,hr\t "<<"2-Qstrm,m3/s\t"<<"3-Hlev,m"<<"\n";
-}
-
-/****************************************************************************
-**  
-**  tKinemat::tKinemat()
-**
-**  Constructor for testing purposes
-**
-*****************************************************************************/
-tKinemat::tKinemat(char *argv[]) : ais(NULL), bis(NULL), his(NULL),
-reis(NULL), siis(NULL), rifis(NULL),
-sumis(NULL), C(NULL), Y1(NULL), 
-Y2(NULL), Y3(NULL)
-{
-	GeomtFile.open( argv[1] );
-	if (!GeomtFile) {
-		cout<<"\nError: File "<<argv[1]<<" not found!\nExiting Program..."<<endl;
-		exit(2);
-	}
-	
-	theOFStream.open(argv[2]);
-	if ( !theOFStream.good() ) {
-		cout<<"\nWarning: Output file not created... "
-		<<"\nExiting program..."<<endl<<flush;
-		exit(2);
-	}
-	if (simCtrl->Header_label == 'Y')
-		theOFStream<<"1-Time,hr\t "<<"2-Qstrm,m3/s\t"<<"3-Hlev,m"<<endl<<flush;
-	
-	ControlOut.open("h_cntr.stream");
-	
-	if ( !ControlOut.good() ) {
-		cout<<"\nWarning: Simulation control file not created... "
-		<<"\nExiting program..."<<endl<<flush;
-		exit(2);
-	}
-	
-	n = m = m1 = 0; 
-} 
+//
+// /****************************************************************************
+//**
+//**  tKinemat::tKinemat()
+//**
+//**  Constructor for testing purposes
+//**
+//*****************************************************************************/
+//tKinemat::tKinemat() : ais(NULL), bis(NULL), his(NULL), reis(NULL),
+//siis(NULL), rifis(NULL), sumis(NULL), C(NULL),
+//Y1(NULL), Y2(NULL), Y3(NULL)
+//{
+//	ControlOut.open("h-cntr.stream");
+//
+//	if ( !ControlOut.good() ) {
+//		cout<<"\nWarning: Simulation control file not created... "
+//		<<"\nExiting program..."<<endl<<flush;
+//		exit(2);
+//	}
+//
+//	GeomtFile.open("artif_chann.dat");
+//
+//	if (!GeomtFile) {
+//		cout<<"\nError: File artif_chann.dat not found!\nExiting Program..."<<endl;
+//		exit(2);
+//	}
+//
+//	theOFStream.open("_Outlet.qout");
+//	if ( !theOFStream.good() ) {
+//		cout<<"\nWarning: Output file not created... "
+//		<<"\nExiting program..."<<endl<<flush;
+//		exit(2);
+//	}
+//	if (simCtrl->Header_label == 'Y')
+//		theOFStream<<"1-Time,hr\t "<<"2-Qstrm,m3/s\t"<<"3-Hlev,m"<<"\n";
+//}
+//
+// /****************************************************************************
+//**
+//**  tKinemat::tKinemat()
+//**
+//**  Constructor for testing purposes
+//**
+//*****************************************************************************/
+//tKinemat::tKinemat(char *argv[]) : ais(NULL), bis(NULL), his(NULL),
+//reis(NULL), siis(NULL), rifis(NULL),
+//sumis(NULL), C(NULL), Y1(NULL),
+//Y2(NULL), Y3(NULL)
+//{
+//	GeomtFile.open( argv[1] );
+//	if (!GeomtFile) {
+//		cout<<"\nError: File "<<argv[1]<<" not found!\nExiting Program..."<<endl;
+//		exit(2);
+//	}
+//
+//	theOFStream.open(argv[2]);
+//	if ( !theOFStream.good() ) {
+//		cout<<"\nWarning: Output file not created... "
+//		<<"\nExiting program..."<<endl<<flush;
+//		exit(2);
+//	}
+//	if (simCtrl->Header_label == 'Y')
+//		theOFStream<<"1-Time,hr\t "<<"2-Qstrm,m3/s\t"<<"3-Hlev,m"<<endl<<flush;
+//
+//	ControlOut.open("h_cntr.stream");
+//
+//	if ( !ControlOut.good() ) {
+//		cout<<"\nWarning: Simulation control file not created... "
+//		<<"\nExiting program..."<<endl<<flush;
+//		exit(2);
+//	}
+//
+//	n = m = m1 = 0;
+//}
 
 
 /****************************************************************************
@@ -738,6 +749,7 @@ void tKinemat::initialize_values(tInputFile &infile, double resTime)
 	LevelPool.SetResVariables(infile);
 	LevelPool.SetResNodes(infile);
 }
+
 
 void tKinemat::Reservoir_Routing(int Rnode)
 {

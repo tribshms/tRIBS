@@ -34,6 +34,7 @@
 #include <sys/types.h>
 #include <sys/times.h>
 #include <sys/time.h>
+#include <mpi.h>
 
 #ifdef __sgi
 // fix a glitch in ANSI compatibility with SGI headers
@@ -82,7 +83,7 @@ private:
 	  		        //  These values aren't used for anything
 };
 
-#include "tParallel/tTimer.cpp"
+//#include "tParallel/tTimer.cpp" //Not sure what's going on here? -WR
 
 #endif // TTIMER_H
 

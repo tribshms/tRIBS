@@ -148,6 +148,7 @@ protected:
   
   //state variables (intrinsic)
   double liqWE, iceWE, snWE; //cm
+  double snSub, snEvap; //cm added by CJC2020
   double canWE; //cm
   double liqRoute; //cm
   double liqWEm, iceWEm, snWEm; //m

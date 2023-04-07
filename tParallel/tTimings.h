@@ -43,6 +43,11 @@
 // include files
 #include "tParallel/tTimer.h"
 
+// added by -WR to compile need to check
+#include <iostream>
+#include <mpi.h>
+using namespace std;
+
 //////////////////////////////////////////////////////////////////////
 /*
   A simple compliant implementation of auto_ptr.
@@ -199,7 +204,7 @@ private:
   static TimerMap_t TimerMap;
 };
 
-#include "tParallel/tTimings.cpp"
+//#include "tParallel/tTimings.cpp" // Not sure why it was done this way,so you only call tTimings.h, causes errors with CMAKE
 
 #endif // TTIMINGS_H
 

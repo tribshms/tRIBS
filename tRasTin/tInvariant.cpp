@@ -35,6 +35,10 @@ GenericSoilData::GenericSoilData(tMesh<tCNode> *mesh,
 {  
 	int np, id;
 	double *sc;
+    
+    // Changes added by Giuseppe in August 2016 to allow reading soil grids
+    int stdgrid_opt = 100; // Assign a random value
+    stdgrid_opt = input->ReadItem(stdgrid_opt, "OPTSOILTYPE" );
   		
 	// The last one calls tResample functions
 	input->ReadItem(soilTable, "SOILTABLENAME"); // input table
@@ -76,6 +80,272 @@ GenericSoilData::GenericSoilData(tMesh<tCNode> *mesh,
 	
 	Inp0.close();
 	delete [] sc;
+    
+    // Giuseppe 2016 - Assign the soil properties to the nodes via the set functions
+    id = 0;
+    for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+        setSoilPtr( cn->getSoilID() );
+        
+        cn->setKs(getSoilProp(1)); // Surface hydraulic conductivity
+        cn->setThetaS(getSoilProp(2)); // Saturation moisture content
+        cn->setThetaR(getSoilProp(3)); // Residual moisture content
+        cn->setPoreSize(getSoilProp(4)); // Pore-size distribution index
+        cn->setAirEBubPres(getSoilProp(5)); // Air entry bubbling pressure
+        cn->setDecayF(getSoilProp(6)); // Decay parameter in the exp
+        cn->setSatAnRatio(getSoilProp(7)); // Anisotropy ratio (saturated)
+        cn->setUnsatAnRatio(getSoilProp(8)); // Anisotropy ratio (unsaturated)
+        cn->setPorosity(getSoilProp(9)); // Porosity
+        cn->setVolHeatCond(getSoilProp(10)); // Volumetric Heat Conductivity
+        cn->setSoilHeatCap(getSoilProp(11)); // Soil Heat Capacity
+        
+        id++;
+    }
+    
+    //}                                 // Comment out later Giuseppe 2016
+    //else if (stdgrid_opt == 1)        // Comment out later Giuseppe 2016
+    if (stdgrid_opt == 1)
+    {
+        
+        int sID_array = 0;
+        for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+            sID_array++;
+        }
+        int Asize = sID_array;
+        
+        // Read the path to the soil grids from the gdf file
+        input->ReadItem(scfile, "SCGRID");
+        
+        int sID = 0;
+        int numParameters;
+        double SCgridlat;
+        double SCgridlong;
+        double SCgridgmt;
+        
+        cout<<"\nReading Soil Cover Data Grid File: ";
+        cout<< scfile<<"..."<<endl<<flush;
+        
+        ifstream readFile(scfile);
+        if (!readFile) {
+            cout << "\nFile "<<scfile<<" not found!" << endl;
+            cout << "Exiting Program...\n\n"<<endl;
+            exit(1);}
+        
+        readFile >> numParameters; //Reads first line of the *.gdf file (11 parameters)
+        
+        //Read default parameters from the second line of the *.gdf file
+        readFile >> SCgridlat;
+        readFile >> SCgridlong;
+        readFile >> SCgridgmt;
+        
+        // Initialize variable with the names of the soil parameters and corresponding files
+        SCgridBaseNames = new char*[numParameters];
+        SCgridParamNames = new char*[numParameters];
+        SCgridExtNames = new char*[numParameters];
+        SCgridName = new char*[numParameters];
+        
+        for (int ct=0;ct<numParameters;ct++) {
+            
+            SCgridParamNames[ct] = new char[10];// Giuseppe: This a char, while previously it was defined as pointer!!!
+            SCgridBaseNames[ct] = new char[kName];
+            SCgridExtNames[ct] = new char[10];
+            SCgridName[ct] = new char[100];
+            readFile >> SCgridParamNames[ct];
+            
+            if ( (strcmp(SCgridParamNames[ct],"KS")!=0) &&
+                (strcmp(SCgridParamNames[ct],"TS")!=0) &&
+                (strcmp(SCgridParamNames[ct],"TR")!=0) &&
+                (strcmp(SCgridParamNames[ct],"PI")!=0) &&
+                (strcmp(SCgridParamNames[ct],"PB")!=0) &&
+                (strcmp(SCgridParamNames[ct],"FD")!=0) &&
+                (strcmp(SCgridParamNames[ct],"AR")!=0) &&
+                (strcmp(SCgridParamNames[ct],"UA")!=0) &&
+                (strcmp(SCgridParamNames[ct],"PO")!=0) &&
+                (strcmp(SCgridParamNames[ct],"VH")!=0) &&
+                (strcmp(SCgridParamNames[ct],"SH")!=0) ) {
+                
+                cout << "\nA soil cover parameter name in the SC gdf file is an unexpected one."<<endl;
+                cout << "\nExpected variables: KS,TS,TR,PI,PB,FD,AR,UA,PO,VH or SH" << endl;
+                cout << "\tCheck and re-run the program" << endl;
+                cout << "\nExiting Program..."<<endl<<endl;
+                exit(1);
+                
+            }
+            
+            readFile >> SCgridBaseNames[ct];
+            
+            if (strcmp(SCgridBaseNames[ct],"NO_DATA")==0) {
+                Cout << "\nCannot use NO_DATA for SC Grids"<<endl;
+                Cout << "\nExiting Program..."<<endl<<endl;
+                exit(1);
+            }
+            readFile >> SCgridExtNames[ct];
+            
+            //char result[100];   // array to hold the result.
+            
+            strcpy(SCgridName[ct],SCgridBaseNames[ct]); // copy the first string into SCgridName[ct]
+            strcat(SCgridName[ct],"."); // append "."
+            strcat(SCgridName[ct],SCgridExtNames[ct]); // append SCgridExtNames[ct]
+            
+            if (strcmp(SCgridParamNames[ct],"KS")==0)
+            {
+                // Resample Ks grid
+                cout << "\nResampling Ks grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setKs(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"TS")==0)
+            {
+                // Resample ThetaS grid
+                cout << "\nResampling ThetaS grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setThetaS(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"TR")==0)
+            {
+                // Resample ThetaR grid
+                cout << "\nResampling ThetaR grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setThetaR(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"PI")==0)
+            {
+                // Resample Pore Index grid
+                cout << "\nResampling Pore Index grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setPoreSize(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"PB")==0)
+            {
+                // Resample Air E. Bubbling P grid
+                cout << "\nResampling Air Entry Bubbling Pressure grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setAirEBubPres(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"FD")==0)
+            {
+                // Resample Decay grid
+                cout << "\nResampling Decay Exponent grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setDecayF(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"AR")==0)
+            {
+                // Resample Decay grid
+                cout << "\nResampling Saturated Anisotropy Ratio grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setSatAnRatio(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"UA")==0)
+            {
+                // Resample Decay grid
+                cout << "\nResampling Unsaturated Anisotropy Ratio grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setUnsatAnRatio(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"PO")==0)
+            {
+                // Resample Porosity grid
+                cout << "\nResampling Porosity grid..." << endl;;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setPorosity(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"VH")==0)
+            {
+                // Resample Volumetric Heat grid
+                cout << "\nResampling Volumetric Heat Conductivity grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setVolHeatCond(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+            if (strcmp(SCgridParamNames[ct],"SH")==0) 
+            {
+                // Resample Soil Heat grid
+                cout << "\nResampling Soil Heat Capacity grid..." << endl;
+                double *tmp = resamp->doIt(SCgridName[ct], 1);     // resamples grid // Bug fix to replace hardcoded indexing CJC 2022
+                tCNode *cn;
+                tMeshListIter <tCNode> niter ( mesh->getNodeList() );
+                id = 0;
+                for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+                    cn->setSoilHeatCap(tmp[id]);  //sets soil ID to tCNode
+                    id++;
+                }
+            }
+            
+        }
+        
+    }
+    
+    
 }
 
 GenericSoilData::~GenericSoilData() {   
@@ -350,6 +620,7 @@ void GenericLandData::SetLtypeParameters(tMesh<tCNode> *mesh,
 	ifstream Inp0(landTable);
 	if (!Inp0) {
 		cout <<"File "<<landTable<<" not found!!!"<<endl;
+		cout<<", tInvariant Error"<<endl;
 		exit(2);
 	}
 	

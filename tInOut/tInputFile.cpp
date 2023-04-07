@@ -42,7 +42,7 @@ tInputFile::~tInputFile()
 
 void tInputFile::CloseOldAndOpenNew( const char * filename) {
 	infile.close();
-	strcpy(InFileName, filename);
+	strcpy(InFileName, filename); // TODO: interrupted by signal 6: SIGABRT here, also note from Sanitizers indicated overlap in memory ranges. Note I think this occur when prompted to update .in file. -WR
 	infile.open( filename );
 	if( !infile.good() ){
 		cout << "\ntInputFile: Unable to open '"<< InFileName << "'." << endl;

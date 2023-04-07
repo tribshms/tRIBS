@@ -26,7 +26,6 @@
 //
 //=========================================================================
 
-#include "Headers/tribs_os.h"
 #include "tMeshElements/meshElements.h"
 #include "tInOut/tInputFile.h"
 #include "Headers/globalFns.h"
@@ -43,6 +42,13 @@
   #include <fstream>
   #include <cassert>
   #include <cmath>
+
+#elif defined MAC
+  #include <iostream>
+  #include <fstream>
+  #include <cassert>
+  #include <cmath>
+
 #elif defined WIN
   #include <iostream.h>
   #include <fstream.h>
@@ -90,6 +96,7 @@ public:
   double getQpout();
   double getRain();
   double getSrf_Hr();
+  double getCumSrf(); // added CJC2021
   double getSrf();
   double getHsrf();
   double getPsrf();
@@ -161,6 +168,8 @@ public:
   double getEvapoTransAge();//state
   double getSnLHF();//flux
   double getSnSHF();//flux
+  double getSnSub();//flux // CJC2020
+  double getSnEvap();//flux // CJC2020
   double getSnGHF();//flux
   double getSnPHF();//flux
   double getSnRLout();//flux
@@ -171,6 +180,10 @@ public:
   double getCumLHF();//integrated output
   double getCumMelt();//integrated output
   double getCumSHF();//integrated output
+  double getCumSnSub();//integrated output // CJC2020
+  double getCumSnEvap();//integrated output // CJC2020
+  double getCumTotEvap();//integrated output // CJC2020
+  double getCumBarEvap();//integrated output // CJC2020
   double getCumPHF();//integrated output
   double getCumRLin();//integrated output
   double getCumRLout();//integrated output
@@ -305,6 +318,18 @@ public:
   int getLandUse();
   int NoMoreTracers();
   int getReach();
+  // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
+  double getKs();
+  double getThetaS();
+  double getThetaR();
+  double getPoreSize();
+  double getAirEBubPres();
+  double getDecayF();
+  double getSatAnRatio();
+  double getUnsatAnRatio();
+  double getPorosity();
+  double getVolHeatCond();
+  double getSoilHeatCap();
   
   double getCentroidX();				// Geometric Methods
   double getCentroidY();
@@ -343,6 +368,20 @@ public:
   void setSoilID(int);                 //Invariant Members
   void setLandUse(int);               
   void setReach(int);
+  
+  // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
+  void setKs(double);
+  void setThetaS(double);
+  void setThetaR(double);
+  void setPoreSize(double);
+  void setAirEBubPres(double);
+  void setDecayF(double);
+  void setSatAnRatio(double);
+  void setUnsatAnRatio(double);
+  void setPorosity(double);
+  void setVolHeatCond(double);
+  void setSoilHeatCap(double);
+
   void setTTime(double);               //Routing Members
   void setHillPath(double);   
   void setStreamPath(double); 
@@ -473,6 +512,8 @@ public:
   void setEvapoTransAge(double);
   void setSnLHF(double);
   void setSnSHF(double);
+  void setSnSub(double); // Snowpack sublimation CJC2020
+  void setSnEvap(double); // Snowpack evaporation CJC2020
   void setSnGHF(double);
   void setSnPHF(double);
   void setSnRLout(double);
@@ -531,12 +572,17 @@ public:
   void addQgwIn(double);
   void addQstrm(double);
   void addAvSoilMoisture(double);
+  void addCumSrf(double); //added CJC2021
   void addSrf_Hr(double);
 
   // SKY2008Snow from AJR2007
   //snow
   void addLatHF(double);
   void addSHF(double);
+  void addSnSub(double); // Snowpack sublimation CJC2020
+  void addSnEvap(double); // Snowpack evaporation CJC2020
+  void addTotEvap(double); // Snowpack evaporation CJC2020
+  void addBarEvap(double); // Snowpack evaporation CJC2020
   void addPHF(double);
   void addRLin(double);
   void addRLout(double);
@@ -601,6 +647,7 @@ protected:
   list<double> gwc;  //SMM - added 09232008 for groundwater flux contributions 
   double srf_hr; 		// Runoff produced in one hour in mm
   double srf; 			// Total Runoff Generation in mm
+  double cumsrf; 			// added CJC2021
   double hsrf; 			// Hortonian Runoff in mm
   double esrf; 			// Exfiltration in mm
   double psrf; 			// Perched Saturation Runoff in mm
@@ -667,6 +714,8 @@ protected:
   double ETage;//state var
   double snLHF;//output
   double snSHF;//output
+  double snSub;//output // CJC2020
+  double snEvap;//output // CJC2020
   double snGHF; //output
   double snPHF; //output
   double snRLin; //output
@@ -744,6 +793,10 @@ protected:
   double cumHrsSun;
   double cumLHF;
   double cumSHF;
+  double cumSnSub; // Define snowpack sublimation CJC2020
+  double cumSnEvap; // Define snowpack evaporation CJC2020
+  double cumTotEvap; // Define total ET CJC2020
+  double cumBarEvap; // Define bare soil evaporation CJC2020
   double cumPHF;
   double cumRLin;
   double cumRLout;
@@ -762,6 +815,19 @@ protected:
   double Width;
   double Roughness;
   double FlowVelocity;
+    
+  // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
+  double Ks;
+  double ThetaS;
+  double ThetaR;
+  double PoreSize;
+  double AirEBubPres;
+  double DecayF;
+  double SatAnRatio;
+  double UnsatAnRatio;
+  double Porosity;
+  double VolHeatCond;
+  double SoilHeatCap;
 
   // double CanopyStorage;         //tWaterBalance Members
   // SKYnGM2008LU: CanopyStorage now replaced by CanopyStorVol below

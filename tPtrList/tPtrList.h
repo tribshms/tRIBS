@@ -29,7 +29,6 @@
 #ifndef TPTRLIST_H
 #define TPTRLIST_H
 
-#include "Headers/tribs_os.h"
 
 #ifdef ALPHA_64
   #include <assert.h>
@@ -136,7 +135,7 @@ public:
   void makeCircular();
   const NodeType *getIthPtr( int ) const;
   NodeType *getIthPtrNC( int ) const;
-  tPtrList<NodeType> *DataCopy();  
+  tPtrList<NodeType> *DataCopy();
     
 private:
   int nNodes;
@@ -865,12 +864,13 @@ inline tPtrList< NodeType > * tPtrList< NodeType >::
 DataCopy()
 {
    tPtrListIter<NodeType> iter( this );
-   NodeType * curr, * newitem;
+   NodeType* curr;
+   NodeType* newitem;
    tPtrList * newlist = new tPtrList();
    
    for( curr=iter.FirstP(); !(iter.AtEnd()); curr=iter.NextP() ){
       newitem = new NodeType( *curr );
-      newlist.insertAtBack( newitem );
+      newlist->insertAtBack( newitem );
    }
    return newlist;
 }
@@ -1025,7 +1025,8 @@ Prev(){
    tPtrListNode< NodeType > *tempnode;
    for( tempnode = ptrlistPtr->first;
         tempnode->next->Ptr->getID() != curptrnode->Ptr->getID();
-        tempnode = tempnode->next );
+        tempnode = tempnode->next )
+       ;
      curptrnode = tempnode;
    assert( curptrnode != 0 );
    counter--;

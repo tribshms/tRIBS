@@ -35,7 +35,7 @@ tCNode::tCNode() :tNode()
 	RiOld = RiNew = 0.0;
 	Qin = Qout = Qpin = Qpout = 0.0;
 	Rain = 0.0;
-	srf_hr=srf=hsrf=esrf=psrf=satsrf=rsrf=sbsrf=0.0;
+	srf_hr=srf=hsrf=esrf=psrf=satsrf=rsrf=sbsrf=cumsrf=0.0; //added cumsrf CJC2021
 	flowedge = 0;
 	gwchange = 0.0;
 	traveltime = hillpath = streampath = 0.0;
@@ -108,6 +108,8 @@ tCNode::tCNode() :tNode()
 	snTemperC = 0.0;
 	crAge = densAge = ETage = 0.0;
 	cumLHF = cumMelt = 0.0;
+	snSub = snEvap = 0.0; // Initialize snowpack cumulative sublimation & evaporation CJC2020
+	cumSnSub = cumSnEvap = cumTotEvap = cumBarEvap = 0.0; // Initialize snowpack cumulative sublimation & evaporation CJC2020
 	snLHF = snSHF = snGHF = snPHF = snRLin = snRLout = snRSin = 0.0;
 	Unode = Uerror = 0.0;
 	cumUError = 0.0;
@@ -155,7 +157,7 @@ tCNode::tCNode(tInputFile &infile) :tNode() {
 	RiOld = RiNew = 0.0;
 	Qin = Qout = Qpin = Qpout = 0.0;
 	Rain = 0.0;
-	srf_hr=srf=hsrf=esrf=psrf=satsrf=rsrf=sbsrf=0.0;
+	srf_hr=srf=hsrf=esrf=psrf=satsrf=rsrf=sbsrf=cumsrf=0.0; //added cumsrf CJC2021
 	flowedge = 0;
 	gwchange = 0.0;
 	traveltime = hillpath = streampath = 0.0;
@@ -228,6 +230,8 @@ tCNode::tCNode(tInputFile &infile) :tNode() {
 	snTemperC = 0.0;
 	crAge = densAge = ETage = 0.0;
 	cumLHF = cumMelt = 0.0;
+	snSub = snEvap = 0.0; // Initialize snowpack cumulative sublimation & evaporation CJC2020
+	cumSnSub = cumSnEvap = cumTotEvap = cumBarEvap = 0.0; // Initialize snowpack cumulative sublimation & evaporation CJC2020
 	snLHF = snSHF = snGHF = snPHF = snRLin = snRLout = snRSin = 0.0;
 	Unode = Uerror = 0.0;
 	cumUError = 0.0;
@@ -260,6 +264,19 @@ tCNode::tCNode(tInputFile &infile) :tNode() {
 	horizonAngle3375 = 0.0; 
 	sfact = 0.0;
 	lfact = 0.0;
+    
+    // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
+    Ks = 0.0;
+    ThetaS = 0.0;
+    ThetaR = 0.0;
+    PoreSize = 0.0;
+    AirEBubPres = 0.0;
+    DecayF = 0.0;
+    SatAnRatio = 0.0;
+    UnsatAnRatio = 0.0;
+    Porosity = 0.0;
+    VolHeatCond = 0.0;
+    SoilHeatCap = 0.0;
 
 }
 
@@ -301,6 +318,7 @@ double tCNode::getQpout()  { return Qpout; }
 double tCNode::getRain()   { return Rain;  }
 double tCNode::getSrf_Hr() { return srf_hr;  }
 double tCNode::getSrf()    { return srf;  }
+double tCNode::getCumSrf()    { return cumsrf;  } // added CJC2021
 double tCNode::getHsrf()   { return hsrf; }
 double tCNode::getPsrf()   { return psrf; }
 double tCNode::getSatsrf() { return satsrf; }
@@ -478,6 +496,8 @@ double tCNode::getDensityAge() {return densAge;}//state
 double tCNode::getEvapoTransAge() {return ETage;}//flux
 double tCNode::getSnLHF() {return snLHF;}//flux
 double tCNode::getSnSHF() {return snSHF;}//flux
+double tCNode::getSnSub() {return snSub;}//flux // CJC2020
+double tCNode::getSnEvap() {return snEvap;}//flux // CJC2020
 double tCNode::getSnGHF() {return snGHF;}//flux
 double tCNode::getSnPHF() {return snPHF;}//flux
 double tCNode::getSnRLin() {return snRLin;}//flux
@@ -486,6 +506,10 @@ double tCNode::getSnRSin() {return snRSin;}//flux
 double tCNode::getUnode() {return Unode;}//flux
 double tCNode::getUerror() {return Uerror;}//flux
 double tCNode::getCumLHF() {return cumLHF;}//flux
+double tCNode::getCumSnSub() {return cumSnSub;}//flux // CJC2020
+double tCNode::getCumSnEvap() {return cumSnEvap;}//flux // CJC2020
+double tCNode::getCumTotEvap() {return cumTotEvap;}//flux // CJC2020
+double tCNode::getCumBarEvap() {return cumBarEvap;}//flux // CJC2020 
 double tCNode::getCumMelt() {return cumMelt;}//flux
 double tCNode::getCumSHF() {return cumSHF;}//flux
 double tCNode::getCumPHF() {return cumPHF;}//flux
@@ -529,6 +553,19 @@ double tCNode::getHorAngle3150() {return horizonAngle3150;}//initialized state
 double tCNode::getHorAngle3375() {return horizonAngle3375;}//initialized state
 double tCNode::getSheltFact() {return sfact;}//derived
 double tCNode::getLandFact() {return lfact;}//derived
+
+// Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
+double tCNode::getKs() {return Ks;}
+double tCNode::getThetaS() {return ThetaS;}
+double tCNode::getThetaR() {return ThetaR;}
+double tCNode::getPoreSize() {return PoreSize;}
+double tCNode::getAirEBubPres() {return AirEBubPres;}
+double tCNode::getDecayF() {return DecayF;}
+double tCNode::getSatAnRatio() {return SatAnRatio;}
+double tCNode::getUnsatAnRatio() {return UnsatAnRatio;}
+double tCNode::getPorosity() {return Porosity;}
+double tCNode::getVolHeatCond() {return VolHeatCond;}
+double tCNode::getSoilHeatCap() {return SoilHeatCap;}
 
 // Set Functions 
 
@@ -667,6 +704,8 @@ void tCNode::setDensityAge(double da) {densAge = da;}//state
 void tCNode::setEvapoTransAge(double ea) {ETage = ea;}//flux
 void tCNode::setSnLHF(double value) {snLHF = value;}//flux
 void tCNode::setSnSHF(double value) {snSHF = value;}//flux
+void tCNode::setSnSub(double value) {snSub = value;}//flux // Snowpack sublimation CJC2020
+void tCNode::setSnEvap(double value) {snEvap = value;}//flux // Snowpack evaporation CJC2020
 void tCNode::setSnGHF(double value) {snGHF = value;}//flux
 void tCNode::setSnPHF(double value) {snPHF = value;}//flux
 void tCNode::setSnRLout(double value) {snRLout = value;}
@@ -765,6 +804,19 @@ void tCNode::setAvStomRes(double value) { AvStomRes = value; }
 void tCNode::setAvVegFraction(double value) { AvVegFraction = value; }
 void tCNode::setAvLeafAI(double value) { AvLeafAI = value; }
 
+// Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
+void tCNode::setKs(double value) { Ks = value;}
+void tCNode::setThetaS(double value) { ThetaS = value;}
+void tCNode::setThetaR(double value) { ThetaR = value;}
+void tCNode::setPoreSize(double value) { PoreSize = value;}
+void tCNode::setAirEBubPres(double value) { AirEBubPres = value;}
+void tCNode::setDecayF(double value) { DecayF = value;}
+void tCNode::setSatAnRatio(double value) { SatAnRatio = value;}
+void tCNode::setUnsatAnRatio(double value) { UnsatAnRatio = value;}
+void tCNode::setPorosity(double value) { Porosity = value;}
+void tCNode::setVolHeatCond(double value) { VolHeatCond = value;}
+void tCNode::setSoilHeatCap(double value) { SoilHeatCap = value;}
+
 // Add Functions
 
 void tCNode::addGwaterChng(double value) { 
@@ -781,11 +833,16 @@ void tCNode::addQgwOut(double value){ QgwOut += value; }
 void tCNode::addQstrm(double value) { Qstrm += value; }
 void tCNode::addAvSoilMoisture(double value) { AvSoilMoisture += value; }
 void tCNode::addSrf_Hr(double value) { srf_hr += value; }
+void tCNode::addCumSrf(double value) { cumsrf += value; } // added CJC2021
 
 // SKY2008Snow from AJR2007
 //snow, snow interception and sheltering -- RINEHART 2007 @ NMT
 void tCNode::addLatHF(double value) { cumLHF += value;}
 void tCNode::addSHF(double value) {cumSHF += value;}
+void tCNode::addSnSub(double value) { cumSnSub += value;} // Snowpack sublimation CJC2020
+void tCNode::addSnEvap(double value) {cumSnEvap += value;} // Snowpack evaporation CJC2020
+void tCNode::addTotEvap(double value) {cumTotEvap += value;} // total ET CJC2020
+void tCNode::addBarEvap(double value) {cumBarEvap += value;} // bare soil evap CJC2020
 void tCNode::addPHF(double value) {cumPHF += value;}
 void tCNode::addRLin(double value) {cumRLin += value;}
 void tCNode::addRLout(double value) {cumRLout += value;}
@@ -1080,6 +1137,7 @@ int tCNode::polyCentroid(double x[], double y[], int n,
 void tCNode::writeRestart(fstream& rStr) const
 {
   BinaryWrite(rStr, srf_hr);
+  BinaryWrite(rStr, cumsrf); //added CJC2021
   BinaryWrite(rStr, RunOn);
   BinaryWrite(rStr, VapPress);
   BinaryWrite(rStr, ShortRadIn_dir);
@@ -1275,6 +1333,10 @@ void tCNode::writeRestart(fstream& rStr) const
   BinaryWrite(rStr, cumHrsSun); // Snow
   BinaryWrite(rStr, cumLHF);
   BinaryWrite(rStr, cumSHF);
+  BinaryWrite(rStr, cumSnSub); // Write snowpack sublimation to restart file CJC2020
+  BinaryWrite(rStr, cumSnEvap); // Write snowpack evaporation to restart file CJC2020
+  BinaryWrite(rStr, cumTotEvap); // Write snowpack evaporation to restart file CJC2020
+  BinaryWrite(rStr, cumBarEvap); // Write snowpack evaporation to restart file CJC2020
   BinaryWrite(rStr, cumPHF);
   BinaryWrite(rStr, cumRLin);
   BinaryWrite(rStr, cumRLout);
@@ -1284,6 +1346,19 @@ void tCNode::writeRestart(fstream& rStr) const
   BinaryWrite(rStr, cumIntSub);
   BinaryWrite(rStr, cumIntUnl);
   BinaryWrite(rStr, cumHrsSnow);
+  
+  // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
+  BinaryWrite(rStr, Ks); 
+  BinaryWrite(rStr, ThetaS);
+  BinaryWrite(rStr, ThetaR);
+  BinaryWrite(rStr, PoreSize);
+  BinaryWrite(rStr, AirEBubPres);
+  BinaryWrite(rStr, DecayF);
+  BinaryWrite(rStr, SatAnRatio);
+  BinaryWrite(rStr, UnsatAnRatio);
+  BinaryWrite(rStr, Porosity);
+  BinaryWrite(rStr, VolHeatCond);
+  BinaryWrite(rStr, SoilHeatCap);
 
   int size;
   if (TimeInd != 0) {
@@ -1326,6 +1401,7 @@ void tCNode::writeRestart(fstream& rStr) const
 void tCNode::readRestart(fstream& rStr)
 {
   BinaryRead(rStr, srf_hr);
+  BinaryRead(rStr, cumsrf); //added CJC2021
   BinaryRead(rStr, RunOn);
   BinaryRead(rStr, VapPress);
   BinaryRead(rStr, ShortRadIn_dir);
@@ -1521,6 +1597,10 @@ void tCNode::readRestart(fstream& rStr)
   BinaryRead(rStr, cumHrsSun); // Snow
   BinaryRead(rStr, cumLHF);
   BinaryRead(rStr, cumSHF);
+  BinaryRead(rStr, cumSnSub); // Read snowpack sublimation from restart file CJC2020
+  BinaryRead(rStr, cumSnEvap); // Read snowpack evaporation from restart file CJC2020
+  BinaryRead(rStr, cumTotEvap); // Read total evaporation from restart file CJC2020
+  BinaryRead(rStr, cumBarEvap); // Read soil evaporation from restart file CJC2020
   BinaryRead(rStr, cumPHF);
   BinaryRead(rStr, cumRLin);
   BinaryRead(rStr, cumRLout);
@@ -1530,6 +1610,19 @@ void tCNode::readRestart(fstream& rStr)
   BinaryRead(rStr, cumIntSub);
   BinaryRead(rStr, cumIntUnl);
   BinaryRead(rStr, cumHrsSnow);
+  
+  // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
+  BinaryRead(rStr, Ks); 
+  BinaryRead(rStr, ThetaS);
+  BinaryRead(rStr, ThetaR);
+  BinaryRead(rStr, PoreSize);
+  BinaryRead(rStr, AirEBubPres);
+  BinaryRead(rStr, DecayF);
+  BinaryRead(rStr, SatAnRatio);
+  BinaryRead(rStr, UnsatAnRatio);
+  BinaryRead(rStr, Porosity);
+  BinaryRead(rStr, VolHeatCond);
+  BinaryRead(rStr, SoilHeatCap);
 
   int size;
   int timeInd;
@@ -1740,6 +1833,8 @@ void tCNode::printVariables()
   cout << " cumHrsSun " << cumHrsSun; // Snow
   cout << " cumLHF " << cumLHF;
   cout << " cumSHF " << cumSHF;
+  cout << " cumSnSub " << cumSnSub; // CJC2020
+  cout << " cumSnEvap " << cumSnEvap; // CJC2020
   cout << " cumPHF " << cumPHF;
   cout << " cumRLin " << cumRLin;
   cout << " cumRLout " << cumRLout;
@@ -1749,6 +1844,19 @@ void tCNode::printVariables()
   cout << " cumIntSub " << cumIntSub;
   cout << " cumIntUnl " << cumIntUnl;
   cout << " cumHrsSnow " << cumHrsSnow;
+    
+  // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
+  cout << " Ks " << Ks; 
+  cout << " ThetaS " << ThetaS;
+  cout << " ThetaR " << ThetaR;
+  cout << " PoreSize " << PoreSize;
+  cout << " AirEBubPres " << AirEBubPres;
+  cout << " DecayF " << DecayF;
+  cout << " SatAnRatio " << SatAnRatio;
+  cout << " UnsatAnRatio " << UnsatAnRatio;
+  cout << " Porosity " << Porosity;
+  cout << " VolHeatCond " << VolHeatCond;
+  cout << " SoilHeatCap " << SoilHeatCap;
 }
 
 

@@ -27,7 +27,6 @@
 //
 //=========================================================================
 
-#include "Headers/tribs_os.h"
 #include "tInOut/tInputFile.h"
 
 #ifdef ALPHA_64
@@ -44,6 +43,15 @@
   #include <cstdio>
   #include <cmath>
   #include <cassert>
+
+#elif defined MAC
+  #include <iostream>
+  #include <fstream>
+  #include <string>
+  #include <cstdio>
+  #include <cmath>
+  #include <cassert>
+
 #elif defined WIN
   #include <iostream.h>
   #include <fstream.h>

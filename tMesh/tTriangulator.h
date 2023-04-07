@@ -19,7 +19,6 @@
 #define DEBUG_PRINT 1
 #define TIMING 1
 
-#include "Headers/tribs_os.h"
 
 #ifdef ALPHA_64
   #include <math.h>
@@ -35,6 +34,15 @@
   #include <ctime>
   #include <cassert>
   #include <iostream>
+
+#elif defined MAC
+  #include <cmath>
+  #include <fstream>
+  #include <cstdlib>
+  #include <ctime>
+  #include <cassert>
+  #include <iostream>
+
 #elif defined WIN
   #include <math.h>
   #include <fstream.h>

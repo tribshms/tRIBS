@@ -217,6 +217,8 @@ void tIntercept::InterceptGray(tCNode *cNode)
 	
 	SetIntercpParameters( cNode );
 	
+	
+	
 	rainfall = cNode->getRain();
 	
 	if (rainfall <= minRainAmount)                //Modify InterStorm Length
@@ -476,7 +478,7 @@ void tIntercept::SetIntercpParameters(tCNode *cNode)
 			}
 		}
 	}
-
+	
 	return;
 }
 

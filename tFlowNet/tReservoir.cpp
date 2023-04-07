@@ -35,6 +35,7 @@ tReservoir::tReservoir()
 
 }
 
+
 tReservoir::tReservoir(tInputFile &inFile)
 {
 	nReservoirs = 0;
@@ -51,8 +52,13 @@ tReservoir::tReservoir(tInputFile &inFile)
 *****************************************************************************/
 tReservoir::~tReservoir()
 {
-	delete [] reservoirNodes;
-	delete [] reservoirTypes;
+    /*TODO: this code was causing a runtime error [EXC_BAD_ACCESS(Code=1)].
+    I think this was because it was using delete [], which is used for arrays of objects
+    also tReservoir class creates a pointer to tResData that should be initialized as a null pointer in the case there is no reservoir*/
+
+    delete reservoirNodes;
+    delete reservoirTypes;
+
 }
 
 //=========================================================================

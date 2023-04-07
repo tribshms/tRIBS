@@ -91,13 +91,27 @@ void tParallel::inputArgs(int& argc, char** argv) {
     // Number of args
     targc = argc;
     MPI_Bcast(&targc, 1, MPI_INTEGER, MASTER_PROC, MPI_COMM_WORLD);
-    //cout << " Master argc = " << argc << endl;
+
+
     // Input file name
-    olen = strlen(argv[1]);
+    size_t olen = strlen(argv[1]);
+
     MPI_Bcast(&olen, 1, MPI_INTEGER, MASTER_PROC, MPI_COMM_WORLD);
+
+    // Allocate a buffer that is large enough to store the input file name
     obuf = new char[olen];
-    strcpy(obuf, argv[1]);
+
+    // Copy the input file name to the buffer using strncpy
+    strncpy(obuf, argv[1], olen);
+//    obuf[sizeof(obuf) - 1] = '\0';
+//
+//    // Check if the input file name was truncated
+//      if (olen > sizeof(obuf) - 1) {
+//          cerr << "Warning: Input file name was truncated." << endl;
+//      }
+
     MPI_Bcast(obuf, olen, MPI_CHAR, MASTER_PROC, MPI_COMM_WORLD);
+
     //cout << "Master argv 1 = " << argv[1] << endl;
     delete [] obuf;
     // Input options

@@ -24,7 +24,7 @@
 
 tResample::tResample(SimulationControl *simCtrPtr, tMesh<tCNode> * gridPtr)
 { 
-	assert(gridPtr > 0);
+	assert(gridPtr != nullptr);
 	mew = gridPtr;
 	simCtrl = simCtrPtr;
 	
@@ -215,7 +215,7 @@ void tResample::MakeBoundaryPolygons()
 				
 				flag = 1;
 				do {
-					assert( ce > 0 );
+					assert( ce != nullptr);
 					ce = ce->getCCWEdg();
 					if ( ce->getDestinationPtrNC()->getBoundaryFlag() == kClosedBoundary ||
 						 ce->getDestinationPtrNC()->getBoundaryFlag() == kOpenBoundary ) {
@@ -229,7 +229,7 @@ void tResample::MakeBoundaryPolygons()
 						}
 					}
 					else { // Makes a stack of nodes connected to the current BND node
-						assert((ce->getDestinationPtrNC()) > 0);
+						assert((ce->getDestinationPtrNC()) != nullptr);
 						NodesLst.insertAtBack( (tCNode*)(ce->getDestinationPtrNC()) );
 					}
 				} while ( ce != curedg );
@@ -289,8 +289,8 @@ void tResample::MakeBoundaryPolygons()
 							&& (tan->bndEdge2 != be1->FindComplement()) ) { 
 							
 							FixVoronoiPolygon(cn, tan, xy, xy1);
-							if (tan->bndEdge1 > 0) { 
-								if (!(tan->bndEdge2 > 0))  //Not assigned yet
+							if (tan->bndEdge1 != nullptr) {
+								if (!(tan->bndEdge2 != nullptr))  //Not assigned yet
 									tan->bndEdge2 = be1;
 							}  
 							else
@@ -310,8 +310,8 @@ void tResample::MakeBoundaryPolygons()
 							&& (tan->bndEdge2 != be2->FindComplement()) ) { 
 							
 							FixVoronoiPolygon(cn, tan, xy2, xy);
-							if (tan->bndEdge1 > 0) {
-								if (!(tan->bndEdge2 > 0))  
+							if (tan->bndEdge1 != nullptr) {
+								if (!(tan->bndEdge2 != nullptr))
 									tan->bndEdge2 = be2;
 							}
 							else
@@ -511,7 +511,7 @@ void tResample::FixVoronoiPolygon(tCNode *cn, tCNode *tan,
 		// NOTE: Could we use nPoints[i] instead ? 
 		//       The problem is how to relate i & tan ?
 		curedg = cn->EdgToNod( tan )->FindComplement();
-		assert(curedg > 0);  
+		assert(curedg != nullptr);
 		ce = curedg;
 		tvtx = curedg->getRVtx();
 		cnt = 0;
@@ -520,7 +520,7 @@ void tResample::FixVoronoiPolygon(tCNode *cn, tCNode *tan,
 			tvtx = ce->getRVtx();
 			cnt++;
 		}
-		assert(ce > 0);  
+		assert(ce != nullptr);
 		/*  Scheme of nodes/edges:         'tan'
 			o
 			'tvtx' O        /             
@@ -701,7 +701,7 @@ void tResample::MakeInteriorPolygons()
 			firstedg = cn->getFlowEdg();
 			if (!firstedg)
 				firstedg = cn->getEdg();
-			assert(firstedg > 0);         
+			assert(firstedg != nullptr);
 			curedg = firstedg->getCCWEdg();
 			cnt++;
 			while (curedg != firstedg) {
@@ -985,7 +985,7 @@ void tResample::FindNeighbValue(tCNode *cn )
 	tEdge  *curedg;
 	
 	firstedg = cn->getFlowEdg(); 
-	assert(firstedg > 0); 
+	assert(firstedg != nullptr);
 	curedg = firstedg->getCCWEdg();
 	
    ID = firstedg->getDestinationPtrNC()->getResIndex();
@@ -1070,6 +1070,7 @@ void tResample::readInputGrid(char *GridIn)
 	ifstream Inp0(GridIn);
 	if (!Inp0) {
 		cout <<"File "<<GridIn<<" not found!!!"<<endl;
+		cout<<", tResample.cpp Error Location"<<endl;
 		exit(2);
 	}
 	
@@ -1611,7 +1612,7 @@ double vCell::convertToVoronoiFormat(int flag)
 	int Vert_sumInOrOut(0);
 
 	int dirXint, dirYint;
-	int InOrOut[3]; //1 is In, 0 is out
+	int InOrOut[4]; //1 is In, 0 is out; Prior to 3/23/2023 InOrOut was creating and address error, or should have as it was InOrOut[3] -WR
 					//initialize InOrOut to all 0s
 	for (int i = 0; i < 4; i++)
 		InOrOut[i] = 0;   

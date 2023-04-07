@@ -7,7 +7,7 @@
 **  		    Massachusetts Institute of Technology
 **
 **
-**  tReservoir.h: Header for class tReservoir (see tReservoir.cpp) which inherets
+**  tReservoir.h: Header for class tReservoir (see tReservoir.cpp) which inherits
 **              tFlowNet, tKinemat and implements Level Pool Routing.
 **
 ***************************************************************************/
@@ -79,13 +79,17 @@ class tReservoir
   void setResArraySize(int);
   int  getResArraySize();
 
+  // needed to make these public since they are created when tKinemat is called, even if opsres ==0, problem is they should be set as null in this case -WR
+  tResData* reservoirNodes;
+  tResData* reservoirTypes;
+
 protected:
 
   char resfile[kName];
   char resNodeFile[kName];
 
-  tResData * reservoirNodes;
-  tResData * reservoirTypes;
+
+
   int rType;
   int rNode;
 
@@ -107,7 +111,7 @@ protected:
   double Q_0, H_0; // Outflow and elev from the Reservoir
   int RStep;
   int NumRes;
-  double ResTimeDt, ;
+  double ResTimeDt;
   int ResTyp, ResNID, ArraySize;
   double ResOutflow, ResOutElev;
 

@@ -87,9 +87,9 @@ tGraph::~tGraph() {}
 *************************************************************************/
 
 void tGraph::finalize(){
-  sim = 0;
-  mesh = 0;
-  flow = 0;
+  sim = nullptr;
+  mesh = nullptr;
+  flow = nullptr;
   numGlobalReach = 0;
   
   conn.erase(conn.begin(), conn.end());
@@ -1618,7 +1618,7 @@ void tGraph::calculateRunFlux() {
   // a head in another partition and outlet in the local partition
   // The node upstream from the outlet is the flux node (node above outlet)
   for (chead = HeadIter.FirstP(), coutlet = OutletIter.FirstP(), i=0;
-       !(HeadIter.AtEnd()), i < numGlobalReach-1;
+       !(HeadIter.AtEnd()), i < numGlobalReach-1; //TODO: warning: left operand of comma operator has no effect [-Wunused-value] -WR
     chead = HeadIter.NextP(), coutlet = OutletIter.NextP(), i++) {
 
     int hpart = getPartition(chead->getReach());

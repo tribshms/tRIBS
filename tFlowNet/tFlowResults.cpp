@@ -160,6 +160,10 @@ void tFlowResults::SetFlowResVariables(tInputFile &infile, double add_time)
 		cout <<"\ntFlowResults: swe failed..."<<endl;
 	if ((melt = (double*)calloc(limit,sizeof(double)))==NULL)
 		cout <<"\ntFlowResults: melt failed..."<<endl;
+	if ((snsub = (double*)calloc(limit,sizeof(double)))==NULL) // CJC2020
+		cout <<"\ntFlowResults: snsub failed..."<<endl; // CJC2020
+	if ((snevap = (double*)calloc(limit,sizeof(double)))==NULL) // CJC2020
+		cout <<"\ntFlowResults: snevap failed..."<<endl; // CJC2020
 	if ((stC = (double*)calloc(limit,sizeof(double)))==NULL)
 		cout <<"\ntFlowResults: stC failed..."<<endl;
 	if ((DUint = (double*)calloc(limit,sizeof(double)))==NULL)
@@ -204,7 +208,7 @@ void tFlowResults::SetFlowResVariables(tInputFile &infile, double add_time)
 		// SKY2008Snow from AJR2007
 		swe[i] = melt[i] = intsn[i] = intsub[i] = intunl[i] = sca[i] = 0.0;
 		stC[i] = DUint[i] = srsi[i] = srlo[i] = srli[i] = sghf[i] = sphf[i] = 0.0;
-		sshf[i] = slhf[i] = 0.0;
+		sshf[i] = slhf[i] = snsub[i] = snevap[i] = 0.0; // Added snsub, snevap CJC2020
 
 		min[i]=9999.99;
 	}
@@ -245,6 +249,8 @@ void tFlowResults::free_results()
 	// SKY2008Snow from AJR2007
 	free(swe);
 	free(melt);
+	free(snsub); // CJC2020
+	free(snevap); // CJC2020
 	free(stC);
 	free(DUint);
 	free(slhf);
@@ -281,6 +287,8 @@ void tFlowResults::free_results()
 	// SKY2008Snow from AJR2007
 	swe = NULL;
 	melt = NULL;
+	snsub = NULL; // CJC2020
+	snevap = NULL; // CJC2020
 	stC = NULL;
 	DUint = NULL;
 	slhf = NULL;
@@ -498,7 +506,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
    // Variables for sums, mins, and maxs
    double *pPhydro, *pMhydro, *pCrr, *pMax, *pMin, *pMsm, *pMsmRt,
           *pMsmU, *pMgw, *pMet, *pSat, *pFrac,
-          *pSwe, *pMelt, *pStC, *pDUint, *pSlhf, *pSshf, *pSphf,
+          *pSwe, *pMelt, *pSnSub, *pSnEvap, *pStC, *pDUint, *pSlhf, *pSshf, *pSphf, // Added *pSnSub, *pSnEvap CJC2020
           *pSghf, *pSrli, *pSrlo, *pSrsi, *pIntsn, *pIntsub,
           *pIntunl, *pSca;
 
@@ -517,6 +525,8 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
    pFrac = tParallel::sum(frac, iimax);
    pSwe = tParallel::sum(swe, iimax);
    pMelt = tParallel::sum(melt, iimax);
+   pSnSub = tParallel::sum(snsub, iimax); // CJC2020
+   pSnEvap = tParallel::sum(snevap, iimax); // CJC2020
    pStC = tParallel::sum(stC, iimax);
    pDUint = tParallel::sum(DUint, iimax);
    pSlhf = tParallel::sum(slhf, iimax);
@@ -541,18 +551,18 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 			
 			// fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 			// SKY2008Snow from AJR2007
-			fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+			fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 
 					"Time", "Srf","MAP","RainMax", "RainMin","FState", "MSM100", "MSMRt", 
 					// "MSMU", "MGW","MET", "%Sat", "%Rain");
 					// SKY2008Snow from AJR2007
 					"MSMU", "MDGW","MET", "SatPercent", "RainPercent",
-					"AvSWE" , "AvMelt" , "AvSTC" , "AvDUInt" , "AvSLHF" , "AvSSHF" , "AvSPHF" , "AvSGHF" , //added by AJR 2007 @ NMT
+					"AvSWE" , "AvMelt" , "AvSnSub" , "AvSnEvap" , "AvSTC" , "AvDUInt" , "AvSLHF" , "AvSSHF" , "AvSPHF" , "AvSGHF" , //added by AJR 2007 @ NMT // Added "AvSnSub" , "AvSnEvap" CJC2020
 					"AvSRLI" , "AvSRLO" , "AvSRSI" , "AvInSn" , "AvInSu" , "AvInUn" , "SCA" );//added by AJR 2007 @ NMT
-			fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+			fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 					"hr" , "m3/s" , "mm/hr" , "mm/hr" , "mm/hr" , "[]" , "[]" , "[]" , "[]" , "mm" , 
-	    				"mm" , "[]" , "[]" , "cm" , "cm" , "C" , "kJ/m2" , "kJ/m2" , "kJ/m2" , //added by AJR 2007 @ NMT
-	    				"kJ/m2" , "kJ/m2" , "kJ/m2" , "kJ/m2" , "kJ/m2" , "kJ/m2" , "cm" , "cm" , "cm", "[]" );//added by AJR 2007 @ NMT
+	    				"mm" , "[]" , "[]" , "cm" , "cm" , "cm" , "cm" , "C" , "kJ/m2" , "kJ/m2" , "kJ/m2" , //added by AJR 2007 @ NMT // added "cm" , "cm" CJC2020
+	    				"kJ/m2" , "kJ/m2" , "kJ/m2" , "kJ/m2" , "kJ/m2" , "cm" , "cm" , "cm", "[]" );//added by AJR 2007 @ NMT // removed extra header for kJ/m2 CJC2020
 
 			// fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 			//		"hr","m3/s","mm/hr","mm/hr","mm/hr","[]", "[]", "[]", "[]",
@@ -567,20 +577,20 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 #ifdef PARALLEL_TRIBS
 
          // Print min, max, and summ variables from all processors
-         fprintf(ifile,"%d.%d\t%f\t%f\t%f\t%f\t%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
+         fprintf(ifile,"%d.%d\t%f\t%f\t%f\t%f\t%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
                it_hour, it_min, pPhydro[ii]+pMhydro[ii], pCrr[ii],
                pMax[ii], pMin[ii], fState[ii], pMsm[ii], pMsmRt[ii],pMsmU[ii], 
                pMgw[ii], pMet[ii], pSat[ii], pFrac[ii],
-               pSwe[ii], pMelt[ii], pStC[ii], pDUint[ii], pSlhf[ii], pSshf[ii], 
+               pSwe[ii], pMelt[ii], pSnSub[ii], pSnEvap[ii], pStC[ii], pDUint[ii], pSlhf[ii], pSshf[ii], // Added pSnSub[ii], pSnEvap[ii] CJC2020
                pSphf[ii], pSghf[ii], pSrli[ii], pSrlo[ii], pSrsi[ii], pIntsn[ii],
                pIntsub[ii], pIntunl[ii], pSca[ii]);
 
 #else
 			// SKY2008Snow from AJR2007
-			fprintf(ifile,"%d.%d\t%f\t%f\t%f\t%f\t%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
+			fprintf(ifile,"%d.%d\t%f\t%f\t%f\t%f\t%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
 					it_hour, it_min, phydro[ii]+mhydro[ii], crr[ii], 
 					max[ii], min[ii], fState[ii], msm[ii], msmRt[ii],msmU[ii], mgw[ii], met[ii], sat[ii], frac[ii],
-					swe[ii], melt[ii], stC[ii], DUint[ii], slhf[ii], sshf[ii], sphf[ii], sghf[ii],//added by AJR 2007 @ NMT
+					swe[ii], melt[ii], snsub[ii], snevap[ii], stC[ii], DUint[ii], slhf[ii], sshf[ii], sphf[ii], sghf[ii],//added by AJR 2007 @ NMT // Added snsub[ii], snevap[ii] CJC2020
 					srli[ii], srlo[ii], srsi[ii], intsn[ii], intsub[ii], intunl[ii], sca[ii]);//added by AJR 2007 @ NMT
 
 
@@ -608,6 +618,8 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
    delete [] pFrac;
    delete [] pSwe;
    delete [] pMelt;
+   delete [] pSnSub; // CJC2020
+   delete [] pSnEvap; // CJC2020
    delete [] pStC;
    delete [] pDUint;
    delete [] pSlhf;
@@ -1056,7 +1068,7 @@ void tFlowResults::store_maxminrain(double time, double value, int flag)
 /***************************************************************************
 ** 
 **  tFlowResults: store_saturation(double time, double value)
-**
+** TODO is it possible to optimize this part of the code?
 ***************************************************************************/
 void tFlowResults::store_saturation(double time, double value, int flag) 
 {   
@@ -1113,6 +1125,10 @@ void tFlowResults::store_saturation(double time, double value, int flag)
 			intunl[init] += value*dcalc/dres;
 		else if (flag == 20)
 			sca[init] += value*dcalc/dres;
+		else if (flag == 21)
+			snsub[init] += value*dcalc/dres; // CJC2020
+		else if (flag == 22)
+			snevap[init] += value*dcalc/dres; // CJC2020
 
 	}
 	return;
@@ -1186,6 +1202,8 @@ void tFlowResults::writeRestart(fstream & rStr) const
     BinaryWrite(rStr, frac[i]);
     BinaryWrite(rStr, swe[i]);
     BinaryWrite(rStr, melt[i]);
+    BinaryWrite(rStr, snsub[i]); // CJC2020
+    BinaryWrite(rStr, snevap[i]); // CJC2020
     BinaryWrite(rStr, stC[i]);
     BinaryWrite(rStr, DUint[i]);
     BinaryWrite(rStr, slhf[i]);
@@ -1238,6 +1256,8 @@ void tFlowResults::readRestart(fstream & rStr)
     BinaryRead(rStr, frac[i]);
     BinaryRead(rStr, swe[i]);
     BinaryRead(rStr, melt[i]);
+    BinaryRead(rStr, snsub[i]); // CJC2020
+    BinaryRead(rStr, snevap[i]); // CJC2020
     BinaryRead(rStr, stC[i]);
     BinaryRead(rStr, DUint[i]);
     BinaryRead(rStr, slhf[i]);

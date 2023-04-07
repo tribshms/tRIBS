@@ -26,7 +26,6 @@
 //
 //=========================================================================
 
-#include "Headers/tribs_os.h"
 #include "tSimulator/tRunTimer.h"
 #include "tSimulator/tControl.h"
 #include "tInOut/tInputFile.h"
@@ -44,6 +43,14 @@
   #include <cstring>
   #include <iostream>
   #include <cstdio>
+
+#elif defined MAC
+  #include <cmath>
+  #include <cstdlib>
+  #include <cstring>
+  #include <iostream>
+  #include <cstdio>
+
 #elif defined WIN
   #include <math.h>
   #include <stdlib.h>
@@ -107,6 +114,8 @@ public:
   // SKY2008Snow from AJR2007
   double *swe;			// Mean SWE in space
   double *melt;			// Mean melt in space
+  double *snsub;		// Mean sn sublimation in space // CJC2020
+  double *snevap;		// Mean sn evaporation in space // CJC2020
   double *stC;			// Mean snow temp (c) in space
   double *DUint;		// Mean change in energy in space
   double *slhf;			// Mean sn latent hf in space

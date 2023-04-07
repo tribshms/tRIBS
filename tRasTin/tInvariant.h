@@ -33,19 +33,25 @@ class LandType;
 class GenericSoilData 
 {
 public:
-  GenericSoilData(tMesh<tCNode> *, tInputFile *, tResample *);
-  ~GenericSoilData();
-  SoilType **SoilClass; 
-
-  int numClass;    			// Number of soil classes
-  int currClass;   			// Indicates current class 
-  char soilGrid[kMaxNameSize];  	// Pathname to soil map
-  char soilTable[kMaxNameSize]; 	// Pathname to soil reference table
-
-  void setSoilPtr(int soilID);
-  void printSoilPars();
-  void SetSoilParameters(tMesh<tCNode>*, tResample*, tInputFile&, int); 
-  double getSoilProp(int);
+    GenericSoilData(tMesh<tCNode> *, tInputFile *, tResample *);
+    ~GenericSoilData();
+    SoilType **SoilClass;
+    
+    int numClass;    			// Number of soil classes
+    int currClass;   			// Indicates current class
+    char soilGrid[kMaxNameSize];  	// Pathname to soil map
+    char soilTable[kMaxNameSize]; 	// Pathname to soil reference table
+    char scfile[kMaxNameSize]; 	// Pathname to soil grid file // Giuseppe 2016
+    
+    void setSoilPtr(int soilID);
+    void printSoilPars();
+    void SetSoilParameters(tMesh<tCNode>*, tResample*, tInputFile&, int);
+    double getSoilProp(int);
+    
+    // Changes added by Giuseppe in August 2016 to allow reading soil grids
+    char **SCgridParamNames, **SCgridBaseNames, **SCgridExtNames, **SCgridName;
+	
+	
 };
 
 class GenericLandData 

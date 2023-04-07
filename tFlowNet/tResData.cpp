@@ -24,6 +24,7 @@
 
 tResData::tResData()
 {
+    std::cerr << "Constructing tResData object \n"; //-WR debug
 	const int rSIZE = 500;
 	ResType = new int[rSIZE];
 	rElev = new double[rSIZE];
@@ -45,13 +46,14 @@ tResData::tResData()
 
 tResData::~tResData()
 {
-	delete [] ResType;
-	delete [] rElev;
-	delete [] rDischarge;
-	delete [] rStorage;
-	delete [] rInflow;
-	delete [] rEDS;
-	delete [] rSTQnext;
+        std::cerr << "Destructing tResData object \n"; //-WR debug
+        delete ResType;
+        delete rElev;
+        delete rDischarge;
+        delete rStorage;
+        delete rInflow;
+        delete rEDS;
+        delete rSTQnext;
 }
 
 //=========================================================================

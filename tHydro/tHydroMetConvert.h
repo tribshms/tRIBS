@@ -21,7 +21,6 @@
 #ifndef THYDROMETCONVERT_H
 #define THYDROMETCONVERT_H
 
-#include "Headers/tribs_os.h"
 #include "Headers/Inclusions.h"
 
 #ifdef ALPHA_64

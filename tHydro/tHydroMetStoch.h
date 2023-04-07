@@ -18,7 +18,6 @@
 #ifndef THYDROMETSTOCH_H
 #define THYDROMETSTOCH_H
 
-#include "Headers/tribs_os.h"
 #include "Headers/Inclusions.h"
 
 #define  PI12  0.261799387799149

@@ -22,13 +22,16 @@
 #ifndef TARRAY_H
 #define TARRAY_H
 
-#include "Headers/tribs_os.h"
 
 #ifdef ALPHA_64
   #include <iostream.h>
   #include <fstream.h>
   #include <assert.h>
 #elif defined LINUX_32
+  #include <iostream>
+  #include <fstream>
+  #include <cassert>
+#elif defined MAC
   #include <iostream>
   #include <fstream>
   #include <cassert>

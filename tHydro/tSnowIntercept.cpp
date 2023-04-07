@@ -77,7 +77,7 @@ void tSnowIntercept::SetSnowInterceptVariables(tInputFile &infile, tHydroModel *
   iceRad = 500e-6; //m
   Mwater = 18.01; //kg/kmol
   R = 8313; //J/kmol K
-  RdryAir = 2870; //J/kg K
+  RdryAir = 287; //J/kg K
   nu = 1.3e-5; //m^2/s
   KtAtm = 0.025; //J/msK
   esatIce = 0.0;
@@ -104,9 +104,9 @@ void tSnowIntercept::SetSnowVariables(tInputFile &infile, tHydroModel *hydro)
   hillAlbedoOption = infile.ReadItem(hillAlbedoOption,"HILLALBOPT");
 
   //AJR2008, SKY2008Snow
-  timeSteph = timeStep;
+  timeStepm = timeStep;  // Code originally assumed this was timesteps in hours but is minutes CJC 2022
   
-  timeStepm = timeSteph*60;
+  timeSteph = timeStepm/60;  // Code addition to calculate time step in hours CJC2022
   timeSteps = 60*timeStepm;
 
   //state variables

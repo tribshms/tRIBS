@@ -28,11 +28,11 @@
 ***************************************************************************/
 
 
-#include "Headers/tribs_os.h"
 #include "Headers/globalIO.h"
 #include "Headers/Inclusions.h"
 #include "Mathutil/predicates.h"
 #include "tFlowNet/tKinemat.h"
+#include "tFlowNet/tReservoir.h" // JECR2014
 #include "tRasTin/tRainfall.h"
 #include "tRasTin/tShelter.h" // SKY2008Snow from AJR2007
 #include "tSimulator/tSimul.h"
@@ -174,6 +174,7 @@ int serialSimulation( int argc, char **argv )
 
 	Cout<<"\n\nPart 9: Deleting Objects and Exiting Program"<<endl;
 	Cout<<"------------------------------------------------"<<endl<<endl;
+	return 0; // 04/07/2020 Added this to eliminate warning Clizarraga 
 }
 
 //=========================================================================
@@ -217,7 +218,7 @@ int parallelSimulation(int argc, char **argv)
 	if (option == 9) {
 
 		cout<<"\n\nPart 2: Creating empty basic mesh" <<endl;
-    Cout<<"---------------------------------------------------"<<endl;
+    	Cout<<"---------------------------------------------------"<<endl;
 		tMesh<tCNode> BasinMesh( &SimCtrl );
 
 		cout<<"\n\nPart 2b: Creating Stream Reach partitioning "<<endl;
@@ -391,6 +392,7 @@ int parallelSimulation(int argc, char **argv)
 
   return(1);
 #endif
+  return 0; // Added this to eliminate warning 04/07/2020 Clizarraga
 }
 
 //=========================================================================

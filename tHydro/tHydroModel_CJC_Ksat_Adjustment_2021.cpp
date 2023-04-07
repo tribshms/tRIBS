@@ -323,29 +323,17 @@ void tHydroModel::InitSet(tResample *resamp)
 	id = 0;
 	for (cn=nodIter.FirstP(); nodIter.IsActive(); cn=nodIter.NextP())
 	{
-        // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-        //soilPtr->setSoilPtr( cn->getSoilID() );
-        //        Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
-        //        Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
-        //        Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
-        //        PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
-        //        Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
-        //        F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
-        //        Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
-        //        UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
-        //        porosity = soilPtr->getSoilProp(9); // Porosity
-        Ksat = cn->getKs();  // Surface hydraulic conductivity
-        Ths = cn->getThetaS(); // Saturation moisture content
-        Thr = cn->getThetaR(); // Residual moisture content
-        PoreInd = cn->getPoreSize(); // Pore-size distribution index
-        Psib = cn->getAirEBubPres(); // Air entry bubbling pressure
-        F = cn->getDecayF(); // Decay parameter in the exp
-        Ar = cn->getSatAnRatio(); // Anisotropy ratio (saturated)
-        UAr = cn->getUnsatAnRatio(); // Anisotropy ratio (unsaturated)
-        porosity = cn->getPorosity(); // Porosity
-        // Giuseppe 2016 - End changes to allow reading soil properties from grids
-		
-        Eps = 3 + 2/PoreInd;
+		soilPtr->setSoilPtr( cn->getSoilID() );
+      Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
+      Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
+      Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
+      PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
+      Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
+      F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
+      Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
+      UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
+      porosity = soilPtr->getSoilProp(9); // Porosity
+      Eps = 3 + 2/PoreInd;
 
 		NwtNew = cn->getNwtOld();              //Initial GW in mm
 
@@ -550,11 +538,8 @@ void tHydroModel::InitIntegralVars()
 	for ( cn=nodIter.FirstP(); nodIter.IsActive(); cn=nodIter.NextP() ) {
 
 		// SKY2008Snow from AJR2007
-        // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-        //soilPtr->setSoilPtr( cn->getSoilID() );
-        //Ths = soilPtr->getSoilProp(2);
-        Ths = cn->getThetaS(); // Saturation moisture content
-        // Giuseppe 2016 - End changes to allow reading soil properties from grids
+		soilPtr->setSoilPtr( cn->getSoilID() );
+		Ths = soilPtr->getSoilProp(2);
 
 		cn->satOccur    = 0;
 		cn->hsrfOccur   = 0.0;
@@ -667,28 +652,17 @@ void tHydroModel::SetupNodeUSZ(tCNode *cn)
 	soilPtr->setSoilPtr( cn->getSoilID() ); //set current s.type
 
 	// Get soil hydraulic properties
-    // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-    //    Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
-    //    Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
-    //    Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
-    //    PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
-    //    Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
-    //    F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
-    //    Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
-    //    UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
-    //    porosity = soilPtr->getSoilProp(9); // Porosity
-    Ksat = cn->getKs();  // Surface hydraulic conductivity
-    Ths = cn->getThetaS(); // Saturation moisture content
-    Thr = cn->getThetaR(); // Residual moisture content
-    PoreInd = cn->getPoreSize(); // Pore-size distribution index
-    Psib = cn->getAirEBubPres(); // Air entry bubbling pressure
-    F = cn->getDecayF(); // Decay parameter in the exp
-    Ar = cn->getSatAnRatio(); // Anisotropy ratio (saturated)
-    UAr = cn->getUnsatAnRatio(); // Anisotropy ratio (unsaturated)
-    porosity = cn->getPorosity(); // Porosity
-    // Giuseppe 2016 - End changes to allow reading soil properties from grids
+	Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
+	Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
+	Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
+	PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
+	Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
+	F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
+	Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
+	UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
+	porosity = soilPtr->getSoilProp(9); // Porosity
 	Eps = 3 + 2/PoreInd;
-	
+
 	// Get dynamic variables from prior time step
 	NwtOld = NwtNew= cn->getNwtOld();  // nwt
 	MuOld  = MuNew = cn->getMuOld();   // mu
@@ -846,6 +820,19 @@ void tHydroModel::UnSaturatedZone(double dt)
 			if ((snWE > 1e-3) || (routeWE > 0.)) {
 				Ractual = 10*routeWE; //have to convert to mm // Changed from R to Ractual CJC2020
 			}
+		}
+		
+		// Adjust saturated hydraulic conductivity based on air
+		// temperature to account for frozen soil effects CJC2020
+		Ta_hi = 8;
+		Ta_lo = 4;
+		alphat = 0.004;
+		airTemp = cn->getAirTemp();
+		if (airTemp <= Ta_lo) {
+			Ksat = Ksat*alphat;
+		}
+		else if ((airTemp < Ta_hi) && (airTemp > Ta_lo)) {
+			Ksat = Ksat*alphat + (airTemp - Ta_lo)*((Ksat - Ksat*alphat)/(Ta_hi - Ta_lo));
 		}
 			
 		
@@ -2510,11 +2497,8 @@ void tHydroModel::ComputeFluxesNodes1D()
 		alpha = atan((cnorg->getFlowEdg())->getSlope());
 		Cos1 = cos(alpha);
 
-        // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-		//soilPtr->setSoilPtr( cnorg->getSoilID() );
-        //Psib = soilPtr->getSoilProp(5);
-        Psib = cnorg->getAirEBubPres(); // Giuseppe 2016 - Changes for soil grids
-		// Giuseppe 2016 - End changes to allow reading soil properties from grids
+		soilPtr->setSoilPtr( cnorg->getSoilID() );
+		Psib = soilPtr->getSoilProp(5);
 
 		// Depending on whether the water table is at the surface or not,
 		// define the gradient of the GW head
@@ -2539,11 +2523,8 @@ void tHydroModel::ComputeFluxesNodes1D()
 				alpha = atan( (cndest->getFlowEdg())->getSlope() );
 				Cos2 = cos(alpha);
 
-                // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-				//                soilPtr->setSoilPtr( cndest->getSoilID() );
-                //                Psib = soilPtr->getSoilProp(5);
-                Psib = cndest->getAirEBubPres(); // Giuseppe 2016 - Changes for soil grids
-				// Giuseppe 2016 - End changes to allow reading soil properties from grids
+				soilPtr->setSoilPtr( cndest->getSoilID() );
+				Psib = soilPtr->getSoilProp(5);
 
 				if (cndest->getNwtOld() == 0.0)
 					nextWTElevation = cndest->getZ() - ((-Psib)/(Cos2*1000.0));
@@ -2574,29 +2555,18 @@ void tHydroModel::ComputeFluxesNodes1D()
 		if ( WTSlope > 0.0 ) {
 			cndest = (tCNode *)nbredg->getDestinationPtrNC();
 
-            // Get soil hydraulic properties
-			// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-            //            soilPtr->setSoilPtr( cnorg->getSoilID() );
-            //            Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
-            //            Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
-            //            Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
-            //            PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
-            //            Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
-            //            F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
-            //            Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
-            //            UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
-            //            porosity = soilPtr->getSoilProp(9); // Porosity
-            Ksat = cnorg->getKs();  // Surface hydraulic conductivity
-            Ths = cnorg->getThetaS(); // Saturation moisture content
-            Thr = cnorg->getThetaR(); // Residual moisture content
-            PoreInd = cnorg->getPoreSize(); // Pore-size distribution index
-            Psib = cnorg->getAirEBubPres(); // Air entry bubbling pressure
-            F = cnorg->getDecayF(); // Decay parameter in the exp
-            Ar = cnorg->getSatAnRatio(); // Anisotropy ratio (saturated)
-            UAr = cnorg->getUnsatAnRatio(); // Anisotropy ratio (unsaturated)
-            porosity = cnorg->getPorosity(); // Porosity
-			// Giuseppe 2016 - End changes to allow reading soil properties from grids
-            Eps = 3 + 2/PoreInd;
+         // Get soil hydraulic properties
+         soilPtr->setSoilPtr( cnorg->getSoilID() );
+         Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
+         Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
+         Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
+         PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
+         Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
+         F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
+         Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
+         UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
+         porosity = soilPtr->getSoilProp(9); // Porosity
+         Eps = 3 + 2/PoreInd;
 
 			DtoBedrock = cnorg->getBedrockDepth();  //Local variable
 
@@ -2618,15 +2588,10 @@ void tHydroModel::ComputeFluxesNodes1D()
 			cnorg->setTransmiss(Transmissivity);
 		}
 		else {
-			// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-            //            soilPtr->setSoilPtr( cnorg->getSoilID() );
-            //            Ksat    = soilPtr->getSoilProp(1);
-            //            F       = soilPtr->getSoilProp(6);
-            //            Ar      = soilPtr->getSoilProp(7);
-            Ksat = cnorg->getKs();  // Surface hydraulic conductivity
-            F = cnorg->getDecayF(); // Decay parameter in the exp
-            Ar = cnorg->getSatAnRatio(); // Anisotropy ratio (saturated)
-			// Giuseppe 2016 - End changes to allow reading soil properties from grids
+			soilPtr->setSoilPtr( cnorg->getSoilID() );
+			Ksat    = soilPtr->getSoilProp(1);
+			F       = soilPtr->getSoilProp(6);
+			Ar      = soilPtr->getSoilProp(7);
 
 			Transmissivity = Ar * Ksat * exp(-F*cnorg->getNwtOld())/F;
 			cnorg->setTransmiss(Transmissivity);
@@ -2673,11 +2638,8 @@ void tHydroModel::ComputeFluxesEdgesND()
 			alpha = atan( (cndest->getFlowEdg())->getSlope() );   //Slope for subsurface fl.
 			Cos2 = cos(alpha);
 
-            // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-			//            soilPtr->setSoilPtr( cnorg->getSoilID() );
-            //            Psib = soilPtr->getSoilProp(5);
-            Psib = cnorg->getAirEBubPres(); // Air entry bubbling pressure
-			// Giuseppe 2016 - End changes to allow reading soil properties from grids
+			soilPtr->setSoilPtr( cnorg->getSoilID() );
+			Psib = soilPtr->getSoilProp(5);
 
 			// Depending on whether the water table is at the surface or not,
 			// define the gradient of the GW head
@@ -2686,11 +2648,8 @@ void tHydroModel::ComputeFluxesEdgesND()
 			else
 				thisWTElevation = (cnorg->getZ()) - (cnorg->getNwtOld()/(Cos1*1000.0));
 
-			// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-            //            soilPtr->setSoilPtr( cndest->getSoilID() );
-            //            Psib = soilPtr->getSoilProp(5);
-            Psib = cndest->getAirEBubPres(); // Air entry bubbling pressure
-			// Giuseppe 2016 - End changes to allow reading soil properties from grids
+			soilPtr->setSoilPtr( cndest->getSoilID() );
+			Psib = soilPtr->getSoilProp(5);
 
 			if (cndest->getNwtOld() == 0.0)
 				nextWTElevation = (cndest->getZ()) - ((-Psib)/(Cos2*1000.0));
@@ -2703,29 +2662,18 @@ void tHydroModel::ComputeFluxesEdgesND()
 				cnorg->getNwtOld() <= DtoBedrock &&
 				cndest->getNwtOld() <= DtoBedrock) {
 
-				// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-                //soilPtr->setSoilPtr( cnorg->getSoilID() );
-                // Get soil hydraulic properties
-                //                Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
-                //                Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
-                //                Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
-                //                PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
-                //                Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
-                //                F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
-                //                Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
-                //                UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
-                //                porosity = soilPtr->getSoilProp(9); // Porosity
-                Ksat = cnorg->getKs();  // Surface hydraulic conductivity
-                Ths = cnorg->getThetaS(); // Saturation moisture content
-                Thr = cnorg->getThetaR(); // Residual moisture content
-                PoreInd = cnorg->getPoreSize(); // Pore-size distribution index
-                Psib = cnorg->getAirEBubPres(); // Air entry bubbling pressure
-                F = cnorg->getDecayF(); // Decay parameter in the exp
-                Ar = cnorg->getSatAnRatio(); // Anisotropy ratio (saturated)
-                UAr = cnorg->getUnsatAnRatio(); // Anisotropy ratio (unsaturated)
-                porosity = cnorg->getPorosity(); // Porosity
-				// Giuseppe 2016 - End changes to allow reading soil properties from grids
-                Eps = 3 + 2/PoreInd;
+				soilPtr->setSoilPtr( cnorg->getSoilID() );
+            // Get soil hydraulic properties
+            Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
+            Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
+            Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
+            PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
+            Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
+            F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
+            Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
+            UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
+            porosity = soilPtr->getSoilProp(9); // Porosity
+            Eps = 3 + 2/PoreInd;
 
 				DtoBedrock = cnorg->getBedrockDepth();  //Local variable
 
@@ -2787,15 +2735,10 @@ void tHydroModel::ComputeFluxesEdgesND()
 				cnorg->setTransmiss(Transmissivity);
 			}
 			else {
-				// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-                //                soilPtr->setSoilPtr( cnorg->getSoilID() );
-                //                Ksat    = soilPtr->getSoilProp(1);
-                //                F       = soilPtr->getSoilProp(6);
-                //                Ar      = soilPtr->getSoilProp(7);
-                Ksat = cnorg->getKs();  // Surface hydraulic conductivity
-                F = cnorg->getDecayF(); // Decay parameter in the exp
-                Ar = cnorg->getSatAnRatio(); // Anisotropy ratio (saturated)
-				// Giuseppe 2016 - End changes to allow reading soil properties from grids
+				soilPtr->setSoilPtr( cnorg->getSoilID() );
+				Ksat    = soilPtr->getSoilProp(1);
+				F       = soilPtr->getSoilProp(6);
+				Ar      = soilPtr->getSoilProp(7);
 
 				Transmissivity = Ar * Ksat * exp(-F*cnorg->getNwtOld())/F;
 				cnorg->setTransmiss(Transmissivity);
@@ -2937,28 +2880,17 @@ void tHydroModel::ComputeFluxesEdgesND()
 void tHydroModel::SetupNodeSZ(tCNode *cn)
 {
 	ID = cn->getID();
-	// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-    //soilPtr->setSoilPtr( cn->getSoilID() );
-    
-    // Get soil hydraulic properties
-    //    Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
-    //    Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
-    //    Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
-    //    PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
-    //    Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
-    //    F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
-    //    Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
-    //    UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
-    Ksat = cn->getKs();  // Surface hydraulic conductivity
-    Ths = cn->getThetaS(); // Saturation moisture content
-    Thr = cn->getThetaR(); // Residual moisture content
-    PoreInd = cn->getPoreSize(); // Pore-size distribution index
-    Psib = cn->getAirEBubPres(); // Air entry bubbling pressure
-    F = cn->getDecayF(); // Decay parameter in the exp
-    Ar = cn->getSatAnRatio(); // Anisotropy ratio (saturated)
-    UAr = cn->getUnsatAnRatio(); // Anisotropy ratio (unsaturated)
-    porosity = cn->getPorosity(); // Porosity
-	// Giuseppe 2016 - End changes to allow reading soil properties from grids
+	soilPtr->setSoilPtr( cn->getSoilID() );
+
+	// Get soil hydraulic properties
+	Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
+	Ths     = soilPtr->getSoilProp(2);  // Saturation moisture content
+	Thr     = soilPtr->getSoilProp(3);  // Residual moisture content
+	PoreInd = soilPtr->getSoilProp(4);  // Pore-size distribution index
+	Psib    = soilPtr->getSoilProp(5);  // Air entry bubbling pressure
+	F       = soilPtr->getSoilProp(6);  // Decay parameter in the exp
+	Ar      = soilPtr->getSoilProp(7);  // Anisotropy ratio (saturated)
+	UAr     = soilPtr->getSoilProp(8);  // Anisotropy ratio (unsaturated)
 	Eps = 3 + 2/PoreInd;
 
 	// Get dynamic variables
@@ -3427,7 +3359,7 @@ void tHydroModel::SaturatedZone(double dtGW)
 
 		cn->addSrf_Hr(srf*dtGW);
 		cn->setsrf(cn->getSrf()+srf*dtGW);
-		cn->addCumSrf(cn->getSrf()+srf*dtGW); // Added line compared to old tRIBS version, not documented CJC 2022
+		cn->addCumSrf(cn->getSrf()+srf*dtGW);
 		cn->setsatsrf(satsrf*dtGW);
 		cn->setesrf(esrf*dtGW);
 

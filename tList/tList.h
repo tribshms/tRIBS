@@ -29,13 +29,15 @@
 #ifndef TLIST_H
 #define TLIST_H
 
-#include "Headers/tribs_os.h"
 #include "Headers/Classes.h" 
 
 #ifdef ALPHA_64
   #include <iostream.h>
   #include <assert.h>
 #elif defined LINUX_32
+  #include <iostream>
+  #include <cassert>
+#elif defined MAC
   #include <iostream>
   #include <cassert>
 #elif defined WIN

@@ -61,10 +61,10 @@ Simulator::Simulator(SimulationControl *simctrlptr, tRainfall *rainptr,
 
 Simulator::~Simulator() 
 {  
-	simCtrl = NULL;
-	rainIn = NULL;
-	timer = NULL;
-	outp = NULL;
+	simCtrl = nullptr;
+	rainIn = nullptr;
+	timer = nullptr;
+	outp = nullptr;
     
 	Cout<<"Simulator Object has been destroyed..."<<endl<<flush;
 }
@@ -518,9 +518,11 @@ void Simulator::OutputSimulatedVars(tKinemat *Flow)
 		else 
 			forenum=1;
 		
-		if ((simCtrl->hydrog_results == 'Y') && (timer->getCurrentTime())) {
+		if ((simCtrl->hydrog_results == 'Y') && (timer->getCurrentTime())) { // CJC 2020 Write mrf file before tRIBS crashes while using -H. Remove later
+			if ((timer->getCurrentTime() == 8760) || (timer->getCurrentTime() == 17520) || (timer->getCurrentTime() == 26280) || (timer->getCurrentTime() == 35040) || (timer->getCurrentTime() == 43800) || (timer->getCurrentTime() == 52560) || (timer->getCurrentTime() == 61320) || (timer->getCurrentTime() == 70080) || (timer->getCurrentTime() == 78840) || (timer->getCurrentTime() == 87600) || (timer->getCurrentTime() == 96360) || (timer->getCurrentTime() == 105120) || (timer->getCurrentTime() == 113880) || (timer->getCurrentTime() == 122640) || (timer->getCurrentTime() == 131400) || (timer->getCurrentTime() == 140160) || (timer->getCurrentTime() == 148920) || (timer->getCurrentTime() == 157680) || (timer->getCurrentTime() == 166440) || (timer->getCurrentTime() == 175200)){
 			Flow->getResultsPtr()->
 			writeAndUpdate( timer->getCurrentTime(), forenum );
+			}
 		}
 		
 		// Write selected dynamic variables
