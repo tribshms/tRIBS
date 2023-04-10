@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Compiler errors related to assert statements with null pointers
 - Compiler error for tPtrList.h (L 873) newlist.insertAtBack to newlist->insertAtBack 
+- Issue in tResample::convertToVoronoiFormat where L 1615-1617 InOrOut variable was not allocating enough memory
 - If optres == 0, would define tReservoir/tResData as dangling pointer, fixed by making tReservoir public and setting as null if optres == 0.
 - Commented out #include t*(parallel code).cpp in parallel header files because it led to redefinition
 
@@ -30,4 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - removed register calls (no longer supported at c++ 17 or earlier)
 - removed old make files
+
+## Return to [README](../README.md)
 
