@@ -1,0 +1,35 @@
+name: compile_and_test
+run-name: ${{github.actor}} is conducting a tRIBS build test
+
+on:
+  push:
+    paths:
+      - "**.cpp"
+      - "**.h"
+      - "**/CMakeLists.txt"
+
+jobs:
+  build_and_test:
+	name: Build & test tRIBS on ${{ matrix.os }} with ${{ matrix.compiler }}.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        compiler: [ g++-10 ]
+        include:
+          - os: ubuntu-latest
+            compiler: g++-10
+            target: Linux
+
+          - os: macos-latest
+            compiler: g++-10
+            target: Macos
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: "Create build directory and run CMake"
+        run: cmake -S . -B build  -DCMAKE_BUILD_TYPE=Debug # TODO update to release
+      - name: "Build Project" 
+        run: cmake --build build --target all 
+ 
