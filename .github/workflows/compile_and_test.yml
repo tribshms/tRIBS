@@ -2,6 +2,7 @@ name: compile_and_test
 run-name: ${{github.actor}} is conducting a tRIBS build test
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - "**.cpp"
