@@ -14,16 +14,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        compiler: [ g++-10 ]
+        os: [macos-latest, ubuntu-latest]
+        compiler: [ g++-11 ]
         include:
+        
+          - os: macos-latest
+            compiler: clang
+            target: Macos
+            
           - os: ubuntu-latest
-            compiler: g++-10
+            compiler: g++-11
             target: Linux
 
-          - os: macos-latest
-            compiler: g++-10
-            target: Macos
 
     steps:
       - name: Checkout Repository
