@@ -1,6 +1,7 @@
 # Required CMake arguments
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.20)
 set(exe "tRIBSgrid") # this line is not required but can be changed to change name of executable
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross compilation see: https://stackoverflow.com/questions/53633705/cmake-the-c-compiler-is-not-able-to-compile-a-simple-test-program
 project(${exe})
 add_executable(${exe} main.cpp)
 

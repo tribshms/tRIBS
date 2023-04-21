@@ -1103,7 +1103,7 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 		for (int i = 0; i < this->numNodes; i++) {
 #ifdef PARALLEL_TRIBS
   // Doesn't need to be less than active size
-      if ( (this->uzel[i] != NULL) && (this->nodeList[i] > 0) ) {
+      if ( (this->uzel[i] != NULL) && (this->nodeList[i] >= 0) ) {
 #else
 			if ( this->uzel[i] && this->nodeList[i] < this->g->getNodeList()->getActiveSize()) {
 #endif
