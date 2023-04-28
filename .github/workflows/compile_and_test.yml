@@ -30,8 +30,13 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: "Install open-mpi"
+        run: brew install open-mpi
+
       - name: "Create build directory and run CMake"
         run: cmake -S . -B build  -DCMAKE_BUILD_TYPE=Debug # TODO update to release
+
       - name: "Build Project" 
         run: cmake --build build --target all 
  

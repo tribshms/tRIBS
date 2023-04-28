@@ -10,9 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [V 3.1] - 2023-4-05
+## [V 3.1] - 2023-4-28
 
 ### Added
+- doc folder with doxygen
 - CMake functionality (CMakeLists.txt)
 - Merged fixes from different versions of tRIBS code including from Josh Cederstrom, Ara Ko, Carlos Lizarraga, and Xiaoyang Tang
 - added #include "tTimer.h" to tTimer.cpp
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Commented out #include t*(parallel code).cpp in parallel header files because it led to redefinition
 
 ### Changed
+- layout of folder structure all tRIBS source code is now in the [src](./src) folder.
 
 ### Removed
 - removed register calls (no longer supported at c++ 17 or earlier)

@@ -16,25 +16,19 @@ sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install
 ```bash
 cd ~/Documents/tRIBS
 ```
-4) Make a build directory and change into that directory.
+4) Once in the directory containing the src code subdirectory and CMakeText.txt execute the following code in the terminal.
 
 ```bash
-mkdir build
-cd build
+cmake -S . -B build 
+cmake --build build --target all  
 ```
+The first command tells CMake to generate the make files for tribs in a folder called build. Followed by the second line which effectively compiles the code. 
 
-5) The run CMake (which generates a Makefile) followed by make to create the tRIBS executable
-
+5) After you can check to see that the executable was made by using.
 ```bash
-cmake ../
-make
-```
-
-6) After you can check to see that the executable was made by using.
-```bash
- ls 
+ ls build/
  ```
- The executable will have a name specifed in the CMakeList.txt file
+ The executable will have a name specifed in the CMakeList.txt file. Currently it is set to tRIBS.
 
  ## Content of CMakeFile.txt
 
