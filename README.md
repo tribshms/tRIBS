@@ -5,7 +5,7 @@ This version of tRIBS has been updated with a [CMake](https://cmake.org/) build 
 
 Click [here](./md/CMake.md) for instructions using CMake to compile tRIBS.
 
-To see the latest changes incorporated into this version of tRIBS see the [CHANGELOG](./md/CHANGELOG.md) and for information on upcoming updates and tasks for tRIBS development see [TODO](./md/TODO).
+To see the latest changes incorporated into this version of tRIBS see the [CHANGELOG](./md/CHANGELOG.md) and for information on upcoming updates and tasks for tRIBS development see [TODO](./md/TODO.md).
 
 We are currently in the process of updating documentation for tRIBS. For now relevant information such as user manual etc. can be found [here](http://vivoni.asu.edu/tribs.html). More details in documentation have been added via [doxygen](https://www.doxygen.nl/), navigate to the html folder in doc [here](./doc/doc/html) and drag the index.html file into a web browser to see detailed documentation of the code.
 
