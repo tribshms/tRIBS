@@ -15,7 +15,7 @@
 
 // header file was missing not sure how this was previously compiled WR
 #include "src/tParallel/tTimings.h"
-
+#include <cstring>
 
 
 // static data members of tTimings class
