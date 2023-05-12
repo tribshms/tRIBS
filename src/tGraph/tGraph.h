@@ -40,8 +40,8 @@
 #include "src/tInOut/tInputFile.h"
 
 struct IDOrder {
-  bool operator() ( tCNode* n1, tCNode* n2 )
-  {
+  bool operator() ( const tCNode* n1, const tCNode* n2 )
+  const {
     return n1->getID() < n2->getID();
   }
 };
