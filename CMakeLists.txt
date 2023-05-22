@@ -177,7 +177,7 @@ else()
 
     target_sources(
             ${exe} PRIVATE src/main.cpp
-            src/Headers/Classrc/ses.h
+            src/Headers/Classes.h
             src/Headers/Definitions.h
             src/Headers/Inclusions.h
             src/Headers/TemplDefinitions.h
