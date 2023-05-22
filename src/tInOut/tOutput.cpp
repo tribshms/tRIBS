@@ -256,6 +256,9 @@ void tOutput<tSubNode>::ReadNodeOutputList() {
 		Cout<<"\tAttention: The specified file with node IDs does not "
 			<<"exist.\n\t\t   No node output will be written."<<endl<<endl;
 		numNodes = 0;
+        nodeList = nullptr;
+        uzel = nullptr;
+        pixinfo = nullptr;
 		return;
 	}
 	
@@ -852,7 +855,7 @@ tCOutput<tSubNode>::~tCOutput()
 {
 
 	// GMnSKY2008MLE to fix memory leaks
-	if (numOutlets > 0) { 
+	if (numOutlets > 0) {
 		for (int j=0; j < numOutlets; j++) 
 #ifdef PARALLEL_TRIBS
     if ( (Outlets[j] != NULL) && (OutletList[j] > 0) )
