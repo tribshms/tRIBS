@@ -21,6 +21,7 @@
 #include "src/tParallel/tParallel.h"
 #endif
 
+using namespace std;
 //=========================================================================
 //
 //
