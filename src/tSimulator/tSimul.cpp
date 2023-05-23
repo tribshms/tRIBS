@@ -508,7 +508,7 @@ void Simulator::OutputSimulatedVars(tKinemat *Flow)
 	}
 
 	// Write streamflow for interior outlets
-	// NOTE: Need to change this later to get an average flow, i.e., 1-hr step
+	// TODO: Need to change this later to get an average flow, i.e., 1-hr step
 	outp->WriteOutletInfo( timer->getCurrentTime() );
 	
 	// If it's time -> Output Hydrograph  
@@ -517,13 +517,10 @@ void Simulator::OutputSimulatedVars(tKinemat *Flow)
 			forenum=0;
 		else 
 			forenum=1;
-		
-		if ((simCtrl->hydrog_results == 'Y') && (timer->getCurrentTime())) { // CJC 2020 Write mrf file before tRIBS crashes while using -H. Remove later
-			if ((timer->getCurrentTime() == 8760) || (timer->getCurrentTime() == 17520) || (timer->getCurrentTime() == 26280) || (timer->getCurrentTime() == 35040) || (timer->getCurrentTime() == 43800) || (timer->getCurrentTime() == 52560) || (timer->getCurrentTime() == 61320) || (timer->getCurrentTime() == 70080) || (timer->getCurrentTime() == 78840) || (timer->getCurrentTime() == 87600) || (timer->getCurrentTime() == 96360) || (timer->getCurrentTime() == 105120) || (timer->getCurrentTime() == 113880) || (timer->getCurrentTime() == 122640) || (timer->getCurrentTime() == 131400) || (timer->getCurrentTime() == 140160) || (timer->getCurrentTime() == 148920) || (timer->getCurrentTime() == 157680) || (timer->getCurrentTime() == 166440) || (timer->getCurrentTime() == 175200)){
-			Flow->getResultsPtr()->
-			writeAndUpdate( timer->getCurrentTime(), forenum );
-			}
-		}
+        if ((simCtrl->hydrog_results == 'Y') && (timer->getCurrentTime())) {
+            Flow->getResultsPtr()->
+                    writeAndUpdate( timer->getCurrentTime(), forenum );
+        }
 		
 		// Write selected dynamic variables
 		// if ( simCtrl->inter_results == 'Y' )
