@@ -3982,7 +3982,7 @@ double vCell::convertToVoronoiFormat(int flag)
 int vCell::polyCentroid(double x[], double y[], int n,
 						double *xCentroid, double *yCentroid, double *area) 
 {
-	register int i, j;
+	int i, j;
 	double ai, atmp = 0.0, xtmp = 0.0, ytmp = 0.0;
 	double x_i, x_j, y_i, y_j; // Added by Giuseppe Mascaro - OCTOBER 2012	
 	if (n < 3) return 1;

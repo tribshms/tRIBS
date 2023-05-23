@@ -1106,7 +1106,7 @@ double tCNode::getCentroidY()
 int tCNode::polyCentroid(double x[], double y[], int n,
 						double *xCentroid, double *yCentroid, double *area) 
 {
-	register int i, j;
+	int i, j;
 	double ai, atmp = 0.0, xtmp = 0.0, ytmp = 0.0;
 	if (n < 3) return 1;
 	for (i = n-1, j = 0; j < n; i = j, j++)
