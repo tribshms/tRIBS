@@ -56,7 +56,7 @@ SimulationControl::SimulationControl(int argc, char **argv)
 	hydro_visual     = 'N';
 	Header_label     = 'Y';
 	smooth_weather   = 'N';
-   debug            = 'N';
+    debug            = 'N';
 	num_simul = 0;
 	VerbID = -999;
 	
