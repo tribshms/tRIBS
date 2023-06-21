@@ -30,7 +30,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0") # no optimization here
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
 
 # set to ON to compile parallel version, set to OFF to compile serial version
-if(ON)
+if(OFF)
     message(WARNING "Compiling parallel version of tRIBS")
 
     target_compile_definitions(${exe}

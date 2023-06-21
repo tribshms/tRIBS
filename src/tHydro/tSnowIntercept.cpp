@@ -275,16 +275,6 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   }
   LAI = coeffLAI;
 
-
-//  if (ID%100 == 0)
-//	  cout << "ID: " << ID << endl;
-
-/*  //let's see what the forcing is for tSnInt
-  if (ID%100 == 0) {
-    cout << "ID: " << ID << "\tRH: " << rHumidity << "\tairT: " << airTemp << "\tairTK: " << airTempK 
-	    << "\n\t\tws: " << windSpeed << "rain: " << rain << "\tLAI: " << LAI << endl;
-  }  */
-
   
   //reinitialize snow interception model
   Iold = rholiqkg*cmtonaught*(node->getIntSWE());
@@ -294,10 +284,9 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   //no snow
   if ( (rain*snowFracCalc() < 1e-4) && (Iold < 1e-3) )
   {
+      I = Iold = Lm = Qcs = 0.0;
 
-    //from callEvapoPotential()	  
-    I = Iold = Lm = Qcs = 0.0;
-
+    //from callEvapoPotential()
     if (Ioption == 1) {
       CanStorage = node->getCumIntercept();
       ctos = 1;
@@ -311,11 +300,9 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
 
     //Evaporation from Wet Canopy <-- works only for 1 hour dt! 
     //'ctos' is C/S - that gives the term in the Rutter equation
-    //if (CanStorage >= ctos*potEvap*timerET->getEtIStep())
     if (CanStorage >= ctos*potEvap*timer->getEtIStep()) //timerET changed to timer as per v3R25 -- SKY2008Snow from AJR2007
       evapWetCanopy = potEvap;
     else {
-      //evapWetCanopy = CanStorage / timerET->getEtIStep(); 
       evapWetCanopy = CanStorage / timer->getEtIStep(); //timerET changed to timer as per v3R25 -- SKY2008Snow from AJR2007
       ctos = 1;
     }

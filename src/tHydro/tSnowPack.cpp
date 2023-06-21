@@ -820,27 +820,12 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       }
     }
 
-    //Use ID for debugging purposes 
-    ID = cNode->getID();
-
     //Get Rainfall
     rain = cNode->getRain(); // get new rainfall
-
-    // SKY2008Snow from AJR2007
-    if (isnan(rain)) {
-	rain = 0.0; // this deals with the hiccup during the second hour where the met data 
-		       // is read in incorrectly. RMK: I DO NOT KNOW WHAT CAUSES THIS, BUT
-		       // IT MAY BE SIGNIFICANT FOR LATER CODE DEVELOPMENT -- INITIAL INSTABILITY 
-		       // CAN LEAD TO REALLY, REALLY UNSTABLE AND UNREALISTIC RESULTS LATER.
-    }
-
     //Set Elevation, Slope and Aspect
     slope = fabs(atan(cNode->getFlowEdg()->getSlope()));
     aspect = cNode->getAspect();
     elevation = cNode->getZ();
-
-/*    if (ID%100 == 0 && ID > 0)
-      cout << "ID: " << ID << "\tsl: " << slope << "\tasp: " << aspect << endl;*/
 
 
     snOnOff = 0.0;
@@ -965,73 +950,28 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 
     }
 
-    //AJR2008, SKY2008Snow
-    //	This functionality is not needed as metHour == etHour is assumed    
-/*    } //end if etistep == metstep
-
-    else {//etistep != metstep
-
-      if (metHour != etHour) {
-	rain = 0.0;
-      }
-      
-      //initialize atmosphere to last reading's data
-      airTemp = cNode->getAirTemp();
-      windSpeed = cNode->getWindSpeed();
-      dewTemp = cNode->getDewTemp();
-      atmPress = cNode->getAirPressure();
-      rHumidity = cNode->getRelHumid();
-    }*/
-
     if(Ioption == 0) {
       cNode->setNetPrecipitation(rain);
     }
-    
-    //Set Coefficients -- this is for soils, land-use parameters --THIS MOVED TO ABOVE, SIMILAR TO IN CALLEVAPOPOTENTIAL
-//    setCoeffs(cNode);// inherited
-//    if (luOption == 1) {	
-//	newLUGridData(cNode);
-//    }
 
     //Call Beta functions
     betaFunc(cNode); // inherited
-    betaFuncT(cNode); // inherited  
+    betaFuncT(cNode); // inherited
+
+    //Get Soil/Surface Temperature
+    Tso = cNode->getSurfTemp() + 273.15;
+    Tlo = cNode->getSoilTemp() + 273.15;
 
     //get the necessary information from tCNode for snow model
     getFrNodeSnP(cNode);
-    
-    //Do the interception scheme
-    snUnload = 0.0;    
-    if ( Ioption && (Intercept->IsThereCanopy(cNode)))  {
-      SnIntercept->callSnowIntercept(cNode, Intercept);
-      rain = cNode->getRain(); //calculated in callSnowIntercept()
-      snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept()
-      snCanWE = cNode->getIntSWE();
-    }
-    else {
-      cNode->setNetPrecipitation(rain);
-    }
-
+    // WR-WB debug not sure if below lines are necessary
+    snUnload = 0.0;
     canWE = cNode->getIntSWE();
 
-    actEvap = 0.0; //SMM added 10312008
-    potEvap = 0.0; //SMM added 10312008
+    //No Snow on ground or canopy and not snowing
+    if ( (snWE <= 1e-4) && (rain*snowFracCalc() <= 5e-2) && rholiqkg*cmtonaught*(cNode->getIntSWE()) <  1e-3) {
 
-    //No-Snow/Snow control statement
-    if ( (snWE <= 1e-4) && (rain*snowFracCalc() <= 5e-2) ) {
-
-      rain += snUnload*ctom;
-      snTempC = 0.0; // reinitialize snTemp
-      snWE = 0.0; // reinitialize snWE
-	  snSub = 0.0; // No sublimation occurs CJC2020
-	  snEvap = 0.0; // No evaporation occurs CJC2020
-      dUint = RLin = RLout = RSin = H = L = G = Prec = 0.0; //reinitialize energy terms
-      
-      //From tEvapoTrans::callEvapoPotential() and tEvapoTrans::callEvapoTrans()
-
-      //Get Soil/Surface Temperature
-      Tso = cNode->getSurfTemp() + 273.15;
-      Tlo = cNode->getSoilTemp() + 273.15;
+      // Following block of code mirrors callEvapoPotential and callEvapoTrans in tEvapoTrans—restructured by WR 6/21/23
      
       //Calculate the Potential and Actual Evaporation
       if(evapotransOption == 1){   
@@ -1057,19 +997,61 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         cout << "Exiting Program...\n\n"<<endl;
         exit(1);
       }
-  
-      ETAge = ETAge + timeStepm;
-            
-      //redo callEvapoTrans
-      ID = cNode->getID();
-      elevation = cNode->getZ(); //SMM 10172008
+
+      // Set
+      setToNode(cNode);
+
       ComputeETComponents(Intercept, cNode, count, flag);
- 
+
+      //Reset Snow
+      snTempC = 0.0; // reinitialize snTemp
+      snWE = 0.0; // reinitialize snWE
+      snSub = 0.0; // No sublimation occurs CJC2020
+      snEvap = 0.0; // No evaporation occurs CJC2020
+      dUint = RLin = RLout = RSin = H = L = G = Prec = 0.0; //reinitialize energy terms
+      ETAge = ETAge + timeStepm;
     }//end no-snow
     
     else //snow
     {
-      
+        // Below block of code added by WR 6/21/23 to set potEvap
+        //Calculate the Potential and Actual Evaporation
+        if(evapotransOption == 1){
+            EvapPenmanMonteith(cNode); // SKY2008Snow
+        }
+        else if(evapotransOption == 2){
+            EvapDeardorff(cNode); // SKY2008Snow
+        }
+        else if(evapotransOption == 3){
+            EvapPriestlyTaylor(cNode); // SKY2008Snow
+        }
+        else if(evapotransOption == 4){
+            EvapPan();
+        }
+        else{
+            cout << "\nEvapotranspiration Option " << evapotransOption;
+            cout <<" not valid." << endl;
+            cout << "\tPlease use :" << endl;
+            cout << "\t\t(1) for Penman-Monteith Method" << endl;
+            cout << "\t\t(2) for Deardorff Method"<< endl;
+            cout << "\t\t(3) for Priestly-Taylor Method" << endl;
+            cout << "\t\t(4) for Pan Evaporation Measurements" << endl;
+            cout << "Exiting Program...\n\n"<<endl;
+            exit(1);
+        }
+        setToNode(cNode);
+
+        // Implement interception schemes for snow—restructured WR 6/21/23
+//        if ( Ioption && (Intercept->IsThereCanopy(cNode)))  {
+//      SnIntercept->callSnowIntercept(cNode, Intercept);
+//      rain = cNode->getRain(); //calculated in callSnowIntercept()
+//      snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept()
+//      snCanWE = cNode->getIntSWE();
+//    }
+//    else {
+//      cNode->setNetPrecipitation(rain);
+//    }
+
       //calculate current snow depth for use in the turbulent heat flux calculations and output.
       snDepthm = cmtonaught*snWE/0.1;
       if (snWE < 1e-5) {
@@ -1362,9 +1344,10 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
              
     }//end yes-snow
 
+    // WR-WB debug: these should be set in the above if/else statment
     //set both tEvapoTrans and tSnowPack information to node
-    setToNode(cNode);
-    setToNodeSnP(cNode);
+    //setToNode(cNode);
+    //setToNodeSnP(cNode);
 
     // Estimate average Ep and cloudiness
     if (rainPtr->getoptStorm() && Io > 0.0) {
