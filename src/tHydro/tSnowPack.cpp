@@ -827,6 +827,8 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     aspect = cNode->getAspect();
     elevation = cNode->getZ();
 
+    //Get NodeID
+    ID = cNode->getID();
 
     snOnOff = 0.0;
 
@@ -968,10 +970,12 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     snUnload = 0.0;
     canWE = cNode->getIntSWE();
 
-    //No Snow on ground or canopy and not snowing
+
+    //No Snow on ground and canopy and not snowing
     if ( (snWE <= 1e-4) && (rain*snowFracCalc() <= 5e-2) && rholiqkg*cmtonaught*(cNode->getIntSWE()) <  1e-3) {
 
-      // Following block of code mirrors callEvapoPotential and callEvapoTrans in tEvapoTrans—restructured by WR 6/21/23
+      // Following block of code mirrors callEvapoPotential and callEvapoTrans in tEvapoTrans as no snow occurs at any
+      // level of the system: i.e. snowpack, canopy, or snowing. —restructured by WR 6/21/23
      
       //Calculate the Potential and Actual Evaporation
       if(evapotransOption == 1){   
@@ -1012,60 +1016,43 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       ETAge = ETAge + timeStepm;
     }//end no-snow
     
-    else //snow
+    else //condtions include: presences or absence of snowpack and snow in canopy, and snowing, raining, or no precip
     {
-        // Below block of code added by WR 6/21/23 to set potEvap
-        //Calculate the Potential and Actual Evaporation
-        if(evapotransOption == 1){
-            EvapPenmanMonteith(cNode); // SKY2008Snow
-        }
-        else if(evapotransOption == 2){
-            EvapDeardorff(cNode); // SKY2008Snow
-        }
-        else if(evapotransOption == 3){
-            EvapPriestlyTaylor(cNode); // SKY2008Snow
-        }
-        else if(evapotransOption == 4){
-            EvapPan();
-        }
-        else{
-            cout << "\nEvapotranspiration Option " << evapotransOption;
-            cout <<" not valid." << endl;
-            cout << "\tPlease use :" << endl;
-            cout << "\t\t(1) for Penman-Monteith Method" << endl;
-            cout << "\t\t(2) for Deardorff Method"<< endl;
-            cout << "\t\t(3) for Priestly-Taylor Method" << endl;
-            cout << "\t\t(4) for Pan Evaporation Measurements" << endl;
-            cout << "Exiting Program...\n\n"<<endl;
-            exit(1);
-        }
-        setToNode(cNode);
+        //Todo:WR-WB debug need to add/update Rain on snow case and make sure proper variables are being set in proper place
+     // during interception
 
-        // Implement interception schemes for snow—restructured WR 6/21/23
-//        if ( Ioption && (Intercept->IsThereCanopy(cNode)))  {
-//      SnIntercept->callSnowIntercept(cNode, Intercept);
-//      rain = cNode->getRain(); //calculated in callSnowIntercept()
-//      snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept()
-//      snCanWE = cNode->getIntSWE();
-//    }
-//    else {
-//      cNode->setNetPrecipitation(rain);
-//    }
+     // Implement interception schemes for snow—restructured WR 6/21/23
+     if ( Ioption && (Intercept->IsThereCanopy(cNode)))  {
+        SnIntercept->callSnowIntercept(cNode, Intercept);
+        snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept() units in cm
+        snCanWE = cNode->getIntSWE();//units in cm
+     }
+     else {
+       cNode->setNetPrecipitation(rain);
+     }
 
-      //calculate current snow depth for use in the turbulent heat flux calculations and output.
+     rain = cNode->getNetPrecipitation(); //units in mm
+     rain += snUnload*ctom; // units in mm
+
+      // Here rain is being set by net precipitation which is set from callSnowIntercept
+      // Prior to re-structuring rain was obtained from getRain, which was modified in callSnowIntercept
+
       snDepthm = cmtonaught*snWE/0.1;
+      //calculate current snow depth for use in the turbulent heat flux calculations and output.
+
       if (snWE < 1e-5) {
 	
         //no precipitation heat flux, as it is totally accounted for in the snow pack energy
-        //  initializtion      
+
+        // initialization
         phfOnOff = 0.0;
 
         //account for veg height
         if (coeffH == 0) {
-	  vegHeight = 0.1;
+            vegHeight = 0.1;
         }
         else {
-	  vegHeight = coeffH;
+	        vegHeight = coeffH;
         }	
 	
         //set the new density age
@@ -1078,47 +1065,50 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         iceWE = iceWE*cmtonaught;
         liqWE = liqWE*cmtonaught;
         snWE = iceWE + liqWE;
-        if (airTemp > 0.0)
-	  snTempC = 0.0;
-        else 
-	  snTempC = airTemp;
+
+        if (airTemp > 0.0) {
+              snTempC = 0.0;
+          }
+
+        else {
+              snTempC = airTemp;
+          }
     
         //snowMB
-	
-        //evaporate liquid from ripe pack snWE += 
+        // evaporate liquid from ripe pack snWE +=
         if (snTempC == 0.0) {
-	  //total SWE update
-	  snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
-		cmtonaught*(snUnload + mtoc*(rain))*timeSteps/3600;
+	        //total SWE update units in
+	        snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
+		    cmtonaught*(snUnload + mtoc*(rain))*timeSteps/3600;
       
-	  //liq WE update
-	  liqWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) + 
-		cmtonaught*((mtoc*rain)*(1 - snowFracCalc()))*timeSteps/3600; // Removed snUnload term CJC2020
-	  snEvap = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ)*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
+	        //liq WE update
+	        liqWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
+		    cmtonaught*((mtoc*rain)*(1 - snowFracCalc()))*timeSteps/3600; // Removed snUnload term CJC2020
+	        snEvap = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ)*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
 	
-	  //solid WE update
-	  iceWE += cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
-	  snSub = 0.0; // No sublimation occurs CJC2020
-        }
+	        //solid WE update
+	        iceWE += cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	        snSub = 0.0; // No sublimation occurs CJC2020
+         }
 	
-	//sublimate solid from frozen pack
+	    //sublimate solid from frozen pack
         else {
 		
-	  //total WE update
-	  snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) +
-		cmtonaught*mtoc*(rain)*timeSteps/3600;
+	        //total WE update
+	        snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) +
+		    cmtonaught*mtoc*(rain)*timeSteps/3600;
 	
-	  //liq WE update
-	  liqWE += cmtonaught*(mtoc*(rain*(1 - snowFracCalc())))*timeSteps/3600; // Removed snUnload term CJC2020
-	  snEvap = 0.0; // No evaporation occurs CJC2020
+	        //liq WE update
+	        liqWE += cmtonaught*(mtoc*(rain*(1 - snowFracCalc())))*timeSteps/3600; // Removed snUnload term CJC2020
+	        snEvap = 0.0; // No evaporation occurs CJC2020
 
-	  //ice WE update
-	  iceWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) + 
-		cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
-	  snSub = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ)*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
+	        //ice WE update
+	        iceWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) +
+		    cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	        snSub = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ)*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
         }
 	
-	//set other fluxes
+	    //set other fluxes
         L = H = G = Prec = Utotold = 0.0;
 
         //initialize and record energy balance
@@ -1133,20 +1123,21 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	
         //account for veg height
         if (coeffH == 0) {
-	  vegHeight = 0.1;
+	        vegHeight = 0.1;
         }
         else {
-	  vegHeight = coeffH;
+	        vegHeight = coeffH; // says this is unused?
         }
 
         //find the new density age
         densityAge = (snWE*densityAge)/(snWE + mtoc*rain);
 
         //reset crust age if snowing out
-        if (rain*snowFracCalc() > 1e-3)
-	    crustAge = 0.0;
+        if (rain * snowFracCalc() > 1e-3) {
+              crustAge = 0.0;
+        }
 
-	//change mass (volume) quantities to correct units (kJs)
+	    //change mass (volume) quantities to correct units (kJs)
         iceWE = iceWE*cmtonaught;
         liqWE = liqWE*cmtonaught;
         snWE = iceWE + liqWE;
@@ -1155,37 +1146,35 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	
         //ripe pack -- evaporate water
         if (snTempC == 0.0) {
-	  //tot WE update
-	  snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
-		cmtonaught*(snUnload + mtoc*(rain))*timeSteps/3600;
+            //tot WE update
+            snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
+            cmtonaught*(snUnload + mtoc*(rain))*timeSteps/3600;
       
-	  //liq WE update
-	  liqWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) + 
-		cmtonaught*((mtoc*rain)*(1 - snowFracCalc()))*timeSteps/3600; // Removed snUnload term CJC2020
-	  snEvap = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ)*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
+	        //liq WE update
+	        liqWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
+		    cmtonaught*((mtoc*rain)*(1 - snowFracCalc()))*timeSteps/3600; // Removed snUnload term CJC2020
+	        snEvap = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ)*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
 	
-	  //ice WE update
-	  iceWE += cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
-	  snSub = 0.0; // No sublimation occurs CJC2020
-	  
+	        //ice WE update
+	        iceWE += cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	        snSub = 0.0; // No sublimation occurs CJC2020
         }
 
         //frozen pack -- sublimate water
         else {
 	  
-	  //tot WE update
-	  snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) +
-		cmtonaught*mtoc*(rain)*timeSteps/3600;
+	        //tot WE update
+	        snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) +
+		    cmtonaught*mtoc*(rain)*timeSteps/3600;
 	
-	  //liq WE update
-	  liqWE += cmtonaught*(mtoc*(rain*(1 - snowFracCalc())))*timeSteps/3600; // Removed snUnload term CJC2020
-	  snEvap = 0.0; // No evaporation occurs CJC2020
-	  
-	  //ice WE update
-	  iceWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) + 
-		cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
-	  snSub = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ)*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
-	  
+            //liq WE update
+            liqWE += cmtonaught*(mtoc*(rain*(1 - snowFracCalc())))*timeSteps/3600; // Removed snUnload term CJC2020
+            snEvap = 0.0; // No evaporation occurs CJC2020
+
+	        //ice WE update
+	        iceWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) +
+		    cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	        snSub = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ)*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
         }	
 	
         //snowEB
@@ -1197,130 +1186,114 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         //if there is no snow left at this point, then bail out of
         //energy balance.
         if ( (snWE <= 5e-6) || (snTempC < -800 ) ) {
-	  liqRoute = 0.0;
-	  snWE = 0.0;
-	  snWE = 0.0;
-	  iceWE = 0.0;
-	  liqWE = 0.0;
-	  Utot = 0.0;
-	  Usn = 0.0;
-	  Uwat = 0.0;
-	  liqRoute = 0.0; 
-	  snTempC = 0.0;
-	  crustAge = 0.0;
-	  densityAge = 0.0;
+	        liqRoute = 0.0;
+	        snWE = 0.0;
+	        snWE = 0.0;
+	        iceWE = 0.0;
+	        liqWE = 0.0;
+	        Utot = 0.0;
+	        Usn = 0.0;
+	        Uwat = 0.0;
+	        liqRoute = 0.0;
+	        snTempC = 0.0;
+	        crustAge = 0.0;
+	        densityAge = 0.0;
         }
         else {
 
-	  //find initial state of energy
-	  Utot = Utotold = iceWE*rhoicekg*cpicekJ*snTempC // I am pretty sure this should be rhoicekg CJC 2020
-			    + liqWE*rholiqkg*latFreezekJ;
-	  //adjust albedo for age
-	  albedo = agingAlbedo();
+	        //find initial state of energy
+	        Utot = Utotold = iceWE*rhoicekg*cpicekJ*snTempC+liqWE*rholiqkg*latFreezekJ; // I am pretty sure this should be rhoicekg CJC 2020
+	        //adjust albedo for age
+	        albedo = agingAlbedo();
 	
-	  //calculate dU
-	  snowEB(ID,cNode); // AJR2008, SKY2008Snow
+	        //calculate dU
+	        snowEB(ID,cNode); // AJR2008, SKY2008Snow
 
-	  //check for balance
-	  Uerr = (Utot - Utotold) - dUint;
+	        //check for balance
+	        Uerr = (Utot - Utotold) - dUint;
    
-	  if (Utot < 0.0) //frozen pack -- change temperature
-		  
-	  {
-	
-	    Usn = Utot;// all energy in solid phase
-	    Uwat = 0.0;// no energy in liquid phase
-	    liqWatCont = 0.0;// no liquid content
-	    liqWE = 0.0;// no liq WE
-	    liqTempC = 0.0; // reset liq temp to default
+	        if (Utot < 0.0){ //frozen pack -- change temperature
+                Usn = Utot;// all energy in solid phase
+                Uwat = 0.0;// no energy in liquid phase
+                liqWatCont = 0.0;// no liquid content
+                liqWE = 0.0;// no liq WE
+                liqTempC = 0.0; // reset liq temp to default
 
-	    iceWE = snWE;
+                iceWE = snWE;
 
-	    //calculate sn temperature, modified THM 2012
-	    if (iceWE < 0.1 && iceWE > 0){
-	      iceTempC = Usn/(cpicekJ*rhoicekg*0.1); // I am pretty sure this should be rhoicekg CJC 2020 
-	    }
-	    else
-	      iceTempC = Usn/(cpicekJ*rhoicekg*snWE); // I am pretty sure this should be rhoicekg CJC 2020 
-		
-	    //adjust to minimum snow temperature
-	    //	RMK: THIS IS A KLUGE THAT IS NECESSARY B/C OF THE 
-	    //	ONE-LAYER ASSUMPTION. IT IS ALSO REQUIRED B/C OF THE
-	    //	SIMPLISTIC WAY WE MODEL GROUND HEAT FLUX. SOMEONE 
-	    //	NEEDS TO INCORPORATE MULTIPLE LAYERS.
-	    if (iceTempC <= minSnTemp)
-	        iceTempC = minSnTemp;
+                //calculate sn temperature, modified THM 2012
+                if (iceWE < 0.1 && iceWE > 0) {
+                    iceTempC = Usn / (cpicekJ * rhoicekg * 0.1); // I am pretty sure this should be rhoicekg CJC 2020
+                } else {
+                    iceTempC = Usn / (cpicekJ * rhoicekg * snWE); //I am pretty sure this should be rhoicekg CJC 2020
+                }
 
-	    //set pack temperature to ice temperature
-	    snTempC = iceTempC;
-	
-	  }//end -- frozen pack
+                //adjust to minimum snow temperature
+                //	RMK: THIS IS A KLUGE THAT IS NECESSARY B/C OF THE
+                //	ONE-LAYER ASSUMPTION. IT IS ALSO REQUIRED B/C OF THE
+                //	SIMPLISTIC WAY WE MODEL GROUND HEAT FLUX. SOMEONE
+                //	NEEDS TO INCORPORATE MULTIPLE LAYERS.
+                if (iceTempC <= minSnTemp) {
+                    iceTempC = minSnTemp;
+                }
+
+                //set pack temperature to ice temperature
+                snTempC = iceTempC;
+
+	        }//end -- frozen pack
 	  
-	  else //melt
-	  {
-	
-	    Uwat = Utot;
-	    Usn = 0.0;
-		liqWE += Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
-		
-	    //make sure that there is enough SWE in the pack for the melt
-	    if (liqWE >= snWE) {
-	        liqWE = snWE; // this is here because the liqWE += term above
-		}				  //  can result in liqWE > snWE
-		
-	    //assign water equivalents 
-	    iceWE = snWE - liqWE;	
-	
-	    //put in routing bucket 
-	    //THM 2012 used 0.35 instead of 0.06 - this is a calibration factor
-	    if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
-		    
-	      //there is enough water left over
-	      if (liqWE != snWE ) {
-	        liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC2020
-	        liqWE = liqWE - liqRoute;
-	        snWE = liqWE + iceWE;
-	      }
+            else {//melt
+                Uwat = Utot;
+                Usn = 0.0;
+                liqWE += Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
+                //make sure that there is enough SWE in the pack for the melt
+                if (liqWE >= snWE) {
+                    liqWE = snWE; // this is here because the liqWE += term above
+                }				  //  can result in liqWE > snWE
+                //assign water equivalents
+                iceWE = snWE - liqWE;
 
-	      //there is no more pack
-	      else {
-	        liqRoute = snWE;
-	        liqWE = 0.0;
-	        iceWE = 0.0;
-	        snWE = 0.0;
-	      }
-	      
-	    }
-
-	    //set temperatures to 0 Celsius
-	    snTempC = 0.0;
-	    iceTempC = 0.0;
-	    liqTempC = 0.0;
-
-	  }//end -- melt
+                //put in routing bucket
+                //THM 2012 used 0.35 instead of 0.06 - this is a calibration factor
+                if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
+                    //there is enough water left over
+                    if (liqWE != snWE ) {
+                        liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC2020
+                        liqWE = liqWE - liqRoute;
+                        snWE = liqWE + iceWE;
+                    }
+                    //there is no more pack
+                    else {
+                        liqRoute = snWE;
+                        liqWE = 0.0;
+                        iceWE = 0.0;
+                        snWE = 0.0;
+                    }
+                }
+                //set temperatures to 0 Celsius
+                snTempC = 0.0;iceTempC = 0.0;liqTempC = 0.0;
+            }//end -- melt
 	  
         }//end -- snow left after initial mass decrement
 		
       }//end -- existing pack at beginning of time step
       
       //make sure that we still have snow
-      if (snWE <= 5e-6)
-      {
-        liqRoute += snWE;
-        snWE = 0.0;
-        liqWE = 0.0;
-        iceWE = 0.0;
-        crustAge = 0.0;
-        densityAge = 0.0;
-        Utot = 0.0;
-        Usn = 0.0;
-        Uwat = 0.0;
-
+      if (snWE <= 5e-6) {
+          liqRoute += snWE;
+          snWE = 0.0;
+          liqWE = 0.0;
+          iceWE = 0.0;
+          crustAge = 0.0;
+          densityAge = 0.0;
+          Utot = 0.0;
+          Usn = 0.0;
+          Uwat = 0.0;
       }
       else {
-        crustAge += timeSteph;
-        densityAge += timeSteph;
-        snOnOff = 1.0;
+          crustAge += timeSteph;
+          densityAge += timeSteph;
+          snOnOff = 1.0;
       }
 
       //mass balance leaves >= 0 snow, then prepare for output in cm
@@ -1328,26 +1301,19 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       iceWE = naughttocm*iceWE;
       liqWE = naughttocm*liqWE;
       liqRoute = naughttocm*liqRoute;
+
+      setToNodeSnP(cNode);
 	  
 	  // Set ET variables equal to zero CJC2020
       cNode->setEvapWetCanopy(0.0);
-      cNode->setEvapDryCanopy(0.0);
+      cNode->setEvapDryCanopy(0.0); // should this really be set to zero?
       cNode->setEvapSoil(0.0);
-      cNode->setEvapoTrans(0.0);
-      cNode->setPotEvap(0.0);
+      cNode->setEvapoTrans(0.0); // should this really be set to zero?
+      cNode->setPotEvap(0.0); // should this really be set to zero?
       cNode->setActEvap(0.0);
-	  
-/*      if (ID%100 == 0 && ID > 0)
-	cout << "ID: " << ID << "\tswe: " << snWE << endl;*/
-      
-      rain = 0.0;// no rain reaches the ground
-             
+
     }//end yes-snow
 
-    // WR-WB debug: these should be set in the above if/else statment
-    //set both tEvapoTrans and tSnowPack information to node
-    //setToNode(cNode);
-    //setToNodeSnP(cNode);
 
     // Estimate average Ep and cloudiness
     if (rainPtr->getoptStorm() && Io > 0.0) {
@@ -1362,32 +1328,30 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     
   }//end while-nodes
   timeCount++;
-
   oldTimeStep = hourlyTimeStep;    
   hourlyTimeStep++;
 
   // AJR2008, SKY2008Snow
   // Submit the basin average value
   if (rainPtr->getoptStorm()) {
-  	// SKY2008Snow -- Following bug corrected to account for SkyC division by cnt again in the next ComputeDailyEpCld call
-	//cnt ? SkyC /= ((double)cnt) : SkyC = skyCover;
-	cnt ? SkyC = SkyC : SkyC = skyCover;
-		
-	// Get approximate EP from Priestley-Taylor method
-	EP = ApproximateEP();
-		
-	// Submit values to climate simulator
-	weatherSimul->ComputeDailyEpCld(EP, SkyC/cnt);
-		
-	// Assign the radiation variables to the 'tHydrometStoch'
-	if (!count) {
-	  weatherSimul->setSunH(alphaD);
-	  weatherSimul->setSinH(sinAlpha);
-	  weatherSimul->setIo(Io);
-	  weatherSimul->setIdir(Ics);
-	  weatherSimul->setIdif(Ids);
-	  weatherSimul->OutputHydrometVars();
-	}
+        // SKY2008Snow -- Following bug corrected to account for SkyC division by cnt again in the next ComputeDailyEpCld call
+        cnt ? SkyC = SkyC : SkyC = skyCover;
+
+        // Get approximate EP from Priestley-Taylor method
+        EP = ApproximateEP();
+
+        // Submit values to climate simulator
+        weatherSimul->ComputeDailyEpCld(EP, SkyC/cnt);
+
+        // Assign the radiation variables to the 'tHydrometStoch'
+        if (!count) {
+          weatherSimul->setSunH(alphaD);
+          weatherSimul->setSinH(sinAlpha);
+          weatherSimul->setIo(Io);
+          weatherSimul->setIdir(Ics);
+          weatherSimul->setIdif(Ids);
+          weatherSimul->OutputHydrometVars();
+        }
   }
   return;
 }
