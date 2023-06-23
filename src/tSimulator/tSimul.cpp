@@ -227,7 +227,7 @@ void Simulator::simulation_loop(tHydroModel *Moisture, tKinemat *Flow,
 	
 		// Check if precipitation variables have to be updated
 		UpdatePrecipitationInput( rainIn->getoptStorm() );
-		
+
 		// Simulate Interception, ET processes
 		SurfaceHydroProcesses( EvapoTrans, Intercept, SnowPack, SnowIntercept ); // SKY2008Snow from AJR2007
 		
@@ -392,10 +392,24 @@ void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans,
 	// Update meteorological and ET/I time
 	get_next_met();
 
-	// SKY2008Snow from AJR2007
-	if (SnowPack->getSnowOpt() == 0) {	
+    // WR-WB -debug
+    if (timer->year == 2002 && timer->month == 11 && timer->day == 9 && timer->hour == 4) {
+        cerr<<"initiate debug at selected date";
+    }
 
-		// Possible combinations of Evapotrans and Intercept on/off 
+    if (timer->year == 2002 && timer->month == 11 && timer->day == 9 && timer->hour == 13) {
+        cerr<<"initiate debug at selected date";
+    }
+
+    if (timer->year == 2002 && timer->month == 11 && timer->day == 14 && timer->hour == 12) {
+        cerr<<"initiate debug at selected date";
+    }
+
+
+    // SKY2008Snow from AJR2007
+	if (SnowPack->getSnowOpt() == 0) {
+
+		// Possible combinations of Evapotrans and Intercept on/off
 		// 1) Both ON
 		if (EvapoTrans->getEToption() !=0 && Intercept->getIoption() != 0) {
 			if ( timer->getCurrentTime() == met_hour ) {
@@ -423,20 +437,20 @@ void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans,
 		// 3) ET ON
 		if (EvapoTrans->getEToption() !=0 && Intercept->getIoption() == 0) {
 			if ( timer->getCurrentTime() == met_hour ) {
-				EvapoTrans->callEvapoPotential();    
-			} 
+				EvapoTrans->callEvapoPotential();
+			}
 			if ( timer->getCurrentTime() == eti_hour )
 				EvapoTrans->callEvapoTrans( Intercept, 0);
 		}
 
-	// SKY2008Snow from AJR2007 starts here 
+	// SKY2008Snow from AJR2007 starts here
 	} //end if (no snow)
- 
+
 	else { //snow active
- 
+
 		// ADDED BY RINEHART 2007 @ NMT
 		//
-		// Possible combinations of Evapotrans and Intercept on/off 
+		// Possible combinations of Evapotrans and Intercept on/off
 		// 1) BOTH ON
 		if (SnowPack->getEToption() !=0 && Intercept->getIoption() != 0) {
 			if ( timer->getCurrentTime() == met_hour ) {
@@ -457,7 +471,7 @@ void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans,
 			if ( timer->getCurrentTime() == met_hour ) {
 				SnowPack->callSnowPack(Intercept,0,SnowIntercept);
 			}
-    
+
 		} //evapotrans options
 	} //snow option
 	// SKY2008Snow from AJR2007 ends here

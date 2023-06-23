@@ -839,6 +839,13 @@ void tHydroModel::UnSaturatedZone(double dt)
 		// Calculate accumulated rain [m^3]
 		TotRain += (Ractual*dt*cn->getVArea()/1000.);
 
+
+        //WR_WB debug
+        if (timer->year == 2002 && timer->month == 11 && timer->day == 14 && timer->hour == 12) {
+            cerr<<"initiate debug at selected date";
+        }
+
+
 		// SKY2008Snow from AJR2007
 		if (SnOpt) {
 			snWE = cn->getLiqWE() + cn->getIceWE();

@@ -966,6 +966,10 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 
     //get the necessary information from tCNode for snow model
     getFrNodeSnP(cNode);
+
+    // ensure routed liquid is reset
+    cNode->setLiqRouted(0.0);
+
     // WR-WB debug not sure if below lines are necessary
     snUnload = 0.0;
     canWE = cNode->getIntSWE();
