@@ -1018,9 +1018,10 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       snEvap = 0.0; // No evaporation occurs CJC2020
       dUint = RLin = RLout = RSin = H = L = G = Prec = 0.0; //reinitialize energy terms
       ETAge = ETAge + timeStepm;
+      cNode->setIntSub(0.0); //WR -WB debug
     }//end no-snow
     
-    else //condtions include: presences or absence of snowpack and snow in canopy, and snowing, raining, or no precip
+    else //condtions include some combination of snowpack and snow in canopy, and snowing, raining, or no precip
     {
         //Todo:WR-WB debug need to add/update Rain on snow case and make sure proper variables are being set in proper place
      // during interception
@@ -1191,7 +1192,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         //energy balance.
         if ( (snWE <= 5e-6) || (snTempC < -800 ) ) {
 	        liqRoute = 0.0;
-	        snWE = 0.0;
 	        snWE = 0.0;
 	        iceWE = 0.0;
 	        liqWE = 0.0;

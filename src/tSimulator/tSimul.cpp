@@ -393,7 +393,7 @@ void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans,
 	get_next_met();
 
     // WR-WB -debug
-    if (timer->year == 2002 && timer->month == 11 && timer->day == 9 && timer->hour == 4) {
+    if (timer->year == 2002 && timer->month == 10 && timer->day == 3 && timer->hour == 6) {
         cerr<<"initiate debug at selected date";
     }
 

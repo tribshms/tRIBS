@@ -2656,7 +2656,7 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 /***************************************************************************
 **
 ** tEvapoTrans::ForceRestore()
-** TODO see if the computations here can be optimized, notably pow is expensive here -WR
+** TODO see if the computations here can be optimized, notably pow is expensive -WR
 ** Calculates the ground heat flux and the deep soil temperature using
 ** the Force-restore method. Depending on the option used (1 or 2) this
 ** function, can return G or dG/dTg. See Lin (1980) and Hu and Islam (1995).

@@ -179,11 +179,13 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   double subFrac, unlFrac; // SKY2008Snow, AJR2008
   int count;
 
-  count = 0; //TODO WR-WB debug
+  count = 0;
 
   slope = fabs(atan(node->getFlowEdg()->getSlope()));
   aspect = node->getAspect();
-  elevation = node->getZ(); 
+  elevation = node->getZ();
+  CanStorage = node->getCanStorage();
+
 
   SetSunVariables();
 
@@ -282,6 +284,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   Qcs = 0.0;
   Lm = 0.0;
 
+  //TODO WR-WB debug what happens to excess canopy storage?
 
   if ( (precip*snowFracCalc() < 1e-4) && (Iold < 1e-3) ) {
       //The below code block account for the case where there is no snow in canopy and it's not snowing, but could be raining
@@ -350,6 +353,13 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
     
     albedo = 0.8;
 
+    // Canopy storage in mm is same value as kg/m^2 when converted, add to I_old and reset to node canopy storage to zero
+    if(CanStorage>1e-5){
+
+        Iold += CanStorage;
+        node->setCanStorage(0.0);
+    }
+
     //precip in mm is same value when converted to kg/m^2
 
     //maximum mass of snow stored in canopy (kg/m^2)
@@ -359,7 +369,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
     effPrecip = 0.7*(Imax - Iold)*(1 - exp(-precip/Imax));
     I = Iold + effPrecip;
 
-    //precip minus interecepted
+    //precip minus intercepted
     precip = precip - effPrecip; //convert to mm while setting to node.
 
     //if there was old snow, sublimate and unload
@@ -395,9 +405,9 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
     // SKY2008Snow based on AJR2008's recommendation ends here
       //set adjusted fluxes and states to node
       node->setIntSWE( naughttocm*( 1/rholiqkg )*I );
-      node->setIntSnUnload( naughttocm*( 1/rholiqkg )*Lm );
+      node->setIntSnUnload(naughttocm*( 1/rholiqkg )*Lm );
       node->setIntSub( naughttocm*( 1/rholiqkg )*Qcs );
-      node->addIntSub( naughttocm*( 1/rholiqkg )*Qcs );
+      node->addIntSub( naughttocm*( 1/rholiqkg )*Qcs ); //WR-WB debug,confusing use of addIntSub--intended for cumulative intercepted sublimation same for below
       node->addIntUnl( naughttocm*( 1/rholiqkg )*Lm );
       node->setIntPrec( effPrecip*( 1/rholiqkg )*naughttocm);
       node->setNetPrecipitation(precip);
