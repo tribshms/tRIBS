@@ -432,6 +432,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
       node->setIntPrec(Isnow*( 1/rholiqkg )*naughttocm);
       // Rate for the _ENTIRE_ cell:
       node->setNetPrecipitation(throughfall + (1-coeffV)*node->getRain());
+      // note mm and kg/m^2 requires not conversion
 
       //set wet and dry evap to 0 when snow in canopy
       node->setEvapWetCanopy(0.0);
