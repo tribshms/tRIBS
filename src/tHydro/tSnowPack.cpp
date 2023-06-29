@@ -1018,7 +1018,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 
       ComputeETComponents(Intercept, cNode, count, flag);
 
-      //Reset Snow
+      //Reset Snow, WR-WB debug rather than reset, why not just make them local, that way they are reset everytime? I guess you may have to pass/return variables to functions if necessary, but would be more clear.
       snTempC = 0.0; // reinitialize snTemp
       snWE = 0.0; // reinitialize snWE
       snSub = 0.0; // No sublimation occurs CJC2020
@@ -1271,7 +1271,10 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
             else {//melt
                 Uwat = Utot;
                 Usn = 0.0;
+
+                // WR-WB debug, below needs to be scaled by (1-coeffV) and what abou
                 liqWE += Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
+
                 //make sure that there is enough SWE in the pack for the melt
                 if (liqWE >= snWE) {
                     liqWE = snWE; // this is here because the liqWE += term above
@@ -1894,22 +1897,26 @@ double tSnowPack::resFactCalc()
     vegHeight = coeffH/250;
     coeffV = 0.1;
   }
-  else 
-    vegHeight = coeffH;
-
-  if(vegHeight > snDepthm)
-    vegHeight = vegHeight - snDepthm;
-  else
-    vegHeight = 0.1; // aka height of snow
+  else {
+      vegHeight = coeffH;
+  }
+  if(vegHeight > snDepthm) {
+      vegHeight = vegHeight - snDepthm;
+  }
+  else {
+      vegHeight = 0.1; // aka height of snow
+  }
 	 
   vegBare = 0.1; // height of bare soilc
 	
   vegFrac = coeffV;
 
-  if(windSpeed == 0.0 || fabs(windSpeed-9999.99)<1e-3)
-    windSpeedC = 0.01;    //Minimum wind speed (m/s)
-  else
-    windSpeedC = windSpeed;
+  if(windSpeed == 0.0 || fabs(windSpeed-9999.99)<1e-3) {
+      windSpeedC = 0.01;    //Minimum wind speed (m/s)
+  }
+  else {
+      windSpeedC = windSpeed;
+  }
 
   // Compute below canopy windspeed at snow surface following equation Moreno et al. (2016) CJC 2020
   //if (snDepthm < coeffH ) {
