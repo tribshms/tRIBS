@@ -1107,7 +1107,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         if (snTempC == 0.0) {
 	        //total SWE update units in
 	        snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
-		    cmtonaught*(snUnload + mtoc*(rain))*timeSteps/3600;
+		    cmtonaught*(mtoc*(rain))*timeSteps/3600;
       
 	        //liq WE update
 	        liqWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
@@ -1115,7 +1115,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	        snEvap = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ)*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
 	
 	        //solid WE update
-	        iceWE += cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	        iceWE += cmtonaught*(mtoc*(rain*snowFracCalc()))*timeSteps/3600;
 	        snSub = 0.0; // No sublimation occurs CJC2020
          }
 	
@@ -1132,7 +1132,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 
 	        //ice WE update
 	        iceWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) +
-		    cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+		    cmtonaught*(mtoc*(rain*snowFracCalc()))*timeSteps/3600;
 	        snSub = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ)*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
         }
 	
@@ -1176,7 +1176,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         if (snTempC == 0.0) {
             //tot WE update
             snWE +=  latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
-            cmtonaught*(snUnload + mtoc*(rain))*timeSteps/3600;
+            cmtonaught*(mtoc*(rain))*timeSteps/3600;
       
 	        //liq WE update
 	        liqWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
@@ -1184,7 +1184,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	        snEvap = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ)*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
 	
 	        //ice WE update
-	        iceWE += cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+	        iceWE += cmtonaught*(mtoc*(rain*snowFracCalc()))*timeSteps/3600;
 	        snSub = 0.0; // No sublimation occurs CJC2020
         }
 
@@ -1201,7 +1201,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 
 	        //ice WE update
 	        iceWE += latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ) +
-		    cmtonaught*(snUnload + mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+		    cmtonaught*(mtoc*(rain*snowFracCalc()))*timeSteps/3600;
 	        snSub = latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ)*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
         }	
 	
