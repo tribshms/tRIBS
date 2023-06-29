@@ -2598,7 +2598,7 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 	
 	
 	// Compute partial derivatives
-	dLdTg = 4.0*Es*sigma*pow(Tg,3.0);
+ 	dLdTg = 4.0*Es*sigma*pow(Tg,3.0);
 	dRndTg = -dLdTg;
 	
 	if (gFluxOption == 1)

@@ -638,7 +638,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
   cNode = nodeIter.FirstP(); // SKY2008Snow, AJR2008 
   while(nodeIter.IsActive()){
 
-	  
     // SKYnGM2008LU
      if (luOption == 1) { 
       if ( luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values
@@ -961,8 +960,9 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     betaFuncT(cNode); // inherited
 
     //Get Soil/Surface Temperature
-    Tso = cNode->getSurfTemp() + 273.15;
-    Tlo = cNode->getSoilTemp() + 273.15;
+    // WR-WB debug trouble shooting temps
+    //Tso = cNode->getSurfTemp() + 273.15;
+    //Tlo = cNode->getSoilTemp() + 273.15;
 
     //get the necessary information from tCNode for snow model
     getFrNodeSnP(cNode);
@@ -974,13 +974,19 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     snUnload = 0.0;
     canWE = cNode->getIntSWE();
 
+    //  ID = cNode->getID(); called above?
+    //  elevation = cNode->getZ();
 
     //No Snow on ground and canopy and not snowing
     if ( (snWE <= 1e-4) && (rain*snowFracCalc() <= 5e-2) && rholiqkg*cmtonaught*(cNode->getIntSWE()) <  1e-3) {
 
       // Following block of code mirrors callEvapoPotential and callEvapoTrans in tEvapoTrans as no snow occurs at any
       // level of the system: i.e. snowpack, canopy, or snowing. —restructured by WR 6/21/23
-     
+
+      // WR-WB debug trouble shooting temps
+      Tso = cNode->getSurfTemp() + 273.15;
+      Tlo = cNode->getSoilTemp() + 273.15;
+
       //Calculate the Potential and Actual Evaporation
       if(evapotransOption == 1){   
         EvapPenmanMonteith(cNode); // SKY2008Snow
@@ -1009,6 +1015,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       // Set
       setToNode(cNode);
 
+
       ComputeETComponents(Intercept, cNode, count, flag);
 
       //Reset Snow
@@ -1018,11 +1025,26 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       snEvap = 0.0; // No evaporation occurs CJC2020
       dUint = RLin = RLout = RSin = H = L = G = Prec = 0.0; //reinitialize energy terms
       ETAge = ETAge + timeStepm;
+      liqRoute = 0.0;
+      iceWE = 0.0;
+      liqWE = 0.0;
+      Utot = 0.0;
+      Usn = 0.0;
+      Uwat = 0.0;
+      snTempC = 0.0;
+      crustAge = 0.0;
+      densityAge = 0.0;
+
       cNode->setIntSub(0.0); //WR -WB debug
+
+      setToNodeSnP(cNode);
+
+
     }//end no-snow
     
     else //condtions include some combination of snowpack and snow in canopy, and snowing, raining, or no precip
     {
+
         //Todo:WR-WB debug need to add/update Rain on snow case and make sure proper variables are being set in proper place
      // during interception
 
@@ -1048,6 +1070,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       if (snWE < 1e-5) {
 	
         //no precipitation heat flux, as it is totally accounted for in the snow pack energy
+        // Note: snSub and snEvap are not scaled by non-vegetated area...
 
         // initialization
         phfOnOff = 0.0;
@@ -1198,7 +1221,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	        Utot = 0.0;
 	        Usn = 0.0;
 	        Uwat = 0.0;
-	        liqRoute = 0.0;
 	        snTempC = 0.0;
 	        crustAge = 0.0;
 	        densityAge = 0.0;
@@ -1306,15 +1328,17 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       liqWE = naughttocm*liqWE;
       liqRoute = naughttocm*liqRoute;
 
-      setToNodeSnP(cNode);
+
 	  
-	  // Set ET variables equal to zero CJC2020
-      cNode->setEvapWetCanopy(0.0);
-      cNode->setEvapDryCanopy(0.0); // should this really be set to zero?
+	  // Set ET variables equal to zero due to snowpack
+      // ET variables are set to zero for canopy when snow in canopy, see tSnowIntercept
       cNode->setEvapSoil(0.0);
-      cNode->setEvapoTrans(0.0); // should this really be set to zero?
-      cNode->setPotEvap(0.0); // should this really be set to zero?
+      cNode->setEvapoTrans(0.0);
+      cNode->setPotEvap(0.0);
       cNode->setActEvap(0.0);
+
+      setToNodeSnP(cNode);
+      setToNode(cNode);
 
     }//end yes-snow
 
@@ -1445,8 +1469,8 @@ void tSnowPack::setToNodeSnP(tCNode* node)
   node->setCrustAge(crustAge);
   node->setDensityAge(densityAge);
   node->setEvapoTransAge(ETAge);
-  node->setSnSub(snSub); // Snowpack sublimation CJC2020
-  node->setSnEvap(snEvap); // Snowpack evaporation CJC2020
+  node->setSnSub(snSub*(1-coeffV)); // scale by non-vegetated area
+  node->setSnEvap(snEvap*(1-coeffV)); // scale by non-vegetated area
 
   //mass flux
   node->setLiqRouted(liqRoute);

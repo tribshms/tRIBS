@@ -9,7 +9,7 @@ add_executable(${exe} src/main.cpp)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #set standard
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 #set compiler if necessary
 #set (CMAKE_CXX_COMPILER <specify compiler here>)

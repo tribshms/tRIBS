@@ -119,7 +119,6 @@ void tSnowIntercept::SetSnowVariables(tInputFile &infile, tHydroModel *hydro)
   snPrec = liqPrec = 0.0;
   snPrecm = liqPrecm = 0.0;
   snPrecmm = liqPrecmm = 0.0;
-  precip = 0;
   vapPressSmb = vapPresskSPa = 0.0;
   rholiqcgs = 1.0;
   rhoicecgs = 0.94;
@@ -176,10 +175,10 @@ void tSnowIntercept::SetSnowVariables(tInputFile &infile, tHydroModel *hydro)
 void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
 {
   double CanStorage, ctos, evapWetCanopy;
-  double subFrac, unlFrac; // SKY2008Snow, AJR2008
+  double subFrac, unlFrac, precip, Isnow, throughfall;// SKY2008Snow, AJR2008
   int count;
-
   count = 0;
+
 
   slope = fabs(atan(node->getFlowEdg()->getSlope()));
   aspect = node->getAspect();
@@ -268,7 +267,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   rHumidity = node->getRelHumid();
   airTemp = node->getAirTemp();
   airTempK = CtoK(airTemp);
-  precip = node->getRain();
+  precip = node->getRain()*coeffV; //precip scaled by veg fraction
   windSpeed = node->getWindSpeed();
   //potEvap = node->getPotEvap();
 
@@ -284,16 +283,26 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   Qcs = 0.0;
   Lm = 0.0;
 
+  // Check snowpack conditions so surface temps are adequately set
+  liqWE = node->getLiqWE(); //cm
+  iceWE = node->getIceWE(); //cm
+  snWE = liqWE + iceWE; //cm
+
+  Tso = node->getSurfTemp() + 273.15;
+  Tlo = node->getSoilTemp() + 273.15;
+
+
   //TODO WR-WB debug what happens to excess canopy storage?
 
   if ( (precip*snowFracCalc() < 1e-4) && (Iold < 1e-3) ) {
       //The below code block account for the case where there is no snow in canopy and it's not snowing, but could be raining
       //In short this should accounts for the case of rain on snow, where the net precip is then routed to SnowPack.
       I = Iold = Lm = Qcs = 0.0;
+
       // Below block of code added by WR 6/21/23 to set potEvap
       //Calculate the Potential and Actual Evaporation
       if(evapotransOption == 1){
-          EvapPenmanMonteith(node); // SKY2008Snow
+          EvapPenmanMonteith(node); // call to get EvapPot, but energy balance for soil es
       }
       else if(evapotransOption == 2){
           EvapDeardorff(node); // SKY2008Snow
@@ -315,6 +324,15 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
           cout << "Exiting Program...\n\n"<<endl;
           exit(1);
       }
+      // Set ground element-scale fluxes to zero and snow temp--just so
+      node->setNetRad(0.0);
+      node->setGFlux(0.0);
+      node->setHFlux(0.0);
+      node->setLFlux(0.0);
+      node->setLongRadOut(0.0);
+      node->setSurfTemp(node->getSnTempC()); //assume surface temp == snow temp, note if snWE < 1e-4 snow intercept should not be called
+      node->setSoilTemp(node->getSnTempC()); //this should be updated with n-layer snow model
+
       setToNode(node);
 
       ComputeETComponents(interceptModel, node, count, 1);
@@ -355,8 +373,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
 
     // Canopy storage in mm is same value as kg/m^2 when converted, add to I_old and reset to node canopy storage to zero
     if(CanStorage>1e-5){
-
-        Iold += CanStorage;
+        Iold += CanStorage; //CanStorage has been scaled by coeffV
         node->setCanStorage(0.0);
     }
 
@@ -366,11 +383,11 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
     Imax = 4.4*LAI;
    
     //compute new intercepted snow (kg/m^2)
-    effPrecip = 0.7*(Imax - Iold)*(1 - exp(-precip/Imax));
-    I = Iold + effPrecip;
+    Isnow = 0.7*(Imax - Iold)*(1 - exp(-precip/Imax));
+    I = Iold + Isnow;
 
-    //precip minus intercepted
-    precip = precip - effPrecip; //convert to mm while setting to node.
+    //precip minus intercepted snow (i.e. throughfall)
+    throughfall = precip - Isnow; //convert to mm while setting to node.
 
     //if there was old snow, sublimate and unload
 
@@ -390,6 +407,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
 
     // SKY2008Snow based on AJR2008's recommendation starts here (water balance now preserved)
     if (I < 0.0) {
+
 	    if (Qcs < 0.0) {
 		    subFrac = fabs(Qcs)/(fabs(Qcs)+Lm);
 		    unlFrac = Lm/(fabs(Qcs)+Lm);
@@ -402,15 +420,22 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
 	    Lm += I*unlFrac;
 	    I = 0.0;
     }
+
     // SKY2008Snow based on AJR2008's recommendation ends here
       //set adjusted fluxes and states to node
+      // because precip is now scaled by coeffV these values now only reflect fluxes and stores in the canopy
       node->setIntSWE( naughttocm*( 1/rholiqkg )*I );
-      node->setIntSnUnload(naughttocm*( 1/rholiqkg )*Lm );
-      node->setIntSub( naughttocm*( 1/rholiqkg )*Qcs );
-      node->addIntSub( naughttocm*( 1/rholiqkg )*Qcs ); //WR-WB debug,confusing use of addIntSub--intended for cumulative intercepted sublimation same for below
+      node->setIntSnUnload(naughttocm*( 1/rholiqkg )*Lm);
+      node->setIntSub( naughttocm*( 1/rholiqkg )*Qcs);
+      node->addIntSub( naughttocm*( 1/rholiqkg )*Qcs);
       node->addIntUnl( naughttocm*( 1/rholiqkg )*Lm );
-      node->setIntPrec( effPrecip*( 1/rholiqkg )*naughttocm);
-      node->setNetPrecipitation(precip);
+      node->setIntPrec(Isnow*( 1/rholiqkg )*naughttocm);
+      // Rate for the _ENTIRE_ cell:
+      node->setNetPrecipitation(throughfall + (1-coeffV)*node->getRain());
+
+      //set wet and dry evap to 0 when snow in canopy
+      node->setEvapWetCanopy(0.0);
+      node->setEvapDryCanopy(0.0);
 
   }//end -- snow exists
   count++;
