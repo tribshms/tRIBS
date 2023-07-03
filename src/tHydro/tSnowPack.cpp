@@ -113,7 +113,7 @@ void tSnowPack::SetSnowVariables(tInputFile &infile, tHydroModel *hydro)
   liqTempC = iceTempC = snTempC = 0.0;
   liqTempK = iceTempK = snTempK = 0.0;
   crustAge = 0.0;
-  albedo = 0.8;
+  albedo = 0.88;
   canWE = 0.0;
   
   //fluxes
@@ -1645,8 +1645,8 @@ double tSnowPack::snowFracCalc()
 
   double snowfrac;
 
-  double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)
-  
+  double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)—updated for CJC thesis (see table 11)
+
   if ( airTemp <= TMin )
 	  snowfrac = 1; // all ice
   if ( airTemp >= TMax )
@@ -1854,9 +1854,9 @@ double tSnowPack::agingAlbedo()
   double alb;
 
   if (liqWE < 1e-5)
-    alb = 0.88*pow(0.94,pow(crustAge/24,0.58)); // dry snow //R66: 0.78, 0.84
+    alb = 0.88*pow(0.94,pow(crustAge/24,0.58)); // dry snow
   else
-    alb = 0.85*pow(0.84,pow(crustAge/24,0.46)); // wet snow //R66: 0.73, 0.65 //R69: 0.80, 0.78
+    alb = 0.82*pow(0.84,pow(crustAge/24,0.46)); // wet snow
 
   return alb;
 }
@@ -1912,9 +1912,9 @@ double tSnowPack::resFactCalc()
   }
 
   // Compute below canopy windspeed at snow surface following equation Moreno et al. (2016) CJC 2020
-  //if (snDepthm < coeffH ) {
-	//windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));	
-  //}
+  if (snDepthm < coeffH ) {
+	windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));
+  }
   
   // Compute aerodynamic resistance for vegetation
   zm = 2.0 + vegHeight;
@@ -2147,8 +2147,8 @@ double tSnowPack::inShortWaveSn(tCNode *cNode)
 
     // Account for vegetation
     if ((evapotransOption == 1)||(snowOption)) {
-      Iv = Is*coeffKt*coeffV + Is*(1.0-coeffV);
-	  //Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016) CJC 2020
+      //Iv = Is*coeffKt*coeffV + Is*(1.0-coeffV);
+	  Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016) CJC 2020
 	}
     else
       Iv = Is;
