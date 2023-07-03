@@ -295,8 +295,9 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   //TODO WR-WB debug what happens to excess canopy storage?
 
   if ( (precip*snowFracCalc() < 1e-4) && (Iold < 1e-3) ) {
-      //The below code block account for the case where there is no snow in canopy and it's not snowing, but could be raining
-      //In short this should accounts for the case of rain on snow, where the net precip is then routed to SnowPack.
+      //The below code block account for the case where there is no snow in canopy and it's not snowing
+      // but could be raining In short this should accounts for the case of rain on snow, where the
+      // net precip is then routed to SnowPack.
       I = Iold = Lm = Qcs = 0.0;
 
       // Below block of code added by WR 6/21/23 to set potEvap
@@ -337,32 +338,11 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
 
       ComputeETComponents(interceptModel, node, count, 1);
 
-      // Note the following code is executed in ComputeETComponets; Variables may need to be updated according to
-      // Snowpack physics.
-
-      // in callIntercept:
-      // Set the dynamic variables to tCNode
-      // cNode->setNetPrecipitation(netPrecipitation); //For the _ENTIRE_ fract
-      // cNode->setInterceptLoss(interception);        //For the _VEGETATED_ fract
-      // cNode->setCanStorage(currentStorage);         //For the _VEGETATED_ fract
-      // interStormLength = cNode->getStormLength();
-      // if(interStormLength < maxInterStormPeriod)
-      //     cNode->setCumIntercept(cumIntercept + interception*timer->getEtIStep());
-      // else
-      //     cNode->setCumIntercept(0.0);
-
-      // at end of ComputeETcomponets
-      // cnode->setEvapWetCanopy(evapWetCanopy);
-      // cNode->setEvapDryCanopy(evapDryCanopy);
-      // cNode->setEvapSoil(evapSoil);
-      // cNode->setEvapoTrans(evapoTranspiration);
-      // cNode->addTotEvap(evapoTranspiration); // add to cumulative totals CJC2020
-      // cNode->addBarEvap(evapSoil); // add to cumulative totals CJC2020
-
+      //Set canopy snow components to 0
       node->setIntSWE(0);
       node->setIntSnUnload(0);
       node->setIntSub(0);
-      node->setIntPrec(0); // snow intercept
+      node->setIntPrec(0);
 
   }//end -- no snow
 
@@ -371,7 +351,8 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
     
     albedo = 0.8;
 
-    // Canopy storage in mm is same value as kg/m^2 when converted, add to I_old and reset to node canopy storage to zero
+    // Canopy storage in mm is same value as kg/m^2 when converted
+    // add to I_old and reset to node canopy storage to zero
     if(CanStorage>1e-5){
         Iold += CanStorage; //CanStorage has been scaled by coeffV
         node->setCanStorage(0.0);

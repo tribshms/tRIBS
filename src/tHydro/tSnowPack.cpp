@@ -959,10 +959,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     betaFunc(cNode); // inherited
     betaFuncT(cNode); // inherited
 
-    //Get Soil/Surface Temperature
-    // WR-WB debug trouble shooting temps
-    //Tso = cNode->getSurfTemp() + 273.15;
-    //Tlo = cNode->getSoilTemp() + 273.15;
 
     //get the necessary information from tCNode for snow model
     getFrNodeSnP(cNode);
@@ -1070,8 +1066,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       if (snWE < 1e-5) {
 	
         //no precipitation heat flux, as it is totally accounted for in the snow pack energy
-        // Note: snSub and snEvap are not scaled by non-vegetated area...
-
         // initialization
         phfOnOff = 0.0;
 
@@ -1097,7 +1091,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         if (airTemp > 0.0) {
               snTempC = 0.0;
           }
-
         else {
               snTempC = airTemp;
           }
@@ -1154,7 +1147,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	        vegHeight = 0.1;
         }
         else {
-	        vegHeight = coeffH; // says this is unused?
+	        vegHeight = coeffH; // unused?
         }
 
         //find the new density age
@@ -1272,7 +1265,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
                 Uwat = Utot;
                 Usn = 0.0;
 
-                // WR-WB debug, below needs to be scaled by (1-coeffV) and what abou
+                // WR-WB debug, I don't think below needs to be scaled by (1-coeffV) since Utot is calculated using scaled iceWE and liqWE
                 liqWE += Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
 
                 //make sure that there is enough SWE in the pack for the melt
