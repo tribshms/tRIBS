@@ -1885,7 +1885,7 @@ double tSnowPack::agingAlbedo()
   if (liqWE < 1e-5)
     alb = 0.88*pow(0.94,pow(crustAge/24,0.58)); // dry snow //R66: 0.78, 0.84
   else
-    alb = 0.85*pow(0.84,pow(crustAge/24,0.46)); // wet snow //R66: 0.73, 0.65 //R69: 0.80, 0.78
+    alb = 0.82*pow(0.84,pow(crustAge/24,0.46)); // wet snow //R66: 0.73, 0.65 //R69: 0.80, 0.78
 
   return alb;
 }
@@ -1937,9 +1937,9 @@ double tSnowPack::resFactCalc()
     windSpeedC = windSpeed;
 
   // Compute below canopy windspeed at snow surface following equation Moreno et al. (2016) CJC 2020
-  //if (snDepthm < coeffH ) {
-	//windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));	
-  //}
+  if (snDepthm < coeffH ) {
+	windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));
+  }
   
   // Compute aerodynamic resistance for vegetation
   zm = 2.0 + vegHeight;
