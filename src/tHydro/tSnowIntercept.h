@@ -168,7 +168,8 @@ protected:
   double rholiqcgs, rhoicecgs, rhosncgs; //g/cm^3
   double rholiqkg, rhoicekg, rhosnkg; //kg/m^3
   double rhoAir; //kg/m^3
-  
+
+
   //thermal properties
   double cpsnowkJ, cpicekJ, cpwaterkJ, cpairkJ; //heat capacity kJ/Kg
   double latFreezekJ, latVapkJ, latSubkJ; //latent heats kJ/g

@@ -240,7 +240,7 @@ void tHydroMet::setAirTemp(double *air){
 }
 
 double tHydroMet::getAirTemp(int time){
-	return airTemp[time];
+    return airTemp[time];
 }
 
 double tHydroMet::getMeanTemp(){
