@@ -160,7 +160,7 @@ protected:
   double crustAge; //hrs  
 
   //fluxes, changes in energy/mass
-  double H,L,G,Prec,Rn; //sensible, latent, ground, precipitation, net radiative heat fluxex (kJ/(m^2)(s))
+  double H,L,G,Prec,Rn; //sensible, latent, ground, precipitation, net radiative heat fluxes (kJ/(m^2)(s))
   double dUint, RLin, RLout, RSin, Uerr; //change in energy, radiative fluxes, EB error (kJ/m^2s)
   double snPrec, liqPrec; //cm
   double snPrecm, liqPrecm; //m
