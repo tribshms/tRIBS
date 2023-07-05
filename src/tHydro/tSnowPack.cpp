@@ -818,6 +818,8 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	  cNode->setAvLeafAI((cNode->getAvLeafAI()*(te-1.0) + cNode->getLeafAI())/te);
       }
     }
+    //Get NodeID
+    ID = cNode->getID();
 
     //Get Rainfall
     rain = cNode->getRain(); // get new rainfall
@@ -826,8 +828,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     aspect = cNode->getAspect();
     elevation = cNode->getZ();
 
-    //Get NodeID
-    ID = cNode->getID();
+
 
     snOnOff = 0.0;
 
@@ -970,8 +971,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     snUnload = 0.0;
     canWE = cNode->getIntSWE();
 
-    //  ID = cNode->getID(); called above?
-    //  elevation = cNode->getZ();
+
 
     //No Snow on ground and canopy and not snowing
     if ( (snWE <= 1e-4) && (rain*snowFracCalc() <= 5e-2) && rholiqkg*cmtonaught*(cNode->getIntSWE()) <  1e-3) {
@@ -1060,13 +1060,13 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       // Here rain is being set by net precipitation which is set from callSnowIntercept
       // Prior to re-structuring rain was obtained from getRain, which was modified in callSnowIntercept
 
-      snDepthm = cmtonaught*snWE/0.1;
+      snDepthm = cmtonaught*snWE/0.312; // 0.312 is value for bulk density of snow, Sturm et al 2010
       //calculate current snow depth for use in the turbulent heat flux calculations and output.
 
       if (snWE < 1e-5) {
 	
         //no precipitation heat flux, as it is totally accounted for in the snow pack energy
-        // initialization
+        //   initialization
         phfOnOff = 0.0;
 
         //account for veg height
@@ -1231,7 +1231,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	        //check for balance
 	        Uerr = (Utot - Utotold) - dUint;
    
-	        if (Utot < 0.0){ //frozen pack -- change temperature
+	        if (Utot < 0.0) { //frozen pack -- change temperature
                 Usn = Utot;// all energy in solid phase
                 Uwat = 0.0;// no energy in liquid phase
                 liqWatCont = 0.0;// no liquid content
@@ -1329,8 +1329,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	  // Set ET variables equal to zero due to snowpack
       // ET variables are set to zero for canopy when snow in canopy, see tSnowIntercept
       cNode->setEvapSoil(0.0);
-      cNode->setEvapoTrans(0.0);
-      cNode->setPotEvap(0.0);
       cNode->setActEvap(0.0);
 
       setToNodeSnP(cNode);
@@ -1912,9 +1910,9 @@ double tSnowPack::resFactCalc()
   }
 
   // Compute below canopy windspeed at snow surface following equation Moreno et al. (2016) CJC 2020
-  if (snDepthm < coeffH ) {
-	windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));
-  }
+//  if (snDepthm < coeffH ) {
+//	windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));
+//  }
   
   // Compute aerodynamic resistance for vegetation
   zm = 2.0 + vegHeight;
@@ -2147,8 +2145,8 @@ double tSnowPack::inShortWaveSn(tCNode *cNode)
 
     // Account for vegetation
     if ((evapotransOption == 1)||(snowOption)) {
-      //Iv = Is*coeffKt*coeffV + Is*(1.0-coeffV);
-	  Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016) CJC 2020
+      Iv = Is*coeffKt*coeffV + Is*(1.0-coeffV);
+	  //Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016) CJC 2020
 	}
     else
       Iv = Is;

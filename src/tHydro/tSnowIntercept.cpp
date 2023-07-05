@@ -179,7 +179,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   int count;
   count = 0;
 
-
+  ID = node->getID();
   slope = fabs(atan(node->getFlowEdg()->getSlope()));
   aspect = node->getAspect();
   elevation = node->getZ();
@@ -196,7 +196,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
 
   //Derive the remote sheltering parameters for use in the computation
   //  of radiation. Use only when remote sheltering is turned on.
-
+  //
   //  Similar to tEvapoTrans::callEvapoPotential and tSnowPack::callSnowPack
   if ( (shelterOption > 0) && (shelterOption < 4) ) {//CHANGED IN 2008    
     for (int tempIndex = 0; tempIndex < 16; tempIndex++) {
@@ -267,9 +267,8 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   rHumidity = node->getRelHumid();
   airTemp = node->getAirTemp();
   airTempK = CtoK(airTemp);
-  precip = node->getRain()*coeffV; //precip scaled by veg fraction
   windSpeed = node->getWindSpeed();
-  //potEvap = node->getPotEvap();
+  precip = node->getRain()*coeffV; //precip scaled by veg fraction
 
   //set vegetation parameters from table
   setCoeffs(node);
@@ -283,11 +282,12 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   Qcs = 0.0;
   Lm = 0.0;
 
-  // Check snowpack conditions so surface temps are adequately set
+
   liqWE = node->getLiqWE(); //cm
   iceWE = node->getIceWE(); //cm
   snWE = liqWE + iceWE; //cm
 
+  // update surface temps and soil temps
   Tso = node->getSurfTemp() + 273.15;
   Tlo = node->getSoilTemp() + 273.15;
 
@@ -325,7 +325,10 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
           cout << "Exiting Program...\n\n"<<endl;
           exit(1);
       }
-      // Set ground element-scale fluxes to zero and snow temp--just so
+      // Set actual evaporation to 0 since snow pack exists and soil evaporation is function of actual evap
+      node->setActEvap(0.0);
+
+      // Set ground element-scale fluxes to zero and surface and soil to snow temp
       node->setNetRad(0.0);
       node->setGFlux(0.0);
       node->setHFlux(0.0);
@@ -334,6 +337,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
       node->setSurfTemp(node->getSnTempC()); //assume surface temp == snow temp, note if snWE < 1e-4 snow intercept should not be called
       node->setSoilTemp(node->getSnTempC()); //this should be updated with n-layer snow model
 
+      // follows structure of
       setToNode(node);
 
       ComputeETComponents(interceptModel, node, count, 1);
@@ -343,6 +347,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
       node->setIntSnUnload(0);
       node->setIntSub(0);
       node->setIntPrec(0);
+
 
   }//end -- no snow
 
@@ -413,11 +418,13 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
       node->setIntPrec(Isnow*( 1/rholiqkg )*naughttocm);
       // Rate for the _ENTIRE_ cell:
       node->setNetPrecipitation(throughfall + (1-coeffV)*node->getRain());
-      // note mm and kg/m^2 requires not conversion
+      // note mm and kg/m^2 requires no conversion
 
       //set wet and dry evap to 0 when snow in canopy
       node->setEvapWetCanopy(0.0);
       node->setEvapDryCanopy(0.0);
+      node->setEvapoTrans(0.0);
+      node->setPotEvap(0.0);
 
   }//end -- snow exists
   count++;

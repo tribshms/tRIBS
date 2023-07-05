@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [V 3.1] - 2023-4-28
+## [V 3.1] - 2023-7-5
 
 ### Added
 - doc folder with doxygen
@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Fixed
+- Fixed Compiler errors for Linux HPC
+- Fixed multiple issues in tSnow classes
 - Compiler errors related to assert statements with null pointers
 - Compiler error for tPtrList.h (L 873) newlist.insertAtBack to newlist->insertAtBack 
 - Issue in tResample::convertToVoronoiFormat where L 1615-1617 InOrOut variable was not allocating enough memory
