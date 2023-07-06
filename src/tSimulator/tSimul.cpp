@@ -392,20 +392,6 @@ void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans,
 	// Update meteorological and ET/I time
 	get_next_met();
 
-    // WR-WB -debug
-    if (timer->year == 2002 && timer->month == 10 && timer->day == 3 && timer->hour == 6) {
-        cerr<<"initiate debug at selected date";
-    }
-
-    if (timer->year == 2002 && timer->month == 11 && timer->day == 9 && timer->hour == 13) {
-        cerr<<"initiate debug at selected date";
-    }
-
-    if (timer->year == 2002 && timer->month == 11 && timer->day == 14 && timer->hour == 12) {
-        cerr<<"initiate debug at selected date";
-    }
-
-
     // SKY2008Snow from AJR2007
 	if (SnowPack->getSnowOpt() == 0) {
 

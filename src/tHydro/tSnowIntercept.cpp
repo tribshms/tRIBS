@@ -291,16 +291,14 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
   Tso = node->getSurfTemp() + 273.15;
   Tlo = node->getSoilTemp() + 273.15;
 
-
-  //TODO WR-WB debug what happens to excess canopy storage?
-
   if ( (precip*snowFracCalc() < 1e-4) && (Iold < 1e-3) ) {
       //The below code block account for the case where there is no snow in canopy and it's not snowing
-      // but could be raining In short this should accounts for the case of rain on snow, where the
-      // net precip is then routed to SnowPack.
+      // but could be raining (i.e. rain on snow). Basically this emulates callEvapPotential and callEvapoTrans,
+      // This is necessary to simulate potential evaporation and subsequently evaporation from the canopy. Terms that are related
+      // to soil are reset to zero on the node.
+
       I = Iold = Lm = Qcs = 0.0;
 
-      // Below block of code added by WR 6/21/23 to set potEvap
       //Calculate the Potential and Actual Evaporation
       if(evapotransOption == 1){
           EvapPenmanMonteith(node); // call to get EvapPot, but energy balance for soil es
@@ -356,14 +354,14 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
     
     albedo = 0.8;
 
-    // Canopy storage in mm is same value as kg/m^2 when converted
-    // add to I_old and reset to node canopy storage to zero
+    //Note no actual unit conversion is necessary from mm to kg/m^2\
+    //Here mm values (i.e. canopy storage, precip) are assumed to be converted to kg/m^2
+
+    //Add CanStorage to I_old and reset to node canopy storage to zero
     if(CanStorage>1e-5){
-        Iold += CanStorage; //CanStorage has been scaled by coeffV
+        Iold += CanStorage; //CanStorage has been scaled by coeffV, through scaling of precip
         node->setCanStorage(0.0);
     }
-
-    //precip in mm is same value when converted to kg/m^2
 
     //maximum mass of snow stored in canopy (kg/m^2)
     Imax = 4.4*LAI;
@@ -373,7 +371,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
     I = Iold + Isnow;
 
     //precip minus intercepted snow (i.e. throughfall)
-    throughfall = precip - Isnow; //convert to mm while setting to node.
+    throughfall = precip - Isnow;
 
     //if there was old snow, sublimate and unload
 
