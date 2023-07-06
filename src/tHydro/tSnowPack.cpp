@@ -895,9 +895,8 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	  default:
 	    cout << "\nCheck tempInd -- did not exist or assign" << endl;
 	}//end-switch
-	
-      }//end-for
-      
+      }    //end-for
+
       shelterFactorGlobal = cNode->getSheltFact(); //computed in tShelter
 
     }
@@ -967,7 +966,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     // ensure routed liquid is reset
     cNode->setLiqRouted(0.0);
 
-    // WR-WB debug not sure if below lines are necessary
     snUnload = 0.0;
     canWE = cNode->getIntSWE();
 
@@ -977,9 +975,8 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     if ( (snWE <= 1e-4) && (rain*snowFracCalc() <= 5e-2) && rholiqkg*cmtonaught*(cNode->getIntSWE()) <  1e-3) {
 
       // Following block of code mirrors callEvapoPotential and callEvapoTrans in tEvapoTrans as no snow occurs at any
-      // level of the system: i.e. snowpack, canopy, or snowing. —restructured by WR 6/21/23
+      // level of the system: i.e. snowpack, canopy, or snowing. —refactored by WR 6/21/23
 
-      // WR-WB debug trouble shooting temps
       Tso = cNode->getSurfTemp() + 273.15;
       Tlo = cNode->getSoilTemp() + 273.15;
 
@@ -1014,7 +1011,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 
       ComputeETComponents(Intercept, cNode, count, flag);
 
-      //Reset Snow, WR-WB debug rather than reset, why not just make them local, that way they are reset everytime? I guess you may have to pass/return variables to functions if necessary, but would be more clear.
+      //Reset Snow. TODO just make below variables local callSnowPack.
       snTempC = 0.0; // reinitialize snTemp
       snWE = 0.0; // reinitialize snWE
       snSub = 0.0; // No sublimation occurs CJC2020
@@ -1031,7 +1028,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
       crustAge = 0.0;
       densityAge = 0.0;
 
-      cNode->setIntSub(0.0); //WR -WB debug
+      cNode->setIntSub(0.0);
 
       setToNodeSnP(cNode);
 
@@ -1041,10 +1038,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
     else //condtions include some combination of snowpack and snow in canopy, and snowing, raining, or no precip
     {
 
-        //Todo:WR-WB debug need to add/update Rain on snow case and make sure proper variables are being set in proper place
-     // during interception
-
-     // Implement interception schemes for snow—restructured WR 6/21/23
+     // Implement interception schemes for snow, refactored WR 6/21/23
      if ( Ioption && (Intercept->IsThereCanopy(cNode)))  {
         SnIntercept->callSnowIntercept(cNode, Intercept);
         snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept() units in cm
@@ -1058,7 +1052,8 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
      rain += snUnload*ctom; // units in mm
 
       // Here rain is being set by net precipitation which is set from callSnowIntercept
-      // Prior to re-structuring rain was obtained from getRain, which was modified in callSnowIntercept
+      // and represenents throughfall + unloaded snow  from snow interception (so scaled by coeffV) and precipitation
+      // that falls on the no vegetated fraction of the cell (1-coeffV). refactored WR 6/21/23
 
       snDepthm = cmtonaught*snWE/0.312; // 0.312 is value for bulk density of snow, Sturm et al 2010
       //calculate current snow depth for use in the turbulent heat flux calculations and output.
@@ -1242,9 +1237,9 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 
                 //calculate sn temperature, modified THM 2012
                 if (iceWE < 0.1 && iceWE > 0) {
-                    iceTempC = Usn / (cpicekJ * rhoicekg * 0.1); // I am pretty sure this should be rhoicekg CJC 2020
+                    iceTempC = Usn / (cpicekJ * rhoicekg * 0.1);
                 } else {
-                    iceTempC = Usn / (cpicekJ * rhoicekg * snWE); //I am pretty sure this should be rhoicekg CJC 2020
+                    iceTempC = Usn / (cpicekJ * rhoicekg * snWE);
                 }
 
                 //adjust to minimum snow temperature
@@ -1265,7 +1260,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
                 Uwat = Utot;
                 Usn = 0.0;
 
-                // WR-WB debug, I don't think below needs to be scaled by (1-coeffV) since Utot is calculated using scaled iceWE and liqWE
+
                 liqWE += Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
 
                 //make sure that there is enough SWE in the pack for the melt
@@ -1276,7 +1271,6 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
                 iceWE = snWE - liqWE;
 
                 //put in routing bucket
-                //THM 2012 used 0.35 instead of 0.06 - this is a calibration factor
                 if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
                     //there is enough water left over
                     if (liqWE != snWE ) {
