@@ -1098,7 +1098,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 		    cmtonaught*(mtoc*(rain))*timeSteps/3600;
       
 	        //liq WE update
-	        liqWE += (1-coeffV)*(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
+	        liqWE += (1-coeffV)*latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ) +
 		    cmtonaught*((mtoc*rain)*(1 - snowFracCalc()))*timeSteps/3600; // Removed snUnload term CJC2020
 	        snEvap = (1-coeffV)*latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ)*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
 	
@@ -1846,9 +1846,9 @@ double tSnowPack::agingAlbedo()
   double alb;
 
   if (liqWE < 1e-5)
-    alb = 0.88*pow(0.94,pow(crustAge/24,0.58)); // dry snow
+    alb = 0.85*pow(0.94,pow(crustAge/24,0.58)); // dry snow
   else
-    alb = 0.82*pow(0.84,pow(crustAge/24,0.46)); // wet snow
+    alb = 0.85*pow(0.82,pow(crustAge/24,0.46)); // wet snow
 
   return alb;
 }
