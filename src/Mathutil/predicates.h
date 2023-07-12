@@ -64,17 +64,17 @@
  
 #define Two_Diff_Tail(a, b, x, y) bvirt = (REAL) (a - x); avirt = x + bvirt; bround = bvirt - b; around = a - avirt; y = around + bround 
  
-#define Two_Diff(a, b, x, y) x = (REAL) (a - b); Two_Diff_Tail(a, b, x, y) 
+#define Two_Diff(a, b, x, y) x = (REAL) (a - b); Two_Diff_Tail(a, b, x, y)
  
-#define Split(a, ahi, alo) c = (REAL) (splitter * a); abig = (REAL) (c - a); ahi = c - abig; alo = a - ahi 
+#define tSPLIT(a, ahi, alo) c = (REAL) (splitter * a); abig = (REAL) (c - a); ahi = c - abig; alo = a - ahi
  
-#define Two_Product_Tail(a, b, x, y) Split(a, ahi, alo); Split(b, bhi, blo); err1 = x - (ahi * bhi); err2 = err1 - (alo * bhi); err3 = err2 - (ahi * blo); y = (alo * blo) - err3 
+#define Two_Product_Tail(a, b, x, y) tSPLIT(a, ahi, alo); tSPLIT(b, bhi, blo); err1 = x - (ahi * bhi); err2 = err1 - (alo * bhi); err3 = err2 - (ahi * blo); y = (alo * blo) - err3
  
 #define Two_Product(a, b, x, y) x = (REAL) (a * b); Two_Product_Tail(a, b, x, y) 
  
-#define Two_Product_Presplit(a, b, bhi, blo, x, y) x = (REAL) (a * b); Split(a, ahi, alo); err1 = x - (ahi * bhi); err2 = err1 - (alo * bhi); err3 = err2 - (ahi * blo); y = (alo * blo) - err3 
+#define Two_Product_Presplit(a, b, bhi, blo, x, y) x = (REAL) (a * b); tSPLIT(a, ahi, alo); err1 = x - (ahi * bhi); err2 = err1 - (alo * bhi); err3 = err2 - (ahi * blo); y = (alo * blo) - err3
  
-#define Square_Tail(a, x, y) Split(a, ahi, alo); err1 = x - (ahi * ahi); err3 = err1 - ((ahi + ahi) * alo); y = (alo * alo) - err3 
+#define Square_Tail(a, x, y) tSPLIT(a, ahi, alo); err1 = x - (ahi * ahi); err3 = err1 - ((ahi + ahi) * alo); y = (alo * alo) - err3
  
 #define Square(a, x, y) x = (REAL) (a * a); Square_Tail(a, x, y) 
  
