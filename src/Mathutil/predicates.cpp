@@ -618,9 +618,9 @@ int Predicates::scale_expansion(int elen, REAL* e, REAL b, REAL* h)
 	INEXACT REAL c; 
 	INEXACT REAL abig; 
 	REAL ahi, alo, bhi, blo; 
-	REAL err1, err2, err3; 
-	
-	Split(b, bhi, blo); 
+	REAL err1, err2, err3;
+
+    tSPLIT(b, bhi, blo);
 	Two_Product_Presplit(e[0], b, bhi, blo, Q, h[0]); 
 	hindex = 1; 
 	for (eindex = 1; eindex < elen; eindex++) { 
@@ -663,9 +663,9 @@ int Predicates::scale_expansion_zeroelim(int elen, REAL* e, REAL b, REAL* h)
 	INEXACT REAL c; 
 	INEXACT REAL abig; 
 	REAL ahi, alo, bhi, blo; 
-	REAL err1, err2, err3; 
-	
-	Split(b, bhi, blo); 
+	REAL err1, err2, err3;
+
+    tSPLIT(b, bhi, blo);
 	Two_Product_Presplit(e[0], b, bhi, blo, Q, hh); 
 	hindex = 0; 
 	if (hh != 0) { 
