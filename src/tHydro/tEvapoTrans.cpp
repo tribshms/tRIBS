@@ -398,6 +398,7 @@ void tEvapoTrans::initializeVariables()
 	panEvap = 0.0; coeffPan = 0.0; // Giuseppe June 2012	
 
 	coeffLAI = 0.0; //RINEHART 2007 @ NMT
+        coeffZt = 0.0;//XYT2021
 	//Horizon angles
 	ha0000 = 0.0; ha0225 = 0.0;
 	ha0450 = 0.0; ha0675 = 0.0;
@@ -894,6 +895,7 @@ void tEvapoTrans::setCoeffs(tCNode* cNode)
 
 	if (snowOption == 1)
 		coeffLAI = landPtr->getLandProp(12);
+                coeffZt = landPtr->getLandProp(15);//XYT2021
 
 	if (evapotransOption == 1) {
 		coeffAl = landPtr->getLandProp(7); 
@@ -1434,7 +1436,17 @@ double tEvapoTrans::aeroResist()
 	ras = log((zm-d)/zom)*log((zm-d)/zov)/(windSpeedC*pow(vonKarm,2.0));
 	
 	ra = (1-vegFrac)*ras + vegFrac*rav;
-	
+
+        tCNode * cNode;
+        tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
+        cNode = nodeIter.FirstP();
+        cNode->setrav(rav);//XYT2021
+        cNode->setras(ras);
+        cNode->setra(ra);
+        cNode->setravsnow(0.0);
+        cNode->setrassnow(0.0);
+        cNode->setrasnow(0.0);
+
 	return ra;
 }
 

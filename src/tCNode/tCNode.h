@@ -306,6 +306,12 @@ public:
   double getAvStomRes();
   double getAvVegFraction();
   double getAvLeafAI();
+  double getrav();//XYT2021
+  double getras();//XYT2021
+  double getra();//XYT2021
+  double getravsnow();//XYT2021
+  double getrassnow();//XYT2021
+  double getrasnow();//XYT2021
 
   double getAvSoilMoisture();         // Integral characteristics
   double getAvEvapFract();
@@ -489,6 +495,12 @@ public:
   void setAvStomRes(double);
   void setAvVegFraction(double);
   void setAvLeafAI(double);
+  void setrav(double);//XYT2021
+  void setras(double);//XYT2021
+  void setra(double);//XYT2021
+  void setravsnow(double);//XYT2021
+  void setrassnow(double);//XYT2021
+  void setrasnow(double);//XYT2021
 
   void setAvSoilMoisture(double);     // Integral characteristics
   void setAvEvapFract(double);
@@ -783,6 +795,7 @@ protected:
   double AvCanStorParam, AvIntercepCoeff, AvThroughFall, AvCanFieldCap;
   double AvDrainCoeff, AvDrainExpPar, AvLandUseAlb, AvVegHeight;
   double AvOptTransmCoeff, AvStomRes, AvVegFraction, AvLeafAI;
+  double rav, ras, ra, ravsnow, rassnow, rasnow;//XYT2021
 
   double AvSoilMoisture;        // Integral characteristics
   double AvEvapFract;

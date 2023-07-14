@@ -164,6 +164,7 @@ class tEvapoTrans
   double coeffKs, coeffCs, coeffPan;
   // SKY2008Snow from AJR2007
   double coeffLAI;
+  double coeffZt;//XYT2021
 
   double Rah, Rstm;
   double SoilHeatCondTh, SoilHeatCpctTh, SoilHeatDiffTh;

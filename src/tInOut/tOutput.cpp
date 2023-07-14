@@ -224,7 +224,7 @@ void tOutput<tSubNode>::CreateAndOpenVizFile( ofstream *theOFStream,
 	sprintf( procex, ".%-d", tParallel::getMyProc());
 	strcat(fullName, procex);
 #else
-	sprintf( procex, "");
+	sprintf( procex, " ");// carlos
 	strcat(fullName, procex);
 #endif 
   
@@ -1218,8 +1218,16 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				<< this->uzel[i]->getOptTransmCoeff()<<" "
 				/* 80 */ << this->uzel[i]->getStomRes()<<" "
 				<< this->uzel[i]->getVegFraction()<<" "
-				<< this->uzel[i]->getLeafAI()<<endl<< flush;
-
+				<< this->uzel[i]->getLeafAI()<<" "
+                                << this->uzel[i]->getrav()<<" "//XYT2021
+                                << this->uzel[i]->getras()<<" "
+                                << this->uzel[i]->getra()<<" "
+                                << this->uzel[i]->getravsnow()<<" "
+                                << this->uzel[i]->getrassnow()<<" "
+                                << this->uzel[i]->getrasnow()<<endl<< flush;//XYT2021
+		
+				
+				
 			}
 		}
 	}

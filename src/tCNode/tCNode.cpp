@@ -101,7 +101,14 @@ tCNode::tCNode() :tNode()
 	AvCanStorParam = AvIntercepCoeff = AvThroughFall = AvCanFieldCap = 0.0;
 	AvDrainCoeff = AvDrainExpPar = AvLandUseAlb = AvVegHeight = 0.0;
 	AvOptTransmCoeff = AvStomRes = AvVegFraction = AvLeafAI = 0.0;
-	
+
+        rav= 0.0; //XYT2021
+        ras= 0.0; //XYT2021
+        ra= 0.0; //XYT2021
+        ravsnow= 0.0; //XYT2021
+        rassnow= 0.0; //XYT2021
+        rasnow= 0.0; //XYT2021
+
 	// SKY2008Snow from AJR2007
 	//snowpack -- RINEHART 2007 @ NMT
 	liqWEq = iceWEq =  liqRoute = dU = 0.0;
@@ -223,6 +230,13 @@ tCNode::tCNode(tInputFile &infile) :tNode() {
 	AvCanStorParam = AvIntercepCoeff = AvThroughFall = AvCanFieldCap = 0.0;
 	AvDrainCoeff = AvDrainExpPar = AvLandUseAlb = AvVegHeight = 0.0;
 	AvOptTransmCoeff = AvStomRes = AvVegFraction = AvLeafAI = 0.0;
+
+        rav= 0.0; //XYT2021
+        ras= 0.0; //XYT2021
+        ra= 0.0; //XYT2021
+        ravsnow= 0.0; //XYT2021
+        rassnow= 0.0; //XYT2021
+        rasnow= 0.0; //XYT2021
 
 	// SKY2008Snow from AJR2007
 	//snowpack -- RINEHART 2007 @ NMT
@@ -474,6 +488,14 @@ double tCNode::getAvOptTransmCoeff() {return AvOptTransmCoeff;}
 double tCNode::getAvStomRes() {return AvStomRes;}
 double tCNode::getAvVegFraction() {return AvVegFraction;}
 double tCNode::getAvLeafAI() {return AvLeafAI;}
+
+//added by XYT2021
+double tCNode::getrav() {return rav;}
+double tCNode::getras() {return ras;}
+double tCNode::getra() {return ra;}
+double tCNode::getravsnow() {return ravsnow;}
+double tCNode::getrassnow() {return rassnow;}
+double tCNode::getrasnow() {return rasnow;}
 
 int    tCNode::getFloodStatus()  { return flood; }
 int    tCNode::getSoilID()       { return soiID; }
@@ -803,6 +825,13 @@ void tCNode::setAvOptTransmCoeff(double value) { AvOptTransmCoeff = value; }
 void tCNode::setAvStomRes(double value) { AvStomRes = value; }
 void tCNode::setAvVegFraction(double value) { AvVegFraction = value; }
 void tCNode::setAvLeafAI(double value) { AvLeafAI = value; }
+
+void tCNode::setrav(double value) { rav=value; } //XYT2021
+void tCNode::setras(double value) { ras=value; }
+void tCNode::setra(double value) { ra=value; }
+void tCNode::setravsnow(double value) { ravsnow=value; }
+void tCNode::setrassnow(double value) { rassnow=value; }
+void tCNode::setrasnow(double value) { rasnow=value; } //XYT2021
 
 // Added by Giuseppe Mascaro in 2016 to allow ingestion of soil grids
 void tCNode::setKs(double value) { Ks = value;}

@@ -75,6 +75,8 @@ void tSnowPack::SetSnowPackVariables(tInputFile &infile, tHydroModel *hydro)
   //parameters
   minSnTemp = infile.ReadItem(minSnTemp,"MINSNTEMP");
   snliqfrac = infile.ReadItem(snliqfrac,"SNLIQFRAC"); // Added by CJC 2020
+  z0snow = infile.ReadItem(z0snow,"Z0SNOW");//XYT2021
+  zmeas = infile.ReadItem(zmeas,"ZMEAS");//XYT2022
   hillAlbedoOption = infile.ReadItem(hillAlbedoOption,"HILLALBOPT");
   densityAge = 0.0;
   ETAge = 0.0;
@@ -1127,6 +1129,27 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	    //set other fluxes
         L = H = G = Prec = Utotold = 0.0;
 
+        //added by XYT2023,liqRoute
+        if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
+              //there is enough water left over
+              if (liqWE != snWE ) {
+                liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC2020
+                liqWE = liqWE - liqRoute;
+                snWE = liqWE + iceWE;
+              }
+              //there is no more pack
+              else {
+                liqRoute = snWE;
+                liqWE = 0.0;
+                iceWE = 0.0;
+                snWE = 0.0;
+              }
+        }
+        if (liqWE < 0) {    // caused by snVap, XYT2023
+                 liqWE = 0;
+                 snWE = iceWE;
+        }
+
         //initialize and record energy balance
         Utot = dUint = iceWE*rhoicekg*cpicekJ*snTempC // Changed to use rhoicekg CJC 2020
 		+ liqWE*rholiqkg*latFreezekJ;
@@ -1261,7 +1284,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
                 Usn = 0.0;
 
 
-                liqWE += Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
+                liqWE = Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to += //XYT2023 += TO =
 
                 //make sure that there is enough SWE in the pack for the melt
                 if (liqWE >= snWE) {
@@ -1867,10 +1890,10 @@ double tSnowPack::agingAlbedo()
 double tSnowPack::resFactCalc()
 {
   
-  double rf, ra;
+/*  double rf, ra;
   double vonKarm = 0.41;
   double vegHeight, vegFrac, vegBare, windSpeedBare;
-  double zm, zom, zov, d, rav, ras;
+  double zm, zom, zov, d, rav, ras, zref, zsurface,Ur;//XYT2023
 
   if(coeffH == 0)
     vegHeight = 0.1;
@@ -1927,6 +1950,137 @@ windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));
   rf = 1/ra; // Otherwise known as kaero
   
   return rf;
+
+  zref=80;// above-canopy reference height
+  zsurface=0.025;//ground roughness
+  Ur=windSpeedC*log(zref/zsurface)/log(zmeas/zsurface);//wind speed at referece height
+  // Compute aerodynamic resistance for vegetation
+  zm = zref;
+  zom = 0.13*vegHeight;
+  zov = 0.013*vegHeight;
+  d = 0.67*vegHeight;
+  rav = log((zm-d)/zom)*log((zm-d)/zov)/(Ur*pow(vonKarm,2));
+  // Compute aerodynamic resistance for bare soil
+  vegBare = 0.1; // height of bare soil
+  zm = zref;
+  zom = 0.13*vegBare;
+  zov = 0.013*vegBare;
+  d = 0.67*vegBare;
+  ras = log((zm-d)/zom)*log((zm-d)/zov)/(Ur*pow(vonKarm,2));
+
+  vegFrac = coeffV;
+  ra = (1-vegFrac)*ras + vegFrac*rav;
+  rf = 1/ra; // Otherwise known as kaero
+
+  tCNode * cNode;
+  tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
+  cNode = nodeIter.FirstP();
+  cNode->setrav(0);//XYT2021
+  cNode->setras(0);//XYT2021
+  cNode->setra(0);//XYT2021
+  cNode->setravsnow(rav);//XYT2021
+  cNode->setrassnow(ras);//XYT2021
+  cNode->setrasnow(ra);//XYT2021
+
+  return rf;*/
+  double rf,ra,rav,ras;//XYT2021
+  double rav31,rav32,rav41,rav42,rav43,rav51,rav52,rav53,rav54;
+  double vonKarm = 0.41;
+  double vegHeight, vegFrac;
+  double dsnow;
+  double zw,dc,zc,Zt;
+  double zref,trunkratio;
+  double Ur,Uw,Uh,Ut;
+  double beita=2.5;
+
+   if(coeffH == 0)
+    vegHeight = 0.1;
+   else  {
+    vegHeight = coeffH;
+   }
+
+  if(windSpeed == 0.0 || fabs(windSpeed-9999.99)<1e-3)
+  windSpeed = 0.01;    //Minimum wind speed (m/s)
+
+  dsnow=snDepthm;//snow depth
+  zref=80;
+  dc=0.67*vegHeight;
+  zc=0.13*vegHeight;
+  zw=1.5*vegHeight-0.5*dc;
+  Zt=coeffZt;
+   //  cout<<"dc="<<dc<<"zc="<<zc<<"zw="<<zw<<"z0snow="<<z0snow<<endl;
+  Ur=windSpeed*log((zref-dsnow)/(z0snow+dsnow))/log((zmeas-dsnow)/(z0snow+dsnow));//wind speed at referece height
+   //   cout<<"Ur="<<Ur<<endl;
+
+ // 5 cases
+  if(dsnow >= vegHeight) {
+        //  cout<<"case1"<<endl;
+        rav=log((zref-dsnow)/(dsnow+z0snow))*log((2+z0snow)/z0snow)/vonKarm/vonKarm/Ur;
+        //cout<<"rav="<<rav<<endl;
+  }
+  else {
+          // wind speed at key height
+            Uw=Ur*log((zw-dc)/zc)/log((zref-dc)/zc);
+            Uh=Uw-Ur*(1-(vegHeight-dc)/(zw-dc))/log((zref-dc)/zc);
+            Ut=Uh*exp(beita*(Zt/vegHeight-1));
+          //cout<<"Ur="<<Ur<<";Uw="<<Uw<<";Uh="<<Uh<<";Ut="<<Ut<<endl;
+
+          if(2+z0snow+dsnow <= Zt) {
+            //    cout<<"case2"<<endl;
+                  rav=log((Zt-dsnow)/(dsnow+z0snow))*log((2+z0snow)/z0snow)/vonKarm/vonKarm/Ut;
+            //    cout<<"rav="<<rav<<endl;
+          }
+          else if ( 2+z0snow+dsnow > Zt && 2+z0snow+dsnow <= vegHeight) {
+           //     cout<<"case3"<<endl;
+                  rav=log((Zt-dsnow)/(dsnow+z0snow))*log((Zt-dsnow)/z0snow)/vonKarm/vonKarm/Ut+vegHeight*log((zref-dc)/zc)*(exp(beita*(1-Zt/vegHeight))-exp(beita*(1-(2+z0snow+dsnow)/vegHeight)))/beita/vonKarm/vonKarm/Ur/(zw-dc);
+                  rav31=log((Zt-dsnow)/(dsnow+z0snow))*log((Zt-dsnow)/z0snow)/vonKarm/vonKarm/Ut;
+                  rav32=vegHeight*log((zref-dc)/zc)*(exp(beita*(1-Zt/vegHeight))-exp(beita*(1-(2+z0snow+dsnow)/vegHeight)))/beita/vonKarm/vonKarm/Ur/(zw-dc);
+           //     cout<<"rav="<<rav<<";rav31"<<rav31<<";rav32="<<rav32<<endl;
+
+          }
+          else if(2+z0snow+dsnow > vegHeight && 2+z0snow+dsnow <= zw ){
+           //     cout<<"case4"<<endl;
+                  rav=log((Zt-dsnow)/(dsnow+z0snow))*log((Zt-dsnow)/z0snow)/vonKarm/vonKarm/Ut+vegHeight*log((zref-dc)/zc)*(exp(beita*(1-Zt/vegHeight))-1)/beita/vonKarm/vonKarm/Ur/(zw-dc)+log((zref-dc)/zc)*(2+z0snow-(vegHeight-dsnow))/vonKarm/vonKarm/Ur/(zw-dc);
+                  rav41=log((Zt-dsnow)/(dsnow+z0snow))*log((Zt-dsnow)/z0snow)/vonKarm/vonKarm/Ut;
+                  rav42=vegHeight*log((zref-dc)/zc)*(exp(beita*(1-Zt/vegHeight))-1)/beita/vonKarm/vonKarm/Ur/(zw-dc);
+                  rav43=log((zref-dc)/zc)*(2+z0snow-(vegHeight-dsnow))/vonKarm/vonKarm/Ur/(zw-dc);
+           //     cout<<"rav="<<rav<<";rav41"<<rav41<<";rav42="<<rav42<<";rav43="<<rav43<<endl;
+          }
+          else {
+           //   cout<<"case5"<<endl;
+                rav=log((Zt-dsnow)/(dsnow+z0snow))*log((Zt-dsnow)/z0snow)/vonKarm/vonKarm/Ut+vegHeight*log((zref-dc)/zc)*(exp(beita*(1-Zt/vegHeight))-1)/beita/vonKarm/vonKarm/Ur/(zw-dc)+log((zref-dc)/zc)*(zw-vegHeight)/vonKarm/vonKarm/Ur/(zw-dc)+log((zref-dc)/zc)*log((2+z0snow+dsnow-dc)/(zw-dc))/vonKarm/vonKarm/Ur;
+                rav51=log((Zt-dsnow)/(dsnow+z0snow))*log((Zt-dsnow)/z0snow)/vonKarm/vonKarm/Ut;
+                rav52=vegHeight*log((zref-dc)/zc)*(exp(beita*(1-Zt/vegHeight))-1)/beita/vonKarm/vonKarm/Ur/(zw-dc);
+                rav53=log((zref-dc)/zc)*(zw-vegHeight)/vonKarm/vonKarm/Ur/(zw-dc);
+                rav54=log((zref-dc)/zc)*log((2+z0snow+dsnow-dc)/(zw-dc))/vonKarm/vonKarm/Ur;
+           //   cout<<"rav="<<rav<<";rav51"<<rav51<<";rav52="<<rav52<<";rav53="<<rav53<<";rav54="<<rav54<<endl;
+          }
+
+  }
+
+  if (rav<0.0){
+          rav=0.1;
+  }
+
+  ras= log((2+z0snow)/z0snow)*log((zref-dsnow)/(dsnow+z0snow))/vonKarm/vonKarm/Ur;
+  vegFrac = coeffV;
+  ra = (1-vegFrac)*ras + vegFrac*rav;
+//cout<<"dsnow="<<dsnow<<"vegHeight="<<vegHeight<<"windSpeed="<<windSpeed<<"ras="<<ras<<"rav="<<rav<<"ra="<<ra<<endl;
+
+  tCNode * cNode;
+  tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
+  cNode = nodeIter.FirstP();
+  cNode->setrav(0);//XYT2021
+  cNode->setras(0);//XYT2021
+  cNode->setra(0);//XYT2021
+  cNode->setravsnow(rav);//XYT2021
+  cNode->setrassnow(ras);//XYT2021
+  cNode->setrasnow(ra);//XYT2021
+
+  rf = 1/ra;
+  return rf;
+
+
 }
 
 //-------------------------------------------------------------------------
@@ -2432,14 +2586,14 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
   
   // Outgoing long wave radiation is controlled by how much of the sky can be seen at that point?? Is this true?
 
-  //calculate emelt THM 2012 / Latent Heat Leaving the Snowpack due to melt
+ /* //calculate emelt THM 2012 / Latent Heat Leaving the Snowpack due to melt
   if (Utot > 0) {
     // emelt=-liqWE*latFreezekJ*rholiqkg/timeSteps; // Changed /3600 to /timeSteps CJC2020
 	emelt=-latHeatFreezeCalc()*1000*(Utot/(latFreezekJ*rholiqkg))/timeSteps; // Changed /3600 to /timeSteps CJC2020 // Changed to use latHeatFreezeCalc() instead of 334 CJC 2020
   }
   else {
     emelt= 0;
-  }
+  }*/
   
   //set up for output
   inShortR = kilotonaught*RSin;
@@ -2469,8 +2623,8 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
   G = 0;
 
   //calculate total dU over given timestep, updated by THM 2012
-  dUint = (H + Rn + L + Prec + G + emelt)*timeSteps; // Changed *3600 to *timeSteps CJC2020
-  
+//  dUint = (H + Rn + L + Prec + G + emelt)*timeSteps; // Changed *3600 to *timeSteps CJC2020
+  dUint = (H + Rn + L + Prec + G )*timeSteps;//XYT2023
   //find new energy state of snow
   Utot +=  dUint;
   return;

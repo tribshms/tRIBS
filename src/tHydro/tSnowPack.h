@@ -185,6 +185,8 @@ protected:
   double compactParam, rhoSnFreshkg;
   double minSnTemp;
   double snliqfrac; // Added by CJC2020
+  double z0snow; //XYT2021
+  double zmeas; //XYT2022
 
   //output variables
   double snDepth,snDepthm; //snow depths (cm,m)
