@@ -49,34 +49,34 @@
 #endif
  
 #define INEXACT                         
-#define REAL double                      // float or double 
+#define tREAL double                      // float or double 
  
 // #define Absolute(a)  abs(a)              // defined in <macros.h>
 #define Absolute(a)  ((a) >= 0.0 ? (a) : -(a)) 
  
 #define Fast_Two_Sum_Tail(a, b, x, y) bvirt = x - a; y = b - bvirt 
  
-#define Fast_Two_Sum(a, b, x, y) x = (REAL) (a + b); Fast_Two_Sum_Tail(a, b, x, y) 
+#define Fast_Two_Sum(a, b, x, y) x = (tREAL) (a + b); Fast_Two_Sum_Tail(a, b, x, y) 
 
-#define Two_Sum_Tail(a, b, x, y) bvirt = (REAL) (x - a); avirt = x - bvirt; bround = b - bvirt; around = a - avirt; y = around + bround 
+#define Two_Sum_Tail(a, b, x, y) bvirt = (tREAL) (x - a); avirt = x - bvirt; bround = b - bvirt; around = a - avirt; y = around + bround 
  
-#define Two_Sum(a, b, x, y) x = (REAL) (a + b); Two_Sum_Tail(a, b, x, y) 
+#define Two_Sum(a, b, x, y) x = (tREAL) (a + b); Two_Sum_Tail(a, b, x, y) 
  
-#define Two_Diff_Tail(a, b, x, y) bvirt = (REAL) (a - x); avirt = x + bvirt; bround = bvirt - b; around = a - avirt; y = around + bround 
+#define Two_Diff_Tail(a, b, x, y) bvirt = (tREAL) (a - x); avirt = x + bvirt; bround = bvirt - b; around = a - avirt; y = around + bround 
  
-#define Two_Diff(a, b, x, y) x = (REAL) (a - b); Two_Diff_Tail(a, b, x, y)
+#define Two_Diff(a, b, x, y) x = (tREAL) (a - b); Two_Diff_Tail(a, b, x, y)
  
-#define tSPLIT(a, ahi, alo) c = (REAL) (splitter * a); abig = (REAL) (c - a); ahi = c - abig; alo = a - ahi
+#define tSPLIT(a, ahi, alo) c = (tREAL) (splitter * a); abig = (tREAL) (c - a); ahi = c - abig; alo = a - ahi
  
 #define Two_Product_Tail(a, b, x, y) tSPLIT(a, ahi, alo); tSPLIT(b, bhi, blo); err1 = x - (ahi * bhi); err2 = err1 - (alo * bhi); err3 = err2 - (ahi * blo); y = (alo * blo) - err3
  
-#define Two_Product(a, b, x, y) x = (REAL) (a * b); Two_Product_Tail(a, b, x, y) 
+#define Two_Product(a, b, x, y) x = (tREAL) (a * b); Two_Product_Tail(a, b, x, y) 
  
-#define Two_Product_Presplit(a, b, bhi, blo, x, y) x = (REAL) (a * b); tSPLIT(a, ahi, alo); err1 = x - (ahi * bhi); err2 = err1 - (alo * bhi); err3 = err2 - (ahi * blo); y = (alo * blo) - err3
+#define Two_Product_Presplit(a, b, bhi, blo, x, y) x = (tREAL) (a * b); tSPLIT(a, ahi, alo); err1 = x - (ahi * bhi); err2 = err1 - (alo * bhi); err3 = err2 - (ahi * blo); y = (alo * blo) - err3
  
 #define Square_Tail(a, x, y) tSPLIT(a, ahi, alo); err1 = x - (ahi * ahi); err3 = err1 - ((ahi + ahi) * alo); y = (alo * alo) - err3
  
-#define Square(a, x, y) x = (REAL) (a * a); Square_Tail(a, x, y) 
+#define Square(a, x, y) x = (tREAL) (a * a); Square_Tail(a, x, y) 
  
 #define Two_One_Sum(a1, a0, b, x2, x1, x0) Two_Sum(a0, b , _i, x0); Two_Sum(a1, _i, x2, x1) 
  
@@ -105,23 +105,23 @@ public:
    void exactinit();
    
    // Basic "exact" arithmetic:
-   int grow_expansion(int elen, REAL* e, REAL b, REAL* h);
-   int grow_expansion_zeroelim(int elen, REAL* e, REAL b, REAL* h);
-   int expansion_sum(int elen, REAL* e, int flen, REAL* f, REAL* h);
-   int expansion_sum_zeroelim1(int elen, REAL* e, int flen, REAL* f,
-                               REAL* h);
-   int expansion_sum_zeroelim2(int elen, REAL* e, int flen, REAL* f,
-                               REAL* h);
-   int fast_expansion_sum(int elen, REAL* e, int flen, REAL* f, REAL* h);
-   int fast_expansion_sum_zeroelim(int elen, REAL* e, int flen, REAL* f,
-                                   REAL* h);
-   int linear_expansion_sum(int elen, REAL* e, int flen, REAL* f, REAL* h);
-   int linear_expansion_sum_zeroelim(int elen, REAL* e, int flen, REAL* f,
-                                     REAL* h);
-   int scale_expansion(int elen, REAL* e, REAL b, REAL* h);
-   int scale_expansion_zeroelim(int elen, REAL* e, REAL b, REAL* h);
-   int compress(int elen, REAL* e, REAL* h);
-   REAL estimate( int elen, REAL* e );
+   int grow_expansion(int elen, tREAL* e, tREAL b, tREAL* h);
+   int grow_expansion_zeroelim(int elen, tREAL* e, tREAL b, tREAL* h);
+   int expansion_sum(int elen, tREAL* e, int flen, tREAL* f, tREAL* h);
+   int expansion_sum_zeroelim1(int elen, tREAL* e, int flen, tREAL* f,
+                               tREAL* h);
+   int expansion_sum_zeroelim2(int elen, tREAL* e, int flen, tREAL* f,
+                               tREAL* h);
+   int fast_expansion_sum(int elen, tREAL* e, int flen, tREAL* f, tREAL* h);
+   int fast_expansion_sum_zeroelim(int elen, tREAL* e, int flen, tREAL* f,
+                                   tREAL* h);
+   int linear_expansion_sum(int elen, tREAL* e, int flen, tREAL* f, tREAL* h);
+   int linear_expansion_sum_zeroelim(int elen, tREAL* e, int flen, tREAL* f,
+                                     tREAL* h);
+   int scale_expansion(int elen, tREAL* e, tREAL b, tREAL* h);
+   int scale_expansion_zeroelim(int elen, tREAL* e, tREAL b, tREAL* h);
+   int compress(int elen, tREAL* e, tREAL* h);
+   tREAL estimate( int elen, tREAL* e );
    
    // Lancaster functions
    double DifferenceOfProductsOfDifferences( double a, double b,
@@ -134,22 +134,22 @@ public:
                                    double g, double h,
                                    double sum );
 
-   REAL orient2dfast(REAL *pa, REAL *pb, REAL *pc);
-   REAL orient2dadapt(REAL *pa, REAL *pb, REAL *pc, REAL detsum);
-   REAL orient2d(REAL *pa, REAL *pb, REAL *pc);
-   REAL incirclefast(REAL *pa, REAL *pb, REAL *pc, REAL *pd);
-   REAL incircleadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd,
-                      REAL permanent);
-   REAL incircle(REAL *pa, REAL *pb, REAL *pc, REAL *pd);
+   tREAL orient2dfast(tREAL *pa, tREAL *pb, tREAL *pc);
+   tREAL orient2dadapt(tREAL *pa, tREAL *pb, tREAL *pc, tREAL detsum);
+   tREAL orient2d(tREAL *pa, tREAL *pb, tREAL *pc);
+   tREAL incirclefast(tREAL *pa, tREAL *pb, tREAL *pc, tREAL *pd);
+   tREAL incircleadapt(tREAL *pa, tREAL *pb, tREAL *pc, tREAL *pd,
+                      tREAL permanent);
+   tREAL incircle(tREAL *pa, tREAL *pb, tREAL *pc, tREAL *pd);
    
 private:
-   REAL splitter;     /* = 2^ceiling(p / 2) + 1.  Used to split floats in half. */ 
-   REAL epsilon;                /* = 2^(-p).  Used to estimate roundoff errors. */ 
-   REAL resulterrbound; 
-   REAL ccwerrboundA, ccwerrboundB, ccwerrboundC; 
-   REAL o3derrboundA, o3derrboundB, o3derrboundC; 
-   REAL iccerrboundA, iccerrboundB, iccerrboundC; 
-   REAL isperrboundA, isperrboundB, isperrboundC; 
+   tREAL splitter;     /* = 2^ceiling(p / 2) + 1.  Used to split floats in half. */ 
+   tREAL epsilon;                /* = 2^(-p).  Used to estimate roundoff errors. */ 
+   tREAL resulterrbound; 
+   tREAL ccwerrboundA, ccwerrboundB, ccwerrboundC; 
+   tREAL o3derrboundA, o3derrboundB, o3derrboundC; 
+   tREAL iccerrboundA, iccerrboundB, iccerrboundC; 
+   tREAL isperrboundA, isperrboundB, isperrboundC; 
 };
 
 #endif

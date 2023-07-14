@@ -276,9 +276,9 @@ public:
   void Flush();         	   	     // clears and reinitializes list
   int isEmpty() const; 			     // returns 1 if empty, 0 otherwise
 
-#ifndef NDEBUG
+//#ifndef NDEBUG
     void print() const;  		     // prints contents of list 
-#endif
+//#endif
 
   int getSize() const; 			         //returns # of items on list
   tListNode< NodeType > * getFirst() const;     //returns ptr to 1st list node

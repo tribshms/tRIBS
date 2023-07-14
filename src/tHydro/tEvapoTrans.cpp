@@ -2548,21 +2548,26 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 	Lsoi = outLongR - inLongR;
 	
 	// 2.) == Ground heat flux ==
-	if (gFluxOption == 1) // Surface toC from the previous time step Tso is used
-		G = pow((4.0*coeffKs*coeffCs/(pi*DTime)),0.5)*(Tg-Tso);
-	else if (gFluxOption == 2)
-		G = ForceRestore(Tg, 1);
+	if (gFluxOption == 1) { // Surface toC from the previous time step Tso is used
+        G = pow((4.0 * coeffKs * coeffCs / (pi * DTime)), 0.5) * (Tg - Tso);
+    }
+	else if (gFluxOption == 2) {
+        G = ForceRestore(Tg, 1);
+    }
 	
 	// 3.) == NET radiation at the surface ==
 	Rn = Rabsb_soi - Lsoi;
 	
 	// 4.) == Sensible heat flux ==
-	if (evapotransOption == 1)
-		H = rho*Cp*(Tg - (airTemp+273.15))/Rah;
-	else if (evapotransOption == 2)
-		H = rho*Cp*(Tg - (airTemp+273.15))*Ch*windSpeedC;
-	else if (evapotransOption == 3)
-		H = rho*Cp*(Tg - (airTemp+273.15))/Rah;
+	if (evapotransOption == 1) {
+        H = rho * Cp * (Tg - (airTemp + 273.15)) / Rah;
+    }
+	else if (evapotransOption == 2) {
+        H = rho * Cp * (Tg - (airTemp + 273.15)) * Ch * windSpeedC;
+    }
+	else if (evapotransOption == 3) {
+        H = rho*Cp*(Tg - (airTemp+273.15))/Rah;
+    }
 	Hsoi = H;
 	
 	// 5.) == Latent heat flux ==

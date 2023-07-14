@@ -728,14 +728,14 @@ double tEdge::CalcLength(){
 **  Debugging routine that reports edge ID and coords of endpoints.
 **
 **************************************************************************/
-
+#ifndef NDEBUG
 void tEdge::TellCoords(){
 	cout << "EDGE " << id << ":\n";
 	cout << "  " << org->getID() << " (" << org->getX() << ","
         << org->getY() << ") -> " << dest->getID() << " ("
         << dest->getX() << "," << dest->getY() << ")" << endl;
 }
-
+#endif
 
 /**************************************************************************
 **
