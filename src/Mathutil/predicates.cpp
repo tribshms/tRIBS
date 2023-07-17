@@ -51,8 +51,8 @@ Predicates::Predicates(){
 
 void Predicates::exactinit() 
 { 
-	REAL half; 
-	REAL check, lastcheck; 
+	tREAL half; 
+	tREAL check, lastcheck; 
 	int every_other; 
 	
 	every_other = 1; 
@@ -100,14 +100,14 @@ void Predicates::exactinit()
 **                                                                            
 *****************************************************************************/ 
 
-int Predicates::grow_expansion(int elen, REAL* e, REAL b, REAL* h) 
+int Predicates::grow_expansion(int elen, tREAL* e, tREAL b, tREAL* h) 
 { 
-	REAL Q; 
-	INEXACT REAL Qnew; 
+	tREAL Q; 
+	INEXACT tREAL Qnew; 
 	int eindex; 
-	REAL enow; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
+	tREAL enow; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
 	
 	Q = b; 
 	for (eindex = 0; eindex < elen; eindex++) { 
@@ -133,14 +133,14 @@ int Predicates::grow_expansion(int elen, REAL* e, REAL b, REAL* h)
 **                                                                            
 *****************************************************************************/ 
 
-int Predicates::grow_expansion_zeroelim(int elen, REAL* e, REAL b, REAL* h)  
+int Predicates::grow_expansion_zeroelim(int elen, tREAL* e, tREAL b, tREAL* h)  
 { 
-	REAL Q, hh; 
-	INEXACT REAL Qnew; 
+	tREAL Q, hh; 
+	INEXACT tREAL Qnew; 
 	int eindex, hindex; 
-	REAL enow; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
+	tREAL enow; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
 	
 	hindex = 0; 
 	Q = b; 
@@ -171,14 +171,14 @@ int Predicates::grow_expansion_zeroelim(int elen, REAL* e, REAL b, REAL* h)
 **                                                                           
 *****************************************************************************/ 
 
-int Predicates::expansion_sum(int elen, REAL* e, int flen, REAL* f, REAL* h)
+int Predicates::expansion_sum(int elen, tREAL* e, int flen, tREAL* f, tREAL* h)
 { 
-	REAL Q; 
-	INEXACT REAL Qnew; 
+	tREAL Q; 
+	INEXACT tREAL Qnew; 
 	int findex, hindex, hlast; 
-	REAL hnow; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
+	tREAL hnow; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
 	
 	Q = f[0]; 
 	for (hindex = 0; hindex < elen; hindex++) { 
@@ -214,15 +214,15 @@ int Predicates::expansion_sum(int elen, REAL* e, int flen, REAL* f, REAL* h)
 **                                                                           
 *****************************************************************************/ 
 
-int Predicates::expansion_sum_zeroelim1(int elen, REAL* e, int flen,
-                                        REAL* f, REAL* h) 
+int Predicates::expansion_sum_zeroelim1(int elen, tREAL* e, int flen,
+                                        tREAL* f, tREAL* h) 
 { 
-	REAL Q; 
-	INEXACT REAL Qnew; 
+	tREAL Q; 
+	INEXACT tREAL Qnew; 
 	int index, findex, hindex, hlast; 
-	REAL hnow; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
+	tREAL hnow; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
 	
 	Q = f[0]; 
 	for (hindex = 0; hindex < elen; hindex++) { 
@@ -269,15 +269,15 @@ int Predicates::expansion_sum_zeroelim1(int elen, REAL* e, int flen,
 **                                                                            
 *****************************************************************************/ 
 
-int Predicates::expansion_sum_zeroelim2(int elen, REAL* e,
-                                        int flen, REAL* f, REAL* h) 
+int Predicates::expansion_sum_zeroelim2(int elen, tREAL* e,
+                                        int flen, tREAL* f, tREAL* h) 
 { 
-	REAL Q, hh; 
-	INEXACT REAL Qnew; 
+	tREAL Q, hh; 
+	INEXACT tREAL Qnew; 
 	int eindex, findex, hindex, hlast; 
-	REAL enow; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
+	tREAL enow; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
 	
 	hindex = 0; 
 	Q = f[0]; 
@@ -321,15 +321,15 @@ int Predicates::expansion_sum_zeroelim2(int elen, REAL* e,
 **                                                                            
 *****************************************************************************/ 
 
-int Predicates::fast_expansion_sum(int elen, REAL* e,
-                                   int flen, REAL* f, REAL* h)
+int Predicates::fast_expansion_sum(int elen, tREAL* e,
+                                   int flen, tREAL* f, tREAL* h)
 { 
-	REAL Q; 
-	INEXACT REAL Qnew; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
+	tREAL Q; 
+	INEXACT tREAL Qnew; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
 	int eindex, findex, hindex; 
-	REAL enow, fnow; 
+	tREAL enow, fnow; 
 	
 	enow = e[0]; 
 	fnow = f[0]; 
@@ -394,16 +394,16 @@ int Predicates::fast_expansion_sum(int elen, REAL* e,
 **                                                                            
 *****************************************************************************/ 
 
-int Predicates::fast_expansion_sum_zeroelim(int elen, REAL* e,
-											int flen, REAL* f, REAL* h)
+int Predicates::fast_expansion_sum_zeroelim(int elen, tREAL* e,
+											int flen, tREAL* f, tREAL* h)
 { 
-	REAL Q; 
-	INEXACT REAL Qnew; 
-	INEXACT REAL hh; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
+	tREAL Q; 
+	INEXACT tREAL Qnew; 
+	INEXACT tREAL hh; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
 	int eindex, findex, hindex; 
-	REAL enow, fnow; 
+	tREAL enow, fnow; 
 	
 	enow = e[0]; 
 	fnow = f[0]; 
@@ -475,17 +475,17 @@ int Predicates::fast_expansion_sum_zeroelim(int elen, REAL* e,
 **                                                                           
 *****************************************************************************/ 
 
-int Predicates::linear_expansion_sum(int elen, REAL* e,
-                                     int flen, REAL* f, REAL* h)
+int Predicates::linear_expansion_sum(int elen, tREAL* e,
+                                     int flen, tREAL* f, tREAL* h)
 { 
-	REAL Q, q; 
-	INEXACT REAL Qnew; 
-	INEXACT REAL R; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
+	tREAL Q, q; 
+	INEXACT tREAL Qnew; 
+	INEXACT tREAL R; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
 	int eindex, findex, hindex; 
-	REAL enow, fnow; 
-	REAL g0; 
+	tREAL enow, fnow; 
+	tREAL g0; 
 	
 	enow = e[0]; 
 	fnow = f[0]; 
@@ -535,18 +535,18 @@ int Predicates::linear_expansion_sum(int elen, REAL* e,
 **                                                                            
 *****************************************************************************/ 
 
-int Predicates::linear_expansion_sum_zeroelim(int elen, REAL* e,
-											  int flen, REAL* f, REAL* h)
+int Predicates::linear_expansion_sum_zeroelim(int elen, tREAL* e,
+											  int flen, tREAL* f, tREAL* h)
 { 
-	REAL Q, q, hh; 
-	INEXACT REAL Qnew; 
-	INEXACT REAL R; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
+	tREAL Q, q, hh; 
+	INEXACT tREAL Qnew; 
+	INEXACT tREAL R; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
 	int eindex, findex, hindex; 
 	int count; 
-	REAL enow, fnow; 
-	REAL g0; 
+	tREAL enow, fnow; 
+	tREAL g0; 
 	
 	enow = e[0]; 
 	fnow = f[0]; 
@@ -605,20 +605,20 @@ int Predicates::linear_expansion_sum_zeroelim(int elen, REAL* e,
 **                                                                            
 *****************************************************************************/ 
 
-int Predicates::scale_expansion(int elen, REAL* e, REAL b, REAL* h) 
+int Predicates::scale_expansion(int elen, tREAL* e, tREAL b, tREAL* h) 
 { 
-	INEXACT REAL Q; 
-	INEXACT REAL sum; 
-	INEXACT REAL product1; 
-	REAL product0; 
+	INEXACT tREAL Q; 
+	INEXACT tREAL sum; 
+	INEXACT tREAL product1; 
+	tREAL product0; 
 	int eindex, hindex; 
-	REAL enow; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
-	INEXACT REAL c; 
-	INEXACT REAL abig; 
-	REAL ahi, alo, bhi, blo; 
-	REAL err1, err2, err3;
+	tREAL enow; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
+	INEXACT tREAL c; 
+	INEXACT tREAL abig; 
+	tREAL ahi, alo, bhi, blo; 
+	tREAL err1, err2, err3;
 
     tSPLIT(b, bhi, blo);
 	Two_Product_Presplit(e[0], b, bhi, blo, Q, h[0]); 
@@ -650,20 +650,20 @@ int Predicates::scale_expansion(int elen, REAL* e, REAL b, REAL* h)
 **                                                                            
 *****************************************************************************/ 
 
-int Predicates::scale_expansion_zeroelim(int elen, REAL* e, REAL b, REAL* h) 
+int Predicates::scale_expansion_zeroelim(int elen, tREAL* e, tREAL b, tREAL* h) 
 { 
-	INEXACT REAL Q, sum; 
-	REAL hh; 
-	INEXACT REAL product1; 
-	REAL product0; 
+	INEXACT tREAL Q, sum; 
+	tREAL hh; 
+	INEXACT tREAL product1; 
+	tREAL product0; 
 	int eindex, hindex; 
-	REAL enow; 
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
-	INEXACT REAL c; 
-	INEXACT REAL abig; 
-	REAL ahi, alo, bhi, blo; 
-	REAL err1, err2, err3;
+	tREAL enow; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
+	INEXACT tREAL c; 
+	INEXACT tREAL abig; 
+	tREAL ahi, alo, bhi, blo; 
+	tREAL err1, err2, err3;
 
     tSPLIT(b, bhi, blo);
 	Two_Product_Presplit(e[0], b, bhi, blo, Q, hh); 
@@ -701,13 +701,13 @@ int Predicates::scale_expansion_zeroelim(int elen, REAL* e, REAL b, REAL* h)
 **                                                                           
 *****************************************************************************/ 
 
-int Predicates::compress(int elen, REAL* e, REAL* h)
+int Predicates::compress(int elen, tREAL* e, tREAL* h)
 { 
-	REAL Q, q; 
-	INEXACT REAL Qnew; 
+	tREAL Q, q; 
+	INEXACT tREAL Qnew; 
 	int eindex, hindex; 
-	INEXACT REAL bvirt; 
-	REAL enow, hnow; 
+	INEXACT tREAL bvirt; 
+	tREAL enow, hnow; 
 	int top, bottom; 
 	
 	bottom = elen - 1; 
@@ -743,9 +743,9 @@ int Predicates::compress(int elen, REAL* e, REAL* h)
 **                                                                            
 *****************************************************************************/ 
 
-REAL Predicates::estimate( int elen, REAL* e ) 
+tREAL Predicates::estimate( int elen, tREAL* e ) 
 { 
-	REAL Q; 
+	tREAL Q; 
 	int eindex; 
 	
 	Q = e[0]; 
@@ -798,32 +798,32 @@ double Predicates::AdaptDiffOfProdsOfDiffs( double terma, double termb,
                                             double termg, double termh,
                                             double sum )
 {
-	INEXACT REAL diff1, diff2, diff3, diff4;
-	REAL diff1tail, diff2tail, diff3tail, diff4tail;
-	INEXACT REAL leftprod, rightprod;
-	REAL leftprodtail, rightprodtail;
-	REAL diff, errbound;
-	REAL B[4], C1[8], C2[12], D[16];
-	INEXACT REAL B3;
+	INEXACT tREAL diff1, diff2, diff3, diff4;
+	tREAL diff1tail, diff2tail, diff3tail, diff4tail;
+	INEXACT tREAL leftprod, rightprod;
+	tREAL leftprodtail, rightprodtail;
+	tREAL diff, errbound;
+	tREAL B[4], C1[8], C2[12], D[16];
+	INEXACT tREAL B3;
 	int C1length, C2length, Dlength;
-	REAL u[4];
-	INEXACT REAL u3;
-	INEXACT REAL s1, t1;
-	REAL s0, t0;
+	tREAL u[4];
+	INEXACT tREAL u3;
+	INEXACT tREAL s1, t1;
+	tREAL s0, t0;
 	
-	INEXACT REAL bvirt;
-	REAL avirt, bround, around;
-	INEXACT REAL c;
-	INEXACT REAL abig;
-	REAL ahi, alo, bhi, blo;
-	REAL err1, err2, err3;
-	INEXACT REAL _i, _j;
-	REAL _0;
+	INEXACT tREAL bvirt;
+	tREAL avirt, bround, around;
+	INEXACT tREAL c;
+	INEXACT tREAL abig;
+	tREAL ahi, alo, bhi, blo;
+	tREAL err1, err2, err3;
+	INEXACT tREAL _i, _j;
+	tREAL _0;
 	
-	diff1 = (REAL) ( terma - termb );
-	diff2 = (REAL) ( termc - termd );
-	diff3 = (REAL) ( terme - termf );
-	diff4 = (REAL) ( termg - termh );
+	diff1 = (tREAL) ( terma - termb );
+	diff2 = (tREAL) ( termc - termd );
+	diff3 = (tREAL) ( terme - termf );
+	diff4 = (tREAL) ( termg - termh );
 	
 	Two_Product( diff1, diff2, leftprod, leftprodtail );
 	Two_Product( diff3, diff4, rightprod, rightprodtail );
@@ -897,9 +897,9 @@ double Predicates::AdaptDiffOfProdsOfDiffs( double terma, double termb,
 **                                                                            
 *****************************************************************************/ 
 
-REAL Predicates::orient2dfast(REAL *pa, REAL *pb, REAL *pc) 
+tREAL Predicates::orient2dfast(tREAL *pa, tREAL *pb, tREAL *pc) 
 { 
-	REAL acx, bcx, acy, bcy; 
+	tREAL acx, bcx, acy, bcy; 
 	
 	acx = pa[0] - pc[0]; 
 	bcx = pb[0] - pc[0]; 
@@ -909,34 +909,34 @@ REAL Predicates::orient2dfast(REAL *pa, REAL *pb, REAL *pc)
 } 
 
 
-REAL Predicates::orient2dadapt(REAL *pa, REAL *pb, REAL *pc, REAL detsum) 
+tREAL Predicates::orient2dadapt(tREAL *pa, tREAL *pb, tREAL *pc, tREAL detsum) 
 { 
-	INEXACT REAL acx, acy, bcx, bcy; 
-	REAL acxtail, acytail, bcxtail, bcytail; 
-	INEXACT REAL detleft, detright; 
-	REAL detlefttail, detrighttail; 
-	REAL det, errbound; 
-	REAL B[4], C1[8], C2[12], D[16]; 
-	INEXACT REAL B3; 
+	INEXACT tREAL acx, acy, bcx, bcy; 
+	tREAL acxtail, acytail, bcxtail, bcytail; 
+	INEXACT tREAL detleft, detright; 
+	tREAL detlefttail, detrighttail; 
+	tREAL det, errbound; 
+	tREAL B[4], C1[8], C2[12], D[16]; 
+	INEXACT tREAL B3; 
 	int C1length, C2length, Dlength; 
-	REAL u[4]; 
-	INEXACT REAL u3; 
-	INEXACT REAL s1, t1; 
-	REAL s0, t0; 
+	tREAL u[4]; 
+	INEXACT tREAL u3; 
+	INEXACT tREAL s1, t1; 
+	tREAL s0, t0; 
 	
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
-	INEXACT REAL c; 
-	INEXACT REAL abig; 
-	REAL ahi, alo, bhi, blo; 
-	REAL err1, err2, err3; 
-	INEXACT REAL _i, _j; 
-	REAL _0; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
+	INEXACT tREAL c; 
+	INEXACT tREAL abig; 
+	tREAL ahi, alo, bhi, blo; 
+	tREAL err1, err2, err3; 
+	INEXACT tREAL _i, _j; 
+	tREAL _0; 
 	
-	acx = (REAL) (pa[0] - pc[0]); 
-	bcx = (REAL) (pb[0] - pc[0]); 
-	acy = (REAL) (pa[1] - pc[1]); 
-	bcy = (REAL) (pb[1] - pc[1]); 
+	acx = (tREAL) (pa[0] - pc[0]); 
+	bcx = (tREAL) (pb[0] - pc[0]); 
+	acy = (tREAL) (pa[1] - pc[1]); 
+	bcy = (tREAL) (pb[1] - pc[1]); 
 	
 	Two_Product(acx, bcy, detleft, detlefttail); 
 	Two_Product(acy, bcx, detright, detrighttail); 
@@ -989,10 +989,10 @@ REAL Predicates::orient2dadapt(REAL *pa, REAL *pb, REAL *pc, REAL detsum)
 	return(D[Dlength - 1]); 
 } 
 
-REAL Predicates::orient2d(REAL *pa, REAL *pb, REAL *pc)
+tREAL Predicates::orient2d(tREAL *pa, tREAL *pb, tREAL *pc)
 { 
-	REAL detleft, detright, det; 
-	REAL detsum, errbound; 
+	tREAL detleft, detright, det; 
+	tREAL detsum, errbound; 
 	
 	detleft = (pa[0] - pc[0]) * (pb[1] - pc[1]); 
 	detright = (pa[1] - pc[1]) * (pb[0] - pc[0]); 
@@ -1045,11 +1045,11 @@ REAL Predicates::orient2d(REAL *pa, REAL *pb, REAL *pc)
 **                                                                            
 *****************************************************************************/ 
 
-REAL Predicates::incirclefast(REAL *pa, REAL *pb, REAL *pc, REAL *pd) 
+tREAL Predicates::incirclefast(tREAL *pa, tREAL *pb, tREAL *pc, tREAL *pd) 
 { 
-	REAL adx, ady, bdx, bdy, cdx, cdy; 
-	REAL abdet, bcdet, cadet; 
-	REAL alift, blift, clift; 
+	tREAL adx, ady, bdx, bdy, cdx, cdy; 
+	tREAL abdet, bcdet, cadet; 
+	tREAL alift, blift, clift; 
 	
 	adx = pa[0] - pd[0]; 
 	ady = pa[1] - pd[1]; 
@@ -1069,76 +1069,76 @@ REAL Predicates::incirclefast(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
 } 
 
 
-REAL Predicates::incircleadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd,
-							   REAL permanent) 
+tREAL Predicates::incircleadapt(tREAL *pa, tREAL *pb, tREAL *pc, tREAL *pd,
+							   tREAL permanent) 
 { 
-	INEXACT REAL adx, bdx, cdx, ady, bdy, cdy; 
-	REAL det, errbound; 
+	INEXACT tREAL adx, bdx, cdx, ady, bdy, cdy; 
+	tREAL det, errbound; 
 	
-	INEXACT REAL bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1; 
-	REAL bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0; 
-	REAL bc[4], ca[4], ab[4]; 
-	INEXACT REAL bc3, ca3, ab3; 
-	REAL axbc[8], axxbc[16], aybc[8], ayybc[16], adet[32]; 
+	INEXACT tREAL bdxcdy1, cdxbdy1, cdxady1, adxcdy1, adxbdy1, bdxady1; 
+	tREAL bdxcdy0, cdxbdy0, cdxady0, adxcdy0, adxbdy0, bdxady0; 
+	tREAL bc[4], ca[4], ab[4]; 
+	INEXACT tREAL bc3, ca3, ab3; 
+	tREAL axbc[8], axxbc[16], aybc[8], ayybc[16], adet[32]; 
 	int axbclen, axxbclen, aybclen, ayybclen, alen; 
-	REAL bxca[8], bxxca[16], byca[8], byyca[16], bdet[32]; 
+	tREAL bxca[8], bxxca[16], byca[8], byyca[16], bdet[32]; 
 	int bxcalen, bxxcalen, bycalen, byycalen, blen; 
-	REAL cxab[8], cxxab[16], cyab[8], cyyab[16], cdet[32]; 
+	tREAL cxab[8], cxxab[16], cyab[8], cyyab[16], cdet[32]; 
 	int cxablen, cxxablen, cyablen, cyyablen, clen; 
-	REAL abdet[64]; 
+	tREAL abdet[64]; 
 	int ablen; 
-	REAL fin1[1152], fin2[1152]; 
-	REAL *finnow, *finother, *finswap; 
+	tREAL fin1[1152], fin2[1152]; 
+	tREAL *finnow, *finother, *finswap; 
 	int finlength; 
 	
-	REAL adxtail, bdxtail, cdxtail, adytail, bdytail, cdytail; 
-	INEXACT REAL adxadx1, adyady1, bdxbdx1, bdybdy1, cdxcdx1, cdycdy1; 
-	REAL adxadx0, adyady0, bdxbdx0, bdybdy0, cdxcdx0, cdycdy0; 
-	REAL aa[4], bb[4], cc[4]; 
-	INEXACT REAL aa3, bb3, cc3; 
-	INEXACT REAL ti1, tj1; 
-	REAL ti0, tj0; 
-	REAL u[4], v[4]; 
-	INEXACT REAL u3, v3; 
-	REAL temp8[8], temp16a[16], temp16b[16], temp16c[16]; 
-	REAL temp32a[32], temp32b[32], temp48[48], temp64[64]; 
+	tREAL adxtail, bdxtail, cdxtail, adytail, bdytail, cdytail; 
+	INEXACT tREAL adxadx1, adyady1, bdxbdx1, bdybdy1, cdxcdx1, cdycdy1; 
+	tREAL adxadx0, adyady0, bdxbdx0, bdybdy0, cdxcdx0, cdycdy0; 
+	tREAL aa[4], bb[4], cc[4]; 
+	INEXACT tREAL aa3, bb3, cc3; 
+	INEXACT tREAL ti1, tj1; 
+	tREAL ti0, tj0; 
+	tREAL u[4], v[4]; 
+	INEXACT tREAL u3, v3; 
+	tREAL temp8[8], temp16a[16], temp16b[16], temp16c[16]; 
+	tREAL temp32a[32], temp32b[32], temp48[48], temp64[64]; 
 	int temp8len, temp16alen, temp16blen, temp16clen; 
 	int temp32alen, temp32blen, temp48len, temp64len; 
-	REAL axtbb[8], axtcc[8], aytbb[8], aytcc[8]; 
+	tREAL axtbb[8], axtcc[8], aytbb[8], aytcc[8]; 
 	int axtbblen, axtcclen, aytbblen, aytcclen; 
-	REAL bxtaa[8], bxtcc[8], bytaa[8], bytcc[8]; 
+	tREAL bxtaa[8], bxtcc[8], bytaa[8], bytcc[8]; 
 	int bxtaalen, bxtcclen, bytaalen, bytcclen; 
-	REAL cxtaa[8], cxtbb[8], cytaa[8], cytbb[8]; 
+	tREAL cxtaa[8], cxtbb[8], cytaa[8], cytbb[8]; 
 	int cxtaalen, cxtbblen, cytaalen, cytbblen; 
-	REAL axtbc[8], aytbc[8], bxtca[8], bytca[8], cxtab[8], cytab[8]; 
+	tREAL axtbc[8], aytbc[8], bxtca[8], bytca[8], cxtab[8], cytab[8]; 
 	int axtbclen, aytbclen, bxtcalen, bytcalen, cxtablen, cytablen; 
-	REAL axtbct[16], aytbct[16], bxtcat[16], bytcat[16], cxtabt[16], cytabt[16]; 
+	tREAL axtbct[16], aytbct[16], bxtcat[16], bytcat[16], cxtabt[16], cytabt[16]; 
 	int axtbctlen, aytbctlen, bxtcatlen, bytcatlen, cxtabtlen, cytabtlen; 
-	REAL axtbctt[8], aytbctt[8], bxtcatt[8]; 
-	REAL bytcatt[8], cxtabtt[8], cytabtt[8]; 
+	tREAL axtbctt[8], aytbctt[8], bxtcatt[8]; 
+	tREAL bytcatt[8], cxtabtt[8], cytabtt[8]; 
 	int axtbcttlen, aytbcttlen, bxtcattlen, bytcattlen, cxtabttlen, cytabttlen; 
-	REAL abt[8], bct[8], cat[8]; 
+	tREAL abt[8], bct[8], cat[8]; 
 	int abtlen, bctlen, catlen; 
-	REAL abtt[4], bctt[4], catt[4]; 
+	tREAL abtt[4], bctt[4], catt[4]; 
 	int abttlen, bcttlen, cattlen; 
-	INEXACT REAL abtt3, bctt3, catt3; 
-	REAL negate; 
+	INEXACT tREAL abtt3, bctt3, catt3; 
+	tREAL negate; 
 	
-	INEXACT REAL bvirt; 
-	REAL avirt, bround, around; 
-	INEXACT REAL c; 
-	INEXACT REAL abig; 
-	REAL ahi, alo, bhi, blo; 
-	REAL err1, err2, err3; 
-	INEXACT REAL _i, _j; 
-	REAL _0; 
+	INEXACT tREAL bvirt; 
+	tREAL avirt, bround, around; 
+	INEXACT tREAL c; 
+	INEXACT tREAL abig; 
+	tREAL ahi, alo, bhi, blo; 
+	tREAL err1, err2, err3; 
+	INEXACT tREAL _i, _j; 
+	tREAL _0; 
 	
-	adx = (REAL) (pa[0] - pd[0]); 
-	bdx = (REAL) (pb[0] - pd[0]); 
-	cdx = (REAL) (pc[0] - pd[0]); 
-	ady = (REAL) (pa[1] - pd[1]); 
-	bdy = (REAL) (pb[1] - pd[1]); 
-	cdy = (REAL) (pc[1] - pd[1]); 
+	adx = (tREAL) (pa[0] - pd[0]); 
+	bdx = (tREAL) (pb[0] - pd[0]); 
+	cdx = (tREAL) (pc[0] - pd[0]); 
+	ady = (tREAL) (pa[1] - pd[1]); 
+	bdy = (tREAL) (pb[1] - pd[1]); 
+	cdy = (tREAL) (pc[1] - pd[1]); 
 	
 	Two_Product(bdx, cdy, bdxcdy1, bdxcdy0); 
 	Two_Product(cdx, bdy, cdxbdy1, cdxbdy0); 
@@ -1639,13 +1639,13 @@ REAL Predicates::incircleadapt(REAL *pa, REAL *pb, REAL *pc, REAL *pd,
 	return finnow[finlength - 1]; 
 } 
 
-REAL Predicates::incircle(REAL *pa, REAL *pb, REAL *pc, REAL *pd)
+tREAL Predicates::incircle(tREAL *pa, tREAL *pb, tREAL *pc, tREAL *pd)
 { 
-	REAL adx, bdx, cdx, ady, bdy, cdy; 
-	REAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady; 
-	REAL alift, blift, clift; 
-	REAL det; 
-	REAL permanent, errbound; 
+	tREAL adx, bdx, cdx, ady, bdy, cdy; 
+	tREAL bdxcdy, cdxbdy, cdxady, adxcdy, adxbdy, bdxady; 
+	tREAL alift, blift, clift; 
+	tREAL det; 
+	tREAL permanent, errbound; 
 	
 	adx = pa[0] - pd[0]; 
 	bdx = pb[0] - pd[0]; 
