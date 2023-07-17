@@ -847,7 +847,19 @@ void tHydroModel::UnSaturatedZone(double dt)
 				Ractual = 10*routeWE; //have to convert to mm // Changed from R to Ractual CJC2020
 			}
 		}
-			
+
+        // Adjust saturated hydraulic conductivity based on air
+        // temperature to account for frozen soil effects CJC2020
+        Ta_hi = 8;
+        Ta_lo = 4;
+        alphat = 0.004;
+        airTemp = cn->getAirTemp();
+        if (airTemp <= Ta_lo) {
+            Ksat = Ksat*alphat;
+        }
+        else if ((airTemp < Ta_hi) && (airTemp > Ta_lo)) {
+            Ksat = Ksat*alphat + (airTemp - Ta_lo)*((Ksat - Ksat*alphat)/(Ta_hi - Ta_lo));
+        }
 		
 		// Total rate of in/outfluxes [mm hr^-1]
 		R1 = (Ractual + (QpIn-QpOut))*Cos + qrunon;  // Moved this line to be below routeWE  calculation CJC2020

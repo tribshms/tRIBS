@@ -1732,18 +1732,18 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 	double Is, N, Iv, Isw, Ir;
 	double v, t, cosi, scover;
 	double RadGlobClr;
-	
-	Ic=Is=Id=Ir=Ids=Ics=Isw=Iv=0.0;	
+
+	Ic=Is=Id=Ir=Ids=Ics=Isw=Iv=0.0;
 
 	// Elevation, slope and aspect have been set before
 
 	// SKY2008Snow from AJR2007
 	SunHour = 0.0;
 
-	if (alphaD > 0.0) { 
-		
+	if (alphaD > 0.0) {
+
 		// Atmospheric turbidity Tlinke: 2.0-3.0 - for rural sites: CALIBRATE
-		
+
 		// Estimate direct beam and diffuse fluxes for horizontal surface
 		// Raditaion fluxes 'Ic' and 'Id' will be estimated
 		DirectDiffuse(Tlinke, elevation);
@@ -1753,11 +1753,11 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 			skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
 			scover = skyCover;
 		}
-		else 
+		else
 			scover = skyCover;
 		N = scover/10.0;
 
-		// If observations (for a horizontal surface) exist - 
+		// If observations (for a horizontal surface) exist -
 		// use them, at least in an approximate manner
 		if (tsOption > 1 && !rainPtr->getoptStorm()) {
 			RadGlobClr = (RadGlbObs/(1.0-0.65*pow(N,2.0)));
@@ -1766,16 +1766,16 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 		}
 
 		// 1) Slope aspect for direct beam radiation
-		// Account for the aspect and slope of the element 
+		// Account for the aspect and slope of the element
 		// Estimate 'cosi' and compare it with the Sun position
-		//  'cosi' = cos(i), where 'i' is the angle between 
+		//  'cosi' = cos(i), where 'i' is the angle between
 		//  the sun beam and the normal to the slope surface
-		
+
 		// SKY2008Snow from AJR2007
 		//  RINEHART 2007 @ NMT
 		//  Only do this computation if sheltering is turned on.
 		if (shelterOption < 4) { //CHANGED IN 2008
-		
+
 			cosi = cos(slope)*sinAlpha + sin(slope)*cos(asin(sinAlpha))*cos(sunaz-aspect);
 
 			// SKY2008Snow, AJR2008
@@ -1787,7 +1787,7 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 			else {
 				Ics = 0.0;
 				SunHour = 0.0; //NO SUN
-			}	
+			}
 
 		}
 		else {
@@ -1805,7 +1805,7 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 		// Adjust circumsolar factor (disabled)
 		//Ic = Ic + Id*circ;
 		//Id = Id - Id*circ;
-		
+
 		// 2) Horizon factor for diffuse radiation
 		// SKY2008Snow from AJR2007
 		//	RINEHART 2007 @ NMT
@@ -1824,22 +1824,22 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 			v = 1.0; //no shading
 		}
 
-		Ids = Id*v; 
-		
-		// 3) Account for cloud cover - the result is 
+		Ids = Id*v;
+
+		// 3) Account for cloud cover - the result is
 		// the Global Shortwave Irradiance [W m^-2]
 		Is = (1.0-0.65*pow(N,2.0))*(Ics + Ids);
-		
+
 		// 4) Reflected radiation from surrounded sites
-		
+
 		// SKY2008Snow from AJR2007
 		if (shelterOption == 0) {
 
-			Ir = coeffAl*Is*(1-cos(slope))*0.5;  
+			Ir = coeffAl*Is*(1-cos(slope))*0.5;
 			Is += Ir;
 
 		// SKY2008Snow from AJR2007
-		}	
+		}
 		else if ((shelterOption > 1)&&(shelterOption < 4)) { //CHANGED IN 2008
 			Ir = coeffAl*Is*( 0.5*(1 + cos(slope)) - shelterFactorGlobal);
 			landRefGlobal = 0.5*(1 + cos(slope)) - shelterFactorGlobal;
@@ -1855,7 +1855,7 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 			Iv = Is*coeffKt*coeffV + Is*(1.0-coeffV);
 		else
 			Iv = Is;
-		
+
 		// Account for albedo
 		Isw = Iv*(1.0-coeffAl);
   }
@@ -1873,27 +1873,17 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 		weatherSimul->setIdif_nir(0.5*(Ids+Ir));//AJR2008, SKY2008Snow
 		weatherSimul->OutputHydrometVars();
 	}
-	
+
 	// Set shortwave variables to the node (partition is approximate)
-	if (tsOption > 1 && !rainPtr->getoptStorm())
-		cNode->setShortRadIn(RadGlbObs); //or set(Is), they must be equal
-	else 
-		cNode->setShortRadIn(Isw);
+	if (tsOption > 1 && !rainPtr->getoptStorm()) {
+        cNode->setShortRadIn(RadGlbObs); //or set(Is), they must be equal
+    }
+	else {
+        cNode->setShortRadIn(Isw);
+    }
 	cNode->setShortRadIn_dir(Ics*(1.0-0.65*pow(N,2.0)));
 	cNode->setShortRadIn_dif((Ids+Ir)*(1.0-0.65*pow(N,2.0)));//AJR2008, SKY2008Snow
-	
-	/*
-	  cout<<"\nSlp = "<<slope<<";\tAspct = "<<aspect<<";\tElev = "<<elevation
-	      <<endl<<"Alb = "<<coeffAl<<";\tcoeffKt = "<<coeffKt<<endl;
-	  cout<<"Io = "<<Io<<";\tsinAlpha = "
-				<<sinAlpha<<";\tSun AZ= "<<sunaz<<endl;
-	  cout<<"Sky = "<<skyCover<<";\tcosi = "<<cosi<<";"<<endl
-	      <<"RadGlbObs = "<<RadGlbObs<<";\tIc = "<<Ic
-	      <<";\tIcs = "<<Ics<<endl<<"Id = "<<Id<<";\tIds = "<<Ids<<endl
-	      <<"Ir = "<<Ir<<";\tIs = "<<Is<<";\tIv = "<<Iv
-	      <<";\tIsw = "<<Isw<<endl<<endl;
-	*/
-	 
+
 	return Isw;
 }
 
