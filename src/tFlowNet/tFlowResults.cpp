@@ -427,8 +427,8 @@ void tFlowResults::writeAndUpdate( double time, int forenum )
 	
 	hour   = (int)floor(time);
 	minute = (int)floor((time-hour)*60);
-	
-	sprintf(timetag,"%04d_%02d.", hour, minute);
+
+	snprintf(timetag, sizeof(timetag),"%04d_%02d.", hour, minute);
 	strcpy( currHydroName, baseHydroName );
 	strcat( currHydroName, timetag );
 	strcat( currHydroName, Extension);
@@ -786,7 +786,7 @@ void tFlowResults::whenTimeIsOver( double time )
 	hour   = (int)floor(time);
 	minute = (int)floor((time-hour)*60);
 	
-	sprintf(timetag,"%04d_%02d", hour, minute);
+    snprintf(timetag,sizeof(timetag),"%04d_%02d", hour, minute);
 	strcpy( fullName, baseHydroName );
 	strcat( fullName, timetag );
 	strcat( fullName, ".rft" );

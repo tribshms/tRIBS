@@ -1133,7 +1133,7 @@ void tResample::readInputGrid(char *GridIn)
 void tResample::In_Mrain_Name(char *pref, char *ext, 
                               int hour, int day, int month, int year) 
 {
-	sprintf(fileIn, "%s%02d%02d%02d%04d.%s", pref, month, day, year, hour, ext);
+	snprintf(fileIn, sizeof(fileIn), "%s%02d%02d%02d%04d.%s", pref, month, day, year, hour, ext);
 	Cout<<"File IN  --> "<<fileIn<<endl;
 	return;
 }
@@ -1146,7 +1146,7 @@ void tResample::In_Mrain_Name(char *pref, char *ext,
 void tResample::Out_Mrain_Name(char *prefix, char *mrf, int hour) 
 {   
 	int min=0;
-	sprintf(fileOut, "%s.%04d_%02d.%s", prefix, hour, min, mrf);
+	snprintf(fileOut, sizeof(fileOut), "%s.%04d_%02d.%s", prefix, hour, min, mrf);
 	Cout<<"File OUT --> "<<fileOut<<endl;
 	return;
 }
