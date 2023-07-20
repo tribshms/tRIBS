@@ -38,7 +38,7 @@
 tKinemat::tKinemat(SimulationControl *sPtr, tMesh<tCNode> *gridRef, tInputFile &infile, 
 				   tRunTimer *timptr)
 :  ais(NULL), bis(NULL), his(NULL), reis(NULL), siis(NULL), rifis(NULL), // what is the : doing here?
-sumis(NULL), C(NULL), Y1(NULL), Y2(NULL), Y3(NULL),
+sumis(NULL), C(NULL), Y1(NULL), Y2(NULL), Y3(NULL), clis(NULL),
 tFlowNet(sPtr, gridRef, infile, timptr)
 {
 	
@@ -51,12 +51,28 @@ tFlowNet(sPtr, gridRef, infile, timptr)
 	cHead = cOutlet = nullptr;
 	TimeSteps = 0;    // Time steps elapsed 
 	qit=Qin=H0=Qout=dt=0;
-	
+
+	ChannelConduc=TransientConduc=reis1=Pchannel=Preach=0.0; //ASM 2/8/2017
+	CountLimit=Count=0; //ASM
+        PsiB=PoreInd=0.0;//ASM
+	NodeLoss=clis=NULL; // ASM 2/9/2017 clis stands for channel loss and is supposed to mimic the ais, bis etc.
+
 	dtReff = 0.5;   // Hour, for lateral influx time increment
 	
 	kincoef   = infile.ReadItem(kincoef, "KINEMVELCOEF");
 	Roughness = infile.ReadItem(Roughness, "CHANNELROUGHNESS");
-	
+
+	percolationOption = infile.ReadItem(percolationOption, "OPTPERCOLATION"); // ASM 2/9/2017
+	ChannelConduc = infile.ReadItem(ChannelConduc, "CHANNELCONDUCTIVITY"); // ASM
+	TransientConduc = infile.ReadItem(TransientConduc, "TRANSIENTCONDUCTIVITY"); //ASM
+	TransientTime = infile.ReadItem(TransientTime, "TRANSIENTTIME"); //ASM
+	channelPorosity = infile.ReadItem(channelPorosity, "CHANNELPOROSITY"); // ASM
+	ChanWidth = infile.ReadItem(ChanWidth, "CHANNELWIDTH"); //ASM temporary fix
+        PoreInd = infile.ReadItem(PoreInd, "CHANPOREINDEX");//ASM
+        PsiB = infile.ReadItem(PsiB, "CHANPSIB");//ASM
+	//PsiB = PsiB/1000.; //ASM convert to m
+	IntStormMax = infile.ReadItem(IntStormMax, "INTSTORMMAX"); //ASM
+
 	Cout<<"\nChannel Characteristics:"<<endl<<endl;
 	Cout<<"Kinematic velocity coefficient: "<<kincoef<<endl;
 	Cout<<"Roughness coefficient: \t\t"<<Roughness<<endl;
@@ -272,7 +288,8 @@ void tKinemat::UpdateForNewRun(tInputFile &infile, int keep)
 	cHead = cOutlet = NULL;  
 	TimeSteps = 0;    // Time steps elapsed 
 	qit=Qin=H0=Qout=0.0;
-	
+	ChannelConduc=TransientConduc=ReachLoss=0.0; // ASM 2/8/2017
+
 	kincoef   = infile.ReadItem(kincoef, "KINEMVELCOEF");
 	Roughness = infile.ReadItem(Roughness, "CHANNELROUGHNESS");
 	
@@ -337,7 +354,8 @@ void tKinemat::UpdateForNewRun(tInputFile &infile, int keep)
 			if (cn->getBoundaryFlag() == kStream) {
 				cn->setHlevel(0.0);
 				cn->setQstrm(0.0);
-				
+				cn->percOccur = 0.0; //ASM set initial percOccur to 0
+
 				// Flush memory for stacks in stream nodes 
 				TimeInd = cn->getTimeIndList();
 				Qeff    = cn->getQeffList();
@@ -638,7 +656,11 @@ void tKinemat::AllocateMemory(int NN)
 	assert(his != 0);
 	reis = new double[n]; 
 	assert(reis != 0);
-	
+	clis = new double[n];	// ASM 2/10/2017 (2 lines)
+	assert(clis !=0);
+	NodeLoss = new double[n]; // ASM 2/17/17 (2 lines)
+	assert(NodeLoss !=0);
+
 	// The following three vectors contain information only for stream
 	// links (n-1) in total but it is more convenient to use size 'n' instead
 	
@@ -696,7 +718,8 @@ void tKinemat::FreeMemory()
 	Y1 = NULL;
 	Y2 = NULL;
 	Y3 = NULL;
-	
+	clis = NULL; // ASM 2/10/2017
+
 	return;
 }
 
@@ -719,7 +742,8 @@ void tKinemat::SurfaceFlow()
 	char extension[20];
 
 	it = 0;
-	RunRoutingModel(it, &check, timer->getTimeStep()*3600.);
+	Pchannel = TotChanLength = ParallelPerc = 0.0; // ASM 2/10/2017
+	RunRoutingModel(it, &check, timer->getTimeStep()*3600.); //ASM added "get current time" variable
 	
 	tFlowNet::SurfaceFlow();
 	
@@ -798,7 +822,13 @@ void tKinemat::RunRoutingModel(int it, int *check, double timeStep)
 	
 	
 	dt = timeStep;  // Computational time step
-	
+
+		// Update the counter for transient conditions
+		if (Preach > 0.1)
+			Count += 1;
+		else
+			Count = 0;
+
 	// Loop through all outlets and set Q to '0' . We need to do that 
 	// in order to properly assign Q-s in confluence nodes  
 	
@@ -820,8 +850,11 @@ void tKinemat::RunRoutingModel(int it, int *check, double timeStep)
 		cHead   = NodesIterH.DatPtr();
 		cOutlet = NodesIterO.DatPtr();
 		
-		// Initialize widths, lengths, slopes, levels, C, Y1, Y2, Y3 
-		InitializeStreamReach( NNodesIter.DatRef() );
+		//can calculate the number of time steps to check for transient period here ASM
+		CountLimit = TransientTime/(dt/60);
+
+		// Initialize widths, lengths, slopes, levels, C, Y1, Y2, Y3
+		InitializeStreamReach( NNodesIter.DatRef(), CountLimit );
 		
 		// Initialize lateral influx array 
 		AssignLateralInflux();
@@ -829,10 +862,8 @@ void tKinemat::RunRoutingModel(int it, int *check, double timeStep)
 		// Initialize upper BND condition 
 		AssignQin();
 
-		// Check Reservoir Option
-		if (optres == 1) {
-			Reservoir_Routing(cn->getID()); // JECR 2015
-		}
+		// Assign reach percolation to total channel percolation ASM 2/10/2017
+		Pchannel += Preach;
 
 		// Run kinematic wave routing model 
 		if ( NNodesIter.DatRef() == 2 )
@@ -1112,12 +1143,15 @@ void tKinemat::setTravelVelocityKin(double curr_discharge, double CArea )
 **  'n' - is the total # of stream nodes including the upper boundary 
 **  
 *****************************************************************************/
-void tKinemat::InitializeStreamReach(int NN)
+void tKinemat::InitializeStreamReach(int NN, int CountLimit)
 {
 	int    i;
 	double Slope;
 	tCNode *cmove, *cend;
-	
+	double ChanLength=TotWidth = 0.0; // ASM
+
+
+
 	n  = NN;        // # of nodes
 	m  = n - 1;
 	m1 = n - 2;
@@ -1143,6 +1177,26 @@ void tKinemat::InitializeStreamReach(int NN)
 		bis[i]   = cmove->getChannelWidth();
 		ais[i]   = cmove->getFlowEdg()->getLength();
 		rifis[i] = cmove->getRoughness();
+		//ASM 2/9/2017
+		if (percolationOption == 1) {
+			//setCoeffstest(cmove);
+			//poro = soilPtr->getSoilProp(9);  // Surface hydraulic conductivity
+			NodeLoss[i] = bis[i] * ais[i] * ChannelConduc * channelPorosity; // ASM testporo; w*l*poro*ksat [m3/s]
+			ChanLength += ais[i]; // ASM
+		}
+		else if (percolationOption == 2) {
+			// Need to get time information here
+			if (Count > CountLimit - 1) {
+				NodeLoss[i] = bis[i] * ais[i] * ChannelConduc * channelPorosity;
+				ChanLength += ais[i];
+			}
+			else {
+				NodeLoss[i] = bis[i] * ais[i] * TransientConduc * channelPorosity;
+				ChanLength += ais[i];
+			}
+		}
+			//end ASM edits
+
 		Slope    = cmove->getFlowEdg()->getSlope();
 		
 		//"Error" slope = 0.5ft/30m = 0.152/30
@@ -1160,7 +1214,9 @@ void tKinemat::InitializeStreamReach(int NN)
 		i++;
 	}
 	
-	// Special care has to be taken regarding the outlet nodes 
+	TotChanLength += ChanLength; //ASM adds
+
+	// Special care has to be taken regarding the outlet nodes
 	// Use the separately stored outlet level from time step (t-1) 
 	his[i]   = OutletHlev[id];           // cmove->getHlevel();
 	bis[i]   = cmove->getChannelWidth();
@@ -1256,7 +1312,9 @@ void tKinemat::AssignLateralInflux()
 {
 	int i;
 	tCNode *cmove, *cend;
-	
+	double reis1; //ASM 2/10/2017
+	Preach = 0.0; //ASM
+
 	// ---------------------------------------------------------
 	// In general case, Reff is calculated 
 	// in the following way (Zero-th node excluded):
@@ -1309,14 +1367,159 @@ void tKinemat::AssignLateralInflux()
 	//
 	
 	for (i=0; i<m; i++) {
-		if (i < m1)
+		if (i < m1) { //ASM added {
 			reis[i] = (reis[i] + reis[i+1])/2.;
+
+			//ASM Percolation:
+			//ASM 2/8/2017: (Next many lines)
+			if (percolationOption == 3) {		//ASM Green Ampt Method
+				/*if ( (reis[i]/cmove->getVArea() ) < ChannelConduc) {
+					clis[i] = reis[i];
+					reis[i] = 0.0;
+				}
+				else {*/
+					if ( cmove->getFt() > 0) {	// Check if there is already an infiltration front
+						Ft = cmove->getFt();
+						Ft_previous = Ft;
+						Ft = Ft + ChannelConduc * dt;
+					}
+					else {				// if no front, estimate Ft_init
+						Ft_init = ChannelConduc * dt;
+						Ft = Ft_init;
+						Ft_previous = 0.0;
+					}
+					Ft_prime = 0.0;
+					PsiF = ((2*PoreInd + 3)/(2*PoreInd + 6) * abs(PsiB))/1000;
+					//DeltTh = channelPorosity - cmove->getRootMoisture();
+					DeltTh = channelPorosity;
+					test = 0;
+					while (test < 100) { //Start with Ft_prime = 0
+						Ft_prime = Ft_previous+ChannelConduc*dt + PsiF*DeltTh*log(1+Ft/(PsiF*DeltTh));
+						if (Ft_prime <= Ft * 1.1 && Ft_prime >= Ft * 0.9)
+							test = 111;
+                                                test += 1;
+                                                Ft = Ft_prime;
+					}
+					rate = 0.0;
+					rate = ChannelConduc * ((PsiF * DeltTh + Ft)/Ft);
+					NodeLoss[i] = rate * channelPorosity * cmove->getVArea();
+					if (reis[i]>0){
+						reis1 = reis[i] - NodeLoss[i];
+						if (reis1 < 0) {
+							clis[i] = reis[i];
+							reis[i] = 0.0;
+						}
+						else {
+							clis[i] = NodeLoss[i];
+							reis[i] = reis1;
+						}
+					}
+					else
+						clis[i] = 0.0;
+					IntStormVar = cmove->getIntStormVar();
+					/*if (IntStormVar < 5) //ASM originally was < IntStormMax
+						cmove->setFt(Ft_prime);
+					else */
+						cmove->setFt(0.0);
+				//}
+			Preach += clis[i];
+			}
+
+			else if (percolationOption == 1 || percolationOption == 2) {	//ASM constant loss and transient methods
+				reis1 = reis[i] - NodeLoss[i];
+				if (reis1 < 0) {
+					clis[i] = reis[i];
+					reis[i] = 0.0;
+				}
+				else {
+					clis[i] = NodeLoss[i];
+					reis[i] = reis1;
+				}
+			Preach += clis[i]; // ASM 2/16/2017 this sums percolation in the channel
+			}
+
+
+		} //ASM
 		else if (i == m1) {
 			if ( cend == OutletNode ) 
 				reis[i] += reis[m];
 			reis[i] /= 2.;
+
+			//ASM 2/8/2017: (Next 10 lines)
+			if (percolationOption == 3) {		//ASM Green Ampt Method
+				/*if ( (reis[i]/cmove->getVArea() ) < ChannelConduc) {
+					clis[i] = reis[i];
+					reis[i] = 0.0;
+				}
+				else {*/
+					if ( cmove->getFt() > 0) {	// Check if there is already an infiltration front
+						Ft = cmove->getFt();
+						Ft_previous = Ft;
+						Ft = Ft + ChannelConduc * dt;
+					}
+					else {				// if no front, estimate Ft_init
+						Ft_init = ChannelConduc * dt;
+						Ft = Ft_init;
+						Ft_previous = 0.0;
+					}
+					Ft_prime = 0.0;
+					PsiF = ((2*PoreInd + 3)/(2*PoreInd + 6) * abs(PsiB))/1000;
+					//DeltTh = channelPorosity - cmove->getRootMoisture();
+					DeltTh = channelPorosity;
+					test = 0;
+					while (test < 100) { //Start with Ft_prime = 0
+						Ft_prime = Ft_previous+ChannelConduc*dt + PsiF*DeltTh*log(1+Ft/(PsiF*DeltTh));
+						if (Ft_prime <= Ft * 1.1 && Ft_prime >= Ft * 0.9)
+							test = 111;
+                                                test += 1;
+                                                Ft = Ft_prime;
+					}
+					rate = 0.0;
+					rate = ChannelConduc * ((PsiF * DeltTh + Ft)/Ft);
+					NodeLoss[i] = rate * channelPorosity * cmove->getVArea();
+					if (reis[i]>0){
+						reis1 = reis[i] - NodeLoss[i];
+						if (reis1 < 0) {
+							clis[i] = reis[i];
+							reis[i] = 0.0;
+						}
+						else {
+							clis[i] = NodeLoss[i];
+							reis[i] = reis1;
+						}
+					}
+					else
+						clis[i] = 0.0;
+					IntStormVar = cmove->getIntStormVar();
+					/*if (IntStormVar < 5) //ASM originally < IntStormMax
+						cmove->setFt(Ft_prime);
+					else */
+						cmove->setFt(0.0);
+				//}
+			Preach += clis[i];
+			}
+
+			else if (percolationOption == 1 || percolationOption ==2) {
+				if (reis[i] > 0) {
+					reis1 = reis[i] - NodeLoss[i];
+					if (reis1 < 0) {
+						clis[i] = reis[i];
+						reis[i] = 0.0;
+					}
+					else {
+						clis[i] = NodeLoss[i];
+						reis[i] = reis1;
+					}
+				}
+				else
+					clis[i] = 0.0;
+			Preach += clis[i]; // ASM 2/16/2017 this sums percolation in the channel reach
+			} //end ASM
 		}
+
 	}
+
+
 	return;
 }
 
@@ -1453,6 +1656,7 @@ void tKinemat::UpdateStreamVars()
 	tCNode *cmove, *cend;
 	
 	i = 0;
+	IndividualPerc = 0.0; //ASM
 	cmove = cHead;  // Points to the current stream head
 	cend = cOutlet; // Point to the current outlet
 	
@@ -1466,6 +1670,16 @@ void tKinemat::UpdateStreamVars()
 			cmove->setQstrm( Qout );
 		}
 		cmove->setFlowVelocity( ComputeNodeFlowVel(i) );
+		if (percolationOption != 0) { // ASM ** Akram: the preceding codes are slightly different for ASM
+			cmove->setChannelPerc( clis[i] ); //ASM 2/10/2017
+		}
+		if (clis[i]>0.0) {
+			//cmove->percOccur=cmove->percOccur+floor(clis[i]*1.0E+3)+1.0E-6;
+			cmove->percOccur=cmove->getPercOccur()+1;
+			cmove->avPerc = cmove->getavPerc()+clis[i];
+		}
+		IndividualPerc = cmove->getChannelPerc();
+		ParallelPerc += IndividualPerc;
 		cmove = cmove->getDownstrmNbr();
 		i++;
 	}

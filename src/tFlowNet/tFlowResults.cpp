@@ -196,8 +196,11 @@ void tFlowResults::SetFlowResVariables(tInputFile &infile, double add_time)
 	
 	if ((fState = (int*)calloc(limit,sizeof(int)))==NULL)
 		cout<<"\ntFlowResults: fState failed..."<<endl;
-	
-	for (i=0; i<limit; i++) {
+
+    if ((Perc = (double*)calloc(limit,sizeof(double)))==NULL)
+        cout<<"\ntFlowResults: Percolation failed..."<<endl; //ASM percolation option
+
+    for (i=0; i<limit; i++) {
 		mhydro[i] = phydro[i] = 0.0;
 		prr[i] = crr[i] = 0.0;
 		HsrfRout[i] = SbsrfRout[i] = 0.0;
@@ -209,6 +212,8 @@ void tFlowResults::SetFlowResVariables(tInputFile &infile, double add_time)
 		swe[i] = melt[i] = intsn[i] = intsub[i] = intunl[i] = sca[i] = 0.0;
 		stC[i] = DUint[i] = srsi[i] = srlo[i] = srli[i] = sghf[i] = sphf[i] = 0.0;
 		sshf[i] = slhf[i] = snsub[i] = snevap[i] = 0.0; // Added snsub, snevap CJC2020
+
+                Perc[i]=0.0; //ASM Percolation opt
 
 		min[i]=9999.99;
 	}
@@ -265,6 +270,9 @@ void tFlowResults::free_results()
 	free(intunl);
 	free(sca);
 
+    //ASM 5/5/2016
+    free(Perc); //ASM percolation option
+
 	prr=NULL;
 	crr=NULL;
 	phydro=NULL;
@@ -302,6 +310,8 @@ void tFlowResults::free_results()
 	intsub = NULL;
 	intunl = NULL;
 	sca = NULL;
+    //ASM 5/5/2016
+    Perc = NULL; //ASM percolation option
 
 	return;
 }
@@ -508,7 +518,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
           *pMsmU, *pMgw, *pMet, *pSat, *pFrac,
           *pSwe, *pMelt, *pSnSub, *pSnEvap, *pStC, *pDUint, *pSlhf, *pSshf, *pSphf, // Added *pSnSub, *pSnEvap CJC2020
           *pSghf, *pSrli, *pSrlo, *pSrsi, *pIntsn, *pIntsub,
-          *pIntunl, *pSca;
+          *pIntunl, *pSca, *pERC; //ASM 5/5/2016
 
    // If running in parallel, collect sums, mins, maxs
    pPhydro = tParallel::sum(phydro, iimax);
@@ -540,7 +550,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
    pIntsub = tParallel::sum(intsub, iimax);
    pIntunl = tParallel::sum(intunl, iimax);
    pSca = tParallel::sum(sca, iimax);
-
+   pPerc = tParallel::sum(Perc, iimax); //ASM percolation option
    
    // Master processor writes file
    if (tParallel::isMaster()) {
@@ -551,18 +561,18 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 			
 			// fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 			// SKY2008Snow from AJR2007
-			fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
+			fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 
 					"Time", "Srf","MAP","RainMax", "RainMin","FState", "MSM100", "MSMRt", 
 					// "MSMU", "MGW","MET", "%Sat", "%Rain");
 					// SKY2008Snow from AJR2007
 					"MSMU", "MDGW","MET", "SatPercent", "RainPercent",
 					"AvSWE" , "AvMelt" , "AvSnSub" , "AvSnEvap" , "AvSTC" , "AvDUInt" , "AvSLHF" , "AvSSHF" , "AvSPHF" , "AvSGHF" , //added by AJR 2007 @ NMT // Added "AvSnSub" , "AvSnEvap" CJC2020
-					"AvSRLI" , "AvSRLO" , "AvSRSI" , "AvInSn" , "AvInSu" , "AvInUn" , "SCA" );//added by AJR 2007 @ NMT
+					"AvSRLI" , "AvSRLO" , "AvSRSI" , "AvInSn" , "AvInSu" , "AvInUn" , "SCA", "ChannelPercolation");//added by AJR 2007 @ NMT
 			fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 					"hr" , "m3/s" , "mm/hr" , "mm/hr" , "mm/hr" , "[]" , "[]" , "[]" , "[]" , "mm" , 
 	    				"mm" , "[]" , "[]" , "cm" , "cm" , "cm" , "cm" , "C" , "kJ/m2" , "kJ/m2" , "kJ/m2" , //added by AJR 2007 @ NMT // added "cm" , "cm" CJC2020
-	    				"kJ/m2" , "kJ/m2" , "kJ/m2" , "kJ/m2" , "kJ/m2" , "cm" , "cm" , "cm", "[]" );//added by AJR 2007 @ NMT // removed extra header for kJ/m2 CJC2020
+	    				"kJ/m2" , "kJ/m2" , "kJ/m2" , "kJ/m2" , "kJ/m2" , "cm" , "cm" , "cm", "[]", "m3" );//added by AJR 2007 @ NMT // removed extra header for kJ/m2 CJC2020 //akram: Need to confirm unit for Percolation
 
 			// fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 			//		"hr","m3/s","mm/hr","mm/hr","mm/hr","[]", "[]", "[]", "[]",
@@ -577,13 +587,13 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 #ifdef PARALLEL_TRIBS
 
          // Print min, max, and summ variables from all processors
-         fprintf(ifile,"%d.%d\t%f\t%f\t%f\t%f\t%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
+         fprintf(ifile,"%d.%d\t%f\t%f\t%f\t%f\t%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
                it_hour, it_min, pPhydro[ii]+pMhydro[ii], pCrr[ii],
                pMax[ii], pMin[ii], fState[ii], pMsm[ii], pMsmRt[ii],pMsmU[ii], 
                pMgw[ii], pMet[ii], pSat[ii], pFrac[ii],
                pSwe[ii], pMelt[ii], pSnSub[ii], pSnEvap[ii], pStC[ii], pDUint[ii], pSlhf[ii], pSshf[ii], // Added pSnSub[ii], pSnEvap[ii] CJC2020
                pSphf[ii], pSghf[ii], pSrli[ii], pSrlo[ii], pSrsi[ii], pIntsn[ii],
-               pIntsub[ii], pIntunl[ii], pSca[ii]);
+               pIntsub[ii], pIntunl[ii], pSca[ii], pPerc[ii]);
 
 #else
 			// SKY2008Snow from AJR2007
@@ -591,7 +601,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 					it_hour, it_min, phydro[ii]+mhydro[ii], crr[ii], 
 					max[ii], min[ii], fState[ii], msm[ii], msmRt[ii],msmU[ii], mgw[ii], met[ii], sat[ii], frac[ii],
 					swe[ii], melt[ii], snsub[ii], snevap[ii], stC[ii], DUint[ii], slhf[ii], sshf[ii], sphf[ii], sghf[ii],//added by AJR 2007 @ NMT // Added snsub[ii], snevap[ii] CJC2020
-					srli[ii], srlo[ii], srsi[ii], intsn[ii], intsub[ii], intunl[ii], sca[ii]);//added by AJR 2007 @ NMT
+					srli[ii], srlo[ii], srsi[ii], intsn[ii], intsub[ii], intunl[ii], sca[ii], Perc[ii]);//added by AJR 2007 @ NMT
 
 
 					//it_hour, it_min, phydro[ii]+mhydro[ii], crr[ii], 
@@ -633,6 +643,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
    delete [] pIntsub;
    delete [] pIntunl;
    delete [] pSca;
+   delete [] pPerc; //ASM percolation option
 
 #endif
 
@@ -1130,7 +1141,12 @@ void tFlowResults::store_saturation(double time, double value, int flag)
 		else if (flag == 22)
 			snevap[init] += value*dcalc/dres; // CJC2020
 
-	}
+            //ASM percolation option
+        else if (flag ==23)
+            Perc[init] += value*225; //ASM the 225 converts to m3
+
+
+    }
 	return;
 }
 
@@ -1217,6 +1233,7 @@ void tFlowResults::writeRestart(fstream & rStr) const
     BinaryWrite(rStr, intsub[i]);
     BinaryWrite(rStr, intunl[i]);
     BinaryWrite(rStr, sca[i]);
+    BinaryWrite(rStr, Perc[i]); //ASM Percolation option
   }
 }
 
@@ -1271,6 +1288,7 @@ void tFlowResults::readRestart(fstream & rStr)
     BinaryRead(rStr, intsub[i]);
     BinaryRead(rStr, intunl[i]);
     BinaryRead(rStr, sca[i]);
+    BinaryRead(rStr, Perc[i]); //ASM Percolationoption
   }
 }
 

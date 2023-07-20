@@ -1781,7 +1781,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			<<setprecision(7)<<cn->getAvOptTransmCoeff()<<',' 
 			<<setprecision(7)<<cn->getAvStomRes()<<',' 
 			<<setprecision(7)<<cn->getAvVegFraction()<<','
-			<<setprecision(7)<<cn->getAvLeafAI();			
+			<<setprecision(7)<<cn->getAvLeafAI();
 
 		intofs<<setprecision(6)<<"\n";
 		
