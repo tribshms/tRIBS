@@ -156,6 +156,12 @@ public:
   double getQgwOut();
   double getQgwIn();
 
+  // ASM 2/10/2017
+  double getChannelPerc();
+  double getFt(); //ASM
+  double getPercOccur(); //ASM
+  double getavPerc(); //ASM
+
   // SKY2008Snow from AJR2007
   //snowpack
   double getLiqWE();//state
@@ -428,7 +434,11 @@ public:
   void setLFlux(double);
   void setGnod(double);
  
-  void setContrArea(double); 
+  // ASM 2/10/2017
+  void setChannelPerc(double);
+  void setFt(double); //ASM
+
+  void setContrArea(double);
   void setCurvature(double); 
   void setBasinArea(double);
   void setBedrockDepth(double);
@@ -629,6 +639,8 @@ public:
   double satsrfOccur; 	        // Groundwater Saturation Occurence
   double sbsrfOccur; 		// Saturation from Below runoff Occurence
   double RechDisch;
+  double percOccur;		// ASM Channel Percolation Occurence
+  double avPerc;		// ASM Channel Percolation Occurence
 
 protected:
   double ContrArea;             // Surface contributing area for the node 
@@ -698,6 +710,10 @@ protected:
   double lFlux;
   double Gnod;
   double Aspect;
+
+  //ASM 2/10/2017
+  double ChannelPerc;
+  double Ft; //ASM
 
   // SKY2008Snow from AJR2007
   //snowpack

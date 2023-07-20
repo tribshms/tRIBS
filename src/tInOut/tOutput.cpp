@@ -1618,7 +1618,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 	int hour, minute;
 	int Occur, prec;
 	char extension[20];
-	double avRate, tmp1, tmp2;
+	double avRate, tmp1, tmp2, PixelPerc; //ASM added pixelperc
 	tSubNode *cn;
 	tMeshListIter<tSubNode> ni( this->g->getNodeList() );
 	
@@ -1781,7 +1781,44 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			<<setprecision(7)<<cn->getAvOptTransmCoeff()<<',' 
 			<<setprecision(7)<<cn->getAvStomRes()<<',' 
 			<<setprecision(7)<<cn->getAvVegFraction()<<','
-			<<setprecision(7)<<cn->getAvLeafAI();			
+			<<setprecision(7)<<cn->getAvLeafAI()<<',';
+
+			/*// ASM
+			Occur = (int)((cn->percOccur-floor(cn->percOccur))*1.E+6);
+				if (Occur > 0) {
+					avRate = floor(cn->percOccur)/1.E+3/Occur;
+					prec = 3;
+					if (avRate>100.0)
+						prec++;
+				}
+				else {
+					avRate = 0.0;
+					prec = 0;
+				}*/
+			/*Occur = (int)(cn->percOccur);
+				if (Occur>0) {
+					avRate = (cn->avPerc)/(cn->percOccur);
+					prec = 3;
+					if (avRate>100.0)
+						prec++;
+				}
+				else {
+					avRate = 0.0;
+					prec = 0;
+				}
+			intofs<<setprecision(6)<<Occur<<setprecision(prec)<<','<<avRate<<',';;	*/
+
+			//ASM
+			Occur = (int)(cn->percOccur);
+				if (Occur>0) {
+					avRate = (cn->avPerc)/(cn->percOccur)*225; //ASM hard coded 3.75 min timestep
+					PixelPerc = Occur*avRate;
+				}
+				else {
+					PixelPerc = 0.0;
+					avRate = 0.0;
+				}
+			intofs<<setprecision(6)<<PixelPerc<<',';;
 
 		intofs<<setprecision(6)<<"\n";
 		

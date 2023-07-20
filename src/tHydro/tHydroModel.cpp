@@ -73,6 +73,7 @@ void tHydroModel::SetHydroMVariables(tInputFile &infile,
 	Ioption     = infile.ReadItem(Ioption, "OPTINTERCEPT");
 	gFluxOption = infile.ReadItem(gFluxOption, "GFLUXOPTION");
 	BRoption    = infile.ReadItem(BRoption, "OPTBEDROCK");
+	percolationOption = infile.ReadItem(percolationOption, "OPTPERCOLATION");
 
 	if (infile.IsItemIn( "OPTGWFILE" ))
 		GWoption = infile.ReadItem(GWoption, "OPTGWFILE");

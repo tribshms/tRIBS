@@ -143,6 +143,7 @@ protected:
   double dist_hill_max;  	// MAX distance on hillslope, [m] 
   double dist_stream_max;	// MAX distance in stream, [m]
   double BasArea;               // Total Basin Area, [m^2]
+  int percolationOption;	// ASM percolation option
 };
 
 #endif

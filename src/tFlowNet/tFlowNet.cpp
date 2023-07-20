@@ -91,6 +91,9 @@ tFlowNet::tFlowNet(SimulationControl *simCtrPtr, tMesh<tCNode> *gridRef,
 	
 	// Initialize Hydrograph class
 	res = new tFlowResults( simCtrl, infile, timptr, MaxTravel() ); 
+
+	percolationOption = infile.ReadItem(percolationOption, "OPTPERCOLATION"); // ASM percolation option
+
 }
 
 tFlowNet::~tFlowNet() 
@@ -842,7 +845,11 @@ void tFlowNet::SurfaceFlow()
 			//Mean SnSub
 		res->store_saturation(0.0, AreaF*cn->getSnSub(),21);// Calculated mean snowpack sublimation CJC2020 
 			//Mean SnSub
-		res->store_saturation(0.0, AreaF*cn->getSnEvap(),22);// Calculated mean snowpack sublimation CJC2020 
+		res->store_saturation(0.0, AreaF*cn->getSnEvap(),22);// Calculated mean snowpack sublimation CJC2020
+
+        //ASM Percolation option
+        if (percolationOption != 0)
+            res->store_saturation(0.0, cn->getChannelPerc(),23);
 
 	}
 	return;
