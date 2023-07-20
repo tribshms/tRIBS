@@ -96,7 +96,7 @@ class tKinemat : public tFlowNet
   void UpdateHsShifted(double *, double *, double, int);
   void AllocateMemory(int);
   void FreeMemory();
-  void InitializeStreamReach(int);
+  void InitializeStreamReach(int, int);
   void AssignLateralInflux();
   void PrintFlowStacks(ofstream &, tCNode *);
   void ComputeCoefficientArrays();
