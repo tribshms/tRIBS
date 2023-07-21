@@ -129,6 +129,8 @@ private:
   int gFluxOption, BRoption, RdstrOption, GWoption;
   int RunOnoption;
 
+  int percolationOption; //ASM 2/14/2017
+
   double NwtOld, NwtNew;   		// Water table depth in mm
   double MuOld,  MuNew;    		// Moisture Content above WT in mm
   double MiOld,  MiNew;    		// Initialization Moist above WT in mm

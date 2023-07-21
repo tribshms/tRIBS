@@ -96,7 +96,7 @@ class tKinemat : public tFlowNet
   void UpdateHsShifted(double *, double *, double, int);
   void AllocateMemory(int);
   void FreeMemory();
-  void InitializeStreamReach(int);
+  void InitializeStreamReach(int, int);
   void AssignLateralInflux();
   void PrintFlowStacks(ofstream &, tCNode *);
   void ComputeCoefficientArrays();
@@ -170,6 +170,13 @@ protected:
 
 /*** Start edits by JECR 2015 ***/
   int optres, checkID, checkNode;
+  double  ChannelConduc, ReachLoss, poro, reis1, Pchannel, Preach, ChanWidth, TotWidth, ChanLength, channelPorosity; //ASM
+  double  TransientConduc, TransientTime, TotChanLength; //ASM
+  double  ExtraPerc, PotentialPerc, TotalPerc, Qin1; //ASM 2/14/2017 Variables for calculating channel loss
+  int percolationOption, CountLimit, Count; //ASM perolcation option
+  double  *clis, *NodeLoss; // ASM not sure if double is correct
+  double  ParallelPerc, IndividualPerc; //ASM test to make parallel percolation
+  double  Ft_init,Ft,ThetaResid,PoreInd,PsiB,PsiF,DeltTh,test,Ft_prime,Ft_previous,IntStormVar,IntStormMax,rate; //ASM Green Ampt variables
   double tempVariable;
   double resTimeStep;
   double resRunTime;

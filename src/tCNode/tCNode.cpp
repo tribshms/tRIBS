@@ -74,11 +74,17 @@ tCNode::tCNode() :tNode()
 	tracer = flood = soiID = LandUse = satOccur = 0;
    Reach = -1;
 	hsrfOccur=psrfOccur=satsrfOccur=sbsrfOccur=0.0;
+	percOccur=0.0; //ASM perc in 00i
+	avPerc=0.0; //ASM perc in 00i
 	RechDisch = Aspect = VegFraction = 0.0;
 	VegFraction = 0.0; 
 	AvSoilMoisture = AvEvapFract = AvET = 0.0;
 	
 	xC=yC=-1;
+
+	// ASM 2/10/2017
+	ChannelPerc = 0.0;
+	Ft = 0.0;
 
 	// SKYnGM2008LU
 	//added for land use grid AJR 2007
@@ -196,11 +202,17 @@ tCNode::tCNode(tInputFile &infile) :tNode() {
 	tracer = flood = soiID = LandUse = satOccur = 0;
    Reach = -1;
 	hsrfOccur=psrfOccur=satsrfOccur=sbsrfOccur=0.0;
+	percOccur=0.0; //ASM perc in 00i
+	avPerc=0.0; //ASM perc in 00i
 	RechDisch = Aspect = VegFraction = 0.0;
 	VegFraction = 0.0; 
 	AvSoilMoisture = AvEvapFract = AvET = 0.0;
 	
 	xC=yC=-1;
+
+	// ASM 2/10/2017
+	ChannelPerc = 0.0;
+	Ft = 0.0;
 
 	// SKYnGM2008LU
 	//added for land use grid AJR 2007
@@ -389,6 +401,11 @@ double tCNode::getGFlux() { return gFlux; }
 double tCNode::getHFlux() { return hFlux; }
 double tCNode::getLFlux() { return lFlux; }
 double tCNode::getGnod()  { return Gnod; }
+
+double tCNode::getChannelPerc() { return ChannelPerc; } //ASM 2/10/2017
+double tCNode::getFt() {return Ft; } //ASM
+double tCNode::getPercOccur() { return percOccur; } //ASM
+double tCNode::getavPerc() { return avPerc; } //ASM
 
 double tCNode::getQgwIn() { return QgwIn; }
 double tCNode::getQgwOut(){ return QgwOut; }
@@ -664,6 +681,9 @@ void tCNode::setGFlux(double gF){ gFlux = gF; }
 void tCNode::setHFlux(double hF){ hFlux = hF; }
 void tCNode::setLFlux(double lF){ lFlux = lF; }
 void tCNode::setGnod(double Go){ Gnod = Go; }
+
+void tCNode::setChannelPerc(double cP){ ChannelPerc = cP; } //ASM 2/10/2017
+void tCNode::setFt(double Ft_prime){ Ft = Ft_prime; } //ASM
 
 void tCNode::setBedrockDepth(double brock) { BedrockDepth = brock; }
 void tCNode::setContrArea(double value)    { ContrArea = value; }
@@ -1171,6 +1191,8 @@ void tCNode::writeRestart(fstream& rStr) const
 
   BinaryWrite(rStr, satOccur);
   BinaryWrite(rStr, hsrfOccur);
+  BinaryWrite(rStr, percOccur); //ASM
+  BinaryWrite(rStr, avPerc);  //ASM
   BinaryWrite(rStr, psrfOccur);
   BinaryWrite(rStr, satsrfOccur);
   BinaryWrite(rStr, sbsrfOccur);
@@ -1228,6 +1250,8 @@ void tCNode::writeRestart(fstream& rStr) const
   BinaryWrite(rStr, Recharge);
   BinaryWrite(rStr, UnSatFlowIn);
   BinaryWrite(rStr, UnSatFlowOut);
+  BinaryWrite(rStr, ChannelPerc); //ASM 2/10/2017
+  BinaryWrite(rStr, Ft); //ASM
 
   BinaryWrite(rStr, liqWEq); // Snowpack
   BinaryWrite(rStr, iceWEq);
@@ -1435,6 +1459,8 @@ void tCNode::readRestart(fstream& rStr)
 
   BinaryRead(rStr, satOccur);
   BinaryRead(rStr, hsrfOccur);
+  BinaryRead(rStr, percOccur); //ASM
+  BinaryRead(rStr, avPerc); //ASM
   BinaryRead(rStr, psrfOccur);
   BinaryRead(rStr, satsrfOccur);
   BinaryRead(rStr, sbsrfOccur);
@@ -1492,6 +1518,8 @@ void tCNode::readRestart(fstream& rStr)
   BinaryRead(rStr, Recharge);
   BinaryRead(rStr, UnSatFlowIn);
   BinaryRead(rStr, UnSatFlowOut);
+  BinaryRead(rStr, ChannelPerc); //ASM 2/10/2017
+  BinaryRead(rStr, Ft); //ASM
 
   BinaryRead(rStr, liqWEq); // Snowpack
   BinaryRead(rStr, iceWEq);
@@ -1655,6 +1683,8 @@ void tCNode::printVariables()
   cout << " LandUse " << LandUse << endl;
   cout << " Reach " << Reach << endl;
   cout << " hsrfOccur " << hsrfOccur << endl;
+  cout << " percOccur " << percOccur <<endl; //ASM
+  cout << " avPerc " << avPerc <<endl; //ASM
   cout << " psrfOccur " << psrfOccur << endl;
   cout << " satsrfOccur " << satsrfOccur << endl;
   cout << " sbsrfOccur " << sbsrfOccur << endl;
@@ -1728,6 +1758,8 @@ void tCNode::printVariables()
   cout << " Recharge " << Recharge << endl;
   cout << " UnSatFlowIn " << UnSatFlowIn << endl;
   cout << " UnSatFlowOut " << UnSatFlowOut << endl;
+  cout << " ChannelPerc " << ChannelPerc << endl; //ASM 2/10/2017
+  cout << " Ft " << Ft << endl; //ASM
 
   cout << " liqWEq " << liqWEq; // Snowpack
   cout << " iceWEq " << iceWEq;
