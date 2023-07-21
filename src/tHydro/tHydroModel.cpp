@@ -828,8 +828,9 @@ void tHydroModel::UnSaturatedZone(double dt)
 			else
 				Ractual = cn->getNetPrecipitation();
 		}
-		else if (Ioption != 0 && EToption != 0)
-			Ractual = cn->getNetPrecipitation() - EvapSoi - EvapVeg;
+		else if (Ioption != 0 && EToption != 0) {
+            Ractual = cn->getNetPrecipitation() - EvapSoi - EvapVeg;
+        }
 
 		// Runon calculations (if on), runon value [mm hr^-1]
 		qrunon = 0.0;
