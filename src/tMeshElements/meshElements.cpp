@@ -876,7 +876,6 @@ tArray< double > tTriangle::FindCircumcenter()
 			assert( dx1==0 && dy2==0 );
 		}
 	}
-	assert( &xy != 0 );
 	
 	return xy;
 }

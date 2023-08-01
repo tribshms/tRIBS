@@ -339,11 +339,11 @@ int tVariant::composeFileName(tRunTimer *t)
 		infile.close();
 	
 	if (t->getMetStep() < t->getRainDT()){   //If 'minute' is NOT equal to '0'
-		sprintf(fileIn, "%s%02d%02d%04d%02d%02d.%s", inputName, 
+		snprintf(fileIn, sizeof(fileIn), "%s%02d%02d%04d%02d%02d.%s", inputName,
 				t->month, t->day, t->year, t->hour, t->minute, extension);
 	}
 	else{                    //If 'minute' IS equal to '0'
-		sprintf(fileIn, "%s%02d%02d%04d%02d.%s", inputName, 
+		snprintf(fileIn, sizeof(fileIn), "%s%02d%02d%04d%02d.%s", inputName,
 				t->month, t->day, t->year, t->hour, extension);}
 	
 	infile.open(fileIn);

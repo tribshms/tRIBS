@@ -4775,7 +4775,7 @@ UpdateMesh()
 		curedg = elist.NextP();
 		assert( curedg != nullptr ); // failure = complementary edges not consecutive, compiler error indicates comparison between pointer and zero, so replaced with null pter -WR
 		curedg->setLength( len );
-	} while( curedg=elist.NextP() );//TODO: is this correct or semantic error? WR warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
+	} while( (curedg=elist.NextP()) != nullptr);//TODO: is this correct or semantic error? WR warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
 	
 	MakeCCWEdges();
 	

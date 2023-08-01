@@ -500,10 +500,10 @@ inline int tNode::getBoundaryFlag() const {return boundary;}
 inline tEdge * tNode::getEdg() {return edg;}
 
 inline const tPtrList< tEdge > &                                    
-tNode::getSpokeList() const {assert( &spokeList != 0 ); return spokeList;}
+tNode::getSpokeList() const { return spokeList;}
 
 inline tPtrList< tEdge > &                                          
-tNode::getSpokeListNC() {assert( &spokeList != 0 ); return spokeList;}
+tNode::getSpokeListNC() { return spokeList;}
 
 inline const tPtrListNode< tEdge > *                                 
 tNode::getFirstSpokeNode() const {return spokeList.getFirst();}
@@ -809,7 +809,6 @@ inline void tEdge::setCCWEdg( tEdge* edg ){
 }
 
 inline void tEdge::setRVtx( tArray< double > arr ){
-   assert( &arr != 0 );
    assert( arr.getSize() == 2 );
    rvtx = arr;
 }
@@ -907,7 +906,6 @@ inline void tEdge::WelcomeCCWNeighbor( tEdge * neighbor ){
 inline tTriangle::tTriangle() : 
   id(-1)
 {
-   assert( p != 0 && e != 0 && t != 0 );
    for( int i=0; i<3; i++ ){
       p[i] = 0;
       e[i] = 0;
@@ -919,7 +917,7 @@ inline tTriangle::tTriangle() :
 inline tTriangle::tTriangle( const tTriangle &init ) :
    id(init.id)
 {
-   assert( p != 0 && e != 0 && t != 0 );
+
    if( &init != 0 ){
       id = init.id;
       for( int i=0; i<3; i++ ){

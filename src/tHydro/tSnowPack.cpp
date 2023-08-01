@@ -1283,7 +1283,7 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
                 Usn = 0.0;
 
 
-                liqWE += Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
+                liqWE = Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
 
                 //make sure that there is enough SWE in the pack for the melt
                 if (liqWE >= snWE) {
@@ -2424,7 +2424,6 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
   
   double sigma(5.67e-8);
   double v1;
-  double emelt; //THM 2012
 
   if (shelterOption > 0 && shelterOption < 3) 
       v1 = shelterFactorGlobal;
@@ -2449,19 +2448,7 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
   RLin = naughttokilo*inLongWave(node); // AJR2008, SKY2008Snow
   RLout = -naughttokilo*v1*emmisSn()*sigma*pow(snTempK,4.0); 
   
-  
-  
-  // Outgoing long wave radiation is controlled by how much of the sky can be seen at that point?? Is this true?
 
-  //calculate emelt THM 2012 / Latent Heat Leaving the Snowpack due to melt
-  if (Utot > 0) {
-    // emelt=-liqWE*latFreezekJ*rholiqkg/timeSteps; // Changed /3600 to /timeSteps CJC2020
-	emelt=-latHeatFreezeCalc()*1000*(Utot/(latFreezekJ*rholiqkg))/timeSteps; // Changed /3600 to /timeSteps CJC2020 // Changed to use latHeatFreezeCalc() instead of 334 CJC 2020
-  }
-  else {
-    emelt= 0;
-  }
-  
   //set up for output
   inShortR = kilotonaught*RSin;
   inLongR = kilotonaught*RLin;
@@ -2489,8 +2476,8 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
   Rn = RSin + RLin + RLout;   
   G = 0;
 
-  //calculate total dU over given timestep, updated by THM 2012
-  dUint = (H + Rn + L + Prec + G + emelt)*timeSteps; // Changed *3600 to *timeSteps CJC2020
+  //calculate total dU over given timestep
+  dUint = (H + Rn + L + Prec + G)*timeSteps; // Changed *3600 to *timeSteps CJC2020
   
   //find new energy state of snow
   Utot +=  dUint;

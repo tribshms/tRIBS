@@ -829,8 +829,9 @@ void tHydroModel::UnSaturatedZone(double dt)
 			else
 				Ractual = cn->getNetPrecipitation();
 		}
-		else if (Ioption != 0 && EToption != 0)
-			Ractual = cn->getNetPrecipitation() - EvapSoi - EvapVeg;
+		else if (Ioption != 0 && EToption != 0) {
+            Ractual = cn->getNetPrecipitation() - EvapSoi - EvapVeg;
+        }
 
 		// Runon calculations (if on), runon value [mm hr^-1]
 		qrunon = 0.0;
@@ -850,17 +851,17 @@ void tHydroModel::UnSaturatedZone(double dt)
 		}
 
         // Adjust saturated hydraulic conductivity based on air
-        // temperature to account for frozen soil effects CJC2020
-        Ta_hi = 8;
-        Ta_lo = 4;
-        alphat = 0.004;
-        airTemp = cn->getAirTemp();
-        if (airTemp <= Ta_lo) {
-            Ksat = Ksat*alphat;
-        }
-        else if ((airTemp < Ta_hi) && (airTemp > Ta_lo)) {
-            Ksat = Ksat*alphat + (airTemp - Ta_lo)*((Ksat - Ksat*alphat)/(Ta_hi - Ta_lo));
-        }
+//        // temperature to account for frozen soil effects CJC2020
+//        Ta_hi = 8;
+//        Ta_lo = 4;
+//        alphat = 0.004;
+//        airTemp = cn->getAirTemp();
+//        if (airTemp <= Ta_lo) {
+//            Ksat = Ksat*alphat;
+//        }
+//        else if ((airTemp < Ta_hi) && (airTemp > Ta_lo)) {
+//            Ksat = Ksat*alphat + (airTemp - Ta_lo)*((Ksat - Ksat*alphat)/(Ta_hi - Ta_lo));
+//        }
 		
 		// Total rate of in/outfluxes [mm hr^-1]
 		R1 = (Ractual + (QpIn-QpOut))*Cos + qrunon;  // Moved this line to be below routeWE  calculation CJC2020
@@ -869,13 +870,16 @@ void tHydroModel::UnSaturatedZone(double dt)
 
 		// Step1: Compute K_unsaturated and rainfall
 		//---------------------------------------------
-		if (Ksat != 0.0)
-			ThSurf=get_InitMoist_depthZ(0.);
+		if (Ksat != 0.0) {
+            ThSurf = get_InitMoist_depthZ(0.);
+        }
 
-		if (RuOld == 0.0)
-			Kunsat = Ksat*pow(((ThSurf-Thr)/(Ths-Thr)), Eps); //Initialized profile
-		else
-			Kunsat = RuOld;  // There is wetted wedge
+		if (RuOld == 0.0) {
+            Kunsat = Ksat * pow(((ThSurf - Thr) / (Ths - Thr)), Eps); //Initialized profile
+        }
+		else {
+            Kunsat = RuOld;  // There is wetted wedge
+        }
 
 
 		// Step2: Determine the node state
@@ -883,25 +887,27 @@ void tHydroModel::UnSaturatedZone(double dt)
 
 		// Splitting into different situations
 		Pixel_State = -1000;
-		if ( (NwtOld==0.) && (R1>=0.) )  // WT initially at surface & stays there
-			Pixel_State = WTStaysAtSurf;
+		if ( (NwtOld==0.) && (R1>=0.) ) { // WT initially at surface & stays there
+            Pixel_State = WTStaysAtSurf;
+        }
 
-		if ( (NwtOld==0.) && (R1<0.) )   // WT initially at surface & drops
-			Pixel_State = WTDropsFromSurf;
+		if ( (NwtOld==0.) && (R1<0.) ) {   // WT initially at surface & drops
+            Pixel_State = WTDropsFromSurf;
+        }
 
-		if ((NwtOld>0.)&&((R1*dt)>=(NwtOld*Ths-MuOld))&&(NfOld==0.||NfOld==NwtOld))
-			Pixel_State = WTGetsToSurf;	   // WT initially at some depth, reaches surface
-
+		if ((NwtOld>0.)&&((R1*dt)>=(NwtOld*Ths-MuOld))&&(NfOld==0.||NfOld==NwtOld)) {
+            Pixel_State = WTGetsToSurf;       // WT initially at some depth, reaches surface
+        }
 
 		if (Pixel_State==-1000) {        // None of the above
 			MuNew = MuOld + dt*R1;  	   // Calculate MuNew from forcing
 
-			if (MuNew < MiOld)      	   // Apply the pertinent interstorm equation
-				Pixel_State = IntStormBelow;
-
-			if (fabs(MuNew - MiOld) < 1.0E-6)
-				Pixel_State = ExactInitial; // Exactly Initialized State
-
+			if (MuNew < MiOld) {           // Apply the pertinent interstorm equation
+                Pixel_State = IntStormBelow;
+            }
+			if (fabs(MuNew - MiOld) < 1.0E-6) {
+                Pixel_State = ExactInitial; // Exactly Initialized State
+            }
 			if (MuNew > MiOld) {
 				if (R1 > 0.0) {
 
@@ -932,12 +938,13 @@ void tHydroModel::UnSaturatedZone(double dt)
 					}
 
 					// Proceed with old/new values
-					if (NtOld == NfOld)
-						Pixel_State = Storm_Unsat_Evol;
+					if (NtOld == NfOld) {
+                        Pixel_State = Storm_Unsat_Evol;
+                    }
 
-					if ((NtOld < NfOld) && (NtOld != 0.0))
-						Pixel_State = Perched_Evol;
-
+					if ((NtOld < NfOld) && (NtOld != 0.0)) {
+                        Pixel_State = Perched_Evol;
+                    }
 					if ((NtOld == 0.0) && (NfOld > 0.0)) {
 						ThRiNf = get_InitMoist_depthZ(NfOld);
 						ThReNf = Ths;
@@ -945,10 +952,12 @@ void tHydroModel::UnSaturatedZone(double dt)
 						qn = Ksat*F*NfOld/(exp(F*NfOld)-1)*(Cos + G/NfOld);
 
 						xxsrf = qn - RiOld*Cos; // Net infiltration rate
-						if (R1 >= xxsrf)
-							Pixel_State = Perched_SurfSat;
-						else
-							Pixel_State = StormToInterTransition;
+						if (R1 >= xxsrf) {
+                            Pixel_State = Perched_SurfSat;
+                        }
+						else {
+                            Pixel_State = StormToInterTransition;
+                        }
 					}
 
 					// --------------------------------------------------
@@ -1101,8 +1110,18 @@ void tHydroModel::UnSaturatedZone(double dt)
 			case IntStormBelow:
 
 				R1 = (R + (QpIn - QpOut))*Cos;
-				Mdelt = Ths*NwtOld - (MuOld + R1*dt); // Pixel moisture deficit
+
+
+                Mdelt = Ths*NwtOld - (MuOld + R1*dt); // Pixel moisture deficit
 				NwtNew = Newton(Mdelt, NwtOld);
+
+                // account for case where no more moisture is available for evaporation -WR 7/28/23
+                if(NwtNew == DtoBedrock){
+                    cn->setEvapSoil((DtoBedrock-NwtOld)*Ths*(EvapSoi/(EvapSoi+EvapVeg)));//set remaining moisture in saturated zone to evapsoil proportional to initial estimates of evapsoil
+                    cn->setEvapDryCanopy((DtoBedrock-NwtOld)*Ths*(EvapVeg/(EvapSoi+EvapVeg)));// same as above but for evap from veg
+                    cn->setEvapoTrans(cn->getEvapWetCanopy()+cn->getEvapDryCanopy()+ cn->getEvapSoil());
+                }
+
 				RiNew = 0.0;
 				RuNew = 0.0;
 				MiNew = get_Total_Moist(NwtNew);
@@ -2089,7 +2108,11 @@ void tHydroModel::UnSaturatedZone(double dt)
 
 		// The following units are [m^3]
 		Stok += srf*dt*cn->getVArea()/1000.0;
-		TotGWchange += (NwtNew-NwtOld)*Ths*cn->getVArea()/(Cos*1000.0);
+        if(NwtNew != NwtOld){
+            cout<<"break point"<<endl;
+        }
+
+        TotGWchange += (NwtNew-NwtOld)*Ths*cn->getVArea()/(Cos*1000.0);
 		TotMoist += (MuNew-MuOld)*cn->getVArea()/(Cos*1000.0);
 
 		// Code related to soil moisture study by Valerio Noto
@@ -2694,10 +2717,12 @@ void tHydroModel::ComputeFluxesEdgesND()
 
 			// Depending on whether the water table is at the surface or not,
 			// define the gradient of the GW head
-			if (cnorg->getNwtOld() == 0.0)
-				thisWTElevation = (cnorg->getZ()) - ((-Psib)/(Cos1*1000.0));
-			else
-				thisWTElevation = (cnorg->getZ()) - (cnorg->getNwtOld()/(Cos1*1000.0));
+			if (cnorg->getNwtOld() == 0.0) {
+                thisWTElevation = (cnorg->getZ()) - ((-Psib) / (Cos1 * 1000.0));
+            }
+			else {
+                thisWTElevation = (cnorg->getZ()) - (cnorg->getNwtOld() / (Cos1 * 1000.0));
+            }
 
 			// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
             //            soilPtr->setSoilPtr( cndest->getSoilID() );
@@ -2705,10 +2730,12 @@ void tHydroModel::ComputeFluxesEdgesND()
             Psib = cndest->getAirEBubPres(); // Air entry bubbling pressure
 			// Giuseppe 2016 - End changes to allow reading soil properties from grids
 
-			if (cndest->getNwtOld() == 0.0)
-				nextWTElevation = (cndest->getZ()) - ((-Psib)/(Cos2*1000.0));
-			else
-				nextWTElevation = (cndest->getZ()) - (cndest->getNwtOld()/(Cos2*1000.0));
+			if (cndest->getNwtOld() == 0.0) {
+                nextWTElevation = (cndest->getZ()) - ((-Psib) / (Cos2 * 1000.0));
+            }
+			else {
+                nextWTElevation = (cndest->getZ()) - (cndest->getNwtOld() / (Cos2 * 1000.0));
+            }
 
 			// Compute only positive fluxes
          DtoBedrock = cnorg->getBedrockDepth(); //SMM - 09232008
@@ -2755,10 +2782,11 @@ void tHydroModel::ComputeFluxesEdgesND()
 				Width = ce->getVEdgLen()*1000.0;
 
 				// Constrain the GW gradient
-				if (WTSlope > 1.0)
-					WTSlope = 1.0;
+				if (WTSlope > 1.0) {
+                    WTSlope = 1.0;
+                }
 
-				// Unconfined aquifer HGL (MM^3/HOUR)
+                // Unconfined aquifer HGL (MM^3/HOUR)
 				QOut = Transmissivity * Width * WTSlope;
 
 				// Compute Voronoi polygon shape factor and constrain the model dynamics
@@ -3053,11 +3081,22 @@ void tHydroModel::SaturatedZone(double dtGW)
 		// Potential States
 		enum {GW_Exfiltrate, GW_IntStorm_Like, GW_Initial, GW_Positive_Bal};
 		Couple_State = -1000;
-		if (NwtNew == NwtOld)            Couple_State=GW_Initial;
-		else if (NwtNew-NwtOld > 1.0E-3) Couple_State=GW_IntStorm_Like;
-		else if (NwtOld-NwtNew > 1.0E-3) Couple_State=GW_Positive_Bal;
-		if (MuOld > NwtNew*Ths)          Couple_State=GW_Exfiltrate;
-		if (Couple_State==-1000)         Couple_State=GW_Initial;
+
+		if (NwtNew == NwtOld) {
+            Couple_State=GW_Initial;
+        }
+		else if (NwtNew-NwtOld > 1.0E-3) {
+            Couple_State=GW_IntStorm_Like;
+        }
+		else if (NwtOld-NwtNew > 1.0E-3) {
+            Couple_State=GW_Positive_Bal;
+        }
+		if (MuOld > NwtNew*Ths) {
+            Couple_State=GW_Exfiltrate;
+        }
+		if (Couple_State==-1000) {
+            Couple_State=GW_Initial;
+        }
 		
 		// State Switch Statements
 		//---------------------------------------------
@@ -3444,10 +3483,14 @@ void tHydroModel::SaturatedZone(double dtGW)
 		cn->setsatsrf(satsrf*dtGW);
 		cn->setesrf(esrf*dtGW);
 
-		if (satsrf>0.0)
-			cn->satsrfOccur=cn->satsrfOccur+floor(satsrf*1.0E+3)+1.0E-6;
-		if (ComputeSurfSoilMoist(1.0)/Ths > 0.999)
-			cn->satOccur = cn->satOccur + 1;
+		if (satsrf>0.0) {
+            cn->satsrfOccur = cn->satsrfOccur + floor(satsrf * 1.0E+3) + 1.0E-6;
+        }
+
+		if (ComputeSurfSoilMoist(1.0)/Ths > 0.999) {
+            cn->satOccur = cn->satOccur + 1;
+        }
+
 		cn->RechDisch=cn->RechDisch+((NwtOld-NwtNew)+satsrf*dtGW*Cos/Ths)*1.0E-3;
 
 		// Soil moisture in the top 10 cm
@@ -3456,10 +3499,12 @@ void tHydroModel::SaturatedZone(double dtGW)
 		cn->setSoilMoistureSC( ThSurf/Ths );
 
 		// Soil moisture in the unsaturated zone
-		if (NwtNew)
-			cn->setSoilMoistureUNSC( MuNew/NwtNew/Ths );
-		else
-			cn->setSoilMoistureUNSC( 1.0 );
+		if (NwtNew) {
+            cn->setSoilMoistureUNSC(MuNew / NwtNew / Ths);
+        }
+		else {
+            cn->setSoilMoistureUNSC(1.0);
+        }
 
 		// Need to divide by the total # of time steps elapsed
 		AA = (double)timer->getElapsedSteps(timer->getCurrentTime());
@@ -3480,7 +3525,7 @@ void tHydroModel::SaturatedZone(double dtGW)
 		// The following are in [M^3]
 		Stok += srf*dtGW*cn->getVArea()/1000.0;
 		TotMoist += (MuNew - MuOld)*cn->getVArea()/(Cos*1000.0);
-		TotGWchange += (NwtNew-NwtOld)*Ths*cn->getVArea()/(Cos*1000.0);
+        TotGWchange += (NwtNew-NwtOld)*Ths*cn->getVArea()/(Cos*1000.0);
 
 		// Estimate and output relative factors
 		if (fabs((cn->getSoilMoistureSC()) - ThSurf0) > 1.0E-6) {

@@ -224,7 +224,7 @@ void tOutput<tSubNode>::CreateAndOpenVizFile( ofstream *theOFStream,
 	sprintf( procex, ".%-d", tParallel::getMyProc());
 	strcat(fullName, procex);
 #else
-	sprintf( procex, "");
+	snprintf( procex, sizeof(procex), "");
 	strcat(fullName, procex);
 #endif 
   
@@ -305,7 +305,7 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 #else
 			if (nodeList[i] >= 0) {
 #endif
-				sprintf(nodeNum,"%d",nodeList[i]);
+				snprintf(nodeNum, sizeof(nodeNum), "%d",nodeList[i]);
 				strcpy(pixelnode, nodeNum);
 				strcat(pixelnode, pixelext);		 
 				
@@ -1099,7 +1099,7 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 		
 		hour   = (int)floor(time);
 		minute = (int)((time-hour)*100);
-		sprintf(extension,"%04d.%02d", hour, minute);
+        snprintf(extension,sizeof(extension),"%04d.%02d", hour, minute);
 		
 		// Writing to a file dynamic variables of node of interest  
 		// The output format should be readable by ArcInfo & Matlab 
@@ -1260,7 +1260,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		//   <<nActiveNodes<<";  nTotalNodes = "<<nnodes<<"\n";
 	}
 
-	sprintf(extension,".%04d_%02dd", hour, minute);
+    snprintf(extension,sizeof(extension),".%04d_%02dd", hour, minute);
 	this->CreateAndOpenFile( &arcofs, extension);  //Opens file for writing
 	
 	if (simCtrl->Header_label == 'Y') {
@@ -1389,7 +1389,7 @@ void tCOutput<tSubNode>::WriteDynamicVarsBinary( double time )
 	int hour = (int)floor(time);
 
 	char extension[20];
-	sprintf(extension, "_dyn.%04d", hour);
+	snprintf(extension,sizeof(extension), "_dyn.%04d", hour);
 
 	ofstream ostr;
 	this->CreateAndOpenVizFile(&ostr, extension);
@@ -1481,7 +1481,7 @@ void tCOutput<tSubNode>::WriteDynamicVar( double time )
 		
 		hour   = (int)floor(time);
 		minute = (int)(time-hour)*100;
-		sprintf(extension,"%04d.%02d", hour, minute);
+        snprintf(extension,sizeof(extension),"%04d.%02d", hour, minute);
 		
 		//for (int i = 0; i < 19; i++) {
 		for (int i = 0; i < 36; i++) {  // SKY2008Snow from AJR2007
@@ -1625,7 +1625,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 	hour   = (int)floor(time);
 	minute = (int)floor((time-hour)*60);
 	
-	sprintf(extension,".%04d_%02di", hour, minute);
+	snprintf(extension, sizeof(extension), ".%04d_%02di", hour, minute);
 	this->CreateAndOpenFile(&intofs, extension);
 	
 	if (simCtrl->Header_label == 'Y') {
@@ -1808,7 +1808,7 @@ void tCOutput<tSubNode>::WriteOutletInfo( double time )
 		
 		hour   = (int)floor(time); 
 		minute = (int)((time-hour)*100);
-		sprintf(extension,"%04d.%02d", hour, minute);
+		snprintf(extension, sizeof(extension),"%04d.%02d", hour, minute);
 		
 		for (int i = 0; i < numOutlets; i++) {
 #ifdef PARALLEL_TRIBS
@@ -1888,7 +1888,7 @@ void tCOutput<tSubNode>::CreateAndOpenOutlet()
 #else
 				if (OutletList[i] > 0) {
 #endif
-					sprintf(nodeNum,"_%d", OutletList[i]);
+					snprintf(nodeNum, sizeof(nodeNum),"_%d", OutletList[i]);
 					strcpy(pixelnode, nodeNum);
 					strcat(pixelnode, pixelext);
 				

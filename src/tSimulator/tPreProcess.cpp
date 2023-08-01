@@ -428,7 +428,7 @@ void tPreProcess::CheckPathNameCorrect(tInputFile &infile, char* filename,
 	
 	while ( !InpStatus ) {   
 		// temporary file output 
-		sprintf(bname, "%s%s", filename, zero);
+		snprintf(bname, sizeof(bname), "%s%s", filename, zero);
 		
 		ofstream readFile(bname);
 		
