@@ -1110,8 +1110,18 @@ void tHydroModel::UnSaturatedZone(double dt)
 			case IntStormBelow:
 
 				R1 = (R + (QpIn - QpOut))*Cos;
-				Mdelt = Ths*NwtOld - (MuOld + R1*dt); // Pixel moisture deficit
+
+
+                Mdelt = Ths*NwtOld - (MuOld + R1*dt); // Pixel moisture deficit
 				NwtNew = Newton(Mdelt, NwtOld);
+
+                // account for case where no more moisture is available for evaporation -WR 7/28/23
+                if(NwtNew == DtoBedrock){
+                    cn->setEvapSoil((DtoBedrock-NwtOld)*Ths*(EvapSoi/(EvapSoi+EvapVeg)));//set remaining moisture in saturated zone to evapsoil proportional to initial estimates of evapsoil
+                    cn->setEvapDryCanopy((DtoBedrock-NwtOld)*Ths*(EvapVeg/(EvapSoi+EvapVeg)));// same as above but for evap from veg
+                    cn->setEvapoTrans(cn->getEvapWetCanopy()+cn->getEvapDryCanopy()+ cn->getEvapSoil());
+                }
+
 				RiNew = 0.0;
 				RuNew = 0.0;
 				MiNew = get_Total_Moist(NwtNew);
