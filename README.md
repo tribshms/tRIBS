@@ -1,23 +1,13 @@
-# tRIBS 2023
-tRIBS source files for development 
+# TIN-based Real-time Integrated Basin Simulator
+ The TIN-based Real-time Integrated Basin Simulator (tRIBS, version 4.0) is a fully distributed physical based hydrological model. Details about the running the model and its applications can be found [here](https://tribshms.readthedocs.io/en/latest/).
+## Installation and Compilation
+tRIBS is an object-oriented based code written in c++. In order to run tRIBS you must download and compile the source code from this GitHub repository. tRIBS V4 has been updated with a CMake build system and has been updated to currently run on new (2022-2023) Mac and Linux OS with C++ standard 17.
+Instructions for using CMake can be found [here.](./md/CMake.md)
+## Working with tRIBS source code
+If you intended to develop, fix, or modify tRIBS source code it's important that you:
+1) Start by creating a [fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) of the tRIBS repository.
+2) Create a development branch to add any changes in the source code.
+3) Keep your main and development branch up to date with changes from the main tRIBS repository.
+4) Updates the main tRIBS source code from your local fork can by creating [pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) on GitHub.
 
-This version of tRIBS has been updated with a [CMake](https://cmake.org/) build system and has been updated to currently run on new Mac OS (2022-2023) with C++ standard 17.
-
-Click [here](./md/CMake.md) for instructions using CMake to compile tRIBS.
-
-To see the latest changes incorporated into this version of tRIBS see the [CHANGELOG](./md/CHANGELOG.md) and for information on upcoming updates and tasks for tRIBS development see [TODO](./md/TODO.md).
-
-We are currently in the process of updating documentation for tRIBS. For now relevant information such as user manual etc. can be found [here](http://vivoni.asu.edu/tribs.html). More details in documentation have been added via [doxygen](https://www.doxygen.nl/), navigate to the html folder in doc [here](./doc/doc/html) and drag the index.html file into a web browser to see detailed documentation of the code.
-
-
-<!-- This verison of tRIBS incorporates significant developement, with the latest modifications made by Josh Cederstrom over the course of his degree. This version also includes fixes from Ara Ko, Carlos Lizarraga, and Xiaoyang. It does not include updates to make files, as a current goal is to bypass this step by using CMake.
-
-Fixes includes:
-- various bug fixes that may or may have not been incorporated into the main code version
-- additions to model outputs to meet the needs of my project e.g. adding snowpack sublimation and evaporation to the outputs
-- changes in variable outputs for certain files e.g. replacing certain variables in dynamic file with the cumulative values
-- additions to snow model like windspeed reduction below the canopy and ability to specify snow liquid water holding capacity in the input file.
-
-To find these changes search for "CJC", "CJC2019", "CJC2020", and "CJC2021"
-
-This version does incorporate the ability to load soil parameters in the form of grids. -->
+For additional details in working with source code, including pertinent git commands, see the following instructions [here](./md/DEV_INST.md)
