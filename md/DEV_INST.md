@@ -16,7 +16,7 @@ your GitHub account.
 3. Click the fork button in the upper-right corner of the page.
 
 Once completed, you will be redirected to the home page for your own
-copy of Landlab.
+copy of tRIBS.
 
 ## Cloning your fork to your computer
 You can clone the fork (that lives on the Github website) locally to
