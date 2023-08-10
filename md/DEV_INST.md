@@ -22,7 +22,7 @@ copy of tRIBS.
 You can clone the fork (that lives on the Github website) locally to
 your computer either using the Github app (the GUI), or directly from
 the command line using git. If you've never used git before, the app is
-probably the way to go.
+probably the way to go. 
 
 ### Using the GUI/app
 
@@ -40,3 +40,9 @@ Use the following commands from the terminal.
    $ cd tribs_sub2020
    $ git remote add upstream git://github.com/tribshms/tribs_sub2020.git
 ```
+Note if you are running into the following errors,
+``` bash
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+```
+then you will likely need to generate a new ssh key and add it to your [GitHub profile](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
