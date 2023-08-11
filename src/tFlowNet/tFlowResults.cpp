@@ -518,7 +518,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
           *pMsmU, *pMgw, *pMet, *pSat, *pFrac,
           *pSwe, *pMelt, *pSnSub, *pSnEvap, *pStC, *pDUint, *pSlhf, *pSshf, *pSphf, // Added *pSnSub, *pSnEvap CJC2020
           *pSghf, *pSrli, *pSrlo, *pSrsi, *pIntsn, *pIntsub,
-          *pIntunl, *pSca, *pERC; //ASM 5/5/2016
+          *pIntunl, *pSca, *pPerc; //ASM 5/5/2016
 
    // If running in parallel, collect sums, mins, maxs
    pPhydro = tParallel::sum(phydro, iimax);
