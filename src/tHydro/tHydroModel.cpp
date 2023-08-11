@@ -1117,9 +1117,21 @@ void tHydroModel::UnSaturatedZone(double dt)
 
                 // account for case where no more moisture is available for evaporation -WR 7/28/23
                 if(NwtNew == DtoBedrock){
-                    cn->setEvapSoil((DtoBedrock-NwtOld)*Ths*(EvapSoi/(EvapSoi+EvapVeg)));//set remaining moisture in saturated zone to evapsoil proportional to initial estimates of evapsoil
-                    cn->setEvapDryCanopy((DtoBedrock-NwtOld)*Ths*(EvapVeg/(EvapSoi+EvapVeg)));// same as above but for evap from veg
-                    cn->setEvapoTrans(cn->getEvapWetCanopy()+cn->getEvapDryCanopy()+ cn->getEvapSoil());
+                    EvapSoi = (DtoBedrock-NwtOld)*Ths*(EvapSoi/(EvapSoi+EvapVeg)); //set remaining moisture in saturated zone to evapsoil proportional to initial estimates of evapsoil
+                    EvapVeg = (DtoBedrock-NwtOld)*Ths*(EvapVeg/(EvapSoi+EvapVeg)); //same as above but for evap from veg
+
+                    if(EvapSoi!=EvapSoi){
+                        EvapSoi = 0;
+                    }
+
+                    if(EvapVeg!=EvapVeg){
+                        EvapVeg = 0;
+                    }
+
+                    cn->setEvapSoil(EvapSoi);//set remaining moisture in saturated zone to evapsoil proportional to initial estimates of evapsoil
+                    cn->setEvapDryCanopy(EvapVeg);// same as above but for evap from veg
+                    cn->setEvapoTrans(cn->getEvapWetCanopy()+EvapVeg+EvapSoi);
+
                 }
 
 				RiNew = 0.0;
