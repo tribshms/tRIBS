@@ -313,55 +313,55 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 				
 				if (simCtrl->Header_label == 'Y') {
                     // first row name
-					pixinfo[i]<<"NodeID  "//1
-					<<"Time_hr  " //2
-					<<"Nwt_mm  " //3
-					<<"Nf_mm  " //4
-					<<"Nt_mm  " //5
-					<<"Mu_mm  " //6
-					<<"Mi_mm  " //7
-					<<"QpOut_mm/h  " //8
-					<<"QpIn_mm/h  " //9
-					<<"Trnsm_m2/h  " //10
-					<<"GWflx_m3/h  " //11
-					<<"Srf_mm  " //12
-					<<"Rain_mm/h  " //13
-					<<"SoilMoist_[]  " //14
-					<<"RootMoist_[]  "  //15
-					<<"AirT_oC  " //16
-					<<"DewT_oC  " //17
-					<<"SurfT_oC  " //18
-					<<"SoilT_oC  " //19
-					<<"Press_Pa  " //20
-					<<"RelHum_[]  " //21
-					<<"SkyCov_[]  "  //22
-					<<"Wind_m/s  " //23
-					<<"NetRad_W/m2  " //24
-					<<"ShrtRadIn_W/m2  " //25
-					<<"ShrtRadIn_dir_W/m2  " //26
-					<<"ShrtRadIn_dif_W/m2  " //27
-					<<"ShortAbsbVeg_W/m2  " //28
-					<<"ShortAbsbSoi_W/m2  " //29
-					<<"LngRadIn_W/m2  " //30
-					<<"LngRadOut_W/m2  " //31
-					<<"PotEvp_mm/h  " //32
-					<<"ActEvp_mm/h  " //33
-					<<"EvpTtrs_mm/h  " //34
-					<<"EvpWetCan_mm/h  " //35
-					<<"EvpDryCan_mm/h  " //36
-					<<"EvpSoil_mm/h  " //37
-					<<"Gflux_W/m2  " //38
-					<<"HFlux_W/m2  " //39
-					<<"Lflux_W/m2  " //40
-					<<"NetPrecip_mm/hr  " //41
-					<<"LiqWE_cm  " //42
-					<<"IceWE_cm  "	//43
-					<<"SnWE_cm  "	//44
+					pixinfo[i]<<"NodeID "//1
+					<<"Time_hr " //2
+					<<"Nwt_mm " //3
+					<<"Nf_mm " //4
+					<<"Nt_mm " //5
+					<<"Mu_mm " //6
+					<<"Mi_mm " //7
+					<<"QpOut_mm/h " //8
+					<<"QpIn_mm/h " //9
+					<<"Trnsm_m2/h " //10
+					<<"GWflx_m3/h " //11
+					<<"Srf_mm " //12
+					<<"Rain_mm/h " //13
+					<<"SoilMoist_[] " //14
+					<<"RootMoist_[] "  //15
+					<<"AirT_oC " //16
+					<<"DewT_oC " //17
+					<<"SurfT_oC " //18
+					<<"SoilT_oC " //19
+					<<"Press_Pa " //20
+					<<"RelHum_[] " //21
+					<<"SkyCov_[] "  //22
+					<<"Wind_m/s " //23
+					<<"NetRad_W/m2 " //24
+					<<"ShrtRadIn_W/m2 " //25
+					<<"ShrtRadIn_dir_W/m2 " //26
+					<<"ShrtRadIn_dif_W/m2 " //27
+					<<"ShortAbsbVeg_W/m2 " //28
+					<<"ShortAbsbSoi_W/m2 " //29
+					<<"LngRadIn_W/m2 " //30
+					<<"LngRadOut_W/m2A " //31
+					<<"PotEvp_mm/h " //32
+					<<"ActEvp_mm/h " //33
+					<<"EvpTtrs_mm/h " //34
+					<<"EvpWetCan_mm/h " //35
+					<<"EvpDryCan_mm/h " //36
+					<<"EvpSoil_mm/h " //37
+					<<"Gflux_W/m2 " //38
+					<<"HFlux_W/m2 " //39
+					<<"Lflux_W/m2 " //40
+					<<"NetPrecip_mm/hr " //41
+					<<"LiqWE_cm " //42
+					<<"IceWE_cm "	//43
+					<<"SnWE_cm "	//44
 					<<"SnSub_cm "	//45
 					<<"SnEvap_cm "	//46
 					<<"U_kJ/m2 "  //47
-					<<"RouteWE_cm  " //48
-					<<"SnTemp_C  "	//49
+					<<"RouteWE_cm " //48
+					<<"SnTemp_C "	//49
 					<<"SurfAge_h "	//50
 					<<"DU_kJ/m2/etistep " //51
 					<<"snLHF_kJ/m2/etistep " //52
@@ -375,25 +375,25 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					<<"IntSWEq_cm "		 //60
 					<<"IntSub_cm "		 //61
 					<<"IntSnUnload_cm "	 //62
-					<<"CanStorage_mm  " //63
-					<<"CumIntercept_mm  " //64
-					<<"Interception_mm  " //65
-					<<"Recharge_mm/hr  " //66
-					<<"RunOn_mm  " //67
-					<<"Srf_Hour_mm  " //68
-					<<"Qstrm_m3/s  " //69
-					<<"Hlevel_m" //70
-					<<"CanStorParam_mm  " //71
-					<<"IntercepCoeff_[]  " //72
-					<<"ThroughFall_[]  " //73
-					<<"CanFieldCap_mm  " //74
-					<<"DrainCoeff_mm/hr  " //75
-					<<"DrainExpPar_1/mm  " //76
+					<<"CanStorage_mm " //63
+					<<"CumIntercept_mm " //64
+					<<"Interception_mm " //65
+					<<"Recharge_mm/hr " //66
+					<<"RunOn_mm " //67
+					<<"Srf_Hour_mm " //68
+					<<"Qstrm_m3/s " //69
+					<<"Hlevel_m " //70
+					<<"CanStorParam_mm " //71
+					<<"IntercepCoeff_[] " //72
+					<<"ThroughFall_[] " //73
+					<<"CanFieldCap_mm " //74
+					<<"DrainCoeff_mm/hr " //75
+					<<"DrainExpPar_1/mm " //76
 					<<"LandUseAlb_[] " //77
 					<<"VegHeight_m " //78
-					<<"OptTransmCoeff_[]" //79
-					<<"StomRes_s/m" //80
-					<<"VegFraction_[] " //81
+					<<"OptTransmCoeff_[] " //79
+					<<"StomRes_s/m " //80
+					<<"VegFraction[] " //81
 					<<"LeafAI_[] " //82
 					<<"\n";
 				}
