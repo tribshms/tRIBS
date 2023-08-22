@@ -159,6 +159,7 @@ void tPreProcess::CheckInputFile(tInputFile &infile)
 	// SKY2008Snow from AJR2007
 	IterReadItem(infile, tempVariable,"OPTSNOW");
 	IterReadItem(infile, tempVariable,"MINSNTEMP");
+	IterReadItem(infile, tempVariable,"SNLIQFRAC"); // Added by CJC 2020
 	IterReadItem(infile, tempVariable,"OPTRADSHELT");
 
 
