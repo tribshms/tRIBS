@@ -445,7 +445,7 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
 //
 //		tSnowIntercept::computeSub()
 //
-//    Uses Liston and Sturm (2006) implementation to compute the snow sublimated
+//    Uses timplementation to compute the snow sublimated
 //    from the canopy after the snow has existed in the canopy for more than a
 //    singe time step. All notation is taken from Liston and Sturm (2006).
 //

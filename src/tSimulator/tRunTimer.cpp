@@ -62,7 +62,13 @@ tRunTimer::tRunTimer( tInputFile &infile )
 {
 	int  cum = 0;
 	int tmp[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-	
+
+    if (year%4 ==0 || year%400 == 0) {
+        tmp[2] = 29;
+		cout<<"It is a leap year\n";
+	}
+
+
 	for (int k=0; k < 13; k++) {  // Initialization of arrays
 		cum += tmp[k];
 		days[k] = tmp[k]; 
