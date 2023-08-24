@@ -441,10 +441,6 @@ void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans,
 		if (SnowPack->getEToption() !=0 && Intercept->getIoption() != 0) {
 			if ( timer->getCurrentTime() == met_hour ) {
 
-                if(timer->year == 2004 && timer->month == 1 && timer->day >4 && timer->day <7){
-                    cerr<< "begin debug";
-                }
-
 				SnowPack->callSnowPack(Intercept,1,SnowIntercept);
 			}
 		}
