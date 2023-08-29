@@ -1138,6 +1138,27 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 	    //set other fluxes
         L = H = G = Prec = Utotold = 0.0;
 
+       	//added by XYT2023,liqRoute
+        if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
+              //there is enough water left over
+              if (liqWE != snWE ) {
+                liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC2020
+                liqWE = liqWE - liqRoute;
+                snWE = liqWE + iceWE;
+              }
+              //there is no more pack
+              else {
+                liqRoute = snWE;
+                liqWE = 0.0;
+                iceWE = 0.0;
+                snWE = 0.0;
+              }
+        }
+        if (liqWE < 0) {    // caused by snVap, XYT2023
+                 liqWE = 0;
+                 snWE = iceWE;
+        }
+
         //initialize and record energy balance
         Utot = dUint = iceWE*rhoicekg*cpicekJ*snTempC // Changed to use rhoicekg CJC 2020
 		+ liqWE*rholiqkg*latFreezekJ;

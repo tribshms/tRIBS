@@ -673,7 +673,7 @@ void tFlowNet::initializeTravelTimeOnly()
 void tFlowNet::setMaxTravelTime() 
 {
 	// Update the limit time of simulation added Ara Ko in 2017
-	res->limit = flowboxes =(int)ceil( (timer->RemainingTime(0.0) + maxttimeInitial)/dOtp); 	
+	// res->limit = flowboxes =(int)ceil( (timer->RemainingTime(0.0) + maxttimeInitial)/dOtp); // commented out as limit determines size of read/write to tFlowResults causing restart errors
 	
 	maxttime = dist_hill_max/hillvel + dist_stream_max/streamvel; //SECONDS
 	res->iimax = timer->getResStep(maxttime/(3600.0));
