@@ -3688,9 +3688,9 @@ void tEvapoTrans::readLUGrid(char *gridFile)
 	LUgridParamNames = new char*[numParameters];
 	
 	for (int ct=0;ct<numParameters;ct++) {
-		LUgridParamNames[ct] = new char[10];
+		LUgridParamNames[ct] = new char[kMaxExt];
 		LUgridBaseNames[ct] = new char[kName];
-		LUgridExtNames[ct] = new char[10];
+		LUgridExtNames[ct] = new char[kMaxExt];
 		readFile >> LUgridParamNames[ct];
 
 		if ( (strcmp(LUgridParamNames[ct],"AL")!=0) &&

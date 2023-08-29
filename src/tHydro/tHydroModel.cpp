@@ -2120,10 +2120,6 @@ void tHydroModel::UnSaturatedZone(double dt)
 
 		// The following units are [m^3]
 		Stok += srf*dt*cn->getVArea()/1000.0;
-        if(NwtNew != NwtOld){
-            cout<<"break point"<<endl;
-        }
-
         TotGWchange += (NwtNew-NwtOld)*Ths*cn->getVArea()/(Cos*1000.0);
 		TotMoist += (MuNew-MuOld)*cn->getVArea()/(Cos*1000.0);
 
