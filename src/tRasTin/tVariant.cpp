@@ -50,7 +50,7 @@ void tVariant::setFileNames(char *file, char *ext)
 	for(int ct=0;ct<kName;ct++) {
 		inputName[ct] = file[ct];
 	}
-	for(int dt=0;dt<20;dt++) { 
+	for(int dt=0;dt<kMaxExt;dt++) {
 		extension[dt] = ext[dt]; //TODO: Sanitizer warning Heap-buffer-overflow on address -WR, 2nd thought, maybe because file doesnt exist
 	}
 	return;
