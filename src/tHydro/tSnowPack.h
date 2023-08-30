@@ -86,9 +86,10 @@ public:
   //destructor
   ~tSnowPack();
 
-  //initialization routine
+  //initialization and update routine
   void SetSnowPackVariables(tInputFile &, tHydroModel *);
   void SetSnowVariables(tInputFile &, tHydroModel *);
+  void checkShelter(tCNode *cNode);
 
   //calling functions
   void callSnowPack(tIntercept *, int, tSnowIntercept *);
@@ -119,7 +120,6 @@ public:
   double inShortWaveSn(tCNode *);
   double emmisSn();
   double inLongWaveSn();
-  void SetSunVariablesSn();
   
   //EB function
   void snowEB(int, tCNode *); // AJR2008, SKY2008Snow
@@ -140,7 +140,6 @@ protected:
   double densityAge; //hr
   double rainTemp;
   double ETAge; //min
-
 
   //discretization
   double timeSteph, timeSteps, timeStepm;
@@ -185,19 +184,17 @@ protected:
   double compactParam, rhoSnFreshkg;
   double minSnTemp;
   double snliqfrac; // Added by CJC2020
-
   //output variables
   double snDepth,snDepthm; //snow depths (cm,m)
   double snOnOff;
   double peakSnWE, peakSnWEtemp; //maximum SWE (cm)
   double persMax, persMaxtemp; //time of peristence of pack (hours)
   double inittime, inittimeTemp, peaktime; //time of initial bulk of snow pack and time of peak
-  			      //(absolute time)
-  
   //conversion factors
   double naughttokilo, kilotonaught, cgsRHOtomks, mksRHOtocgs;
   double naughttocm, cmtonaught, ctom, mtoc;
-  
+
+
 };
 
 #endif
