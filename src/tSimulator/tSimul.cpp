@@ -193,7 +193,7 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
 *****************************************************************************/
 void Simulator::simulation_loop(tHydroModel *Moisture, tKinemat *Flow,
 								tEvapoTrans *EvapoTrans, tIntercept *Intercept, 
-								tWaterBalance *Balance, tSnowPack *SnowPack, tSnowIntercept *SnowIntercept, // SKY2008Snow from AJR2007
+								tWaterBalance *Balance, tSnowPack *SnowPack, // SKY2008Snow from AJR2007
 								tInputFile &InFl) // SKY2008Snow
 {
 	Cout<<"\nHydrologic Simulation begins...\n"<<endl;
@@ -229,7 +229,7 @@ void Simulator::simulation_loop(tHydroModel *Moisture, tKinemat *Flow,
 		UpdatePrecipitationInput( rainIn->getoptStorm() );
 
 		// Simulate Interception, ET processes
-		SurfaceHydroProcesses( EvapoTrans, Intercept, SnowPack, SnowIntercept ); // SKY2008Snow from AJR2007
+		SurfaceHydroProcesses( EvapoTrans, Intercept, SnowPack); // SKY2008Snow from AJR2007
 		
 		// Simulate Infiltration, Groundwater processes
 		SubSurfaceHydroProcesses( Moisture );
@@ -387,7 +387,7 @@ void Simulator::UpdatePrecipitationInput(int opt)
 **
 *****************************************************************************/
 void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans, 
-									  tIntercept  *Intercept, tSnowPack *SnowPack, tSnowIntercept *SnowIntercept) // SKY2008Snow from AJR2007
+									  tIntercept  *Intercept, tSnowPack *SnowPack) // SKY2008Snow from AJR2007
 {
 	// Update meteorological and ET/I time
 	get_next_met();
@@ -441,7 +441,7 @@ void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans,
 		if (SnowPack->getEToption() !=0 && Intercept->getIoption() != 0) {
 			if ( timer->getCurrentTime() == met_hour ) {
 
-				SnowPack->callSnowPack(Intercept,1,SnowIntercept);
+				SnowPack->callSnowPack(Intercept,1);
 			}
 		}
 		// 2) INTERCEPTION ON
@@ -456,7 +456,7 @@ void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans,
 		// 3) ET ON
 		if (SnowPack->getEToption() !=0 && Intercept->getIoption() == 0) {
 			if ( timer->getCurrentTime() == met_hour ) {
-				SnowPack->callSnowPack(Intercept,0,SnowIntercept);
+				SnowPack->callSnowPack(Intercept,0);
 			}
 
 		} //evapotrans options
@@ -725,7 +725,7 @@ int Simulator::check_mod_status()
 void Simulator::RunItAgain( tInputFile &InFl, tHydroModel *Moisture, 
 							tKinemat *Flow, tEvapoTrans *EvapoTrans, 
 							tIntercept *Intercept, tWaterBalance *Balance,
-							tPreProcess *PreProcessor, tSnowPack *SnowPack, tSnowIntercept *SnowIntercept) // SKY2008Snow from AJR2007
+							tPreProcess *PreProcessor, tSnowPack *SnowPack) // SKY2008Snow from AJR2007
 { 
 	char wish = 'Z';
 	char keep = 'Z';
@@ -882,7 +882,7 @@ void Simulator::RunItAgain( tInputFile &InFl, tHydroModel *Moisture,
        //SMM 09252008 added parameters
 	
 	// Start simulation
-	simulation_loop( Moisture, Flow, EvapoTrans, Intercept, Balance, SnowPack, SnowIntercept, InFl); // SKY2008Snow from AJR2007
+	simulation_loop( Moisture, Flow, EvapoTrans, Intercept, Balance, SnowPack, InFl); // SKY2008Snow from AJR2007
 	
 	// Finish simulation 
 	end_simulation( Flow );

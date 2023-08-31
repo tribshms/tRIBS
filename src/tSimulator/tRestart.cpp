@@ -32,8 +32,8 @@ tRestart<tSubNode>::tRestart(
 	tRainfall* r,
 	tEvapoTrans* e,
 	tIntercept* i,
-   tSnowPack* s,
-   tSnowIntercept* c)
+   tSnowPack* s
+   )
 {
   timer = t;
   mesh = m;
@@ -44,7 +44,6 @@ tRestart<tSubNode>::tRestart(
   evap = e;
   intercept = i;
   snowpack = s;
-  snowintercept = c;
 }
 
 /*************************************************************************
@@ -70,7 +69,6 @@ void tRestart<tSubNode>::writeRestart(fstream & rStr)
 	// are not saved in the binary Restart files.
 	if (snowpack->getSnowOpt() != 0){
 		snowpack->writeRestart(rStr);
-		snowintercept->writeRestart(rStr); // saving
 	}// Giuseppe DEBUG Restart 2012 - END
 	
 
@@ -99,7 +97,6 @@ void tRestart<tSubNode>::readRestart(fstream & rStr)
 	// with the writeRestart function.
 	if (snowpack->getSnowOpt() != 0){	
 		snowpack->readRestart(rStr);
-		snowintercept->readRestart(rStr);
 	}// Giuseppe DEBUG Restart 2012 - END
 }
 

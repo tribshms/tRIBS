@@ -100,8 +100,6 @@ if(OFF)
             src/tHydro/tHydroModel.h
             src/tHydro/tIntercept.cpp
             src/tHydro/tIntercept.h
-            src/tHydro/tSnowIntercept.cpp
-            src/tHydro/tSnowIntercept.h
             src/tHydro/tSnowPack.cpp
             src/tHydro/tSnowPack.h
             src/tHydro/tWaterBalance.cpp
@@ -224,8 +222,6 @@ else()
             src/tHydro/tHydroModel.h
             src/tHydro/tIntercept.cpp
             src/tHydro/tIntercept.h
-            src/tHydro/tSnowIntercept.cpp
-            src/tHydro/tSnowIntercept.h
             src/tHydro/tSnowPack.cpp
             src/tHydro/tSnowPack.h
             src/tHydro/tWaterBalance.cpp

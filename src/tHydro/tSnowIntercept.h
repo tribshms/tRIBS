@@ -87,11 +87,11 @@ public:
   ~tSnowIntercept();
 
   //initialization routine
-  void SetSnowInterceptVariables();
+  void SetSnowInterceptVariables();// redundant to tSnowPack
   void SetSnowVariables(tInputFile &);
 
   //calling function
-  void callSnowIntercept(tCNode *, tIntercept *);
+
   
   //general physical functions
   void computeSub();
@@ -102,21 +102,7 @@ public:
   double KtoC(double);
   
   //EB functions -- basic calculations
-  double latentHFCalc(double);
-  double snowFracCalc();
-  double latHeatVapCalc();
-  double latHeatFreezeCalc();
-  double latHeatSubCalc();
-  double heatCapAirCalc();
-  double heatCapSolCalc();
-  double heatCapLiqCalc();
-  double inShortWaveSn();
-
-  //EB function
-  void snowEB(int);
-  
-  //communication functions
-  int getSnowOpt();
+  double inShortWaveSn(); // not quite redundant,but looks pretty similar, I think I can update the version in tSnowPack to behave accordingly
   
   // Restart functions
   void writeRestart(fstream &) const;
