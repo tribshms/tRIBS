@@ -312,108 +312,89 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 				CreateAndOpenFile( &pixinfo[i], pixelnode );
 				
 				if (simCtrl->Header_label == 'Y') {
-					pixinfo[i]<<"1-NodeID  "
-					<<"2-Time,hr  "
-					<<"3-Nwt,mm  "
-					<<"4-Nf,mm  "
-					<<"5-Nt,mm  "
-					<<"6-Mu,mm  "
-					<<"7-Mi,mm  "
-					<<"8-QpOut,mm/h  "
-					<<"9-QpIn,mm/h  "
-					<<"10-Trnsm,m2/h  "
-					<<"11-GWflx,m3/h  "
-					<<"12-Srf,mm  "
-					<<"13-Rain,mm/h  "
-					//<<"14-SoilMoist,d/l " 
-					<<"14-SoilMoist,[]  " // SKYnGM2008LU
-					//<<"15-RootMoist,d/l  " 
-					<<"15-RootMoist,[]  " // SKYnGM2008LU
-					<<"16-AirT,oC  "
-					<<"17-DewT,oC  "
-					<<"18-SurfT,oC  "
-					<<"19-SoilT,oC  "
-					<<"20-Press,Pa  "
-					//<<"21-RelHum,d/l  " 
-					<<"21-RelHum,[]  " // SKYnGM2008LU
-					//<<"22-SkyCov,d/l  "
-					<<"22-SkyCov,[]  " // SKYnGM2008LU
-					<<"23-Wind,m/s  "
-					<<"24-NetRad,W/m2  "
-					<<"25-ShrtRadIn,W/m2  "
-					<<"26-ShrtRadIn_dir,W/m2  "
-					<<"27-ShrtRadIn_dif,W/m2  "
-					<<"28-ShortAbsbVeg,W/m2  "
-					<<"29-ShortAbsbSoi,W/m2  "
-					<<"30-LngRadIn,W/m2  "
-					<<"31-LngRadOut,W/m2,  "
-					<<"32-PotEvp,mm/h  "
-					<<"33-ActEvp,mm/h  "
-					<<"34-EvpTtrs,mm/h  "
-					<<"35-EvpWetCan,mm/h  "
-					<<"36-EvpDryCan,mm/h  "
-					<<"37-EvpSoil,mm/h  "
-					<<"38-Gflux,W/m2  "
-					<<"39-HFlux,W/m2  "
-					<<"40-Lflux,W/m2  "
-					<<"41-NetPrecip,mm/hr  "
-					
-
-					// SKY2008Snow from AJR2007
-					<<"42-LiqWE,cm  "		//added by AJR 2007 @ NMT
-					<<"43-IceWE,cm  "		//added by AJR 2007 @ NMT
-					<<"44-SnWE,cm  "		//added by AJR 2007 @ NMT
-					<<"45-SnSub,cm "		//added by CJC2020
-					<<"46-SnEvap,cm "		//added by CJC2020
-					<<"47-U,kJ/m2 "		//added by AJR 2007 @ NMT
-					<<"48-RouteWE,cm  "		//added by AJR 2007 @ NMT
-					<<"49-SnTemp,C  "		//added by AJR 2007 @ NMT
-					<<"50-SurfAge,h "		//added by AJR 2007 @ NMT
-					<<"51-DU,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"52-snLHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"53-snSHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"54-snGHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"55-snPHF,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"56-snRLout,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"57-snRLin,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"58-snRSin,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"59-Uerror,kJ/m2/etistep "		//added by AJR 2007 @ NMT
-					<<"60-IntSWEq,cm "		//added by AJR 2007 @ NMT
-					<<"61-IntSub,cm "		//added by AJR 2007 @ NMT
-					<<"62-IntSnUnload,cm "		//added by AJR 2007 @ NMT
-
-					// SKY2008Snow
-					<<"63-CanStorage,mm  "
-					<<"64-CumIntercept,mm  "
-					<<"65-Interception,mm  "
-					<<"66-Recharge,mm/hr  "
-					<<"67-RunOn,mm  "
-					<<"68-Srf_Hour,mm  "
-					<<"69-Qstrm,m3/s  "
-					<<"70-Hlevel,m"
-					//<<"42-CanStorg,mm  "
-					//<<"43-CumIntercept,mm  "
-					//<<"44-Intercept,mm  "
-					//<<"45-Recharge,mm/hr  "
-					//<<"46-Runon,mm  "
-					//<<"47-Srf_Hour,mm  "
-					//<<"48-Qstrm,m3/s  "
-					//<<"49-Hlev,m"
-
-					// SKYnGM2008LU
-					<<"71-CanStorParam,mm  "
-					<<"72-IntercepCoeff,[]  "
-					<<"73-ThroughFall,[]  "
-					<<"74-CanFieldCap,mm  "
-					<<"75-DrainCoeff,mm/hr  "
-					<<"76-DrainExpPar,1/mm  "
-					<<"77-LandUseAlb,[] "
-					<<"78-VegHeight,m "
-					<<"79-OptTransmCoeff,[]"
-					<<"80-StomRes,s/m"
-					<<"81-VegFraction,[] "
-					<<"82-LeafAI,[] "
-
+                    // first row name
+					pixinfo[i]<<"NodeID "//1
+					<<"Time_hr " //2
+					<<"Nwt_mm " //3
+					<<"Nf_mm " //4
+					<<"Nt_mm " //5
+					<<"Mu_mm " //6
+					<<"Mi_mm " //7
+					<<"QpOut_mm/h " //8
+					<<"QpIn_mm/h " //9
+					<<"Trnsm_m2/h " //10
+					<<"GWflx_m3/h " //11
+					<<"Srf_mm " //12
+					<<"Rain_mm/h " //13
+					<<"SoilMoist_[] " //14
+					<<"RootMoist_[] "  //15
+					<<"AirT_oC " //16
+					<<"DewT_oC " //17
+					<<"SurfT_oC " //18
+					<<"SoilT_oC " //19
+					<<"Press_Pa " //20
+					<<"RelHum_[] " //21
+					<<"SkyCov_[] "  //22
+					<<"Wind_m/s " //23
+					<<"NetRad_W/m2 " //24
+					<<"ShrtRadIn_W/m2 " //25
+					<<"ShrtRadIn_dir_W/m2 " //26
+					<<"ShrtRadIn_dif_W/m2 " //27
+					<<"ShortAbsbVeg_W/m2 " //28
+					<<"ShortAbsbSoi_W/m2 " //29
+					<<"LngRadIn_W/m2 " //30
+					<<"LngRadOut_W/m2A " //31
+					<<"PotEvp_mm/h " //32
+					<<"ActEvp_mm/h " //33
+					<<"EvpTtrs_mm/h " //34
+					<<"EvpWetCan_mm/h " //35
+					<<"EvpDryCan_mm/h " //36
+					<<"EvpSoil_mm/h " //37
+					<<"Gflux_W/m2 " //38
+					<<"HFlux_W/m2 " //39
+					<<"Lflux_W/m2 " //40
+					<<"NetPrecip_mm/hr " //41
+					<<"LiqWE_cm " //42
+					<<"IceWE_cm "	//43
+					<<"SnWE_cm "	//44
+					<<"SnSub_cm "	//45
+					<<"SnEvap_cm "	//46
+					<<"U_kJ/m2 "  //47
+					<<"RouteWE_cm " //48
+					<<"SnTemp_C "	//49
+					<<"SurfAge_h "	//50
+					<<"DU_kJ/m2/etistep " //51
+					<<"snLHF_kJ/m2/etistep " //52
+					<<"snSHF_kJ/m2/etistep " //53
+					<<"snGHF_kJ/m2/etistep " //54
+					<<"snPHF_kJ/m2/etistep " //55
+					<<"snRLout_kJ/m2/etistep " //56
+					<<"snRLin_kJ/m2/etistep " //57
+					<<"snRSin_kJ/m2/etistep " //58
+					<<"Uerror_kJ/m2/etistep " //59
+					<<"IntSWEq_cm "		 //60
+					<<"IntSub_cm "		 //61
+					<<"IntSnUnload_cm "	 //62
+					<<"CanStorage_mm " //63
+					<<"CumIntercept_mm " //64
+					<<"Interception_mm " //65
+					<<"Recharge_mm/hr " //66
+					<<"RunOn_mm " //67
+					<<"Srf_Hour_mm " //68
+					<<"Qstrm_m3/s " //69
+					<<"Hlevel_m " //70
+					<<"CanStorParam_mm " //71
+					<<"IntercepCoeff_[] " //72
+					<<"ThroughFall_[] " //73
+					<<"CanFieldCap_mm " //74
+					<<"DrainCoeff_mm/hr " //75
+					<<"DrainExpPar_1/mm " //76
+					<<"LandUseAlb_[] " //77
+					<<"VegHeight_m " //78
+					<<"OptTransmCoeff_[] " //79
+					<<"StomRes_s/m " //80
+					<<"VegFraction[] " //81
+					<<"LeafAI_[] " //82
 					<<"\n";
 				}
 				pixinfo[i].setf( ios::right, ios::adjustfield );
