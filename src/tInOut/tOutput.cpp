@@ -1886,7 +1886,7 @@ void tCOutput<tSubNode>::CreateAndOpenOutlet()
        // Check if outlet node is on this processor
        if ( (Outlets[i] != NULL) && (OutletList[i] > 0) ) {
 #else
-				if (OutletList[i] > 0) {
+				if (OutletList[i] >= 0) { //WR added = for single element case, where
 #endif
 					snprintf(nodeNum, sizeof(nodeNum),"_%d", OutletList[i]);
 					strcpy(pixelnode, nodeNum);
@@ -1931,7 +1931,7 @@ void tCOutput<tSubNode>::SetInteriorOutlet()
 	tMeshListIter<tSubNode> niter( this->g->getNodeList() );
 	if ( OutletList ) {
 		for (int i=0; i < numOutlets; i++) {
-			if (OutletList[i] > 0) {
+			if (OutletList[i] >= 0) { //WR added in = for single element case where node ID = 0
 #ifdef PARALLEL_TRIBS
            // Each processor creates/writes outlet files for its points
            for (cnn=niter.FirstP(); niter.IsActive(); cnn=niter.NextP() ) {

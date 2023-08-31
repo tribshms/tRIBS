@@ -292,7 +292,6 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag, tSnowIntercept *Sn
         cNode->setStomRes(landPtr->getLandProp(10));
         cNode->setVegFraction(landPtr->getLandProp(11));
         cNode->setLeafAI(landPtr->getLandProp(12));
-        cNode = nodeIter.NextP();
 
         if (luOption == 1) {
             if ( luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values

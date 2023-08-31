@@ -5403,6 +5403,7 @@ void tMesh<tSubNode>::writeRestart(fstream & rStr)
 /***************************************************************************
 **
 ** tMesh::readRestart() Function
+** For each node restart state is read in
 **
 ***************************************************************************/
 
