@@ -87,8 +87,8 @@ public:
   ~tSnowPack();
 
   //initialization and update routine
-  void SetSnowPackVariables(tInputFile &, tHydroModel *);
-  void SetSnowVariables(tInputFile &, tHydroModel *);
+  void SetSnowPackVariables(tInputFile &);
+  void SetSnowVariables(tInputFile &);
   void checkShelter(tCNode *cNode);
 
   //calling functions
@@ -108,18 +108,11 @@ public:
   double sensibleHFCalc(double);
   double snowFracCalc();
   double precipitationHFCalc();
-  double latHeatVapCalc();
-  double latHeatFreezeCalc();
-  double latHeatSubCalc();
-  double heatCapAirCalc();
-  double heatCapSolCalc();
-  double heatCapLiqCalc();
-  double vapPressSnowSurfCalc();
   double agingAlbedo();
   double resFactCalc();
   double inShortWaveSn(tCNode *);
   double emmisSn();
-  double inLongWaveSn();
+
   
   //EB function
   void snowEB(int, tCNode *); // AJR2008, SKY2008Snow

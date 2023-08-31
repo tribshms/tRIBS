@@ -41,8 +41,8 @@ tSnowIntercept::tSnowIntercept(SimulationControl *simCtrPtr, tMesh<tCNode> *grid
 
 {
 
-  SetSnowVariables(inFile, hydro);
-  SetSnowInterceptVariables(inFile, hydro);  
+  SetSnowVariables(inFile);
+  SetSnowInterceptVariables();
 
 }
 
@@ -66,7 +66,7 @@ tSnowIntercept::~tSnowIntercept() {
 //
 //------------------------------------------------------------------
 
-void tSnowIntercept::SetSnowInterceptVariables(tInputFile &infile, tHydroModel *hydro)
+void tSnowIntercept::SetSnowInterceptVariables()
 {
 
   Qcs = Ce = I = psiS = 0.0;
@@ -84,8 +84,6 @@ void tSnowIntercept::SetSnowInterceptVariables(tInputFile &infile, tHydroModel *
   beta = 0.9;
   acoefficient = 0.0;
   Lm = 0.0;
-
-  return;
 }
 //---------------------------------------------------------------------------
 //
@@ -97,7 +95,7 @@ void tSnowIntercept::SetSnowInterceptVariables(tInputFile &infile, tHydroModel *
 //
 //---------------------------------------------------------------------------
 
-void tSnowIntercept::SetSnowVariables(tInputFile &infile, tHydroModel *hydro)
+void tSnowIntercept::SetSnowVariables(tInputFile &infile)
 {
 
   //options	
@@ -152,8 +150,7 @@ void tSnowIntercept::SetSnowVariables(tInputFile &infile, tHydroModel *hydro)
   ctom = 10;
   mtoc = 0.1;
   htos = 3600;
-  
-  return;
+
 }
 
 /****************************************************************************
@@ -425,7 +422,6 @@ void tSnowIntercept::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
       node->setPotEvap(0.0);
 
   }//end -- snow exists
-  count++;
 
   return;
 }
@@ -646,159 +642,6 @@ double tSnowIntercept::latHeatVapCalc()
   return lhvap;
 }
 
-//-----------------------------------------------------------------------------
-//
-//			tSnowIntercept::latHeatFreezeCalc()
-//
-//	Calculates the latent heat of freezing. Can be made more specific
-//	if need in later model implementations.
-//			
-//
-//-----------------------------------------------------------------------------
-
-double tSnowIntercept::latHeatFreezeCalc()
-{
-
-  double lhfreeze(334);// kJ/kg
-
-  return lhfreeze;
-}
-
-//------------------------------------------------------------------------------
-//
-//		      tSnowIntercept::latHeatSubCalc()
-//
-//	  Calculates the latent heat of sublimation. Can be made more specific
-//	  if needed in later model implementations.
-//
-//------------------------------------------------------------------------------
-
-double tSnowIntercept::latHeatSubCalc()
-{
-
-  double lhsub(2470 + 334);// kJ/kg
-
-  return lhsub;
-}
-
-//------------------------------------------------------------------------------
-//
-//			tSnowIntercept::heatCapVapCalc()
-//
-//	  Calculates the heat capacity of water vapor. Can be made more specific
-//	  if needed in later implementations.
-//
-//------------------------------------------------------------------------------
-
-double tSnowIntercept::heatCapAirCalc()
-{
-  double heatcapvap(1.01); //kJ/(K*kg)
-
-  return heatcapvap;
-}
-
-//-------------------------------------------------------------------------------
-//
-//			  tSnowIntercept::heatCapSolCalc()
-//	
-//	Calculates the heat capacity of solid water. Can be made more specific
-//	if needed in later implementations.
-//
-//-------------------------------------------------------------------------------
-
-double tSnowIntercept::heatCapSolCalc()
-{
-  double heatcapsol(2.1); //kJ/(K*kg)
-
-  return heatcapsol;
-}
-
-//--------------------------------------------------------------------------------
-//
-//			  tSnowIntercept::heatCapLiqCalc()
-//			  
-//	Calculates the heat capacity of liquid water. Can be made more specific if
-//	needed in later implementations.
-//
-//--------------------------------------------------------------------------------
-
-double tSnowIntercept::heatCapLiqCalc()
-{
-  double heatcapliq(4.19); // kJ/(K*kg)
-
-  return heatcapliq;
-}
-
-//-------------------------------------------------------------------------
-//
-// tSnowIntercept::inShortWaveSn() Function
-//
-//
-//  This code is a modified version of tEvapoTrans::inShortWave() and
-//  tSnowPack::inShortWaveSn() functions. It does not adjust for overlying
-//  vegetation.
-//
-//  It does, however, account for the different sheltering options and the
-//  change in albedo in a canopy covered in snow.
-//
-//  
-//
-// Calculate the Clear Sky Incoming Direct Solar Radiation Intensity Ic 
-//                                               for horizontal surface
-//       Ic = Io*t^(1/sin(alpha))           Wilson and Gallant (Eq 4.7)
-//     Transmission coefficient (t)
-//        t = 0.65 + 0.00008*Z      Z = node elevation (meters) (Eq 4.8)
-//     
-//     Adjustment for Circumsolar Diffuse Radiation
-//       Ic = Ic + Id*CIRC                    W&G Eq 4.17
-//
-// Calculate the Clear Sky Incoming Diffusive Radiation Intensity Id   
-//                                            for horizontal surface 
-//       Id = (0.271 - 0.294*t^(1/sin(alpha)))*Io
-//     Adjustment for Circumsolar Diffuse Radiation
-//       Id = Id - Id*CIRC                    W&G Eq 4.18
-//       CIRC = {.07, .10, .12, .14, .16, .19, .23, .20, .16, .12, .08, .07}
-//           for each month Jan - Dec.
-// 
-// Calculate the Direct Solar Radiation on Sloping Surface
-//
-//       Ics = Ic*cosi                        W&G Eq 4.20 - 4.24
-//       cosi = A + B*cos(tau) + C*sin(tau)
-//       A = sin(del)*sin(phi)*cos(beta) + sin(beta)*cos(asp)*cos(phi)
-//       B = cos(del)*(cos(phi)*cos(beta) - sin(phi)*cos(asp)*sin(beta))
-//       C = sin(beta)*cos(del)*sin(asp)
-//
-//       where beta = slope angle (radians), asp = aspect angle (radians)
-//
-// Calculate the Diffuse Solar Radiation on Sloping Surface
-//
-//       Ids = Id * v
-//       v = sky view fraction ~ cos2(beta/2)         Moore et al (1993)
-//
-// Calculate Reflection Radiation Component
-//
-//       Ir = (Ic + Id)*(1 - v)*A      A = albedo     W&G Eq 4.26
-//
-// Total Incoming Solar Radiation on Sloping Surface (Clear Sky)
-//
-//       Ith = (Ics + Ids) + Ir
-//
-// Calculate the Cloudy Sky Incoming Solar Radiation Intensity Is
-//       Is = (1-0.65*N^2)*(Ics + Ids) + Ir                              2.29
-//     Fractional Sky Cover N 
-//          N = skycover/10;
-//
-// Calculate the Effect of Vegetation Absorption on Incoming Solar Radiation
-//       Iv = Kt*Is;
-//     Optical Transmission Coefficient of Surface/Vegetation Kt
-//     Landuse-derived coefficient coeffKt    Range (0-1)  bareground = 1;
-//
-// Calculate the Albedo Effect on Incoming Solar Radiation
-//       Isw = Iv(1-A)                                                   2.32
-//     Albedo Coefficient of Surface/Vegetation
-//     Landuse-derived coefficient coeffA     Range (0-1) See Bras(1990) p.37
-//
-//----------------------------------------------------------------------------
 
 double tSnowIntercept::inShortWaveSn()
 {

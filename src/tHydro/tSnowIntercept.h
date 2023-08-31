@@ -87,8 +87,8 @@ public:
   ~tSnowIntercept();
 
   //initialization routine
-  void SetSnowInterceptVariables(tInputFile &, tHydroModel *);
-  void SetSnowVariables(tInputFile &, tHydroModel *);  
+  void SetSnowInterceptVariables();
+  void SetSnowVariables(tInputFile &);
 
   //calling function
   void callSnowIntercept(tCNode *, tIntercept *);

@@ -48,8 +48,8 @@ tSnowPack::tSnowPack(SimulationControl *simCtrPtr, tMesh<tCNode> *gridRef,
     simCtrl = simCtrPtr;
 
     //set variables
-    SetSnowVariables(infile, hydro);
-    SetSnowPackVariables(infile, hydro);
+    SetSnowVariables(infile);
+    SetSnowPackVariables(infile);
 
 }
 
@@ -66,7 +66,7 @@ tSnowPack::~tSnowPack() {
 //
 //---------------------------------------------------------------------------
 
-void tSnowPack::SetSnowPackVariables(tInputFile &infile, tHydroModel *hydro) {
+void tSnowPack::SetSnowPackVariables(tInputFile &infile) {
 
     //parameters
     minSnTemp = infile.ReadItem(minSnTemp, "MINSNTEMP");
@@ -78,7 +78,6 @@ void tSnowPack::SetSnowPackVariables(tInputFile &infile, tHydroModel *hydro) {
     rhoSnFreshkg = 100;
     snOnOff = 0.0;
 
-    return;
 }
 
 
@@ -92,7 +91,7 @@ void tSnowPack::SetSnowPackVariables(tInputFile &infile, tHydroModel *hydro) {
 //
 //---------------------------------------------------------------------------
 
-void tSnowPack::SetSnowVariables(tInputFile &infile, tHydroModel *hydro) {
+void tSnowPack::SetSnowVariables(tInputFile &infile) {
 
     //time steps
     timeStepm = infile.ReadItem(timeStepm, "METSTEP");
@@ -152,9 +151,6 @@ void tSnowPack::SetSnowVariables(tInputFile &infile, tHydroModel *hydro) {
     ctom = 10;
     mtoc = 0.1;
 
-    //canopy conditions
-
-    return;
 }
 
 //---------------------------------------------------------------------------
@@ -300,7 +296,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag, tSnowIntercept *Sn
         }
 
         // Elapsed MET steps from the beginning, used for averaging dynamic LU grid values below over time for integ. output
-        double te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
+        auto te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
         integratedLUVars(cNode, te);
 
         //Get NodeID
@@ -777,8 +773,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag, tSnowIntercept *Sn
             weatherSimul->OutputHydrometVars();
         }
     }
-    return;
-}
+    }
 
 /****************************************************************************
 **
@@ -839,8 +834,6 @@ void tSnowPack::getFrNodeSnP(tCNode *node) {
     inittime = node->getInitPackTime();
     inittimeTemp = node->getInitPackTimeTemp();
     peaktime = node->getPeakPackTime();
-
-    return;
 
 }
 
@@ -929,8 +922,6 @@ void tSnowPack::setToNodeSnP(tCNode *node) {
     //reset fluxes to zero
     L = H = Prec = G = RLin = RLout = RSin = dUint = 0.0;
     liqRoute = 0.0;
-
-    return;
 }
 
 
@@ -1070,7 +1061,7 @@ double tSnowPack::snowFracCalc() {
 //------------------------------------------------------------------------------
 
 double tSnowPack::precipitationHFCalc() {
-    double phf;
+    double phf = 0;
     double frac;
 
     //  frac = snowFracCalc();
@@ -1088,131 +1079,6 @@ double tSnowPack::precipitationHFCalc() {
     }
 
     return phf;
-}
-
-
-
-//-----------------------------------------------------------------------------
-//
-//			    tSnowPack::latHeatVapCalc()
-//
-//	This function returns the latent heat of the vaporization in kJ/kg. It 
-//	was constructed in order to ease incorporation of more precise functional
-//	values of the latent heat of vaporization in a multilayered model.
-//
-//-----------------------------------------------------------------------------
-
-double tSnowPack::latHeatVapCalc() {
-
-    double lhvap(2470);
-
-    return lhvap;
-}
-
-//-----------------------------------------------------------------------------
-//
-//			    tSnowPack::latHeatFreezeCalc()
-//
-//	This function returns the latent heat of the freezing in kJ/kg. It 
-//	was constructed in order to ease incorporation of more precise functional
-//	values of the latent heat of vaporization in a multilayered model.
-//	
-//-----------------------------------------------------------------------------
-
-double tSnowPack::latHeatFreezeCalc() {
-
-    double lhfreeze(334);
-
-    return lhfreeze;
-}
-
-//------------------------------------------------------------------------------
-//
-//			      tSnowPack::latHeatSubCalc()
-//
-//
-//	This function returns the latent heat of the sublimation in kJ/kg. It 
-//	was constructed in order to ease incorporation of more precise functional
-//	values of the latent heat of vaporization in a multilayered model.
-//	
-//------------------------------------------------------------------------------
-
-double tSnowPack::latHeatSubCalc() {
-
-    double lhsub(2470 + 334);
-
-    return lhsub;
-}
-
-//------------------------------------------------------------------------------
-//
-//			    tSnowPack::heatCapVapCalc()
-//
-//	Returns the heat capacity of water vapor in kJ/kg. It was constructed
-//	in order to allow easy incorporation of more precise values into a 
-//	multilayered model.
-//
-//------------------------------------------------------------------------------
-
-double tSnowPack::heatCapAirCalc() {
-    double heatcapvap(1.01);
-
-    return heatcapvap;
-}
-
-//-------------------------------------------------------------------------------
-//
-//			      tSnowPack::heatCapSolCalc()
-//
-//	Returns the heat capacity of solid water in kJ/kg. It was constructed
-//	in order to allow easy incorporation of more precise values into a 
-//	multilayered model.
-//
-//-------------------------------------------------------------------------------
-
-double tSnowPack::heatCapSolCalc() {
-    double heatcapsol(2.1);
-
-    return heatcapsol;
-}
-
-//--------------------------------------------------------------------------------
-//
-//			      tSnowPack::heatCapLiqCalc()
-//			      
-//
-//	Returns the heat capacity of liquid water in kJ/kg. It was constructed
-//	in order to allow easy incorporation of more precise values into a 
-//	multilayered model.
-//
-//--------------------------------------------------------------------------------
-
-double tSnowPack::heatCapLiqCalc() {
-    double heatcapliq(4.19);
-
-    return heatcapliq;
-}
-
-//---------------------------------------------------------------------------------
-//
-//			    tSnowPack::vapPressSnowSurfCalc()
-//
-//	Returns the vapor pressure at the snow surface from the Clausisu-Clayperyon (sp?)
-//	relationship. This assumes that the air is saturated at the snow surface.
-//
-//						    References: Dingman (2002)
-//								Wigmosta et al (1994)
-//								Anderson (1976)
-//								    
-//---------------------------------------------------------------------------------
-
-double tSnowPack::vapPressSnowSurfCalc() {
-    double vpresssnowsurf(0.0);
-
-    // From Bras (1990)
-    vpresssnowsurf = 6.112 * exp((17.67 * snTempC) / (snTempC + 243.5));
-
-    return vpresssnowsurf;
 }
 
 //-----------------------------------------------------------------------------------
@@ -1381,7 +1247,7 @@ double tSnowPack::resFactCalc() {
 
 double tSnowPack::inShortWaveSn(tCNode *cNode) {
     double Is, N, Iv, Isw, Ir;
-    double v, t, cosi, scover;
+    double v, cosi, scover;
     double RadGlobClr;
 
     //Remaining variables in DirectDiffuse from v3 -- AJR2008, SKY2008Snow
@@ -1575,64 +1441,6 @@ double tSnowPack::emmisSn() {
     return emiss;
 }
 
-//-----------------------------------------------------------------------------
-//
-//			      tSnowPack::inLongWaveSn() 
-//
-// Function based on gray-body (Bras(1990) p44)
-//
-//        Rlin(t) = K(t)*Ea(t)*S*T(t)^4   (J/(m^2*s)) 
-//
-//        S      Stefan-Boltzmann Constant = 5.67e-8  J/(s*m^2*K^4)
-//        K(t)   Cloud cover coefficient K(t) = (1+0.17*N^2) []
-//        N(t)   Sky Cover/10
-//        Ea(t)  Atmospheric Thermal Emissivity  Idso(1981)
-//               Ea(t) = 0.74 + 0.0049*e(t)  []
-//        T(t)   Air Temperature (K)  
-//
-// Assigns corrected SkyCover 
-//
-// This function was constructed when we were focusing on the controls of
-// snow in canopy. Here, we could correct for the effect of 0 C temperatures
-// in the canopy compared more variable ambient temperature. B/c of problems
-// with the admittedly simple implementation, I have choosen not to 
-// incorporate those physics.
-//
-//    Rinehart 2007 @ New Mexico Tech
-//    
-//---------------------------------------------------------------------------
-
-double tSnowPack::inLongWaveSn() {
-    double sigma, kCloud, airTempK, Ea, Rlin, scover, N;
-    double v0;
-
-    if (shelterOption < 3)
-        v0 = shelterFactorGlobal;
-    else
-        v0 = 1;
-
-    sigma = 5.67e-8;
-    if (fabs(skyCover - 9999.99) < 1e-3) {
-        skyCover = compSkyCover();
-        scover = skyCover;
-    } else
-        scover = skyCover;
-
-    skyCoverC = scover;
-
-    N = scover / 10.0;
-    kCloud = 1 + 0.17 * pow(N, 2);
-    airTempK = airTemp + 273.15;
-    Ea = 0.74 + 0.0049 * vaporPress();
-    if (canWE <= 1e-3) // where we would account for no-snow in canopy
-        Rlin = v0 * kCloud * Ea * sigma * pow(airTempK, 4);
-    else // account for snow in canopy
-        Rlin = v0 *
-               ((1 - coeffV) * kCloud * Ea * sigma * pow(airTempK, 4) + coeffV * emmisSn() * sigma * pow(273.15, 4));
-
-    return Rlin;
-}
-
 /************************************************************************************
 **
 **			tSnowPack -- Energy Balance Functions 
@@ -1716,7 +1524,6 @@ void tSnowPack::snowEB(int nodeID, tCNode *node) {
 
     //find new energy state of snow
     Utot += dUint;
-    return;
 }
 
 /*****************************************************************************
@@ -1985,7 +1792,7 @@ void tSnowPack::readRestart(fstream &rStr) {
 
 void tSnowPack::checkShelter(tCNode *cNode) {
     if ((shelterOption > 0) && (shelterOption < 4)) {//CHANGED 2008
-        int tempIndex = 0;
+        int tempIndex;
         for (tempIndex = 0; tempIndex < 16; tempIndex++) {
             switch (tempIndex) {
                 case 0:
