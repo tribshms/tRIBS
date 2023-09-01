@@ -94,7 +94,7 @@ public:
 
   //calling functions
   void callSnowPack(tIntercept *, int);
-  void callSnowIntercept(tCNode *, tIntercept *);
+  void callSnowIntercept(tCNode *, tIntercept *,int count);
 
   //initialization, interact w/ tCNode
   void getFrNodeSnP(tCNode *);

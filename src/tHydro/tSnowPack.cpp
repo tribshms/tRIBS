@@ -378,9 +378,6 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
             // Following block of code mirrors callEvapoPotential and callEvapoTrans in tEvapoTrans as no snow occurs at any
             // level of the system: i.e. snowpack, canopy, or snowing. —refactored by WR 6/21/23
 
-            Tso = cNode->getSurfTemp() + 273.15;
-            Tlo = cNode->getSoilTemp() + 273.15;
-
             //Calculate the Potential and Actual Evaporation
             if (evapotransOption == 1) {
                 EvapPenmanMonteith(cNode); // SKY2008Snow
@@ -430,7 +427,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
 
             // Implement interception schemes for snow, refactored WR 6/21/23
             if (Ioption && (Intercept->IsThereCanopy(cNode))) {
-                callSnowIntercept(cNode, Intercept);
+                callSnowIntercept(cNode, Intercept,count);
                 snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept() units in cm
                 snCanWE = cNode->getIntSWE();//units in cm
             } else {
@@ -606,7 +603,6 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
 
                 //snowEB
                 ETAge = 0.0;
-
                 L = latentHFCalc(resFactCalc());
                 Prec = precipitationHFCalc();
 
@@ -791,12 +787,10 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
 //
 //---------------------------------------------------------------------------
 
-void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel)
+void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int count)
 {
     double CanStorage, ctos, evapWetCanopy;
     double subFrac, unlFrac, precip, Isnow, throughfall;// SKY2008Snow, AJR2008
-    int count;
-    count = 0;
     CanStorage = node->getCanStorage();
 
     //set meteorolgical conditions
