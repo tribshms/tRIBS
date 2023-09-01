@@ -1127,8 +1127,15 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		evapDryCanopy *= coeffV;
 		
 		// Evaporation from Bare Soil
+
+		if(cNode->getBedrockDepth() <= 0) //TODO: Consider scenario where this is true--but coeffV ~=0, catch and end run? Or explicitly let user know they're simulating something that is not resolved by the model
+        {
+            evapSoil = 0;
+        }
+        else{
 		evapSoil = (1-coeffV)*(actEvaporation);
-		
+        }
+
 		// Total Evapotranspiration
 		evapoTranspiration = evapWetCanopy + evapDryCanopy + evapSoil;
 		
