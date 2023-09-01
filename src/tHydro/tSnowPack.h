@@ -149,7 +149,6 @@ protected:
   double canWE; //cm
   double liqRoute; //cm
   double liqWEm, iceWEm, snWEm; //m
-  double liqRoutem; //m
   double Utot, Usn, Uwat, Utotold; //internal energy (kJ/m^2), set to 0 at T=0 C
   double liqWatCont; // degree of saturation
   double liqTempC, iceTempC, snTempC; //Celsius

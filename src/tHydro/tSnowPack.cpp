@@ -115,6 +115,7 @@ void tSnowPack::SetSnowVariables(tInputFile &infile) {
     crustAge = 0.0;
     albedo = 0.88;
     canWE = 0.0;
+    Iold = Utotold = 0;
 
     //fluxes
     H = L = G = Prec = Rn = 0.0;
@@ -122,6 +123,8 @@ void tSnowPack::SetSnowVariables(tInputFile &infile) {
     snPrecm = liqPrecm = 0.0;
     snPrecmm = liqPrecmm = 0.0;
     vapPressSmb = vapPresskSPa = 0.0;
+    snSub = snEvap = liqRoute = 0.0;
+    RSin = 0;
 
     //density
     rholiqcgs = 1.0;
@@ -426,7 +429,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
         {
 
             // Implement interception schemes for snow, refactored WR 6/21/23
-            if (Ioption && (Intercept->IsThereCanopy(cNode))) {
+            if (Ioption && coeffV>0) {
                 callSnowIntercept(cNode, Intercept,count);
                 snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept() units in cm
                 snCanWE = cNode->getIntSWE();//units in cm
@@ -789,9 +792,10 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
 
 void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int count)
 {
-    double CanStorage, ctos, evapWetCanopy;
+    double CanStorage, ctos, evapWetCanopy, can_flx;
     double subFrac, unlFrac, precip, Isnow, throughfall;// SKY2008Snow, AJR2008
     CanStorage = node->getCanStorage();
+    can_flx = 0;
 
     //set meteorolgical conditions
     rHumidity = node->getRelHumid();
@@ -923,6 +927,14 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
             Lm += I*unlFrac;
             I = 0.0;
         }
+
+//        // Check for numerical errors: absorb the imbalance
+//        can_flx = precip - Qcs - (Iold-I) - throughfall;
+//        if (precip) {
+//            if (fabs(can_flx)/precip*100.0 > 0.5)
+//                throughfall += can_flx;
+//        }
+
 
         // SKY2008Snow based on AJR2008's recommendation ends here
         //set adjusted fluxes and states to node
@@ -1962,7 +1974,6 @@ void tSnowPack::writeRestart(fstream &rStr) const {
     BinaryWrite(rStr, liqWEm);
     BinaryWrite(rStr, iceWEm);
     BinaryWrite(rStr, snWEm);
-    BinaryWrite(rStr, liqRoutem);
     BinaryWrite(rStr, Utot);
     BinaryWrite(rStr, Usn);
     BinaryWrite(rStr, Uwat);
@@ -2100,7 +2111,6 @@ void tSnowPack::readRestart(fstream &rStr) {
     BinaryRead(rStr, liqWEm);
     BinaryRead(rStr, iceWEm);
     BinaryRead(rStr, snWEm);
-    BinaryRead(rStr, liqRoutem);
     BinaryRead(rStr, Utot);
     BinaryRead(rStr, Usn);
     BinaryRead(rStr, Uwat);
