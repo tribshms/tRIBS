@@ -38,7 +38,7 @@
 #include "src/tSimulator/tSimul.h"
 #include "src/Headers/TemplDefinitions.h"
 #include "src/tHydro/tSnowPack.h" // SKY2008Snow from AJR2007
-#include "src/tHydro/tSnowIntercept.h" // SKY2008Snow from AJR2007
+
 
 #ifdef PARALLEL_TRIBS
 #include "tGraph/tGraph.h"
@@ -139,14 +139,11 @@ int serialSimulation( int argc, char **argv )
 
 	Cout<<"\nInitializing SnowPack setup... \n";
 	tSnowPack SnowPack( &SimCtrl, &BasinMesh, InputFile, &Timer, &RsmplMaster, &Moisture, &Rainfall); // SKY2008Snow from AJR2007
-	
-	Cout<<"\nCreating SnowInterception setup...\n";
-	tSnowIntercept SnowIntercept( &SimCtrl, &BasinMesh, InputFile, &Timer, &RsmplMaster, &Moisture, &Rainfall); // SKY2008Snow from AJR2007
 
 	Cout<<"\nCreating Restart setup...\n";
 	tRestart<tCNode> Restart( &Timer, &BasinMesh, &Flow, &Balance,
                               &Moisture, &Rainfall, &EvapoTrans, &Intercept,
-                              &SnowPack, &SnowIntercept );
+                              &SnowPack);
 
 	Cout<<"\n\nPart 7: Creating and Initializing Simulation"<<endl;
 	Cout<<"------------------------------------------------"<<endl<<endl;
@@ -163,13 +160,13 @@ int serialSimulation( int argc, char **argv )
 	Cout<<"\n\nPart 8: Hydrologic Simulation Loop"<<endl;
 	Cout<<"--------------------------------------"<<endl;
 	Simulant.simulation_loop( &Moisture, &Flow, &EvapoTrans, 
-							  &Intercept, &Balance, &SnowPack, &SnowIntercept, // SKY2008Snow from AJR2007
+							  &Intercept, &Balance, &SnowPack, // SKY2008Snow from AJR2007
 							  InputFile); // SKY2008Snow
 	Simulant.end_simulation( &Flow );
 	
 	while ( Simulant.check_mod_status() )
 		Simulant.RunItAgain(InputFile, &Moisture, &Flow, &EvapoTrans,
-							&Intercept, &Balance, &PreProcessor, &SnowPack, &SnowIntercept); // SKY2008Snow from AJR2007
+							&Intercept, &Balance, &PreProcessor, &SnowPack); // SKY2008Snow from AJR2007
 	
 
 	Cout<<"\n\nPart 9: Deleting Objects and Exiting Program"<<endl;
@@ -273,7 +270,7 @@ int parallelSimulation(int argc, char **argv)
 		cout<<"\nCreating Restart setup...\n";
 		tRestart<tCNode> Restart( &Timer, &BasinMesh, &Flow, &Balance,
                               &Moisture, &Rainfall, &EvapoTrans, &Intercept,
-                              &SnowPack, &SnowIntercept );
+                              &SnowPack);
 
 		cout<<"\n\nPart 7: Creating and Initializing Simulation"<<endl;
 		Cout<<"------------------------------------------------"<<endl<<endl;
@@ -289,13 +286,13 @@ int parallelSimulation(int argc, char **argv)
 		cout<<"\n\nPart 8: Hydrologic Simulation Loop"<<endl;
 		Cout<<"--------------------------------------"<<endl;
 		Simulant.simulation_loop( &Moisture, &Flow, &EvapoTrans,
-                              &Intercept, &Balance, &SnowPack, &SnowIntercept, // SKY2008Snow from AJR2007
+                              &Intercept, &Balance, &SnowPack, // SKY2008Snow from AJR2007
                               InputFile); // SKY2008Snow
 		Simulant.end_simulation( &Flow );
 
 		while ( Simulant.check_mod_status() )
 			Simulant.RunItAgain(InputFile, &Moisture, &Flow, &EvapoTrans,
-                            &Intercept, &Balance, &PreProcessor, &SnowPack, &SnowIntercept); // SKY2008Snow from AJR2007
+                            &Intercept, &Balance, &PreProcessor, &SnowPack); // SKY2008Snow from AJR2007
 	}
 
 	// Otherwise all nodes and edges will be read into tMesh so that mesh
@@ -354,7 +351,7 @@ int parallelSimulation(int argc, char **argv)
 		Cout<<"\nCreating Restart setup...\n";
 		tRestart<tCNode> Restart( &Timer, &BasinMesh, &Flow, &Balance,
                               &Moisture, &Rainfall, &EvapoTrans, &Intercept,
-                              &SnowPack, &SnowIntercept );
+                              &SnowPack);
 
 		Cout<<"\n\nPart 7: Creating and Initializing Simulation"<<endl;
 		Cout<<"------------------------------------------------"<<endl<<endl;
@@ -371,14 +368,13 @@ int parallelSimulation(int argc, char **argv)
 		Cout<<"\n\nPart 8: Hydrologic Simulation Loop"<<endl;
 		Cout<<"--------------------------------------"<<endl;
 		Simulant.simulation_loop( &Moisture, &Flow, &EvapoTrans, 
-                              &Intercept, &Balance, &SnowPack, &SnowIntercept, // SKY2008Snow from AJR2007 
+                              &Intercept, &Balance, &SnowPack, // SKY2008Snow from AJR2007
                               InputFile); // SKY2008Snow  
 		Simulant.end_simulation( &Flow );
 
 		while ( Simulant.check_mod_status() )
 			Simulant.RunItAgain(InputFile, &Moisture, &Flow, &EvapoTrans,
-                          &Intercept, &Balance, &PreProcessor, &SnowPack, 
-                          &SnowIntercept); // SKY2008Snow from AJR2007
+                          &Intercept, &Balance, &PreProcessor, &SnowPack); // SKY2008Snow from AJR2007
 	}
 
 	Cout<<"\n\nPart 9: Deleting Objects and Exiting Program"<<endl;

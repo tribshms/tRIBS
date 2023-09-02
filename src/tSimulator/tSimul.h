@@ -31,7 +31,6 @@
 #include "src/tFlowNet/tKinemat.h"
 #include "src/tFlowNet/tReservoir.h" // JECR2015
 #include "src/tHydro/tSnowPack.h" // SKY2008Snow from AJR2007
-#include "src/tHydro/tSnowIntercept.h" // SKY2008Snow from AJR2007
 #include "src/Headers/Inclusions.h"
 
 //=========================================================================
@@ -77,13 +76,13 @@ class Simulator
        //SMM 09252008 added parameters
   void end_simulation(tKinemat*);
   void simulation_loop(tHydroModel*, tKinemat*, tEvapoTrans*, 
-		       tIntercept*, tWaterBalance*, tSnowPack*, tSnowIntercept*, // SKY2008Snow from AJR2007
+		       tIntercept*, tWaterBalance*, tSnowPack*, // SKY2008Snow from AJR2007
 		       tInputFile&); // SKY2008Snow
   void RunItAgain(tInputFile&, tHydroModel*, tKinemat*, 
-		  tEvapoTrans*, tIntercept*, tWaterBalance*, tPreProcess*,  tSnowPack*, tSnowIntercept*); // SKY2008Snow from AJR2007
+		  tEvapoTrans*, tIntercept*, tWaterBalance*, tPreProcess*,  tSnowPack*); // SKY2008Snow from AJR2007
   void PrintRunTimeVars(tHydroModel *, int);
   void UpdatePrecipitationInput(int);
-  void SurfaceHydroProcesses(tEvapoTrans *, tIntercept *, tSnowPack *, tSnowIntercept*); // SKY2008Snow from AJR2007
+  void SurfaceHydroProcesses(tEvapoTrans *, tIntercept *, tSnowPack *); // SKY2008Snow from AJR2007
   void SubSurfaceHydroProcesses(tHydroModel *);
   void OutputSimulatedVars(tKinemat *);
   void UpdateWaterBalance(tWaterBalance *);

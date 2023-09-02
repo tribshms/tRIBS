@@ -33,31 +33,29 @@
 //
 //---------------------------------------------------------------------------
 
-tSnowPack::tSnowPack(){
+tSnowPack::tSnowPack() {
 
 }
 
 tSnowPack::tSnowPack(SimulationControl *simCtrPtr, tMesh<tCNode> *gridRef,
-		       	tInputFile &infile, tRunTimer *t, tResample *resamp, 
-			tHydroModel *hydro, tRainfall *storm)
-  : tEvapoTrans( simCtrPtr, gridRef, infile, t, resamp, hydro, storm )
+                     tInputFile &infile, tRunTimer *t, tResample *resamp,
+                     tHydroModel *hydro, tRainfall *storm)
+        : tEvapoTrans(simCtrPtr, gridRef, infile, t, resamp, hydro, storm) {
 
-{
+    gridPtr = gridRef;
+    //timerET = t;
+    timer = t; // SKY2008Snow
+    simCtrl = simCtrPtr;
 
-  gridPtr = gridRef;
-  //timerET = t;
-  timer = t; // SKY2008Snow
-  simCtrl = simCtrPtr;
-  
-  //set variables
-  SetSnowVariables(infile, hydro);
-  SetSnowPackVariables(infile, hydro);
+    //set variables
+    SetSnowVariables(infile);
+    SetSnowPackVariables(infile);
+    SetSnowInterceptVariables();
 
 }
 
-tSnowPack::~tSnowPack() 
-{
-  Cout << "tSnowPack Object has been destroyed..." << endl;
+tSnowPack::~tSnowPack() {
+    Cout << "tSnowPack Object has been destroyed..." << endl;
 }
 
 //---------------------------------------------------------------------------
@@ -69,97 +67,99 @@ tSnowPack::~tSnowPack()
 //
 //---------------------------------------------------------------------------
 
-void tSnowPack::SetSnowPackVariables(tInputFile &infile, tHydroModel *hydro)
-{
+void tSnowPack::SetSnowPackVariables(tInputFile &infile) {
 
-  //parameters
-  minSnTemp = infile.ReadItem(minSnTemp,"MINSNTEMP");
-  snliqfrac = infile.ReadItem(snliqfrac,"SNLIQFRAC"); // Added by CJC 2020
-  hillAlbedoOption = infile.ReadItem(hillAlbedoOption,"HILLALBOPT");
-  densityAge = 0.0;
-  ETAge = 0.0;
-  compactParam = 0.3;
-  rhoSnFreshkg = 100;
-  snOnOff = 0.0;
- 
-  return;
+    //parameters
+    minSnTemp = infile.ReadItem(minSnTemp, "MINSNTEMP");
+    snliqfrac = infile.ReadItem(snliqfrac, "SNLIQFRAC"); // Added by CJC 2020
+    hillAlbedoOption = infile.ReadItem(hillAlbedoOption, "HILLALBOPT");
+    densityAge = 0.0;
+    ETAge = 0.0;
+    compactParam = 0.3;
+    rhoSnFreshkg = 100;
+    snOnOff = 0.0;
 }
-
-
-//---------------------------------------------------------------------------
-//
-//	tSnowPack::SetSnowVariables()
-//
-//	Auxiliary function used in robust constructor to initialize snow 
-//	variables. This function will remain more or less the same across
-//	snow classes.
-//
-//---------------------------------------------------------------------------
-
-void tSnowPack::SetSnowVariables(tInputFile &infile, tHydroModel *hydro)
+void tSnowPack::SetSnowInterceptVariables()
 {
+    Qcs = Ce = I = psiS = 0.0;
+    Imax = prec = LAI = 0.0;
+    RH = D = rhoVap = Omega = 0.0;
+    Sh = Nu = Re = 0.0;
+    kc = 0.010; //-
+    iceRad = 500e-6; //m
+    Mwater = 18.01; //kg/kmol
+    R = 8313; //J/kmol K
+    RdryAir = 287; //J/kg K
+    nu = 1.3e-5; //m^2/s
+    KtAtm = 0.025; //J/msK
+    esatIce = 0.0;
+    beta = 0.9;
+    acoefficient = 0.0;
+    Lm = 0.0;
+}
+void tSnowPack::SetSnowVariables(tInputFile &infile) {
 
-  //time steps
-  timeStepm = infile.ReadItem(timeStepm,"METSTEP");
-  timeSteph = timeStepm/60;
-  timeSteps = 60*timeStepm;
-  minutelyTimeStep = 0.0;  
+    //time steps
+    timeStepm = infile.ReadItem(timeStepm, "METSTEP");
+    timeSteph = timeStepm / 60;
+    timeSteps = 60 * timeStepm;
+    minutelyTimeStep = 0.0;
 
-  //state variables
-  liqWE = iceWE = snWE = 0.0;
-  liqWEm = iceWEm = snWEm = 0.0;
-  Utot = Usn = Uwat = 0.0;
-  liqWatCont = 0.0;
-  liqTempC = iceTempC = snTempC = 0.0;
-  liqTempK = iceTempK = snTempK = 0.0;
-  crustAge = 0.0;
-  albedo = 0.88;
-  canWE = 0.0;
-  
-  //fluxes
-  H = L = G = Prec = Rn = 0.0;
-  snPrec = liqPrec = 0.0;
-  snPrecm = liqPrecm = 0.0;
-  snPrecmm = liqPrecmm = 0.0;
-  vapPressSmb = vapPresskSPa = 0.0;
+    //state variables
+    liqWE = iceWE = snWE = 0.0;
+    liqWEm = iceWEm = snWEm = 0.0;
+    Utot = Usn = Uwat = 0.0;
+    liqWatCont = 0.0;
+    liqTempC = iceTempC = snTempC = 0.0;
+    liqTempK = iceTempK = snTempK = 0.0;
+    crustAge = 0.0;
+    albedo = 0.88;
+    canWE = 0.0;
+    Iold = Utotold = 0;
 
-  //density
-  rholiqcgs = 1.0;
-  rhoicecgs = 0.92;
-  rhosncgs = 0.1;
-  rholiqkg = 1000.0;
-  rhoicekg = 920.0;
-  rhosnkg = 100.0;
-  rhoAir = 1.3;
+    //fluxes
+    H = L = G = Prec = Rn = 0.0;
+    snPrec = liqPrec = 0.0;
+    snPrecm = liqPrecm = 0.0;
+    snPrecmm = liqPrecmm = 0.0;
+    vapPressSmb = vapPresskSPa = 0.0;
+    snSub = snEvap = liqRoute = 0.0;
+    RSin = 0;
 
-  //thermal properties
-  cpicekJ = 2.1;
-  cpwaterkJ = 4.190;
-  cpairkJ = 1.006;
-  latFreezekJ = 334;
-  latVapkJ = 2470;
-  latSubkJ = latFreezekJ + latVapkJ;
-  
-  //output variables
-  snDepth = snDepthm = 0.0;
-  snOnOff = 0.0;
-  peakSnWE = peakSnWEtemp = 0.0;
-  persMax = persMaxtemp = 0.0;
-  inittime = peaktime = 0.0;
-	  
-  //conversions
-  naughttokilo = 1e-3;
-  kilotonaught = 1e3;
-  cgsRHOtomks = 1e3;
-  mksRHOtocgs = 1e-3;
-  naughttocm = 100; // Used convert m to cm
-  cmtonaught = 0.01; // Used convert cm to m
-  ctom = 10;
-  mtoc = 0.1;
+    //density
+    rholiqcgs = 1.0;
+    rhoicecgs = 0.92;
+    rhosncgs = 0.1;
+    rholiqkg = 1000.0;
+    rhoicekg = 920.0;
+    rhosnkg = 100.0;
+    rhoAir = 1.3;
 
-  //canopy conditions
-  
-  return;
+    //thermal properties
+    cpicekJ = 2.1;
+    cpwaterkJ = 4.190;
+    cpairkJ = 1.006;
+    latFreezekJ = 334;
+    latVapkJ = 2470;
+    latSubkJ = latFreezekJ + latVapkJ;
+
+    //output variables
+    snDepth = snDepthm = 0.0;
+    snOnOff = 0.0;
+    peakSnWE = peakSnWEtemp = 0.0;
+    persMax = persMaxtemp = 0.0;
+    inittime = peaktime = 0.0;
+
+    //conversions
+    naughttokilo = 1e-3;
+    kilotonaught = 1e3;
+    cgsRHOtomks = 1e3;
+    mksRHOtocgs = 1e-3;
+    naughttocm = 100; // Used convert m to cm
+    cmtonaught = 0.01; // Used convert cm to m
+    ctom = 10;
+    mtoc = 0.1;
+
 }
 
 //---------------------------------------------------------------------------
@@ -242,902 +242,73 @@ void tSnowPack::SetSnowVariables(tInputFile &infile, tHydroModel *hydro)
 //				    
 //---------------------------------------------------------------------------
 // SKY2008Snow, AJR2008
-void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * SnIntercept) //,
-//	      double metStep, double etStep)
+void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
 {
 
-  tCNode * cNode;
-  tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
-  // cNode = nodeIter.FirstP(); -- SKY2008Snow, AJR2008
-  int count = 0;
-  int cnt = 0;
-  int tempIndex = 0;
+    tCNode *cNode;
+    tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
 
-  // SKY2008Snow, AJR2008
-  double EP = 0.0; //double tmp = 0.0; 
-  double SkyC = 0.0; //double tmpC = 0.0; 
+    int count = 0;
+    int cnt = 0;
+    double EP = 0.0; //double tmp = 0.0;
+    double SkyC = 0.0; //double tmpC = 0.0;
+    double vegHeight;
 
-  double vegHeight;
-  
-  // SKY2008Snow, AJR2008
-  //  metHour = metStep; 
-  //  etHour = etStep; 
+    // SKY2008Snow, AJR2008
+    //  metHour = metStep;
+    //  etHour = etStep;
 
-  if(simCtrl->Verbose_label == 'Y'){
-    cout << "\nSnowPack Routine Call ..."<<endl;
-  }
-
-  // Set time, sun, and meteorological variables -- AJR2008, SKY2008Snow
-  SetEnvironment();
-
-  //Set Time
-  // setTime(hourlyTimeStep);
-
-  // Compute Sun variables for given hour (basin 
-  // average, although spatially distributed
-  // variables can be easily obtained by re-defining
-  // lat/long values for each node)
-  //SetSunVariablesSn();
-
-  //If stochastic rainfall is used -- use simulated 
-  //hydrometeorological variables (spatially uniform)
-  //if (rainPtr->getoptStorm())
-  //  newHydroMetStochData(hourlyTimeStep);
-
-  // SKY2008Snow, AJR2008
-  // Resample Meteorological Grids, if option
-  if (metdataOption == 2){
-	resampleGrids(timer);
-  }
-
-  // SKYnGM2008LU
-  // Set static land use tCnode members before being assigned dynamically further below.
-  cNode = nodeIter.FirstP();
-  while (nodeIter.IsActive()) {
-    landPtr->setLandPtr(cNode->getLandUse());
-    cNode->setCanStorParam(landPtr->getLandProp(1));
-    cNode->setIntercepCoeff(landPtr->getLandProp(2));
-    cNode->setThroughFall(landPtr->getLandProp(3));
-    cNode->setCanFieldCap(landPtr->getLandProp(4));
-    cNode->setDrainCoeff(landPtr->getLandProp(5));
-    cNode->setDrainExpPar(landPtr->getLandProp(6));
-    cNode->setLandUseAlb(landPtr->getLandProp(7));
-    cNode->setVegHeight(landPtr->getLandProp(8));
-    cNode->setOptTransmCoeff(landPtr->getLandProp(9));
-    cNode->setStomRes(landPtr->getLandProp(10));
-    cNode->setVegFraction(landPtr->getLandProp(11));
-    cNode->setLeafAI(landPtr->getLandProp(12));
-    cNode = nodeIter.NextP();
-  }
-  if (luOption == 1) { // resampling Land Use grids done here, i.e., dynamic case
-    if (AtFirstTimeStepLUFlag) {			
-      for (int ct=0;ct<nParmLU;ct++) { 
-	if (strcmp(LUgridParamNames[ct],"AL")==0) {
-	  if ( (timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid])) ) {
-	      NowTillWhichALgrid++;
-	    }
-	    LandUseAlbGrid->updateLUVarOfBothGrids("AL", ALgridFileNames[NowTillWhichALgrid]);
-	    LandUseAlbGrid->updateLUVarOfPrevGrid("AL", ALgridFileNames[NowTillWhichALgrid-1]);
-	  }
-	  else {
-	    LandUseAlbGrid->updateLUVarOfBothGrids("AL", ALgridFileNames[1]);	
-	    LandUseAlbGrid->updateLUVarOfPrevGrid("AL", ALgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"TF")==0) {
-	  if ( (timer->getCurrentTime())>(double(TFgridhours[NowTillWhichTFgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(TFgridhours[NowTillWhichTFgrid])) ) {
-	      NowTillWhichTFgrid++;
-	    }
-	    ThroughFallGrid->updateLUVarOfBothGrids("TF", TFgridFileNames[NowTillWhichTFgrid]);
-	    ThroughFallGrid->updateLUVarOfPrevGrid("TF", TFgridFileNames[NowTillWhichTFgrid-1]);
-	  }
-	  else {
-	    ThroughFallGrid->updateLUVarOfBothGrids("TF", TFgridFileNames[1]);
-	    ThroughFallGrid->updateLUVarOfPrevGrid("TF", TFgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"VH")==0) {
-	  if ( (timer->getCurrentTime())>(double(VHgridhours[NowTillWhichVHgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(VHgridhours[NowTillWhichVHgrid])) ) {
-	      NowTillWhichVHgrid++;
-	    }
-	    VegHeightGrid->updateLUVarOfBothGrids("VH", VHgridFileNames[NowTillWhichVHgrid]);
-	    VegHeightGrid->updateLUVarOfPrevGrid("VH", VHgridFileNames[NowTillWhichVHgrid-1]);
-	  }
-	  else {
-	    VegHeightGrid->updateLUVarOfBothGrids("VH", VHgridFileNames[1]);
-	    VegHeightGrid->updateLUVarOfPrevGrid("VH", VHgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"SR")==0) {
-	  if ( (timer->getCurrentTime())>(double(SRgridhours[NowTillWhichSRgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(SRgridhours[NowTillWhichSRgrid])) ) {
-	      NowTillWhichSRgrid++;
-	    }
-	    StomResGrid->updateLUVarOfBothGrids("SR", SRgridFileNames[NowTillWhichSRgrid]);
-	    StomResGrid->updateLUVarOfPrevGrid("SR", SRgridFileNames[NowTillWhichSRgrid-1]);
-	  }
-	  else {
-	    StomResGrid->updateLUVarOfBothGrids("SR", SRgridFileNames[1]);
-	    StomResGrid->updateLUVarOfPrevGrid("SR", SRgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"VF")==0) {
-	  if ( (timer->getCurrentTime())>(double(VFgridhours[NowTillWhichVFgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(VFgridhours[NowTillWhichVFgrid])) ) {
-	      NowTillWhichVFgrid++;
-	    }
-	    VegFractGrid->updateLUVarOfBothGrids("VF", VFgridFileNames[NowTillWhichVFgrid]);
-	    VegFractGrid->updateLUVarOfPrevGrid("VF", VFgridFileNames[NowTillWhichVFgrid-1]);
-	  }
-	  else {
-	    VegFractGrid->updateLUVarOfBothGrids("VF", VFgridFileNames[1]);
-	    VegFractGrid->updateLUVarOfPrevGrid("VF", VFgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"CS")==0) {
-	  if ( (timer->getCurrentTime())>(double(CSgridhours[NowTillWhichCSgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(CSgridhours[NowTillWhichCSgrid])) ) {
-	      NowTillWhichCSgrid++;
-	    }
-	    CanStorParamGrid->updateLUVarOfBothGrids("CS", CSgridFileNames[NowTillWhichCSgrid]);
-	    CanStorParamGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[NowTillWhichCSgrid-1]);
-	  }
-	  else {
-	    CanStorParamGrid->updateLUVarOfBothGrids("CS", CSgridFileNames[1]);
-	    CanStorParamGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"IC")==0) {
-	  if ( (timer->getCurrentTime())>(double(ICgridhours[NowTillWhichICgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(ICgridhours[NowTillWhichICgrid])) ) {
-	      NowTillWhichICgrid++;
-	    }
-	    IntercepCoeffGrid->updateLUVarOfBothGrids("IC", ICgridFileNames[NowTillWhichICgrid]);
-	    IntercepCoeffGrid->updateLUVarOfPrevGrid("IC", ICgridFileNames[NowTillWhichICgrid-1]);
-	  }
-	  else {
-	    IntercepCoeffGrid->updateLUVarOfBothGrids("IC", ICgridFileNames[1]);
-	    IntercepCoeffGrid->updateLUVarOfPrevGrid("IC", ICgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"CC")==0) {
-	  if ( (timer->getCurrentTime())>(double(CCgridhours[NowTillWhichCCgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(CCgridhours[NowTillWhichCCgrid])) ) {
-	      NowTillWhichCCgrid++;
-	    }
-	    CanFieldCapGrid->updateLUVarOfBothGrids("CC", CCgridFileNames[NowTillWhichCCgrid]);
-	    CanFieldCapGrid->updateLUVarOfPrevGrid("CC", CCgridFileNames[NowTillWhichCCgrid-1]);
-	  }
-	  else {
-	    CanFieldCapGrid->updateLUVarOfBothGrids("CC", CCgridFileNames[1]);
-	    CanFieldCapGrid->updateLUVarOfPrevGrid("CC", CCgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"DC")==0) {
-	  if ( (timer->getCurrentTime())>(double(DCgridhours[NowTillWhichDCgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(DCgridhours[NowTillWhichDCgrid])) ) {
-	      NowTillWhichDCgrid++;
-	    }
-	    DrainCoeffGrid->updateLUVarOfBothGrids("DC", DCgridFileNames[NowTillWhichDCgrid]);
-	    DrainCoeffGrid->updateLUVarOfPrevGrid("DC", DCgridFileNames[NowTillWhichDCgrid-1]);
-	  }
-	  else {
-	    DrainCoeffGrid->updateLUVarOfBothGrids("DC", DCgridFileNames[1]);
-	    DrainCoeffGrid->updateLUVarOfPrevGrid("DC", DCgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"DE")==0) {
-	  if ( (timer->getCurrentTime())>(double(DEgridhours[NowTillWhichDEgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(DEgridhours[NowTillWhichDEgrid])) ) {
-	      NowTillWhichDEgrid++;
-	    }
-	    DrainExpParGrid->updateLUVarOfBothGrids("DE", DEgridFileNames[NowTillWhichDEgrid]);
-	    DrainExpParGrid->updateLUVarOfPrevGrid("DE", DEgridFileNames[NowTillWhichDEgrid-1]);
-	  }
-	  else {
-	    DrainExpParGrid->updateLUVarOfBothGrids("DE", DEgridFileNames[1]);
-	    DrainExpParGrid->updateLUVarOfPrevGrid("DE", DEgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"OT")==0) {
-	  if ( (timer->getCurrentTime())>(double(OTgridhours[NowTillWhichOTgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(OTgridhours[NowTillWhichOTgrid])) ) {
-	      NowTillWhichOTgrid++;
-	    }
-	    OptTransmCoeffGrid->updateLUVarOfBothGrids("OT", OTgridFileNames[NowTillWhichOTgrid]);
-	    OptTransmCoeffGrid->updateLUVarOfPrevGrid("OT", OTgridFileNames[NowTillWhichOTgrid-1]);
-	  }
-	  else {
-	    OptTransmCoeffGrid->updateLUVarOfBothGrids("OT", OTgridFileNames[1]);
-	    OptTransmCoeffGrid->updateLUVarOfPrevGrid("OT", OTgridFileNames[1]);
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"LA")==0) {
-	  if ( (timer->getCurrentTime())>(double(LAgridhours[NowTillWhichLAgrid])) ) {
-	    while ( (timer->getCurrentTime())>(double(LAgridhours[NowTillWhichLAgrid])) ) {
-	      NowTillWhichLAgrid++;
-	    }
-	    LeafAIGrid->updateLUVarOfBothGrids("LA", LAgridFileNames[NowTillWhichLAgrid]);
-	    LeafAIGrid->updateLUVarOfPrevGrid("LA", LAgridFileNames[NowTillWhichLAgrid-1]);
-	  }
-	  else {
-	    LeafAIGrid->updateLUVarOfBothGrids("LA", LAgridFileNames[1]);
-	    LeafAIGrid->updateLUVarOfPrevGrid("LA", LAgridFileNames[1]);
-	  }
-	}
-      } // end for loop
-      AtFirstTimeStepLUFlag=0;
-    } // end AtFirstTimeStepLUFlag if 
-    else {
-      for (int ct=0;ct<nParmLU;ct++) { 
-	if (strcmp(LUgridParamNames[ct],"AL")==0) {
-	  if (NowTillWhichALgrid <= numALfiles) {
-	    if ((timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid]))) { 
-	      NowTillWhichALgrid++;
-	      if ( (NowTillWhichALgrid-1)<numALfiles) {
-		LandUseAlbGrid->updateLUVarOfBothGrids("AL", ALgridFileNames[NowTillWhichALgrid]);
-	      }					
-	      else {
-		LandUseAlbGrid->updateLUVarOfPrevGrid("AL", ALgridFileNames[numALfiles]);
-	      }
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"TF")==0) {
-	  if (NowTillWhichTFgrid <= numTFfiles) {
-	    if ((timer->getCurrentTime())>(double(TFgridhours[NowTillWhichTFgrid]))) { 
-	      NowTillWhichTFgrid++;
-	      if ((NowTillWhichTFgrid-1)<numTFfiles) {							
-		ThroughFallGrid->updateLUVarOfBothGrids("TF", TFgridFileNames[NowTillWhichTFgrid]);
-	      }
-	      else {
-		ThroughFallGrid->updateLUVarOfPrevGrid("TF", TFgridFileNames[numTFfiles]);
-	      }	
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"VH")==0) {
-	  if (NowTillWhichVHgrid<=numVHfiles) {		
-	    if ((timer->getCurrentTime())>(double(VHgridhours[NowTillWhichVHgrid]))) {
-	      NowTillWhichVHgrid++;
-	      if ((NowTillWhichVHgrid-1)<numVHfiles) {
-		VegHeightGrid->updateLUVarOfBothGrids("VH", VHgridFileNames[NowTillWhichVHgrid]);
-	      }
-	      else {
-		VegHeightGrid->updateLUVarOfPrevGrid("VH", VHgridFileNames[numVHfiles]);
-	      }
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"SR")==0) {
-	  if (NowTillWhichSRgrid<=numSRfiles) {
-	    if ((timer->getCurrentTime())>(double(SRgridhours[NowTillWhichSRgrid]))) { 
-	      NowTillWhichSRgrid++;
-	      if ((NowTillWhichSRgrid-1)<numSRfiles) {
-		StomResGrid->updateLUVarOfBothGrids("SR", SRgridFileNames[NowTillWhichSRgrid]);
-	      }
-	      else {
-		StomResGrid->updateLUVarOfPrevGrid("SR", SRgridFileNames[numSRfiles]);
-	      }	
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"VF")==0) {
-	  if (NowTillWhichVFgrid<=numVFfiles) {
-	    if ((timer->getCurrentTime())>(double(VFgridhours[NowTillWhichVFgrid]))) { 
-	      NowTillWhichVFgrid++;
-	      if ((NowTillWhichVFgrid-1)<numVFfiles) {
-		VegFractGrid->updateLUVarOfBothGrids("VF", VFgridFileNames[NowTillWhichVFgrid]);
-	      }
-	      else {
-		VegFractGrid->updateLUVarOfPrevGrid("VF", VFgridFileNames[numVFfiles]);
-	      }	
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"CS")==0) {
-	  if (NowTillWhichCSgrid<=numCSfiles) {
-	    if ((timer->getCurrentTime())>(double(CSgridhours[NowTillWhichCSgrid]))) { 
-	      NowTillWhichCSgrid++;
-	      if ((NowTillWhichCSgrid-1)<numCSfiles) {
-	        CanStorParamGrid->updateLUVarOfBothGrids("CS", CSgridFileNames[NowTillWhichCSgrid]);
-	      }
-	      else {
-		CanStorParamGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[numCSfiles]);
-	      }	
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"IC")==0) {
-	  if (NowTillWhichICgrid<=numICfiles) {
-	    if ((timer->getCurrentTime())>(double(ICgridhours[NowTillWhichICgrid]))) { 
-	      NowTillWhichICgrid++;
-	      if ((NowTillWhichICgrid-1)<numICfiles) {
-		IntercepCoeffGrid->updateLUVarOfBothGrids("IC", ICgridFileNames[NowTillWhichICgrid]);
-	      }
-	      else {
-		IntercepCoeffGrid->updateLUVarOfPrevGrid("IC", ICgridFileNames[numICfiles]);
-	      }
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"CC")==0) {
-	  if (NowTillWhichCCgrid<=numCCfiles) {
-	    if ((timer->getCurrentTime())>(double(CCgridhours[NowTillWhichCCgrid]))) { 
-	      NowTillWhichCCgrid++;
-	      if ((NowTillWhichCCgrid-1)<numCCfiles) {							
-		CanFieldCapGrid->updateLUVarOfBothGrids("CC", CCgridFileNames[NowTillWhichCCgrid]);
-	      }
-	      else {
-		CanFieldCapGrid->updateLUVarOfPrevGrid("CC", CCgridFileNames[numCCfiles]);
-	      }
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"DC")==0) {
-	  if (NowTillWhichDCgrid<=numDCfiles) {
-	    if ((timer->getCurrentTime())>(double(DCgridhours[NowTillWhichDCgrid]))) { 
-	      NowTillWhichDCgrid++;
-	      if ((NowTillWhichDCgrid-1)<numDCfiles) {
-		DrainCoeffGrid->updateLUVarOfBothGrids("DC", DCgridFileNames[NowTillWhichDCgrid]);
-	      }
-	      else {
-		DrainCoeffGrid->updateLUVarOfPrevGrid("DC", DCgridFileNames[numDCfiles]);
-	      }
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"DE")==0) {
-	  if (NowTillWhichDEgrid<=numDEfiles) {
-	    if ((timer->getCurrentTime())>(double(DEgridhours[NowTillWhichDEgrid]))) {
-	      NowTillWhichDEgrid++;
-	      if ((NowTillWhichDEgrid-1)<numDEfiles) {	
-		DrainExpParGrid->updateLUVarOfBothGrids("DE", DEgridFileNames[NowTillWhichDEgrid]);
-	      }
-	      else {
-		DrainExpParGrid->updateLUVarOfPrevGrid("DE", DEgridFileNames[numDEfiles]);
-	      }
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"OT")==0) {
-	  if (NowTillWhichOTgrid<=numOTfiles) {
-	    if ((timer->getCurrentTime())>(double(OTgridhours[NowTillWhichOTgrid]))) {
-	      NowTillWhichOTgrid++;
-	      if ((NowTillWhichOTgrid-1)<numOTfiles) {	
-		OptTransmCoeffGrid->updateLUVarOfBothGrids("OT", OTgridFileNames[NowTillWhichOTgrid]);
-	      }
-	      else {
-		OptTransmCoeffGrid->updateLUVarOfPrevGrid("OT", OTgridFileNames[numOTfiles]);
-	      }
-	    }
-	  }
-	}
-	if (strcmp(LUgridParamNames[ct],"LA")==0) {
-	  if (NowTillWhichLAgrid<=numLAfiles) {
-	    if ((timer->getCurrentTime())>(double(LAgridhours[NowTillWhichLAgrid]))) { 
-	      NowTillWhichLAgrid++;
-	      if ((NowTillWhichLAgrid-1)<numLAfiles) {
-		LeafAIGrid->updateLUVarOfBothGrids("LA", LAgridFileNames[NowTillWhichLAgrid]);
-	      }
-	      else {
-		LeafAIGrid->updateLUVarOfPrevGrid("LA", LAgridFileNames[numLAfiles]);
-	      }
-	    }
-	  }
-	}
-      } //end for
-    } // end AtFirstTimeStepLUFlag else
-  } // end luOption if
-
-
-  //Loop through all nodes for this time period
-  cNode = nodeIter.FirstP(); // SKY2008Snow, AJR2008 
-  while(nodeIter.IsActive()){
-
-    // SKYnGM2008LU
-     if (luOption == 1) { 
-      if ( luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values
-	for (int ct=0;ct<nParmLU;ct++) { 
-	  if ( (strcmp(LUgridParamNames[ct],"AL")==0) && (NowTillWhichALgrid > 1) &&
-		    ( NowTillWhichALgrid < (numALfiles+1) ) ) 
-	  {
-	    cNode->setLandUseAlb( cNode->getLandUseAlbInPrevGrid()+
-		     (cNode->getLandUseAlbInUntilGrid() - cNode->getLandUseAlbInPrevGrid())*
-		      (timer->getCurrentTime() - double(ALgridhours[NowTillWhichALgrid-1]))/
-		      (double(ALgridhours[NowTillWhichALgrid])-double(ALgridhours[NowTillWhichALgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"TF")==0) && (NowTillWhichTFgrid > 1) &&
-		    ( NowTillWhichTFgrid < (numTFfiles+1) ) ) 
-	  {
-	    cNode->setThroughFall( cNode->getThroughFallInPrevGrid()+
-		      (cNode->getThroughFallInUntilGrid() - cNode->getThroughFallInPrevGrid())*
-		      (timer->getCurrentTime() - double(TFgridhours[NowTillWhichTFgrid-1]))/
-		      (double(TFgridhours[NowTillWhichTFgrid])-double(TFgridhours[NowTillWhichTFgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"VH")==0) && (NowTillWhichVHgrid > 1) &&
-		    ( NowTillWhichVHgrid < (numVHfiles+1) ) ) 
-	  {
-	    cNode->setVegHeight( cNode->getVegHeightInPrevGrid()+
-		      (cNode->getVegHeightInUntilGrid() - cNode->getVegHeightInPrevGrid())*
-		      (timer->getCurrentTime() - double(VHgridhours[NowTillWhichVHgrid-1]))/
-		      (double(VHgridhours[NowTillWhichVHgrid])-double(VHgridhours[NowTillWhichVHgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"SR")==0) && (NowTillWhichSRgrid > 1) &&
-		    ( NowTillWhichSRgrid < (numSRfiles+1) ) ) 
-	  {
-	    cNode->setStomRes( cNode->getStomResInPrevGrid()+
-		      (cNode->getStomResInUntilGrid() - cNode->getStomResInPrevGrid())*
-		      (timer->getCurrentTime() - double(SRgridhours[NowTillWhichSRgrid-1]))/
-		      (double(SRgridhours[NowTillWhichSRgrid])-double(SRgridhours[NowTillWhichSRgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"VF")==0) && (NowTillWhichVFgrid > 1) &&
-		    ( NowTillWhichVFgrid < (numVFfiles+1) ) ) 
-	  {
-	    cNode->setVegFraction( cNode->getVegFractionInPrevGrid()+
-		      (cNode->getVegFractionInUntilGrid() - cNode->getVegFractionInPrevGrid())*
-		      (timer->getCurrentTime() - double(VFgridhours[NowTillWhichVFgrid-1]))/
-		      (double(VFgridhours[NowTillWhichVFgrid])-double(VFgridhours[NowTillWhichVFgrid-1])) ) ; // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"CS")==0) && (NowTillWhichCSgrid > 1) &&
-		    ( NowTillWhichCSgrid < (numCSfiles+1) ) ) 
-	  {
-	    cNode->setCanStorParam( cNode->getCanStorParamInPrevGrid()+
-		      (cNode->getCanStorParamInUntilGrid() - cNode->getCanStorParamInPrevGrid())*
-		      (timer->getCurrentTime() - double(CSgridhours[NowTillWhichCSgrid-1]))/
-		      (double(CSgridhours[NowTillWhichCSgrid])-double(CSgridhours[NowTillWhichCSgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"IC")==0) && (NowTillWhichICgrid > 1) &&
-		    ( NowTillWhichICgrid < (numICfiles+1) ) ) 
-	  {
-	    cNode->setIntercepCoeff( cNode->getIntercepCoeffInPrevGrid()+
-		      (cNode->getIntercepCoeffInUntilGrid() - cNode->getIntercepCoeffInPrevGrid())*
-		      (timer->getCurrentTime() - double(ICgridhours[NowTillWhichICgrid-1]))/
-		      (double(ICgridhours[NowTillWhichICgrid])-double(ICgridhours[NowTillWhichICgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"CC")==0) && (NowTillWhichCCgrid > 1) &&
-		    ( NowTillWhichCCgrid < (numCCfiles+1) ) ) 
-	  {
-	    cNode->setCanFieldCap( cNode->getCanFieldCapInPrevGrid()+
-		      (cNode->getCanFieldCapInUntilGrid() - cNode->getCanFieldCapInPrevGrid())*
-		      (timer->getCurrentTime() - double(CCgridhours[NowTillWhichCCgrid-1]))/
-		      (double(CCgridhours[NowTillWhichCCgrid])-double(CCgridhours[NowTillWhichCCgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"DC")==0) && (NowTillWhichDCgrid > 1) &&
-		    ( NowTillWhichDCgrid < (numDCfiles+1) ) ) 
-	  {
-	    cNode->setDrainCoeff( cNode->getDrainCoeffInPrevGrid()+
-		      (cNode->getDrainCoeffInUntilGrid() - cNode->getDrainCoeffInPrevGrid())*
-		      (timer->getCurrentTime() - double(DCgridhours[NowTillWhichDCgrid-1]))/
-		      (double(DCgridhours[NowTillWhichDCgrid])-double(DCgridhours[NowTillWhichDCgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"DE")==0) && (NowTillWhichDEgrid > 1) &&
-		    ( NowTillWhichDEgrid < (numDEfiles+1) ) ) 
-	  {
-	    cNode->setDrainExpPar( cNode->getDrainExpParInPrevGrid()+
-		      (cNode->getDrainExpParInUntilGrid() - cNode->getDrainExpParInPrevGrid())*
-		      (timer->getCurrentTime() - double(DEgridhours[NowTillWhichDEgrid-1]))/
-		      (double(DEgridhours[NowTillWhichDEgrid])-double(DEgridhours[NowTillWhichDEgrid-1])) ) ; // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"OT")==0) && (NowTillWhichOTgrid > 1) &&
-		    ( NowTillWhichOTgrid < (numOTfiles+1) ) ) 
-	  {
-	    cNode->setOptTransmCoeff( cNode->getOptTransmCoeffInPrevGrid()+
-		      (cNode->getOptTransmCoeffInUntilGrid() - cNode->getOptTransmCoeffInPrevGrid())*
-		      (timer->getCurrentTime() - double(OTgridhours[NowTillWhichOTgrid-1]))/
-		      (double(OTgridhours[NowTillWhichOTgrid])-double(OTgridhours[NowTillWhichOTgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	  if ( (strcmp(LUgridParamNames[ct],"LA")==0) && (NowTillWhichLAgrid > 1) &&
-		    ( NowTillWhichLAgrid < (numLAfiles+1) ) ) 
-	  {
-	    cNode->setLeafAI( cNode->getLeafAIInPrevGrid()+
-		      (cNode->getLeafAIInUntilGrid() - cNode->getLeafAIInPrevGrid())*
-		      (timer->getCurrentTime() - double(LAgridhours[NowTillWhichLAgrid-1]))/
-		      (double(LAgridhours[NowTillWhichLAgrid])-double(LAgridhours[NowTillWhichLAgrid-1])) ); // fixed extra and missing brackets xiaoyang2020
-	  }
-	} // end for loop
-      } // end luInterpOption if
-    } // end luOption if
-
-    // SKYnGM2008LU: Elapsed MET steps from the beginning, used for averaging dynamic LU grid values below over time for integ. output
-    double te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
-    for (int ct=0;ct<nParmLU;ct++) { 
-      if (strcmp(LUgridParamNames[ct],"AL")==0) {  
-        if (fabs(te - 1.0) < 1.0E-6)
-          cNode->setAvLandUseAlb(cNode->getLandUseAlb());
-        else if (te > 1.0) 
-          cNode->setAvLandUseAlb((cNode->getAvLandUseAlb()*(te-1.0) + cNode->getLandUseAlb())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"TF")==0) {  
-        if (fabs(te - 1.0) < 1.0E-6)
-          cNode->setAvThroughFall(cNode->getThroughFall());
-        else if (te > 1.0) 
-          cNode->setAvThroughFall((cNode->getAvThroughFall()*(te-1.0) + cNode->getThroughFall())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"VH")==0) {  
-        if (fabs(te - 1.0) < 1.0E-6)
-          cNode->setAvVegHeight(cNode->getVegHeight());
-        else if (te > 1.0) 
-          cNode->setAvVegHeight((cNode->getAvVegHeight()*(te-1.0) + cNode->getVegHeight())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"SR")==0) {  
-	if (fabs(te - 1.0) < 1.0E-6)
-          cNode->setAvStomRes(cNode->getStomRes());
-	else if (te > 1.0) 
-	  cNode->setAvStomRes((cNode->getAvStomRes()*(te-1.0) + cNode->getStomRes())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"VF")==0) {  
-	if (fabs(te - 1.0) < 1.0E-6)
-	  cNode->setAvVegFraction(cNode->getVegFraction());
-	else if (te > 1.0) 
-	  cNode->setAvVegFraction((cNode->getAvVegFraction()*(te-1.0) + cNode->getVegFraction())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"CS")==0) {  
-	if (fabs(te - 1.0) < 1.0E-6)
-	  cNode->setAvCanStorParam(cNode->getCanStorParam());
-	else if (te > 1.0) 
-	  cNode->setAvCanStorParam((cNode->getAvCanStorParam()*(te-1.0) + cNode->getCanStorParam())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"IC")==0) {  
-        if (fabs(te - 1.0) < 1.0E-6)
-          cNode->setAvIntercepCoeff(cNode->getIntercepCoeff());
-        else if (te > 1.0) 
-          cNode->setAvIntercepCoeff((cNode->getAvIntercepCoeff()*(te-1.0) + cNode->getIntercepCoeff())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"CC")==0) {  
-        if (fabs(te - 1.0) < 1.0E-6)
-          cNode->setAvCanFieldCap(cNode->getCanFieldCap());
-        else if (te > 1.0) 
-          cNode->setAvCanFieldCap((cNode->getAvCanFieldCap()*(te-1.0) + cNode->getCanFieldCap())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"DC")==0) {  
-        if (fabs(te - 1.0) < 1.0E-6)
-          cNode->setAvDrainCoeff(cNode->getDrainCoeff());
-        else if (te > 1.0) 
-          cNode->setAvDrainCoeff((cNode->getAvDrainCoeff()*(te-1.0) + cNode->getDrainCoeff())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"DE")==0) {  
-        if (fabs(te - 1.0) < 1.0E-6)
-          cNode->setAvDrainExpPar(cNode->getDrainExpPar());
-        else if (te > 1.0) 
-          cNode->setAvDrainExpPar((cNode->getAvDrainExpPar()*(te-1.0) + cNode->getDrainExpPar())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"OT")==0) {  
-        if (fabs(te - 1.0) < 1.0E-6)
-          cNode->setAvOptTransmCoeff(cNode->getOptTransmCoeff());
-        else if (te > 1.0) 
-          cNode->setAvOptTransmCoeff((cNode->getAvOptTransmCoeff()*(te-1.0) + cNode->getOptTransmCoeff())/te);
-      }
-      if (strcmp(LUgridParamNames[ct],"LA")==0) {  
-	if (fabs(te - 1.0) < 1.0E-6)
-	  cNode->setAvLeafAI(cNode->getLeafAI());
-	else if (te > 1.0) 
-	  cNode->setAvLeafAI((cNode->getAvLeafAI()*(te-1.0) + cNode->getLeafAI())/te);
-      }
-    }
-    //Get NodeID
-    ID = cNode->getID();
-
-    //Get Rainfall
-    rain = cNode->getRain(); // get new rainfall
-    //Set Elevation, Slope and Aspect
-    slope = fabs(atan(cNode->getFlowEdg()->getSlope()));
-    aspect = cNode->getAspect();
-    elevation = cNode->getZ();
-
-
-
-    snOnOff = 0.0;
-
-    //if we are dealing with remote topographic sheltering, get horizon angles
-    //
-    //	  RMK: THIS IS MORE OR LESS A KLUGE. THIS SHOULD BE DONE WITH POINTERS
-    //	  AND ARRAYS IN ORDER TO ALLOW FOR A FLEXIBLE ANGLE RESOLUTION, BUT I
-    //	  COULDN'T FIGURE OUT HOW TO IMPLEMENT IN TCNODE
-    //
-    //	  JULY 2007 -- AJR
-
-    if ((shelterOption > 0)&&(shelterOption < 4)) {//CHANGED 2008
-      
-      for (tempIndex = 0; tempIndex < 16; tempIndex++) {
-      	switch ( tempIndex ) {
-	  case 0:
-	    ha2700 = cNode->getHorAngle2700();
-	    break;
-	  case 1:
-	    ha2925 = cNode->getHorAngle2925();
-	    break;
-	  case 2:
-	    ha3150 = cNode->getHorAngle3150();
-	    break;
-	  case 3:
-	    ha3375 = cNode->getHorAngle3375();
-	    break;
-	  case 4:
-	    ha0000 = cNode->getHorAngle0000();
-	    break;
-	  case 5:
-	    ha0225 = cNode->getHorAngle0225();
-	    break;
-	  case 6:
-	    ha0450 = cNode->getHorAngle0450();
-	    break;
-	  case 7:
-	    ha0675 = cNode->getHorAngle0675();
-	    break;
-	  case 8:
-	    ha0900 = cNode->getHorAngle0900();
-	    break;
-	  case 9:
-	    ha1125 = cNode->getHorAngle1125();
-	    break;
-	  case 10:
-	    ha1350 = cNode->getHorAngle1350();
-	    break;
-	  case 11:
-	    ha1575 = cNode->getHorAngle1575();
-	    break;
-	  case 12:
-	    ha1800 = cNode->getHorAngle1800();
-	    break;
-	  case 13:
-	    ha2025 = cNode->getHorAngle2025();
-	    break;
-	  case 14:
-	    ha2250 = cNode->getHorAngle2250();
-	    break;
-	  case 15:
-	    ha2475 = cNode->getHorAngle2475();
-	    break;
-	  default:
-	    cout << "\nCheck tempInd -- did not exist or assign" << endl;
-	}//end-switch
-      }    //end-for
-
-      shelterFactorGlobal = cNode->getSheltFact(); //computed in tShelter
-
-    }
-    else if (shelterOption == 0) { // local sheltering for factor only
-      shelterFactorGlobal = 0.5*(1 + cos(slope)); //computed here for output purposes
-      cNode->setSheltFact(shelterFactorGlobal); // SKYnGM2008LU
-    }
-    else {
-      shelterFactorGlobal = 1; //no sheltering
-    }
-	
-    setCoeffs(cNode);
-    if (luOption == 1) {
-	    newLUGridData(cNode);
+    if (simCtrl->Verbose_label == 'Y') {
+        cout << "\nSnowPack Routine Call ..." << endl;
     }
 
-    //time to get met data
-//    if (metHour == etHour) { // AJR2008, SKY2008Snow --  metHour == etHour is assumed.
-      
-    //not in stochastic mode
-    if (!rainPtr->getoptStorm()) {
-      if(metdataOption == 1){
-	thisStation = assignedStation[count];
-	newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
-      }
-      else if(metdataOption == 2){
-      //resampleGrids(timerET); // read in met grid data -- inherited function
-      newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
-      }
-	
-      // SKY2008Snow, AJR2007
-      // Set the observed values to the node: 
-      // they will be required by other function calls
+    // Set time, sun, and meteorological variables -- AJR2008, SKY2008Snow
+    SetEnvironment();
 
-      //AJR2008, SKY2008Snow
-      vPress = vaporPress(); //-- ADDED IN ORDER TO SET RH... CORRECTLY FOR SNOW
-
-      cNode->setAirTemp(airTemp); // celsius
-      cNode->setDewTemp(dewTemp);
-      cNode->setRelHumid(rHumidity);
-      cNode->setVapPressure(vPress);
-      cNode->setSkyCover(skyCover);
-      cNode->setWindSpeed(windSpeed);
-      cNode->setAirPressure(atmPress);
-      cNode->setShortRadIn(RadGlbObs);
-
-      //Set Soil/Surface Temperature
-      if(hourlyTimeStep == 0) {
-        cNode->setSoilTemp(Tlo - 273.15);
-        cNode->setSurfTemp(Tso - 273.15);
-      }
-
+    // Resample Meteorological Grids, if option
+    if (metdataOption == 2) {
+        resampleGrids(timer);
     }
 
-    if(Ioption == 0) {
-      cNode->setNetPrecipitation(rain);
-    }
-
-    //Call Beta functions
-    betaFunc(cNode); // inherited
-    betaFuncT(cNode); // inherited
-
-
-    //get the necessary information from tCNode for snow model
-    getFrNodeSnP(cNode);
-
-    // ensure routed liquid is reset
-    cNode->setLiqRouted(0.0);
-
-    snUnload = 0.0;
-    canWE = cNode->getIntSWE();
-
-
-
-    //No Snow on ground and canopy and not snowing
-    if ( (snWE <= 1e-4) && (rain*snowFracCalc() <= 5e-2) && rholiqkg*cmtonaught*(cNode->getIntSWE()) <  1e-3) {
-
-      // Following block of code mirrors callEvapoPotential and callEvapoTrans in tEvapoTrans as no snow occurs at any
-      // level of the system: i.e. snowpack, canopy, or snowing. —refactored by WR 6/21/23
-
-      Tso = cNode->getSurfTemp() + 273.15;
-      Tlo = cNode->getSoilTemp() + 273.15;
-
-      //Calculate the Potential and Actual Evaporation
-      if(evapotransOption == 1){   
-        EvapPenmanMonteith(cNode); // SKY2008Snow
-      }
-      else if(evapotransOption == 2){
-        EvapDeardorff(cNode); // SKY2008Snow
-      } 
-      else if(evapotransOption == 3){
-        EvapPriestlyTaylor(cNode); // SKY2008Snow
-      }
-      else if(evapotransOption == 4){
-        EvapPan();
-      }
-      else{
-        cout << "\nEvapotranspiration Option " << evapotransOption;
-        cout <<" not valid." << endl;
-        cout << "\tPlease use :" << endl;
-        cout << "\t\t(1) for Penman-Monteith Method" << endl;
-        cout << "\t\t(2) for Deardorff Method"<< endl;
-        cout << "\t\t(3) for Priestly-Taylor Method" << endl;
-        cout << "\t\t(4) for Pan Evaporation Measurements" << endl;
-        cout << "Exiting Program...\n\n"<<endl;
-        exit(1);
-      }
-
-      // Set
-      setToNode(cNode);
-
-
-      ComputeETComponents(Intercept, cNode, count, flag);
-
-      //Reset Snow. TODO just make below variables local callSnowPack.
-      snTempC = 0.0; // reinitialize snTemp
-      snWE = 0.0; // reinitialize snWE
-      snSub = 0.0; // No sublimation occurs CJC2020
-      snEvap = 0.0; // No evaporation occurs CJC2020
-      dUint = RLin = RLout = RSin = H = L = G = Prec = 0.0; //reinitialize energy terms
-      ETAge = ETAge + timeStepm;
-      liqRoute = 0.0;
-      iceWE = 0.0;
-      liqWE = 0.0;
-      Utot = 0.0;
-      Usn = 0.0;
-      Uwat = 0.0;
-      snTempC = 0.0;
-      crustAge = 0.0;
-      densityAge = 0.0;
-
-      cNode->setIntSub(0.0);
-
-      setToNodeSnP(cNode);
-
-
-    }//end no-snow
-    
-    else //condtions include some combination of snowpack and snow in canopy, and snowing, raining, or no precip
-    {
-
-     // Implement interception schemes for snow, refactored WR 6/21/23
-     if ( Ioption && (Intercept->IsThereCanopy(cNode)))  {
-        SnIntercept->callSnowIntercept(cNode, Intercept);
-        snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept() units in cm
-        snCanWE = cNode->getIntSWE();//units in cm
-     }
-     else {
-       cNode->setNetPrecipitation(rain);
-     }
-
-     rain = cNode->getNetPrecipitation(); //units in mm
-     rain += snUnload*ctom; // units in mm
-
-      // Here rain is being set by net precipitation which is set from callSnowIntercept
-      // and represents throughfall + unloaded snow  from snow interception (so scaled by coeffV) and precipitation
-      // that falls on the no vegetated fraction of the cell (1-coeffV). refactored WR 6/21/23
-
-      snDepthm = cmtonaught*snWE/0.312; // 0.312 is value for bulk density of snow, Sturm et al. 2010
-      //calculate current snow depth for use in the turbulent heat flux calculations and output.
-
-      if (snWE < 1e-5) {
-	
-        //no precipitation heat flux, as it is totally accounted for in the snow pack energy
-        //   initialization
-        phfOnOff = 0.0;
-
-        //account for veg height
-        if (coeffH == 0) {
-            vegHeight = 0.1;
+    if (luOption == 1) { // resampling Land Use grids done here, i.e., dynamic case
+        if (AtFirstTimeStepLUFlag) {
+            initialLUGridAssignment();
+            AtFirstTimeStepLUFlag=0;
         }
         else {
-	        vegHeight = coeffH;
-        }	
-	
-        //set the new density age
-        densityAge = 0.0;
+            LUGridAssignment();
+        }
+    }
 
-        //reinitialize crust age
-        crustAge = 0.0;
+    // BEGIN LOOP THROUGH NODES
+    cNode = nodeIter.FirstP();
+    while (nodeIter.IsActive()) {
+        // Set static land use tCnode members before being assigned dynamically further below.
+        landPtr->setLandPtr(cNode->getLandUse());
+        cNode->setCanStorParam(landPtr->getLandProp(1));
+        cNode->setIntercepCoeff(landPtr->getLandProp(2));
+        cNode->setThroughFall(landPtr->getLandProp(3));
+        cNode->setCanFieldCap(landPtr->getLandProp(4));
+        cNode->setDrainCoeff(landPtr->getLandProp(5));
+        cNode->setDrainExpPar(landPtr->getLandProp(6));
+        cNode->setLandUseAlb(landPtr->getLandProp(7));
+        cNode->setVegHeight(landPtr->getLandProp(8));
+        cNode->setOptTransmCoeff(landPtr->getLandProp(9));
+        cNode->setStomRes(landPtr->getLandProp(10));
+        cNode->setVegFraction(landPtr->getLandProp(11));
+        cNode->setLeafAI(landPtr->getLandProp(12));
 
-        //change mass (volume) quantities to correct units (kJ, m, C, s)
-        iceWE = iceWE*cmtonaught;
-        liqWE = liqWE*cmtonaught;
-        snWE = iceWE + liqWE;
-
-        if (airTemp > 0.0) {
-              snTempC = 0.0;
-          }
-        else {
-              snTempC = airTemp;
-          }
-    
-        //snowMB
-        // evaporate liquid from ripe pack snWE +=
-        // note evaporation/sublimation flux can be negative or positive, with latter representing condensation/deposition
-        if (snTempC == 0.0) {
-
-	        //liq WE update
-            snEvap = (1-coeffV)*latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ);//*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
-            liqWE += cmtonaught*((mtoc*rain)*(1 - snowFracCalc()))*timeSteps/3600; // Removed snUnload term CJC2020
-
-            if(liqWE+snEvap<=0){
-                snEvap = liqWE;
-                liqWE = 0;
-            }
-            else{
-                liqWE+=snEvap;
-            }
-	
-	        //solid WE update
-	        iceWE += cmtonaught*(mtoc*(rain*snowFracCalc()))*timeSteps/3600;
-	        snSub = 0.0; // No sublimation occurs CJC2020
-         }
-	
-	    //sublimate solid from frozen pack
-        else {
-	
-	        //liq WE update
-	        liqWE += cmtonaught*(mtoc*(rain*(1 - snowFracCalc())))*timeSteps/3600; // Removed snUnload term CJC2020
-	        snEvap = 0.0; // No evaporation occurs CJC2020
-
-	        //ice WE update
-            snSub = (1-coeffV)*latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ);//*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
-            iceWE += cmtonaught*(mtoc*(rain*snowFracCalc()))*timeSteps/3600;
-
-            if(iceWE+snSub<=0){
-                snSub = iceWE;
-                iceWE = 0;
-            }
-            else{
-                iceWE+=snSub;
+        if (luOption == 1) {
+            if ( luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values
+                interpolateLUGrids(cNode);
             }
         }
 
-        snWE = iceWE+liqWE;
-        snSub*=naughttocm;
-        snEvap*=naughttocm;
-	    //set other fluxes
-        L = H = G = Prec = Utotold = 0.0;
+        // Elapsed MET steps from the beginning, used for averaging dynamic LU grid values below over time for integ. output
+        auto te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
+        integratedLUVars(cNode, te);
 
+<<<<<<< HEAD
        	//added by XYT2023,liqRoute
         if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
               //there is enough water left over
@@ -1162,235 +333,459 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         //initialize and record energy balance
         Utot = dUint = iceWE*rhoicekg*cpicekJ*snTempC // Changed to use rhoicekg CJC 2020
 		+ liqWE*rholiqkg*latFreezekJ;
+=======
+        //Get NodeID
+        ID = cNode->getID();
+>>>>>>> origin/SnowMerge
 
-      }
-      else { 
-	
-        //account for precipitation heat flux
-        phfOnOff = 1.0;
-	
-        //account for veg height
-        if (coeffH == 0) {
-	        vegHeight = 0.1;
+        //Get Rainfall
+        rain = cNode->getRain(); // get new rainfall
+
+        //Set Elevation, Slope and Aspect
+        slope = fabs(atan(cNode->getFlowEdg()->getSlope()));
+        aspect = cNode->getAspect();
+        elevation = cNode->getZ();
+
+        snOnOff = 0.0;
+
+        checkShelter(cNode);
+
+        setCoeffs(cNode);
+        if (luOption == 1) {
+            newLUGridData(cNode);
         }
-        else {
-	        vegHeight = coeffH; // unused?
-        }
 
-        //find the new density age
-        densityAge = (snWE*densityAge)/(snWE + mtoc*rain);
-
-        //reset crust age if snowing out
-        if (rain * snowFracCalc() > 1e-3) {
-              crustAge = 0.0;
-        }
-
-	    //change mass (volume) quantities to correct units (kJs)
-        iceWE = iceWE*cmtonaught;
-        liqWE = liqWE*cmtonaught;
-        snWE = iceWE + liqWE;
-
-        //snowMB
-	
-        //ripe pack -- evaporate water
-        if (snTempC == 0.0) {
-
-	        //liq WE update
-            snEvap = (1-coeffV)*latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latVapkJ);//*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
-            liqWE += cmtonaught*((mtoc*rain)*(1 - snowFracCalc()))*timeSteps/3600; // Removed snUnload term CJC2020
-
-            if(liqWE+snEvap<=0){
-                snEvap = liqWE;
-                liqWE = 0;
-            }
-            else{
-                liqWE+=snEvap;
+        //not in stochastic mode
+        if (!rainPtr->getoptStorm()) {
+            if (metdataOption == 1) {
+                thisStation = assignedStation[count];
+                newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
+            } else if (metdataOption == 2) {
+                //resampleGrids(timerET); // read in met grid data -- inherited function
+                newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
             }
 
-	        //ice WE update
-	        iceWE += cmtonaught*(mtoc*(rain*snowFracCalc()))*timeSteps/3600;
-	        snSub = 0.0; // No sublimation occurs CJC2020
+            // Set the observed values to the node:
+            // they will be required by other function calls
+            vPress = vaporPress(); //-- ADDED IN ORDER TO SET RH... CORRECTLY FOR SNOW
+            cNode->setAirTemp(airTemp); // celsius
+            cNode->setDewTemp(dewTemp);
+            cNode->setRelHumid(rHumidity);
+            cNode->setVapPressure(vPress);
+            cNode->setSkyCover(skyCover);
+            cNode->setWindSpeed(windSpeed);
+            cNode->setAirPressure(atmPress);
+            cNode->setShortRadIn(RadGlbObs);
+
+            //Set Soil/Surface Temperature
+            if (hourlyTimeStep == 0) {
+                cNode->setSoilTemp(Tlo - 273.15);
+                cNode->setSurfTemp(Tso - 273.15);
+            }
+
         }
 
-        //frozen pack -- sublimate water
-        else {
+        if (Ioption == 0) {
+            cNode->setNetPrecipitation(rain);
+        }
 
-            //liq WE update
-            liqWE += cmtonaught*(mtoc*(rain*(1 - snowFracCalc())))*timeSteps/3600; // Removed snUnload term CJC2020
+        //Call Beta functions
+        betaFunc(cNode); // inherited
+        betaFuncT(cNode); // inherited
+
+        //get the necessary information from tCNode for snow model
+        getFrNodeSnP(cNode);
+
+        // ensure routed liquid is reset
+        cNode->setLiqRouted(0.0);
+
+        snUnload = 0.0;
+        canWE = cNode->getIntSWE();
+
+        //No Snow on ground and canopy and not snowing
+        if ((snWE <= 1e-4) && (rain * snowFracCalc() <= 5e-2) && rholiqkg * cmtonaught * (cNode->getIntSWE()) < 1e-3) {
+
+            // Following block of code mirrors callEvapoPotential and callEvapoTrans in tEvapoTrans as no snow occurs at any
+            // level of the system: i.e. snowpack, canopy, or snowing. —refactored by WR 6/21/23
+
+            //Calculate the Potential and Actual Evaporation
+            if (evapotransOption == 1) {
+                EvapPenmanMonteith(cNode); // SKY2008Snow
+            } else if (evapotransOption == 2) {
+                EvapDeardorff(cNode); // SKY2008Snow
+            } else if (evapotransOption == 3) {
+                EvapPriestlyTaylor(cNode); // SKY2008Snow
+            } else if (evapotransOption == 4) {
+                EvapPan();
+            } else {
+                cout << "\nEvapotranspiration Option " << evapotransOption;
+                cout << " not valid." << endl;
+                cout << "\tPlease use :" << endl;
+                cout << "\t\t(1) for Penman-Monteith Method" << endl;
+                cout << "\t\t(2) for Deardorff Method" << endl;
+                cout << "\t\t(3) for Priestly-Taylor Method" << endl;
+                cout << "\t\t(4) for Pan Evaporation Measurements" << endl;
+                cout << "Exiting Program...\n\n" << endl;
+                exit(1);
+            }
+            // Set
+            setToNode(cNode);
+            ComputeETComponents(Intercept, cNode, count, flag);
+
+            snTempC = 0.0; // reinitialize snTemp
+            snWE = 0.0; // reinitialize snWE
+            snSub = 0.0; // No sublimation occurs CJC2020
             snEvap = 0.0; // No evaporation occurs CJC2020
+            dUint = RLin = RLout = RSin = H = L = G = Prec = 0.0; //reinitialize energy terms
+            ETAge = ETAge + timeStepm;
+            liqRoute = 0.0;
+            iceWE = 0.0;
+            liqWE = 0.0;
+            Utot = 0.0;
+            Usn = 0.0;
+            Uwat = 0.0;
+            snTempC = 0.0;
+            crustAge = 0.0;
+            densityAge = 0.0;
 
-            //ice WE update
-            snSub = (1-coeffV)*latentHFCalc(resFactCalc())*timeSteps/(rholiqkg*latSubkJ);//*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
-            iceWE += cmtonaught*(mtoc*(rain*snowFracCalc()))*timeSteps/3600;
+            cNode->setIntSub(0.0);
+            setToNodeSnP(cNode);
+        }//end no-snow
 
-            if(iceWE+snSub<=0){
-                snSub = iceWE;
-                iceWE = 0;
+        else //condtions include some combination of snowpack and snow in canopy, and snowing, raining, or no precip
+        {
+
+            // Implement interception schemes for snow, refactored WR 6/21/23
+            if (Ioption && coeffV>0) {
+                callSnowIntercept(cNode, Intercept,count);
+                snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept() units in cm
+                snCanWE = cNode->getIntSWE();//units in cm
+            } else {
+                cNode->setNetPrecipitation(rain);
             }
-            else{
-                iceWE+=snSub;
-            }
-        }
 
-          snWE = iceWE+liqWE;
-          snSub*=naughttocm;
-          snEvap*=naughttocm;
+            rain = cNode->getNetPrecipitation(); //units in mm
+            rain += snUnload * ctom; // units in mm
 
-        //snowEB
-        ETAge = 0.0;
+            // Here rain is being set by net precipitation which is set from callSnowIntercept
+            // and represents throughfall + unloaded snow  from snow interception (so scaled by coeffV) and precipitation
+            // that falls on the no vegetated fraction of the cell (1-coeffV). refactored WR 6/21/23
 
-        L = latentHFCalc(resFactCalc());
-        Prec = precipitationHFCalc();
+            snDepthm = cmtonaught * snWE / 0.312; // 0.312 is value for bulk density of snow, Sturm et al. 2010
+            //calculate current snow depth for use in the turbulent heat flux calculations and output.
 
-        //if there is no snow left at this point, then bail out of
-        //energy balance.
-        if ( (snWE <= 5e-6) || (snTempC < -800 ) ) {
-	        liqRoute = 0.0;
-	        snWE = 0.0;
-	        iceWE = 0.0;
-	        liqWE = 0.0;
-	        Utot = 0.0;
-	        Usn = 0.0;
-	        Uwat = 0.0;
-	        snTempC = 0.0;
-	        crustAge = 0.0;
-	        densityAge = 0.0;
-        }
-        else {
+            if (snWE < 1e-5) {
 
-	        //find initial state of energy
-	        Utot = Utotold = iceWE*rhoicekg*cpicekJ*snTempC+liqWE*rholiqkg*latFreezekJ; // I am pretty sure this should be rhoicekg CJC 2020
-	        //adjust albedo for age
-	        albedo = agingAlbedo();
-	
-	        //calculate dU
-	        snowEB(ID,cNode); // AJR2008, SKY2008Snow
+                //no precipitation heat flux, as it is totally accounted for in the snow pack energy
+                //   initialization
+                phfOnOff = 0.0;
 
-	        //check for balance
-	        Uerr = (Utot - Utotold) - dUint;
-   
-	        if (Utot < 0.0) { //frozen pack -- change temperature
-                Usn = Utot;// all energy in solid phase
-                Uwat = 0.0;// no energy in liquid phase
-                liqWatCont = 0.0;// no liquid content
-                liqWE = 0.0;// no liq WE
-                liqTempC = 0.0; // reset liq temp to default
-
-                iceWE = snWE;
-
-                //calculate sn temperature, modified THM 2012
-                if (iceWE < 0.1 && iceWE > 0) {
-                    iceTempC = Usn / (cpicekJ * rhoicekg * 0.1);
+                //account for veg height
+                if (coeffH == 0) {
+                    vegHeight = 0.1;
                 } else {
-                    iceTempC = Usn / (cpicekJ * rhoicekg * snWE);
+                    vegHeight = coeffH;
                 }
 
-                //adjust to minimum snow temperature
-                //	RMK: THIS IS A KLUGE THAT IS NECESSARY B/C OF THE
-                //	ONE-LAYER ASSUMPTION. IT IS ALSO REQUIRED B/C OF THE
-                //	SIMPLISTIC WAY WE MODEL GROUND HEAT FLUX. SOMEONE
-                //	NEEDS TO INCORPORATE MULTIPLE LAYERS.
-                if (iceTempC <= minSnTemp) {
-                    iceTempC = minSnTemp;
+                //set the new density age
+                densityAge = 0.0;
+
+                //reinitialize crust age
+                crustAge = 0.0;
+
+                //change mass (volume) quantities to correct units (kJ, m, C, s)
+                iceWE = iceWE * cmtonaught;
+                liqWE = liqWE * cmtonaught;
+                snWE = iceWE + liqWE;
+
+                if (airTemp > 0.0) {
+                    snTempC = 0.0;
+                } else {
+                    snTempC = airTemp;
                 }
 
-                //set pack temperature to ice temperature
-                snTempC = iceTempC;
+                //snowMB
+                // evaporate liquid from ripe pack snWE +=
+                // note evaporation/sublimation flux can be negative or positive, with latter representing condensation/deposition
+                if (snTempC == 0.0) {
 
-	        }//end -- frozen pack
-	  
-            else {//melt
-                Uwat = Utot;
+                    //liq WE update
+                    snEvap = (1 - coeffV) * latentHFCalc(resFactCalc()) * timeSteps /
+                             (rholiqkg * latVapkJ);//*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
+                    liqWE += cmtonaught * ((mtoc * rain) * (1 - snowFracCalc())) * timeSteps /
+                             3600; // Removed snUnload term CJC2020
+
+                    if (liqWE + snEvap <= 0) {
+                        snEvap = liqWE;
+                        liqWE = 0;
+                    } else {
+                        liqWE += snEvap;
+                    }
+
+                    //solid WE update
+                    iceWE += cmtonaught * (mtoc * (rain * snowFracCalc())) * timeSteps / 3600;
+                    snSub = 0.0; // No sublimation occurs CJC2020
+                }
+
+                    //sublimate solid from frozen pack
+                else {
+
+                    //liq WE update
+                    liqWE += cmtonaught * (mtoc * (rain * (1 - snowFracCalc()))) * timeSteps /
+                             3600; // Removed snUnload term CJC2020
+                    snEvap = 0.0; // No evaporation occurs CJC2020
+
+                    //ice WE update
+                    snSub = (1 - coeffV) * latentHFCalc(resFactCalc()) * timeSteps /
+                            (rholiqkg * latSubkJ);//*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
+                    iceWE += cmtonaught * (mtoc * (rain * snowFracCalc())) * timeSteps / 3600;
+
+                    if (iceWE + snSub <= 0) {
+                        snSub = iceWE;
+                        iceWE = 0;
+                    } else {
+                        iceWE += snSub;
+                    }
+                }
+
+                snWE = iceWE + liqWE;
+                snSub *= naughttocm;
+                snEvap *= naughttocm;
+                //set other fluxes
+                L = H = G = Prec = Utotold = 0.0;
+
+                //initialize and record energy balance
+                Utot = dUint = iceWE * rhoicekg * cpicekJ * snTempC // Changed to use rhoicekg CJC 2020
+                               + liqWE * rholiqkg * latFreezekJ;
+
+            } else {
+
+                //account for precipitation heat flux
+                phfOnOff = 1.0;
+
+                //account for veg height
+                if (coeffH == 0) {
+                    vegHeight = 0.1;
+                } else {
+                    vegHeight = coeffH; // unused?
+                }
+
+                //find the new density age
+                densityAge = (snWE * densityAge) / (snWE + mtoc * rain);
+
+                //reset crust age if snowing out
+                if (rain * snowFracCalc() > 1e-3) {
+                    crustAge = 0.0;
+                }
+
+                //change mass (volume) quantities to correct units (kJs)
+                iceWE = iceWE * cmtonaught;
+                liqWE = liqWE * cmtonaught;
+                snWE = iceWE + liqWE;
+
+                //snowMB
+
+                //ripe pack -- evaporate water
+                if (snTempC == 0.0) {
+
+                    //liq WE update
+                    snEvap = (1 - coeffV) * latentHFCalc(resFactCalc()) * timeSteps /
+                             (rholiqkg * latVapkJ);//*naughttocm; // Calculate evaporation from snowpack in cm CJC2020
+                    liqWE += cmtonaught * ((mtoc * rain) * (1 - snowFracCalc())) * timeSteps /
+                             3600; // Removed snUnload term CJC2020
+
+                    if (liqWE + snEvap <= 0) {
+                        snEvap = liqWE;
+                        liqWE = 0;
+                    } else {
+                        liqWE += snEvap;
+                    }
+
+                    //ice WE update
+                    iceWE += cmtonaught * (mtoc * (rain * snowFracCalc())) * timeSteps / 3600;
+                    snSub = 0.0; // No sublimation occurs CJC2020
+                }
+
+                    //frozen pack -- sublimate water
+                else {
+
+                    //liq WE update
+                    liqWE += cmtonaught * (mtoc * (rain * (1 - snowFracCalc()))) * timeSteps /
+                             3600; // Removed snUnload term CJC2020
+                    snEvap = 0.0; // No evaporation occurs CJC2020
+
+                    //ice WE update
+                    snSub = (1 - coeffV) * latentHFCalc(resFactCalc()) * timeSteps /
+                            (rholiqkg * latSubkJ);//*naughttocm; // Calculate sublimation from snowpack in cm CJC2020
+                    iceWE += cmtonaught * (mtoc * (rain * snowFracCalc())) * timeSteps / 3600;
+
+                    if (iceWE + snSub <= 0) {
+                        snSub = iceWE;
+                        iceWE = 0;
+                    } else {
+                        iceWE += snSub;
+                    }
+                }
+
+                snWE = iceWE + liqWE;
+                snSub *= naughttocm;
+                snEvap *= naughttocm;
+
+                //snowEB
+                ETAge = 0.0;
+                L = latentHFCalc(resFactCalc());
+                Prec = precipitationHFCalc();
+
+                //if there is no snow left at this point, then bail out of
+                //energy balance.
+                if ((snWE <= 5e-6) || (snTempC < -800)) {
+                    liqRoute = 0.0;
+                    snWE = 0.0;
+                    iceWE = 0.0;
+                    liqWE = 0.0;
+                    Utot = 0.0;
+                    Usn = 0.0;
+                    Uwat = 0.0;
+                    snTempC = 0.0;
+                    crustAge = 0.0;
+                    densityAge = 0.0;
+                } else {
+
+                    //find initial state of energy
+                    Utot = Utotold = iceWE * rhoicekg * cpicekJ * snTempC + liqWE * rholiqkg *
+                                                                            latFreezekJ; // I am pretty sure this should be rhoicekg CJC 2020
+                    //adjust albedo for age
+                    albedo = agingAlbedo();
+
+                    //calculate dU
+                    snowEB(ID, cNode); // AJR2008, SKY2008Snow
+
+                    //check for balance
+                    Uerr = (Utot - Utotold) - dUint;
+
+                    if (Utot < 0.0) { //frozen pack -- change temperature
+                        Usn = Utot;// all energy in solid phase
+                        Uwat = 0.0;// no energy in liquid phase
+                        liqWatCont = 0.0;// no liquid content
+                        liqWE = 0.0;// no liq WE
+                        liqTempC = 0.0; // reset liq temp to default
+
+                        iceWE = snWE;
+
+                        //calculate sn temperature, modified THM 2012
+                        if (iceWE < 0.1 && iceWE > 0) {
+                            iceTempC = Usn / (cpicekJ * rhoicekg * 0.1);
+                        } else {
+                            iceTempC = Usn / (cpicekJ * rhoicekg * snWE);
+                        }
+
+                        //adjust to minimum snow temperature
+                        //	RMK: THIS IS A KLUGE THAT IS NECESSARY B/C OF THE
+                        //	ONE-LAYER ASSUMPTION. IT IS ALSO REQUIRED B/C OF THE
+                        //	SIMPLISTIC WAY WE MODEL GROUND HEAT FLUX. SOMEONE
+                        //	NEEDS TO INCORPORATE MULTIPLE LAYERS.
+                        if (iceTempC <= minSnTemp) {
+                            iceTempC = minSnTemp;
+                        }
+
+                        //set pack temperature to ice temperature
+                        snTempC = iceTempC;
+
+                    }//end -- frozen pack
+
+                    else {//melt
+                        Uwat = Utot;
+                        Usn = 0.0;
+
+
+                        liqWE = Uwat / (latFreezekJ * rholiqkg); //THM // The only thing THM change was = to +=
+
+                        //make sure that there is enough SWE in the pack for the melt
+                        if (liqWE >= snWE) {
+                            liqWE = snWE; // this is here because the liqWE += term above
+                        }                  //  can result in liqWE > snWE
+                        //assign water equivalents
+                        iceWE = snWE - liqWE;
+
+                        //put in routing bucket
+                        if (liqWE > snliqfrac * iceWE) { // Added snliqfrac by CJC2020
+                            //there is enough water left over
+                            if (liqWE != snWE) {
+                                liqRoute = (liqWE - snliqfrac * iceWE); // Added snliqfrac by CJC2020
+                                liqWE = liqWE - liqRoute;
+                                snWE = liqWE + iceWE;
+                            }
+                                //there is no more pack
+                            else {
+                                liqRoute = snWE;
+                                liqWE = 0.0;
+                                iceWE = 0.0;
+                                snWE = 0.0;
+                            }
+                        }
+                        //set temperatures to 0 Celsius
+                        snTempC = 0.0;
+                        iceTempC = 0.0;
+                        liqTempC = 0.0;
+                    }//end -- melt
+                }//end -- snow left after initial mass decrement
+            }//end -- existing pack at beginning of time step
+
+            //make sure that we still have snow
+            if (snWE <= 5e-6) {
+                liqRoute += snWE;
+                snWE = 0.0;
+                liqWE = 0.0;
+                iceWE = 0.0;
+                crustAge = 0.0;
+                densityAge = 0.0;
+                Utot = 0.0;
                 Usn = 0.0;
+                Uwat = 0.0;
+            } else {
+                crustAge += timeSteph;
+                densityAge += timeSteph;
+                snOnOff = 1.0;
+            }
 
-
-                liqWE = Uwat/(latFreezekJ*rholiqkg); //THM // The only thing THM change was = to +=
-
-                //make sure that there is enough SWE in the pack for the melt
-                if (liqWE >= snWE) {
-                    liqWE = snWE; // this is here because the liqWE += term above
-                }				  //  can result in liqWE > snWE
-                //assign water equivalents
-                iceWE = snWE - liqWE;
-
-                //put in routing bucket
-                if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
-                    //there is enough water left over
-                    if (liqWE != snWE ) {
-                        liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC2020
-                        liqWE = liqWE - liqRoute;
-                        snWE = liqWE + iceWE;
-                    }
-                    //there is no more pack
-                    else {
-                        liqRoute = snWE;
-                        liqWE = 0.0;
-                        iceWE = 0.0;
-                        snWE = 0.0;
-                    }
-                }
-                //set temperatures to 0 Celsius
-                snTempC = 0.0;iceTempC = 0.0;liqTempC = 0.0;
-            }//end -- melt
-        }//end -- snow left after initial mass decrement
-      }//end -- existing pack at beginning of time step
-      
-      //make sure that we still have snow
-      if (snWE <= 5e-6) {
-          liqRoute += snWE;
-          snWE = 0.0;
-          liqWE = 0.0;
-          iceWE = 0.0;
-          crustAge = 0.0;
-          densityAge = 0.0;
-          Utot = 0.0;
-          Usn = 0.0;
-          Uwat = 0.0;
-      }
-      else {
-          crustAge += timeSteph;
-          densityAge += timeSteph;
-          snOnOff = 1.0;
-      }
-
-      //mass balance leaves >= 0 snow, then prepare for output in cm
-      snWE = naughttocm*snWE;
-      iceWE = naughttocm*iceWE;
-      liqWE = naughttocm*liqWE;
-      liqRoute = naughttocm*liqRoute;
+            //mass balance leaves >= 0 snow, then prepare for output in cm
+            snWE = naughttocm * snWE;
+            iceWE = naughttocm * iceWE;
+            liqWE = naughttocm * liqWE;
+            liqRoute = naughttocm * liqRoute;
 
 
 
-	  // Set ET variables equal to zero due to snowpack
-      // ET variables are set to zero for canopy when snow in canopy, see tSnowIntercept
-      cNode->setEvapSoil(0.0);
-      cNode->setActEvap(0.0);
+            // Set ET variables equal to zero due to snowpack
+            // ET variables are set to zero for canopy when snow in canopy, see tSnowIntercept
+            cNode->setEvapSoil(0.0);
+            cNode->setActEvap(0.0);
 
-      setToNodeSnP(cNode);
-      setToNode(cNode);
+            setToNodeSnP(cNode);
+            setToNode(cNode);
 
-    }//end yes-snow
+        }//end yes-snow
 
 
-    // Estimate average Ep and cloudiness
-    if (rainPtr->getoptStorm() && Io > 0.0) {
-      potEvap = cNode->getPotEvap();
-      SkyC += skyCover;
-      cnt++;
-    }
+        // Estimate average Ep and cloudiness
+        if (rainPtr->getoptStorm() && Io > 0.0) {
+            potEvap = cNode->getPotEvap();
+            SkyC += skyCover;
+            cnt++;
+        }
 
-    //get the next node information for while loop
-    cNode = nodeIter.NextP();
-    count++;
-    
-  }//end while-nodes
-  timeCount++;
-  oldTimeStep = hourlyTimeStep;    
-  hourlyTimeStep++;
+        //get the next node information for while loop
+        cNode = nodeIter.NextP();
+        count++;
 
-  // AJR2008, SKY2008Snow
-  // Submit the basin average value
-  if (rainPtr->getoptStorm()) {
+    }//end while-nodes
+    timeCount++;
+    oldTimeStep = hourlyTimeStep;
+    hourlyTimeStep++;
+
+    // AJR2008, SKY2008Snow
+    // Submit the basin average value
+    if (rainPtr->getoptStorm()) {
         // SKY2008Snow -- Following bug corrected to account for SkyC division by cnt again in the next ComputeDailyEpCld call
         cnt ? SkyC = SkyC : SkyC = skyCover;
 
@@ -1398,19 +793,198 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
         EP = ApproximateEP();
 
         // Submit values to climate simulator
-        weatherSimul->ComputeDailyEpCld(EP, SkyC/cnt);
+        weatherSimul->ComputeDailyEpCld(EP, SkyC / cnt);
 
         // Assign the radiation variables to the 'tHydrometStoch'
         if (!count) {
-          weatherSimul->setSunH(alphaD);
-          weatherSimul->setSinH(sinAlpha);
-          weatherSimul->setIo(Io);
-          weatherSimul->setIdir(Ics);
-          weatherSimul->setIdif(Ids);
-          weatherSimul->OutputHydrometVars();
+            weatherSimul->setSunH(alphaD);
+            weatherSimul->setSinH(sinAlpha);
+            weatherSimul->setIo(Io);
+            weatherSimul->setIdir(Ics);
+            weatherSimul->setIdif(Ids);
+            weatherSimul->OutputHydrometVars();
         }
-  }
-  return;
+    }
+    }
+
+//---------------------------------------------------------------------------
+//
+//		tSnowIntercept::callSnowIntercept()
+//
+//    Calls the physical algorithms from tSnow::callSnowPack(). Some of
+//    tIntercept::callIntercept() is implemented for the case when there is
+//    no snow.
+//
+//---------------------------------------------------------------------------
+
+void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int count)
+{
+    double CanStorage, ctos, evapWetCanopy, can_flx;
+    double subFrac, unlFrac, precip, Isnow, throughfall;// SKY2008Snow, AJR2008
+    CanStorage = node->getCanStorage();
+    can_flx = 0;
+
+    //set meteorolgical conditions
+    rHumidity = node->getRelHumid();
+    airTemp = node->getAirTemp();
+    airTempK = CtoK(airTemp);
+    windSpeed = node->getWindSpeed();
+    precip = node->getRain()*coeffV; //precip scaled by veg fraction
+    LAI = coeffLAI;
+
+    //reinitialize snow interception model
+    Iold = rholiqkg*cmtonaught*(node->getIntSWE());
+    Qcs = 0.0;
+    Lm = 0.0;
+    liqWE = node->getLiqWE(); //cm
+    iceWE = node->getIceWE(); //cm
+    snWE = liqWE + iceWE; //cm
+
+
+    if ( (precip*snowFracCalc() < 1e-4) && (Iold < 1e-3) ) {
+        //The below code block account for the case where there is no snow in canopy and it's not snowing
+        // but could be raining (i.e. rain on snow). Basically this emulates callEvapPotential and callEvapoTrans,
+        // This is necessary to simulate potential evaporation and subsequently evaporation from the canopy. Terms that are related
+        // to soil are reset to zero on the node.
+
+        I = Iold = Lm = Qcs = 0.0;
+
+        //Calculate the Potential and Actual Evaporation
+        if(evapotransOption == 1){
+            EvapPenmanMonteith(node); // call to get EvapPot, but energy balance for soil es
+        }
+        else if(evapotransOption == 2){
+            EvapDeardorff(node); // SKY2008Snow
+        }
+        else if(evapotransOption == 3){
+            EvapPriestlyTaylor(node); // SKY2008Snow
+        }
+        else if(evapotransOption == 4){
+            EvapPan();
+        }
+        else{
+            cout << "\nEvapotranspiration Option " << evapotransOption;
+            cout <<" not valid." << endl;
+            cout << "\tPlease use :" << endl;
+            cout << "\t\t(1) for Penman-Monteith Method" << endl;
+            cout << "\t\t(2) for Deardorff Method"<< endl;
+            cout << "\t\t(3) for Priestly-Taylor Method" << endl;
+            cout << "\t\t(4) for Pan Evaporation Measurements" << endl;
+            cout << "Exiting Program...\n\n"<<endl;
+            exit(1);
+        }
+        // Set actual evaporation to 0 since snow pack exists and soil evaporation is function of actual evap
+        node->setActEvap(0.0);
+
+        // Set ground element-scale fluxes to zero and surface and soil to snow temp
+        node->setNetRad(0.0);
+        node->setGFlux(0.0);
+        node->setHFlux(0.0);
+        node->setLFlux(0.0);
+        node->setLongRadOut(0.0);
+        node->setSurfTemp(node->getSnTempC()); //assume surface temp == snow temp, note if snWE < 1e-4 snow intercept should not be called
+        node->setSoilTemp(node->getSnTempC()); //this should be updated with n-layer snow model
+
+        // follows structure of
+        setToNode(node);
+
+        ComputeETComponents(interceptModel, node, count, 1);
+
+        //Set canopy snow components to 0
+        node->setIntSWE(0);
+        node->setIntSnUnload(0);
+        node->setIntSub(0);
+        node->setIntPrec(0);
+
+
+    }//end -- no snow
+
+        //snowing with or without snow in canopy
+    else {
+
+        albedo = 0.8;
+
+        //Note no actual unit conversion is necessary from mm to kg/m^2\
+    //Here mm values (i.e. canopy storage, precip) are assumed to be converted to kg/m^2
+
+        //Add CanStorage to I_old and reset to node canopy storage to zero
+        if(CanStorage>1e-5){
+            Iold += CanStorage; //CanStorage has been scaled by coeffV, through scaling of precip
+            node->setCanStorage(0.0);
+        }
+
+        //maximum mass of snow stored in canopy (kg/m^2)
+        Imax = 4.4*LAI;
+
+        //compute new intercepted snow (kg/m^2)
+        Isnow = 0.7*(Imax - Iold)*(1 - exp(-precip/Imax));
+        I = Iold + Isnow;
+
+        //precip minus intercepted snow (i.e. throughfall)
+        throughfall = precip - Isnow;
+
+        //if there was old snow, sublimate and unload
+
+        if (Iold > 0.0) {
+            computeSub();
+            computeUnload();
+        }
+        else {
+            Qcs = 0.0;//sublimation term
+            Lm = 0.0;//unloading term
+        }
+
+        //adjust amount of snow in canopy
+        Iold = I;
+
+        I += Qcs - Lm; //I == interception (kg), Qcs == sublimation (kg) (sign computed), Lm == unloading (computed positive) (kg)
+
+        // SKY2008Snow based on AJR2008's recommendation starts here (water balance now preserved)
+        if (I < 0.0) {
+
+            if (Qcs < 0.0) {
+                subFrac = fabs(Qcs)/(fabs(Qcs)+Lm);
+                unlFrac = Lm/(fabs(Qcs)+Lm);
+            }
+            else {
+                subFrac = 0.0;
+                unlFrac = 1.0;
+            }
+            Qcs -= I*subFrac;
+            Lm += I*unlFrac;
+            I = 0.0;
+        }
+
+//        // Check for numerical errors: absorb the imbalance
+//        can_flx = precip - Qcs - (Iold-I) - throughfall;
+//        if (precip) {
+//            if (fabs(can_flx)/precip*100.0 > 0.5)
+//                throughfall += can_flx;
+//        }
+
+
+        // SKY2008Snow based on AJR2008's recommendation ends here
+        //set adjusted fluxes and states to node
+        // because precip is now scaled by coeffV these values now only reflect fluxes and stores in the canopy
+        node->setIntSWE( naughttocm*( 1/rholiqkg )*I );
+        node->setIntSnUnload(naughttocm*( 1/rholiqkg )*Lm);
+        node->setIntSub( naughttocm*( 1/rholiqkg )*Qcs);
+        node->addIntSub( naughttocm*( 1/rholiqkg )*Qcs);
+        node->addIntUnl( naughttocm*( 1/rholiqkg )*Lm );
+        node->setIntPrec(Isnow*( 1/rholiqkg )*naughttocm);
+        // Rate for the _ENTIRE_ cell:
+        node->setNetPrecipitation(throughfall + (1-coeffV)*node->getRain());
+        // note mm and kg/m^2 requires no conversion
+
+        //set wet and dry evap to 0 when snow in canopy
+        node->setEvapWetCanopy(0.0);
+        node->setEvapDryCanopy(0.0);
+        node->setEvapoTrans(0.0);
+        node->setPotEvap(0.0);
+
+    }//end -- snow exists
+
+    return;
 }
 
 /****************************************************************************
@@ -1430,56 +1004,51 @@ void tSnowPack::callSnowPack(tIntercept * Intercept, int flag, tSnowIntercept * 
 //
 //---------------------------------------------------------------------------
 
-void tSnowPack::getFrNodeSnP(tCNode* node)
-{
-  
-  liqWE = node->getLiqWE(); //cm
-  iceWE = node->getIceWE(); //cm
-  liqRoute = 0.0; //cm
-  snWE = liqWE + iceWE; //cm
-  
-  //deal with the snow temperatures
-  if (snWE > 1e-4) {
-	  
-    snTempC = node->getSnTempC(); //Celsius
-    iceTempC = snTempC; //Celsius
-    liqTempC = 0.0; //default -- if this is 0.0, then the other should have been
-		    //		 set to 0.0 during the last time step.
+void tSnowPack::getFrNodeSnP(tCNode *node) {
 
-  }
-  else if (airTemp > 0.0) {
-    //in case it is snowing out and the air temperature is greater than 0.0 (this is
-    //actually a possibility). This also assumes that there is no pack.
-    snTempC = 0.0;
-    iceTempC = 0.0;
-    liqTempC = 0.0;
-  }
-  else if (airTemp <= 0.0) {
-    //if the air temperature is less than zero and there is no pack, assume 
-    //that the temperature of the phases are all the air temp.
-    snTempC = airTemp;
-    iceTempC = airTemp;
-    liqTempC = airTemp;
-  }
-  
-  crustAge = node->getCrustAge();
-  densityAge = node->getDensityAge();
-  ETAge = node->getEvapoTransAge();
+    liqWE = node->getLiqWE(); //cm
+    iceWE = node->getIceWE(); //cm
+    liqRoute = 0.0; //cm
+    snWE = liqWE + iceWE; //cm
 
-  persMax = node->getPersTimeMax();
-  persMaxtemp = node->getPersTime();
-  
-  peakSnWE = node->getPeakSWE();
-  peakSnWEtemp = node->getPeakSWETemp();
+    //deal with the snow temperatures
+    if (snWE > 1e-4) {
 
-  inittime = node->getInitPackTime();
-  inittimeTemp = node->getInitPackTimeTemp();
-  peaktime = node->getPeakPackTime();
- 
-  return;
-  
+        snTempC = node->getSnTempC(); //Celsius
+        iceTempC = snTempC; //Celsius
+        liqTempC = 0.0; //default -- if this is 0.0, then the other should have been
+        //		 set to 0.0 during the last time step.
+
+    } else if (airTemp > 0.0) {
+        //in case it is snowing out and the air temperature is greater than 0.0 (this is
+        //actually a possibility). This also assumes that there is no pack.
+        snTempC = 0.0;
+        iceTempC = 0.0;
+        liqTempC = 0.0;
+    } else if (airTemp <= 0.0) {
+        //if the air temperature is less than zero and there is no pack, assume
+        //that the temperature of the phases are all the air temp.
+        snTempC = airTemp;
+        iceTempC = airTemp;
+        liqTempC = airTemp;
+    }
+
+    crustAge = node->getCrustAge();
+    densityAge = node->getDensityAge();
+    ETAge = node->getEvapoTransAge();
+
+    persMax = node->getPersTimeMax();
+    persMaxtemp = node->getPersTime();
+
+    peakSnWE = node->getPeakSWE();
+    peakSnWEtemp = node->getPeakSWETemp();
+
+    inittime = node->getInitPackTime();
+    inittimeTemp = node->getInitPackTimeTemp();
+    peaktime = node->getPeakPackTime();
+
 }
-  
+
 //---------------------------------------------------------------------------
 //
 //			  tSnowPack::setToNodeSnP()
@@ -1488,25 +1057,24 @@ void tSnowPack::getFrNodeSnP(tCNode* node)
 //
 //---------------------------------------------------------------------------
 
-void tSnowPack::setToNodeSnP(tCNode* node)
-{
-  
-  //state variables
-  node->setLiqWE(liqWE);
-  node->setIceWE(iceWE);
-  node->setSnTempC(snTempC);
-  node->setCrustAge(crustAge);
-  node->setDensityAge(densityAge);
-  node->setEvapoTransAge(ETAge);
-  node->setSnSub(snSub); // scaled by non-vegetated area
-  node->setSnEvap(snEvap); // scaled by non-vegetated area
+void tSnowPack::setToNodeSnP(tCNode *node) {
 
-  //mass flux
-  node->setLiqRouted(liqRoute);
+    //state variables
+    node->setLiqWE(liqWE);
+    node->setIceWE(iceWE);
+    node->setSnTempC(snTempC);
+    node->setCrustAge(crustAge);
+    node->setDensityAge(densityAge);
+    node->setEvapoTransAge(ETAge);
+    node->setSnSub(snSub); // scaled by non-vegetated area
+    node->setSnEvap(snEvap); // scaled by non-vegetated area
 
-  //energy fluxes, changes
-  node->setDU(dUint);
-  node->setUnode(Utot);
+    //mass flux
+    node->setLiqRouted(liqRoute);
+
+    //energy fluxes, changes
+    node->setDU(dUint);
+    node->setUnode(Utot);
 /*  node->setSnLHF(L*kilotonaught);
   node->setSnSHF(H*kilotonaught);
   node->setSnPHF(Prec*kilotonaught);
@@ -1515,59 +1083,57 @@ void tSnowPack::setToNodeSnP(tCNode* node)
   node->setSnRLout(RLout*kilotonaught);
   node->setSnRSin(RSin*kilotonaught);*/
 
-  //outputs
-  node->setUerror(Uerr);
+    //outputs
+    node->setUerror(Uerr);
 
-  //times and peaks
-  if ( (iceWE + liqWE) <= 1e-5 ) {
-    persMaxtemp = 0.0;
-    inittimeTemp = 0.0;
-  }
+    //times and peaks
+    if ((iceWE + liqWE) <= 1e-5) {
+        persMaxtemp = 0.0;
+        inittimeTemp = 0.0;
+    }
 
-  if ( snWE > 1e-5) {
-     persMaxtemp += 1.0;
+    if (snWE > 1e-5) {
+        persMaxtemp += 1.0;
 
-     if (persMaxtemp > persMax) {
-      persMax = persMaxtemp;
-      
-      if (persMaxtemp-1 < 1)
-	inittimeTemp = hourlyTimeStep;
+        if (persMaxtemp > persMax) {
+            persMax = persMaxtemp;
 
-     }
-  }
+            if (persMaxtemp - 1 < 1)
+                inittimeTemp = hourlyTimeStep;
 
-  if ( snWE >= peakSnWE) {
-     peakSnWE = snWE;
-     peaktime = hourlyTimeStep;
-     inittime = inittimeTemp;
-  }
+        }
+    }
 
-  node->setPersTimeMax(persMax);
-  node->setPersTime(persMaxtemp);
-  node->setPeakSWE(peakSnWE);
-  node->setPeakPackTime(double(peaktime));
-  node->setInitPackTime(double(inittime));
-  node->setInitPackTimeTemp(double(inittimeTemp));
-  
-  //cumulative outputs
-  node->addLatHF(L);
-  node->addSnSub(snSub); // cumulative snow sublimation CJC2020
-  node->addSnEvap(snEvap); // cumulative snow evaporation CJC2020
-  node->addMelt(liqRoute);
-  node->addSHF(H*timeSteps);
-  node->addPHF(Prec*timeSteps);
-  node->addGHF(G*timeSteps);
-  node->addRLin(RLin*timeSteps);
-  node->addRLout(RLout*timeSteps);
-  node->addRSin(RSin*timeSteps);
-  node->addCumUerror(Uerr*timeSteps);
-  node->addCumHrsSnow(snOnOff);
+    if (snWE >= peakSnWE) {
+        peakSnWE = snWE;
+        peaktime = hourlyTimeStep;
+        inittime = inittimeTemp;
+    }
 
-  //reset fluxes to zero
-  L = H = Prec = G = RLin = RLout = RSin = dUint = 0.0;
-  liqRoute = 0.0;
-  
-  return;
+    node->setPersTimeMax(persMax);
+    node->setPersTime(persMaxtemp);
+    node->setPeakSWE(peakSnWE);
+    node->setPeakPackTime(double(peaktime));
+    node->setInitPackTime(double(inittime));
+    node->setInitPackTimeTemp(double(inittimeTemp));
+
+    //cumulative outputs
+    node->addLatHF(L);
+    node->addSnSub(snSub); // cumulative snow sublimation CJC2020
+    node->addSnEvap(snEvap); // cumulative snow evaporation CJC2020
+    node->addMelt(liqRoute);
+    node->addSHF(H * timeSteps);
+    node->addPHF(Prec * timeSteps);
+    node->addGHF(G * timeSteps);
+    node->addRLin(RLin * timeSteps);
+    node->addRLout(RLout * timeSteps);
+    node->addRSin(RSin * timeSteps);
+    node->addCumUerror(Uerr * timeSteps);
+    node->addCumHrsSnow(snOnOff);
+
+    //reset fluxes to zero
+    L = H = Prec = G = RLin = RLout = RSin = dUint = 0.0;
+    liqRoute = 0.0;
 }
 
 
@@ -1590,12 +1156,11 @@ void tSnowPack::setToNodeSnP(tCNode* node)
 //
 //---------------------------------------------------------------------------
 
-double tSnowPack::densityFromAge()
-{
-  
-  double rhotemporary(400); //kg/m^3
+double tSnowPack::densityFromAge() {
 
-  return rhotemporary;
+    double rhotemporary(400); //kg/m^3
+
+    return rhotemporary;
 }
 
 /****************************************************************************
@@ -1624,15 +1189,15 @@ double tSnowPack::densityFromAge()
 //
 //---------------------------------------------------------------------------
 
-double tSnowPack::latentHFCalc(double Kaero)
-{
+double tSnowPack::latentHFCalc(double Kaero) {
 
-  double lhf;
-  if (snTempC == 0.0)
-    lhf = (latVapkJ*0.622*rhoAir*Kaero*(vPress - 6.111)/atmPress); //evaporation by THM 2012
-  else
-    lhf = (latSubkJ*0.622*rhoAir*Kaero*(vPress - 6.112*exp((17.67*snTempC)/(snTempC+243.5)))/atmPress); //sublimation by THM 2012
-  return lhf;
+    double lhf;
+    if (snTempC == 0.0)
+        lhf = (latVapkJ * 0.622 * rhoAir * Kaero * (vPress - 6.111) / atmPress); //evaporation by THM 2012
+    else
+        lhf = (latSubkJ * 0.622 * rhoAir * Kaero * (vPress - 6.112 * exp((17.67 * snTempC) / (snTempC + 243.5))) /
+               atmPress); //sublimation by THM 2012
+    return lhf;
 }
 
 //----------------------------------------------------------------------------
@@ -1649,13 +1214,12 @@ double tSnowPack::latentHFCalc(double Kaero)
 //
 //----------------------------------------------------------------------------
 
-double tSnowPack::sensibleHFCalc(double Kaero)
-{
+double tSnowPack::sensibleHFCalc(double Kaero) {
 
-  double shf;
-  
-  shf =  (rhoAir*cpairkJ*Kaero*((airTemp+273.15) - (snTempC+273.15)));
-  return shf;
+    double shf;
+
+    shf = (rhoAir * cpairkJ * Kaero * ((airTemp + 273.15) - (snTempC + 273.15)));
+    return shf;
 }
 
 //-----------------------------------------------------------------------------
@@ -1672,22 +1236,21 @@ double tSnowPack::sensibleHFCalc(double Kaero)
 //
 //-----------------------------------------------------------------------------
 
-double tSnowPack::snowFracCalc()
-{
+double tSnowPack::snowFracCalc() {
 
-  double snowfrac;
+    double snowfrac;
 
-  double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)—updated for CJC thesis (see table 11)
+    double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)—updated for CJC thesis (see table 11)
 
-  if ( airTemp <= TMin )
-	  snowfrac = 1; // all ice
-  if ( airTemp >= TMax )
-	  snowfrac = 0; // all liquid
-  if ( (airTemp >= TMin)&&(airTemp <= TMax) )
-	  snowfrac = (TMax - airTemp)/(TMax - TMin); //mixture
+    if (airTemp <= TMin)
+        snowfrac = 1; // all ice
+    if (airTemp >= TMax)
+        snowfrac = 0; // all liquid
+    if ((airTemp >= TMin) && (airTemp <= TMax))
+        snowfrac = (TMax - airTemp) / (TMax - TMin); //mixture
 
-  
-  return snowfrac;
+
+    return snowfrac;
 }
 
 //------------------------------------------------------------------------------
@@ -1709,159 +1272,25 @@ double tSnowPack::snowFracCalc()
 //
 //------------------------------------------------------------------------------
 
-double tSnowPack::precipitationHFCalc()
-{
-  double phf;
-  double frac;
+double tSnowPack::precipitationHFCalc() {
+    double phf = 0;
+    double frac;
 
-  //  frac = snowFracCalc();
-  snPrec = (snowFracCalc()*(rain + ctom*snUnload))*mtoc; //convert from mm to cm
-  liqPrec = ((1 - snowFracCalc())*(rain + ctom*snUnload))*mtoc; //convert from mm to cm
+    //  frac = snowFracCalc();
+    snPrec = (snowFracCalc() * (rain + ctom * snUnload)) * mtoc; //convert from mm to cm
+    liqPrec = ((1 - snowFracCalc()) * (rain + ctom * snUnload)) * mtoc; //convert from mm to cm
 
-  if (airTemp > 0) {
-    phf = (cmtonaught*snPrec*0*rholiqkg*cpicekJ + 
-		    cmtonaught*liqPrec*( latFreezekJ + airTemp*rholiqkg*cpwaterkJ))/3600;
+    if (airTemp > 0) {
+        phf = (cmtonaught * snPrec * 0 * rholiqkg * cpicekJ +
+               cmtonaught * liqPrec * (latFreezekJ + airTemp * rholiqkg * cpwaterkJ)) / 3600;
 
-  }
-  else if (airTemp <= 0) {
-    phf = (cmtonaught*snPrec*airTemp*rholiqkg*cpicekJ + 
-		    cmtonaught*liqPrec*latFreezekJ*rholiqkg)/3600;
+    } else if (airTemp <= 0) {
+        phf = (cmtonaught * snPrec * airTemp * rholiqkg * cpicekJ +
+               cmtonaught * liqPrec * latFreezekJ * rholiqkg) / 3600;
 
-  }
+    }
 
-  return phf;
-}
-
-
-
-//-----------------------------------------------------------------------------
-//
-//			    tSnowPack::latHeatVapCalc()
-//
-//	This function returns the latent heat of the vaporization in kJ/kg. It 
-//	was constructed in order to ease incorporation of more precise functional
-//	values of the latent heat of vaporization in a multilayered model.
-//
-//-----------------------------------------------------------------------------
-
-double tSnowPack::latHeatVapCalc()
-{
-
-  double lhvap(2470);
-
-  return lhvap;
-}
-
-//-----------------------------------------------------------------------------
-//
-//			    tSnowPack::latHeatFreezeCalc()
-//
-//	This function returns the latent heat of the freezing in kJ/kg. It 
-//	was constructed in order to ease incorporation of more precise functional
-//	values of the latent heat of vaporization in a multilayered model.
-//	
-//-----------------------------------------------------------------------------
-
-double tSnowPack::latHeatFreezeCalc()
-{
-
-  double lhfreeze(334);
-
-  return lhfreeze;
-}
-
-//------------------------------------------------------------------------------
-//
-//			      tSnowPack::latHeatSubCalc()
-//
-//
-//	This function returns the latent heat of the sublimation in kJ/kg. It 
-//	was constructed in order to ease incorporation of more precise functional
-//	values of the latent heat of vaporization in a multilayered model.
-//	
-//------------------------------------------------------------------------------
-
-double tSnowPack::latHeatSubCalc()
-{
-
-  double lhsub(2470+334);
-
-  return lhsub;
-}
-
-//------------------------------------------------------------------------------
-//
-//			    tSnowPack::heatCapVapCalc()
-//
-//	Returns the heat capacity of water vapor in kJ/kg. It was constructed
-//	in order to allow easy incorporation of more precise values into a 
-//	multilayered model.
-//
-//------------------------------------------------------------------------------
-
-double tSnowPack::heatCapAirCalc()
-{
-  double heatcapvap(1.01);
-
-  return heatcapvap;
-}
-
-//-------------------------------------------------------------------------------
-//
-//			      tSnowPack::heatCapSolCalc()
-//
-//	Returns the heat capacity of solid water in kJ/kg. It was constructed
-//	in order to allow easy incorporation of more precise values into a 
-//	multilayered model.
-//
-//-------------------------------------------------------------------------------
-
-double tSnowPack::heatCapSolCalc()
-{
-  double heatcapsol(2.1);
-
-  return heatcapsol;
-}
-
-//--------------------------------------------------------------------------------
-//
-//			      tSnowPack::heatCapLiqCalc()
-//			      
-//
-//	Returns the heat capacity of liquid water in kJ/kg. It was constructed
-//	in order to allow easy incorporation of more precise values into a 
-//	multilayered model.
-//
-//--------------------------------------------------------------------------------
-
-double tSnowPack::heatCapLiqCalc()
-{
-  double heatcapliq(4.19);
-
-  return heatcapliq;
-}
-
-//---------------------------------------------------------------------------------
-//
-//			    tSnowPack::vapPressSnowSurfCalc()
-//
-//	Returns the vapor pressure at the snow surface from the Clausisu-Clayperyon (sp?)
-//	relationship. This assumes that the air is saturated at the snow surface.
-//
-//						    References: Dingman (2002)
-//								Wigmosta et al (1994)
-//								Anderson (1976)
-//								    
-//---------------------------------------------------------------------------------
-
-double tSnowPack::vapPressSnowSurfCalc()
-{
-  double vpresssnowsurf(0.0);
-
-  // From Bras (1990)
-  vpresssnowsurf = 6.112*exp((17.67*snTempC)/(snTempC + 243.5));
-    
-  return vpresssnowsurf;
+    return phf;
 }
 
 //-----------------------------------------------------------------------------------
@@ -1881,16 +1310,15 @@ double tSnowPack::vapPressSnowSurfCalc()
 //
 //-----------------------------------------------------------------------------------
 
-double tSnowPack::agingAlbedo()
-{
-  double alb;
+double tSnowPack::agingAlbedo() {
+    double alb;
 
-  if (liqWE < 1e-5)
-    alb = 0.85*pow(0.94,pow(crustAge/24,0.58)); // dry snow
-  else
-    alb = 0.85*pow(0.82,pow(crustAge/24,0.46)); // wet snow
+    if (liqWE < 1e-5)
+        alb = 0.85 * pow(0.94, pow(crustAge / 24, 0.58)); // dry snow
+    else
+        alb = 0.85 * pow(0.82, pow(crustAge / 24, 0.46)); // wet snow
 
-  return alb;
+    return alb;
 }
 
 //-----------------------------------------------------------------------------------
@@ -1904,325 +1332,497 @@ double tSnowPack::agingAlbedo()
 //
 //-----------------------------------------------------------------------------------
 
-double tSnowPack::resFactCalc()
-{
-  
-  double rf, ra;
-  double vonKarm = 0.41;
-  double vegHeight, vegFrac, vegBare, windSpeedBare;
-  double zm, zom, zov, d, rav, ras;
+double tSnowPack::resFactCalc() {
 
-  if(coeffH == 0)
-    vegHeight = 0.1;
-  else 
-    vegHeight = coeffH; // vegHeight in meters
+    double rf, ra;
+    double vonKarm = 0.41;
+    double vegHeight, vegFrac, vegBare, windSpeedBare;
+    double zm, zom, zov, d, rav, ras;
 
-  //THM 2012 added for grassland
-  if(coeffH < 1){
-    vegHeight = coeffH/250;
-    coeffV = 0.1;
-  }
-  else {
-      vegHeight = coeffH;
-  }
-  if(vegHeight > snDepthm) {
-      vegHeight = vegHeight - snDepthm;
-  }
-  else {
-      vegHeight = 0.1; // aka height of snow
-  }
-	 
-  vegBare = 0.1; // height of bare soilc
-	
-  vegFrac = coeffV;
+    if (coeffH == 0)
+        vegHeight = 0.1;
+    else
+        vegHeight = coeffH; // vegHeight in meters
 
-  if(windSpeed == 0.0 || fabs(windSpeed-9999.99)<1e-3) {
-      windSpeedC = 0.01;    //Minimum wind speed (m/s)
-  }
-  else {
-      windSpeedC = windSpeed;
-  }
-
-  // Compute below canopy windspeed at snow surface following equation Moreno et al. (2016) CJC 2020
-  if (snDepthm < coeffH ) {
-    windSpeedC = windSpeedC*exp(-0.5*coeffLAI*(1-(snDepthm/coeffH)));
+    //THM 2012 added for grassland
+    if (coeffH < 1) {
+        vegHeight = coeffH / 250;
+        coeffV = 0.1;
+    } else {
+        vegHeight = coeffH;
     }
-  
-  // Compute aerodynamic resistance for vegetation
-  zm = 2.0 + vegHeight;
-  zom = 0.13*vegHeight;
-  zov = 0.013*vegHeight;
-  d = 0.67*vegHeight;
-  rav = log((zm-d)/zom)*log((zm-d)/zov)/(windSpeedC*pow(vonKarm,2));
+    if (vegHeight > snDepthm) {
+        vegHeight = vegHeight - snDepthm;
+    } else {
+        vegHeight = 0.1; // aka height of snow
+    }
 
-  // Compute aerodynamic resistance for bare soil
-  zm = 2.0 + vegBare;
-  zom = 0.13*vegBare;
-  zov = 0.013*vegBare;
-  d = 0.67*vegBare;
-  
-  ras = log((zm-d)/zom)*log((zm-d)/zov)/(windSpeedC*pow(vonKarm,2));
-	
-  ra = (1-vegFrac)*ras + vegFrac*rav;
-  rf = 1/ra; // Otherwise known as kaero
-  
-  return rf;
+    vegBare = 0.1; // height of bare soilc
+
+    vegFrac = coeffV;
+
+    if (windSpeed == 0.0 || fabs(windSpeed - 9999.99) < 1e-3) {
+        windSpeedC = 0.01;    //Minimum wind speed (m/s)
+    } else {
+        windSpeedC = windSpeed;
+    }
+
+    // Compute below canopy windspeed at snow surface following equation Moreno et al. (2016) CJC 2020
+    if (snDepthm < coeffH) {
+        windSpeedC = windSpeedC * exp(-0.5 * coeffLAI * (1 - (snDepthm / coeffH)));
+    }
+
+    // Compute aerodynamic resistance for vegetation
+    zm = 2.0 + vegHeight;
+    zom = 0.13 * vegHeight;
+    zov = 0.013 * vegHeight;
+    d = 0.67 * vegHeight;
+    rav = log((zm - d) / zom) * log((zm - d) / zov) / (windSpeedC * pow(vonKarm, 2));
+
+    // Compute aerodynamic resistance for bare soil
+    zm = 2.0 + vegBare;
+    zom = 0.13 * vegBare;
+    zov = 0.013 * vegBare;
+    d = 0.67 * vegBare;
+
+    ras = log((zm - d) / zom) * log((zm - d) / zov) / (windSpeedC * pow(vonKarm, 2));
+
+    ra = (1 - vegFrac) * ras + vegFrac * rav;
+    rf = 1 / ra; // Otherwise known as kaero
+
+    return rf;
 }
 
-//-------------------------------------------------------------------------
+
+/****************************************************************************
+**
+**		      tSnowIntercept -- Physical Routines
+**
+**	Functions that compute changes internal to the canopy for
+**	tSnowIntercept::callSnowIntercept. A loading function should probably
+**	be implemented in order to fully modulate the algorithm.
+**
+****************************************************************************/
+
+//---------------------------------------------------------------------------
 //
-// tSnowPack::inShortWaveSn() Function
+//		tSnowIntercept::computeSub()
 //
-//  This is modified, including comments, from tEvapoTrans::inShorWave().
-//  Where we have modified things, it is noted.
-//
-// Calculate the Clear Sky Incoming Direct Solar Radiation Intensity Ic 
-//                                               for horizontal surface
-//       Ic = Io*t^(1/sin(alpha))           Wilson and Gallant (Eq 4.7)
-//     Transmission coefficient (t)
-//        t = 0.65 + 0.00008*Z      Z = node elevation (meters) (Eq 4.8)
-//     
-//     Adjustment for Circumsolar Diffuse Radiation
-//       Ic = Ic + Id*CIRC                    W&G Eq 4.17
-//
-// Calculate the Clear Sky Incoming Diffusive Radiation Intensity Id   
-//                                            for horizontal surface 
-//       Id = (0.271 - 0.294*t^(1/sin(alpha)))*Io
-//     Adjustment for Circumsolar Diffuse Radiation
-//       Id = Id - Id*CIRC                    W&G Eq 4.18
-//       CIRC = {.07, .10, .12, .14, .16, .19, .23, .20, .16, .12, .08, .07}
-//           for each month Jan - Dec.
-// 
-// Calculate the Direct Solar Radiation on Sloping Surface
-//
-//       Ics = Ic*cosi                        W&G Eq 4.20 - 4.24
-//       cosi = A + B*cos(tau) + C*sin(tau)
-//       A = sin(del)*sin(phi)*cos(beta) + sin(beta)*cos(asp)*cos(phi)
-//       B = cos(del)*(cos(phi)*cos(beta) - sin(phi)*cos(asp)*sin(beta))
-//       C = sin(beta)*cos(del)*sin(asp)
-//
-//       where beta = slope angle (radians), asp = aspect angle (radians)
-//
-// Calculate the Diffuse Solar Radiation on Sloping Surface
-//
-//       Ids = Id * v
-//       v = sky view fraction ~ cos2(beta/2)         Moore et al (1993)
-//
-// Calculate Reflection Radiation Component
-//
-//       Ir = (Ic + Id)*(1 - v)*A      A = albedo     W&G Eq 4.26
-//
-// Total Incoming Solar Radiation on Sloping Surface (Clear Sky)
-//
-//       Ith = (Ics + Ids) + Ir
-//
-// Calculate the Cloudy Sky Incoming Solar Radiation Intensity Is
-//       Is = (1-0.65*N^2)*(Ics + Ids) + Ir                              2.29
-//     Fractional Sky Cover N 
-//          N = skycover/10;
-//
-// Calculate the Effect of Vegetation Absorption on Incoming Solar Radiation
-//       Iv = Kt*Is;
-//     Optical Transmission Coefficient of Surface/Vegetation Kt
-//     Landuse-derived coefficient coeffKt    Range (0-1)  bareground = 1;
-//
-// Calculate the Albedo Effect on Incoming Solar Radiation
-//       Isw = Iv(1-A)                                                   2.32
-//     Albedo Coefficient of Surface/Vegetation
-//     Landuse-derived coefficient coeffA     Range (0-1) See Bras(1990) p.37
+//    Uses timplementation to compute the snow sublimated
+//    from the canopy after the snow has existed in the canopy for more than a
+//    singe time step. All notation is taken from Liston and Sturm (2006).
 //
 //----------------------------------------------------------------------------
 
-double tSnowPack::inShortWaveSn(tCNode *cNode)
+void tSnowPack::computeSub()
 {
-  double Is, N, Iv, Isw, Ir;
-  double v, t, cosi, scover;
-  double RadGlobClr;
 
-  //Remaining variables in DirectDiffuse from v3 -- AJR2008, SKY2008Snow
-  //  So, entire function changed to match inShortWave in tEvapoTrans
+    //compute incoming shortwave radiation
+    inShortR = inShortWaveCan();// W
+
+    //compute effective incident shortwave radiation on snow crystal
+    Sp = 3.1416*pow(iceRad,2.0)*(1 - 0.8)*inShortR;//check units--check (W)
+
+    //Find coefficient for changing windspeed
+    acoefficient = beta*coeffLAI;
+
+    //find windspeed
+    if (windSpeed == 0.0) {
+        windSpeed = 0.1;
+    }
+    windSpeed = windSpeed*exp(-acoefficient*0.4);
+
+    //Calculate Reynolds number
+    Re = 2*iceRad*windSpeed/nu;
+
+    //Calculate Sherwood number
+    Sh = 1.79 + 0.606*pow(Re,0.5);
+
+    //Calculate Nusselt number
+    Nu = Sh;
+
+    //calculate saturated vapor pressure of at ice interface
+    esatIce = 611.15*exp( 22.452*( airTempK - 273.16)/(airTempK - 0.61)); //check units--check
+
+    //calculate density of vapor
+    rhoVap = 0.622*esatIce/(RdryAir*airTempK);
+
+    //compute vapor diffusivity
+    D = 2.06e-5 * pow(airTempK/273,1.75);
+
+    //Place holder in algorithm
+    Omega = (1/(KtAtm*airTempK*Nu))*(1000*latSubkJ*Mwater/(R*airTempK) - 1);//check units--check
+
+    //find change of mass of ice crystal with respect to time
+    dmdt = (2*3.1416*iceRad*(rHumidity/100 - 1) - Sp*Omega) /
+           (1000*latSubkJ*Omega + (1/(D*rhoVap*Sh)));
+
+    //relative sublimation from ice sphere
+    psiS = dmdt/( (4/3)*3.1416*rhoicekg*iceRad*iceRad*iceRad );
+
+    //canopy exposure coefficient
+    Ce = kc*pow(I/Imax,-0.4);
+
+    //compute total sublimated snow during timestep
+    Qcs = Ce*I*psiS*timeSteps;
+
+    //RMK: Qcs IS AN INTERNAL VARIABLE TO THE CLASS SO WE DO NOT NEED TO
+    //	 RETURN IT TO THE CALLING FUNCTION.
+
+    return;
+}
+
+
+//---------------------------------------------------------------------------
+//
+//			tSnowIntercept::computeUnload()
+//
+//	Compute the amount of unloading during a timestep according to
+//	Liston and Sturm (2006). This is basically a degree day approach.
+//
+//----------------------------------------------------------------------------
+
+void tSnowPack::computeUnload()
+{
+
+    //find if over critical temperature
+    if (airTempK >= 273.16) {
+        Lm = 5.8e-5*(airTempK - 273.16)*timeSteps;//unload
+    }
+    else {
+        Lm = 0.0;//do not unload
+    }
+
+    //RMK: Lm IS AN INTERNAL VARIABLE AND DOES NOT NEED TO BE RETURNED TO THE
+    //	 CALLING FUNCTION.
+
+    return;
+
+}
+
+
+double tSnowPack::inShortWaveSn(tCNode *cNode) {
+    double Is, N, Iv, Isw, Ir;
+    double v, cosi, scover;
+    double RadGlobClr;
+
+    //Remaining variables in DirectDiffuse from v3 -- AJR2008, SKY2008Snow
+    //  So, entire function changed to match inShortWave in tEvapoTrans
 /*  double h0, m, pp0, Dh0ref, h0ref, drm, Tlinke;
   double TnTLK, Fdh0, A1p, A1, A2, A3;
   double pi = 4*atan(1.0);*/
 
-  Ic=Is=Id=Ir=Ids=Ics=Isw=Iv=0.0;
+    Ic = Is = Id = Ir = Ids = Ics = Isw = Iv = 0.0;
 
-  // Elevation, Slope and Aspect have been set before
+    // Elevation, Slope and Aspect have been set before
 
-  SunHour = 0.0; //Rinehart 2007 -- initialize whether we see sun or not to NO
-  
-  if (alphaD > 0.0) {
+    SunHour = 0.0; //Rinehart 2007 -- initialize whether we see sun or not to NO
 
-    elevation = cNode->getZ(); //SMM 10142008
-    DirectDiffuse(Tlinke, elevation);  // SKY2008Snow, AJR2007
+    if (alphaD > 0.0) {
 
-    // Cloud cover information
-    if (fabs(skyCover-9999.99) < 1.0E-3) {
+        elevation = cNode->getZ(); //SMM 10142008
+        DirectDiffuse(Tlinke, elevation);  // SKY2008Snow, AJR2007
 
-	skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
-					// computes sky cover from relative
-					// humidity and rain.
-	scover = skyCover;
+        // Cloud cover information
+        if (fabs(skyCover - 9999.99) < 1.0E-3) {
 
-	//if (rain > 0.0) scover = 10.0;
-	//else            scover = 1.0;
+            skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
+            // computes sky cover from relative
+            // humidity and rain.
+            scover = skyCover;
+
+            //if (rain > 0.0) scover = 10.0;
+            //else            scover = 1.0;
+        } else
+            scover = skyCover;
+        N = scover / 10.0;
+
+        // If observations (for a horizontal surface) exist -
+        // use them, at least in an approximate manner
+        if (tsOption > 1 && !rainPtr->getoptStorm()) {
+            RadGlobClr = (RadGlbObs / (1.0 - 0.65 * pow(N, 2.0)));
+            Ic = Ic / (Ic * sinAlpha + Id) * RadGlobClr;
+            Id = RadGlobClr - Ic * sinAlpha;
+        }
+
+        // 1) Slope aspect
+        //Account for the aspect and slope of the element
+        //Estimate 'cosi' and compare it with the Sun position
+        //  'cosi' = cos(i), where 'i' is the angle between
+        //  the sun beam and the normal to the slope surface
+        //
+        //Rinehart 2007 @ New Mexico Tech
+        //
+        //	We have incorporated sheltering options. Option 3 is
+        //	no topographic shading. Option 0, the default, is
+        //	local topographic shading. Option 1 is incorporation
+        //	of horizon angles in calc of SV and LV. Option 2 is
+        //	the total integration of local and remote sheltering.
+        //
+        //	Here, if any sheltering is turned on, then we calculate
+        //	the local controls of slope and aspect.
+        //
+        //	RMK: SLOPE AND ASPECT ARE CALCULATED FROM THE FLOW EDGE
+        //	AND ARE IN RADIANS.
+
+        if (shelterOption < 4) {//CHANGED IN 2008
+
+            cosi = 1.0 * (cos(slope) * sinAlpha + sin(slope) * cos(asin(sinAlpha)) * cos(sunaz - aspect));
+
+            if (cosi >= 0.0) {
+                Ics = Ic * cosi;
+                SunHour = 1.0; //YES SUN
+            } else {
+                Ics = 0.0;
+                SunHour = 0.0; //NO SUN
+            }
+        } else {
+            Ics = 1.0 * Ic;
+            SunHour = 1.0;
+        }
+
+        if ((shelterOption == 2) || (shelterOption == 1)) {//CHANGED IN 2008
+
+            Ics *= aboveHorizon(ID); //check to see if we can see the sun (aboveHorizon() in tEvapoTrans)
+            SunHour *= aboveHorizon(ID);
+        }
+
+        //2) Horizon factor for diffuse radiation?
+        //Rinehart 2007 @ New Mexico Tech
+        //
+        //	See comment above about sheltering options.
+
+        if ((shelterOption > 0) && (shelterOption < 3)) {
+            v = shelterFactorGlobal; //incorporate remote sheltering
+        } else if (shelterOption == 0 || shelterOption == 3) { //CHANGED 2008
+            v = 0.5 * (1 + cos(slope)); //local sheltering
+        } else {
+            v = 1.0; // no sheltering
+        }
+
+        Ids = Id * v;
+
+        // 3) Account for cloud cover
+        Is = (1.0 - 0.65 * pow(N, 2)) * (Ics + Ids);
+
+        //Reflected from surrounded sites radiation
+        //
+        //Modified by Rinehart 2007 @ New Mexico Tech
+        //
+        if (hillAlbedoOption == 0) {
+            hillalbedo = albedo;
+        } else if (hillAlbedoOption == 1) {
+            hillalbedo = coeffAl;
+        } else if (hillAlbedoOption == 2) {
+
+            if (snCanWE == 0)
+                hillalbedo = coeffV * coeffAl + (1 - coeffV) * albedo;
+            else
+                hillalbedo = albedo;
+        }
+
+        if (shelterOption == 0) {
+            //local
+            Ir = hillalbedo * Is * (1 - cos(slope)) * 0.5;
+            Is += Ir;
+        } else if ((shelterOption > 1) && (shelterOption < 4)) { //CHANGED IN 2008
+            //remote
+            Ir = hillalbedo * Is * (0.5 * (1 + cos(slope)) - shelterFactorGlobal); //CHANGED IN 2008
+            landRefGlobal = 0.5 * (1 + cos(slope)) - shelterFactorGlobal;
+            Is += Ir;
+
+        } else { //CHANGED IN 2008
+            Ir = 0.0;
+            Is = Is;
+        }
+
+        // Account for vegetation
+        if ((evapotransOption == 1) || (snowOption)) {
+            //Iv = Is * coeffKt * coeffV + Is * (1.0 - coeffV);
+            Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016) CJC 2020
+        } else
+            Iv = Is;
+
+        // Account for albedo
+        //Modified by Rinehart 2007 @ New Mexico Tech
+        //	This is actually the main difference b/t the tEvapoTrans::inShortWave
+        //	and this function. We no longer see the land surface and have
+        //	calculated albedo as a function of surface age earlier in the
+        //	algorithm.
+
+        Isw = Iv * (1.0 - albedo);
+
+    } //end -- alphaD > 0
+    else {
+        Ic = Is = N = Iv = Isw = Id = Ids = Ics = Ir = 0.0;
+    } // end -- alphaD <= 0
+
+
+    // Assign the radiation variables to the 'tHydrometStoch' for ID = 0
+    if (rainPtr->getoptStorm() && (ID == 0)) {
+        weatherSimul->setSunH(alphaD);
+        weatherSimul->setIdir(Ics);
+        weatherSimul->setIdir_vis(0.5 * Ics);
+        weatherSimul->setIdir_nir(0.5 * Ics);
+        weatherSimul->setIdif(Ids + Ir);//AJR2008, SKY2008Snow
+        weatherSimul->setIdif_vis(0.5 * (Ids + Ir));//AJR2008, SKY2008Snow
+        weatherSimul->setIdif_nir(0.5 * (Ids + Ir));//AJR2008, SKY2008Snow
+        weatherSimul->OutputHydrometVars();
     }
-    else 
-	scover = skyCover;
-    N = scover/10.0;
-		
-    // If observations (for a horizontal surface) exist - 
-    // use them, at least in an approximate manner
+
+    // Set shortwave variables to the node (partition is approximate)
     if (tsOption > 1 && !rainPtr->getoptStorm()) {
-	RadGlobClr = (RadGlbObs/(1.0-0.65*pow(N,2.0)));
-	Ic = Ic/(Ic*sinAlpha + Id)*RadGlobClr;
-	Id = RadGlobClr - Ic*sinAlpha;
-    }
-
-    // 1) Slope aspect
-    //Account for the aspect and slope of the element 
-    //Estimate 'cosi' and compare it with the Sun position
-    //  'cosi' = cos(i), where 'i' is the angle between 
-    //  the sun beam and the normal to the slope surface
-    //
-    //Rinehart 2007 @ New Mexico Tech
-    //
-    //	We have incorporated sheltering options. Option 3 is
-    //	no topographic shading. Option 0, the default, is
-    //	local topographic shading. Option 1 is incorporation
-    //	of horizon angles in calc of SV and LV. Option 2 is 
-    //	the total integration of local and remote sheltering.
-    //
-    //	Here, if any sheltering is turned on, then we calculate
-    //	the local controls of slope and aspect.
-    //
-    //	RMK: SLOPE AND ASPECT ARE CALCULATED FROM THE FLOW EDGE
-    //	AND ARE IN RADIANS.
-    
-    if (shelterOption < 4) {//CHANGED IN 2008
-      
-      cosi = 1.0*(cos(slope)*sinAlpha + sin(slope)*cos(asin(sinAlpha))*cos(sunaz-aspect));
-
-      if (cosi >= 0.0) {
-	Ics = Ic*cosi;
-	SunHour = 1.0; //YES SUN
-      }
-      else {
-	Ics = 0.0;
-	SunHour = 0.0; //NO SUN
-      }
-    }
-    else {
-	Ics = 1.0*Ic;
-	SunHour = 1.0;
-    }
-
-    if ( (shelterOption == 2) || (shelterOption == 1) ) {//CHANGED IN 2008
-	    
-	Ics *= aboveHorizon(ID); //check to see if we can see the sun (aboveHorizon() in tEvapoTrans)
-	SunHour *= aboveHorizon(ID);
-    }
-
-    //2) Horizon factor for diffuse radiation?
-    //Rinehart 2007 @ New Mexico Tech
-    //
-    //	See comment above about sheltering options.
-    
-    if ((shelterOption > 0)&&(shelterOption < 3)) {
-      v = shelterFactorGlobal; //incorporate remote sheltering
-    }
-    else if (shelterOption == 0 || shelterOption == 3){ //CHANGED 2008
-      v = 0.5*(1 + cos(slope)); //local sheltering
-    }
-    else {
-      v = 1.0; // no sheltering
-    }
-    
-    Ids = Id*v;
-
-    // 3) Account for cloud cover
-    Is = (1.0-0.65*pow(N,2))*(Ics + Ids);
-    
-    //Reflected from surrounded sites radiation
-    //
-    //Modified by Rinehart 2007 @ New Mexico Tech
-    //
-    if (hillAlbedoOption == 0) {
-	hillalbedo = albedo; }
-    else if (hillAlbedoOption == 1) {
-	hillalbedo = coeffAl; 
-    }
-    else if (hillAlbedoOption == 2) {
-	
-	if (snCanWE == 0)
-	 hillalbedo = coeffV*coeffAl + (1-coeffV)*albedo;
-	else
-	  hillalbedo = albedo;
-    }
-
-    if (shelterOption == 0) {
-      //local
-      Ir = hillalbedo*Is*(1-cos(slope))*0.5;  
-      Is += Ir;
-    }
-    else if ( (shelterOption > 1)&&(shelterOption < 4) ) { //CHANGED IN 2008
-      //remote    
-      Ir = hillalbedo*Is*( 0.5*(1 + cos(slope)) - shelterFactorGlobal); //CHANGED IN 2008
-      landRefGlobal = 0.5*(1 + cos(slope)) - shelterFactorGlobal;
-      Is += Ir;
-
-    }
-    else { //CHANGED IN 2008
-      Ir = 0.0;
-      Is = Is;
-    }
-
-    // Account for vegetation
-    if ((evapotransOption == 1)||(snowOption)) {
-      Iv = Is*coeffKt*coeffV + Is*(1.0-coeffV);
-	  //Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016) CJC 2020
-	}
-    else
-      Iv = Is;
-
-    // Account for albedo
-    //Modified by Rinehart 2007 @ New Mexico Tech
-    //	This is actually the main difference b/t the tEvapoTrans::inShortWave
-    //	and this function. We no longer see the land surface and have 
-    //	calculated albedo as a function of surface age earlier in the
-    //	algorithm.
-    	
-    Isw = Iv*(1.0 - albedo);
-
-  } //end -- alphaD > 0
-  else {
-    Ic=Is=N=Iv=Isw=Id=Ids=Ics=Ir=0.0;
-  } // end -- alphaD <= 0
-
-  
-  // Assign the radiation variables to the 'tHydrometStoch' for ID = 0
-  if (rainPtr->getoptStorm() && (ID == 0)) {
-    weatherSimul->setSunH(alphaD);
-    weatherSimul->setIdir(Ics);
-    weatherSimul->setIdir_vis(0.5*Ics);
-    weatherSimul->setIdir_nir(0.5*Ics);
-    weatherSimul->setIdif(Ids+Ir);//AJR2008, SKY2008Snow
-    weatherSimul->setIdif_vis(0.5*(Ids+Ir));//AJR2008, SKY2008Snow
-    weatherSimul->setIdif_nir(0.5*(Ids+Ir));//AJR2008, SKY2008Snow
-    weatherSimul->OutputHydrometVars();
-  }
-
-  // Set shortwave variables to the node (partition is approximate)
-	if (tsOption > 1 && !rainPtr->getoptStorm()) {
         cNode->setShortRadIn(RadGlbObs); //or set(Is), they must be equal
-    }
-	else {
+    } else {
         cNode->setShortRadIn(Isw);
     }
-	cNode->setShortRadIn_dir(Ics*(1.0-0.65*pow(N,2.0)));
-	cNode->setShortRadIn_dif((Ids+Ir)*(1.0-0.65*pow(N,2.0)));//AJR2008, SKY2008Snow
+    cNode->setShortRadIn_dir(Ics * (1.0 - 0.65 * pow(N, 2.0))); // TODO: should these be set as values above the canopy?
+    cNode->setShortRadIn_dif((Ids + Ir) * (1.0 - 0.65 * pow(N, 2.0)));//AJR2008, SKY2008Snow
 
-  return Isw;
+    return Isw;
+}
+
+double tSnowPack::inShortWaveCan() {
+    double Is, N, Iv, Isw, Ir;
+    double v, cosi, scover;
+    double RadGlobClr;
+
+    // WR refactor 8-31-2023, this is a almost the same as inShortWave, but returns Iws before
+    // accounting for the effects of optical transmission through the canopy. There is
+    // certainly a cleaner way to do this, but for now this will have to do.
+
+    Ic = Is = Id = Ir = Ids = Ics = Isw = Iv = 0.0;
+
+    // Elevation, Slope and Aspect have been set before
+
+    SunHour = 0.0; //Rinehart 2007 -- initialize whether we see sun or not to NO
+
+    if (alphaD > 0.0) {
+
+        DirectDiffuse(Tlinke, elevation);  // SKY2008Snow, AJR2007
+
+        // Cloud cover information
+        if (fabs(skyCover - 9999.99) < 1.0E-3) {
+
+            skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
+            // computes sky cover from relative
+            // humidity and rain.
+            scover = skyCover;
+
+            //if (rain > 0.0) scover = 10.0;
+            //else            scover = 1.0;
+        } else
+            scover = skyCover;
+        N = scover / 10.0;
+
+        // If observations (for a horizontal surface) exist -
+        // use them, at least in an approximate manner
+        if (tsOption > 1 && !rainPtr->getoptStorm()) {
+            RadGlobClr = (RadGlbObs / (1.0 - 0.65 * pow(N, 2.0)));
+            Ic = Ic / (Ic * sinAlpha + Id) * RadGlobClr;
+            Id = RadGlobClr - Ic * sinAlpha;
+        }
+
+        // 1) Slope aspect
+        //Account for the aspect and slope of the element
+        //Estimate 'cosi' and compare it with the Sun position
+        //  'cosi' = cos(i), where 'i' is the angle between
+        //  the sun beam and the normal to the slope surface
+        //
+        //Rinehart 2007 @ New Mexico Tech
+        //
+        //	We have incorporated sheltering options. Option 3 is
+        //	no topographic shading. Option 0, the default, is
+        //	local topographic shading. Option 1 is incorporation
+        //	of horizon angles in calc of SV and LV. Option 2 is
+        //	the total integration of local and remote sheltering.
+        //
+        //	Here, if any sheltering is turned on, then we calculate
+        //	the local controls of slope and aspect.
+        //
+        //	RMK: SLOPE AND ASPECT ARE CALCULATED FROM THE FLOW EDGE
+        //	AND ARE IN RADIANS.
+
+        if (shelterOption < 4) {//CHANGED IN 2008
+
+            cosi = 1.0 * (cos(slope) * sinAlpha + sin(slope) * cos(asin(sinAlpha)) * cos(sunaz - aspect));
+
+            if (cosi >= 0.0) {
+                Ics = Ic * cosi;
+                SunHour = 1.0; //YES SUN
+            } else {
+                Ics = 0.0;
+                SunHour = 0.0; //NO SUN
+            }
+        } else {
+            Ics = 1.0 * Ic;
+            SunHour = 1.0;
+        }
+
+        if ((shelterOption == 2) || (shelterOption == 1)) {//CHANGED IN 2008
+
+            Ics *= aboveHorizon(ID); //check to see if we can see the sun (aboveHorizon() in tEvapoTrans)
+            SunHour *= aboveHorizon(ID);
+        }
+
+        //2) Horizon factor for diffuse radiation?
+        //Rinehart 2007 @ New Mexico Tech
+        //
+        //	See comment above about sheltering options.
+
+        if ((shelterOption > 0) && (shelterOption < 3)) {
+            v = shelterFactorGlobal; //incorporate remote sheltering
+        } else if (shelterOption == 0 || shelterOption == 3) { //CHANGED 2008
+            v = 0.5 * (1 + cos(slope)); //local sheltering
+        } else {
+            v = 1.0; // no sheltering
+        }
+
+        Ids = Id * v;
+
+        // 3) Account for cloud cover
+        Is = (1.0 - 0.65 * pow(N, 2)) * (Ics + Ids);
+
+        //Reflected from surrounded sites radiation
+        //
+        //Modified by Rinehart 2007 @ New Mexico Tech
+        //
+        if (hillAlbedoOption == 0) {
+            hillalbedo = albedo;
+        } else if (hillAlbedoOption == 1) {
+            hillalbedo = coeffAl;
+        } else if (hillAlbedoOption == 2) {
+
+            if (snCanWE == 0)
+                hillalbedo = coeffV * coeffAl + (1 - coeffV) * albedo;
+            else
+                hillalbedo = albedo;
+        }
+
+        if (shelterOption == 0) {
+            //local
+            Ir = hillalbedo * Is * (1 - cos(slope)) * 0.5;
+            Is += Ir;
+        } else if ((shelterOption > 1) && (shelterOption < 4)) { //CHANGED IN 2008
+            //remote
+            Ir = hillalbedo * Is * (0.5 * (1 + cos(slope)) - shelterFactorGlobal); //CHANGED IN 2008
+            landRefGlobal = 0.5 * (1 + cos(slope)) - shelterFactorGlobal;
+            Is += Ir;
+
+        } else { //CHANGED IN 2008
+            Ir = 0.0;
+            Is = Is;
+        }
+
+        // Account for albedo
+        Isw = Iv * (1.0 - albedo);
+
+    } //end -- alphaD > 0
+    else {
+        Ic = Is = N = Iv = Isw = Id = Ids = Ics = Ir = 0.0;
+    } // end -- alphaD <= 0
+
+    return Isw;
 }
 
 //----------------------------------------------------------------------------
@@ -2234,188 +1834,10 @@ double tSnowPack::inShortWaveSn(tCNode *cNode)
 //
 //----------------------------------------------------------------------------
 
-double tSnowPack::emmisSn()
-{
+double tSnowPack::emmisSn() {
 
-double emiss = 0.9;
-return emiss ;
-}
-
-//-----------------------------------------------------------------------------
-//
-//			      tSnowPack::inLongWaveSn() 
-//
-// Function based on gray-body (Bras(1990) p44)
-//
-//        Rlin(t) = K(t)*Ea(t)*S*T(t)^4   (J/(m^2*s)) 
-//
-//        S      Stefan-Boltzmann Constant = 5.67e-8  J/(s*m^2*K^4)
-//        K(t)   Cloud cover coefficient K(t) = (1+0.17*N^2) []
-//        N(t)   Sky Cover/10
-//        Ea(t)  Atmospheric Thermal Emissivity  Idso(1981)
-//               Ea(t) = 0.74 + 0.0049*e(t)  []
-//        T(t)   Air Temperature (K)  
-//
-// Assigns corrected SkyCover 
-//
-// This function was constructed when we were focusing on the controls of
-// snow in canopy. Here, we could correct for the effect of 0 C temperatures
-// in the canopy compared more variable ambient temperature. B/c of problems
-// with the admittedly simple implementation, I have choosen not to 
-// incorporate those physics.
-//
-//    Rinehart 2007 @ New Mexico Tech
-//    
-//---------------------------------------------------------------------------
-
-double tSnowPack::inLongWaveSn(){
-  double sigma, kCloud, airTempK, Ea, Rlin, scover, N;
-  double v0;
-
-  if (shelterOption < 3)
-	  v0 = shelterFactorGlobal;
-  else
-	  v0 = 1;
-  
-  sigma = 5.67e-8;
-  if(fabs(skyCover-9999.99)<1e-3){
-    skyCover = compSkyCover();
-    scover = skyCover;
-  }
-  else 
-    scover = skyCover;
-
-  skyCoverC = scover;
-
-  N = scover/10.0;
-  kCloud = 1 + 0.17*pow(N,2);
-  airTempK = airTemp+273.15;
-  Ea = 0.74 + 0.0049*vaporPress();
-  if (canWE <= 1e-3) // where we would account for no-snow in canopy
-    Rlin = v0*kCloud*Ea*sigma*pow(airTempK,4);
-  else // account for snow in canopy
-    Rlin = v0*((1 - coeffV)*kCloud*Ea*sigma*pow(airTempK,4) + coeffV*emmisSn()*sigma*pow(273.15,4));
-
-  return Rlin;
-}
-
-//--------------------------------------------------------------------------
-//
-//		  tSnowPack::SetSunVariablesSn() Function
-//
-// Calculate the Incoming Solar Radiation Intensity at Top of Atmosphere Io
-//       Io = (Wo/r^2)sin(alpha)          (J/m2*s)            Bras(1990) 2.9
-//     Solar Constant Wo
-//         Wo = 1353 W/m2
-//     Ratio of Actual Earth-Sun to Mean Earth-Sun Distance (r)          2.10
-//         r = 1.0 + 0.017*cos((2*pi/365)*(186-D))  
-//     Julian Day D
-//     Solar Altitude sin(alpha)         Bras(1990) from Eagleson(1970)  2.4
-//         sin(alpha) = sin(del)*sin(phi) + cos(del)*cos(phi)*cos(tau)  
-//     Declination of sun  del (radians)                                 2.5
-//              del = (23.45*pi/180)*cos((2*pi/365)*(172-D))   
-//     Local Latitude  phi (radians)
-//              phi = latitude*pi/180  
-//
-//
-//  Placed in tSnowPack for debugging of some inheritance issues. Can and
-//  probably should be removed.
-//
-//  Rinehart 2007 @ New Mexico Tech
-//
-//--------------------------------------------------------------------------
-
-void tSnowPack::SetSunVariablesSn()
-{
-  int JDay, month;
-  double r, dtau, dgmt, alphaR;
-  double Ts, Tsp1, longSM, longM;
-  double tau1, tau2;
-  double Wo = 1353.0;
-  double pi = 4*atan(1.0);
-  double CIRC[12] = {.07, .10, .12, .14, .16, .19, .23, .20, .16, .12, .08, .07};
-
-  dgmt  = gmt;
-  longSM = 15.0*abs(gmt);
-  longM = fabs(longitude);
-  Ts    =  nodeHour;      // Current Hour
-  JDay  = julianDay();    // Current Julian day
-  month = currentTime[1]; // Current Month
-  circ  = CIRC[month-1];
-
-  r = 1.0 + 0.017*cos((2.0*pi/365.0)*(186.0-JDay));
-  del = (23.45*pi/180.0)*cos((2*pi/365.0)*(172.0-JDay));
-  phi = latitude*pi/180.0;
-
-  if (gmt) 
-     deltaT = (1.0/15.0)*(longSM - longM)*(dgmt/abs(dgmt));
-  else 
-     // If it is in the "0"th zone this wont work for west longitude
-     deltaT = -longM*15.0; 
-
-  // Compute hour angle for the current and following hour
-  tau1 = ComputeHourAngle( Ts+1.0, deltaT );
-  if (Ts < 23)
-     //Tsp1 = Ts+timerET->getEtIStep();
-     Tsp1 = Ts+timer->getEtIStep(); // SKY2008Snow 
-  else
-     Tsp1 = 0.0;
-  tau2 = ComputeHourAngle( Tsp1+1.0, deltaT );
-
-  // Take an average 'tau' representative for the current hour
-  // Around local noon, dicrepancies may arise due to non-
-  // synchronization with true solar noon: so, adjust it
-  if (fabs(tau1-tau2) >= pi) {
-     if (tau2 < tau1)
-         tau2 += 2*pi;
-     else 
-	 tau1 += 2*pi;
-  }
-  tau = (tau1 + tau2)/2;
-  if (tau > 2*pi)
-     tau -= 2*pi;
-
-  // Take an average of 'sinAlpha'
-  //sinAlpha = ((timerET->getEtIStep())*sin(del)*sin(phi)+12/pi*cos(del)*cos(phi)*
-  // SKY2008Snow
-  sinAlpha = ((timer->getEtIStep())*sin(del)*sin(phi)+12/pi*cos(del)*cos(phi)*
-  	      (sin(tau2)-sin(tau1)));
-
-  // Compute an angle
-  alphaR = asin(sinAlpha);
-  alphaD = alphaR*180.0/pi;
-
-  // Compute sun's azimuth using the "hour angle method" [rad from North]
-  sunaz = atan(-sin(tau)/(tan(del)*cos(phi)-sin(phi)*cos(tau)));
-  if (tau >0 && tau <= pi) {
-     if (sunaz > 0) 
-        sunaz += pi;
-     else
-        sunaz += (2*pi);
-  }
-  else if (tau >=pi && tau <= 2*pi) {
-     if (sunaz < 0) 
-        sunaz += pi;
-  }
-
-/*  cout << "sunaz: " << sunaz*180/pi << " " << sunaz << "\talphaD: " << alphaD << endl;*/
-
-  
-  // Compute extraterrestrial radiation [W m^-2]
-  // At the top of the atmosphere
-  Io = (Wo/pow(r,2));
-
-  // These are calculated in LOCAL time. To obtain values in
-  // standard meridian time, add 'deltaT' to both
-  if (!nodeHour) {
-     SunRisHrLoc = (2*pi-acos(-tan(del)*tan(phi)))*180/pi/15 - 12;
-     SunSetHrLoc  = acos(-tan(del)*tan(phi))*180/pi/15 + 12;
-  }
-
-  // The total day length
-  DayLength = 2*acos(-tan(del)*tan(phi))*180/pi/15;
-
-  return;
+    double emiss = 0.9;
+    return emiss;
 }
 
 /************************************************************************************
@@ -2440,69 +1862,67 @@ void tSnowPack::SetSunVariablesSn()
 //
 //-----------------------------------------------------------------------------------
 
-void tSnowPack::snowEB(int nodeID, tCNode* node)
-{
-  
-  double sigma(5.67e-8);
-  double v1;
+void tSnowPack::snowEB(int nodeID, tCNode *node) {
 
-  if (shelterOption > 0 && shelterOption < 3) 
-      v1 = shelterFactorGlobal;
-  else
-      v1 = 1;
- 
-  //convert temperature
-  snTempK = CtoK(snTempC);
-  
-  //set up resistance
-  resFact = resFactCalc();
+    double sigma(5.67e-8);
+    double v1;
 
-  //turbulent heat fluxes
-  H = sensibleHFCalc(resFact);
-  L = latentHFCalc(resFact);
+    if (shelterOption > 0 && shelterOption < 3)
+        v1 = shelterFactorGlobal;
+    else
+        v1 = 1;
 
-  //precipitation heat flux
-  Prec = phfOnOff*precipitationHFCalc();
+    //convert temperature
+    snTempK = CtoK(snTempC);
 
-  //atmospheric heat flux
-  RSin = naughttokilo*inShortWaveSn(node); // AJR2008, SKY2008Snow
-  RLin = naughttokilo*inLongWave(node); // AJR2008, SKY2008Snow
-  RLout = -naughttokilo*v1*emmisSn()*sigma*pow(snTempK,4.0); 
-  
+    //set up resistance
+    resFact = resFactCalc();
 
-  //set up for output
-  inShortR = kilotonaught*RSin;
-  inLongR = kilotonaught*RLin;
-  outLongR = kilotonaught*RLout;
- 
-  // SKY2008Snow, AJR 2008
-  //	Set the non-snow fluxes to zero
-  node->setHFlux(0.0);
-  node->setLFlux(0.0);
-  node->setLongRadIn(0.0);
-  node->setLongRadOut(outLongR);
-  node->setShortAbsbVeg(0.0);
-  node->setShortAbsbSoi(0.0);
+    //turbulent heat fluxes
+    H = sensibleHFCalc(resFact);
+    L = latentHFCalc(resFact);
 
-  // Set the snow fluxes
-  node->setSnLHF(L*kilotonaught);
-  node->setSnSHF(H*kilotonaught);
-  node->setSnPHF(Prec*kilotonaught);
-  node->setSnGHF(G*kilotonaught);
-  node->setSnRLin(RLin*kilotonaught);
-  node->setSnRLout(RLout*kilotonaught);
-  node->setSnRSin(RSin*kilotonaught);  
+    //precipitation heat flux
+    Prec = phfOnOff * precipitationHFCalc();
+
+    //atmospheric heat flux
+    RSin = naughttokilo * inShortWaveSn(node); // AJR2008, SKY2008Snow
+    RLin = naughttokilo * inLongWave(node); // AJR2008, SKY2008Snow
+    RLout = -naughttokilo * v1 * emmisSn() * sigma * pow(snTempK, 4.0);
 
 
-  Rn = RSin + RLin + RLout;   
-  G = 0;
+    //set up for output
+    inShortR = kilotonaught * RSin;
+    inLongR = kilotonaught * RLin;
+    outLongR = kilotonaught * RLout;
 
-  //calculate total dU over given timestep
-  dUint = (H + Rn + L + Prec + G)*timeSteps; // Changed *3600 to *timeSteps CJC2020
-  
-  //find new energy state of snow
-  Utot +=  dUint;
-  return;
+    // SKY2008Snow, AJR 2008
+    //	Set the non-snow fluxes to zero
+    node->setHFlux(0.0);
+    node->setLFlux(0.0);
+    node->setLongRadIn(0.0);
+    node->setLongRadOut(outLongR);
+    node->setShortAbsbVeg(0.0);
+    node->setShortAbsbSoi(0.0);
+
+    // Set the snow fluxes
+    node->setSnLHF(L * kilotonaught);
+    node->setSnSHF(H * kilotonaught);
+    node->setSnPHF(Prec * kilotonaught);
+    node->setSnGHF(G * kilotonaught);
+    node->setSnRLin(RLin * kilotonaught);
+    node->setSnRLout(RLout * kilotonaught);
+    node->setSnRSin(RSin * kilotonaught);
+
+
+    Rn = RSin + RLin + RLout;
+    G = 0;
+
+    //calculate total dU over given timestep
+    dUint = (H + Rn + L + Prec + G) * timeSteps; // Changed *3600 to *timeSteps CJC2020
+
+    //find new energy state of snow
+    Utot += dUint;
 }
 
 /*****************************************************************************
@@ -2514,15 +1934,8 @@ void tSnowPack::snowEB(int nodeID, tCNode* node)
 **
 *****************************************************************************/
 
-//---------------------------------------------------------------------------
-//
-//	tSnowPack::getSnowOpt()
-//
-//---------------------------------------------------------------------------
-
-int tSnowPack::getSnowOpt()
-{
-  return snowOption; //found in tEvapoTrans construction
+int tSnowPack::getSnowOpt() {
+    return snowOption; //found in tEvapoTrans construction
 }
 
 
@@ -2543,11 +1956,10 @@ int tSnowPack::getSnowOpt()
 //	
 //---------------------------------------------------------------------------
 
-double tSnowPack::CtoK(double temperature) 
-{
+double tSnowPack::CtoK(double temperature) {
 
-  return (temperature + 273.15);
-  
+    return (temperature + 273.15);
+
 }
 
 //---------------------------------------------------------------------------
@@ -2557,11 +1969,10 @@ double tSnowPack::CtoK(double temperature)
 //	Convert Kelvin to Celsius
 //---------------------------------------------------------------------------
 
-double tSnowPack::KtoC(double temperature)
-{
+double tSnowPack::KtoC(double temperature) {
 
-  return (temperature - 273.15);
-  
+    return (temperature - 273.15);
+
 }
 
 /***************************************************************************
@@ -2571,106 +1982,136 @@ double tSnowPack::KtoC(double temperature)
 ** Called from tSimulator during simulation loop
 **
 ***************************************************************************/
-void tSnowPack::writeRestart(fstream & rStr) const
-{ 
-  BinaryWrite(rStr, hillAlbedoOption);
-  BinaryWrite(rStr, densityAge);
-  BinaryWrite(rStr, rainTemp);
-  BinaryWrite(rStr, ETAge);
+void tSnowPack::writeRestart(fstream &rStr) const {
+    BinaryWrite(rStr, hillAlbedoOption);
+    BinaryWrite(rStr, densityAge);
+    BinaryWrite(rStr, rainTemp);
+    BinaryWrite(rStr, ETAge);
 
-  BinaryWrite(rStr, timeSteph);
-  BinaryWrite(rStr, timeSteps);
-  BinaryWrite(rStr, timeStepm);
-  BinaryWrite(rStr, minutelyTimeStep);
-  
-  BinaryWrite(rStr, liqWE);
-  BinaryWrite(rStr, iceWE);
-  BinaryWrite(rStr, snWE);
-  BinaryWrite(rStr, canWE);
-  BinaryWrite(rStr, liqRoute);
-  BinaryWrite(rStr, liqWEm);
-  BinaryWrite(rStr, iceWEm);
-  BinaryWrite(rStr, snWEm);
-  BinaryWrite(rStr, liqRoutem);
-  BinaryWrite(rStr, Utot);
-  BinaryWrite(rStr, Usn);
-  BinaryWrite(rStr, Uwat);
-  BinaryWrite(rStr, Utotold);
-  BinaryWrite(rStr, liqWatCont);
-  BinaryWrite(rStr, liqTempC);
-  BinaryWrite(rStr, iceTempC); 
-  BinaryWrite(rStr, snTempC);
-  BinaryWrite(rStr, liqTempK);
-  BinaryWrite(rStr, iceTempK); 
-  BinaryWrite(rStr, snTempK);
-  BinaryWrite(rStr, crustAge);
+    BinaryWrite(rStr, timeSteph);
+    BinaryWrite(rStr, timeSteps);
+    BinaryWrite(rStr, timeStepm);
+    BinaryWrite(rStr, minutelyTimeStep);
 
-  BinaryWrite(rStr, H);
-  BinaryWrite(rStr, L);
-  BinaryWrite(rStr, G);
-  BinaryWrite(rStr, Prec);
-  BinaryWrite(rStr, Rn);
-  BinaryWrite(rStr, dUint); 
-  BinaryWrite(rStr, RLin);
-  BinaryWrite(rStr, RLout);
-  BinaryWrite(rStr, RSin);
-  BinaryWrite(rStr, Uerr);
-  BinaryWrite(rStr, snPrec);
-  BinaryWrite(rStr, liqPrec);
-  BinaryWrite(rStr, snPrecm);
-  BinaryWrite(rStr, liqPrecm);
-  BinaryWrite(rStr, snPrecmm);
-  BinaryWrite(rStr, liqPrecmm);
-  BinaryWrite(rStr, snUnload);
-  BinaryWrite(rStr, snCanWE);
-  BinaryWrite(rStr, vapPressSmb); 
-  BinaryWrite(rStr, vapPresskSPa);
-  
-  BinaryWrite(rStr, rholiqcgs);
-  BinaryWrite(rStr, rhoicecgs);
-  BinaryWrite(rStr, rhosncgs);
-  BinaryWrite(rStr, rholiqkg);
-  BinaryWrite(rStr, rhoicekg); 
-  BinaryWrite(rStr, rhosnkg);
-  BinaryWrite(rStr, rhoAir);
-  BinaryWrite(rStr, phfOnOff);
+    BinaryWrite(rStr, liqWE);
+    BinaryWrite(rStr, iceWE);
+    BinaryWrite(rStr, snWE);
+    BinaryWrite(rStr, canWE);
+    BinaryWrite(rStr, liqRoute);
+    BinaryWrite(rStr, liqWEm);
+    BinaryWrite(rStr, iceWEm);
+    BinaryWrite(rStr, snWEm);
+    BinaryWrite(rStr, Utot);
+    BinaryWrite(rStr, Usn);
+    BinaryWrite(rStr, Uwat);
+    BinaryWrite(rStr, Utotold);
+    BinaryWrite(rStr, liqWatCont);
+    BinaryWrite(rStr, liqTempC);
+    BinaryWrite(rStr, iceTempC);
+    BinaryWrite(rStr, snTempC);
+    BinaryWrite(rStr, liqTempK);
+    BinaryWrite(rStr, iceTempK);
+    BinaryWrite(rStr, snTempK);
+    BinaryWrite(rStr, crustAge);
 
-  BinaryWrite(rStr, cpsnowkJ);
-  BinaryWrite(rStr, cpicekJ);
-  BinaryWrite(rStr, cpwaterkJ);
-  BinaryWrite(rStr, cpairkJ);
-  BinaryWrite(rStr, latFreezekJ);
-  BinaryWrite(rStr, latVapkJ);
-  BinaryWrite(rStr, latSubkJ);
+    BinaryWrite(rStr, H);
+    BinaryWrite(rStr, L);
+    BinaryWrite(rStr, G);
+    BinaryWrite(rStr, Prec);
+    BinaryWrite(rStr, Rn);
+    BinaryWrite(rStr, dUint);
+    BinaryWrite(rStr, RLin);
+    BinaryWrite(rStr, RLout);
+    BinaryWrite(rStr, RSin);
+    BinaryWrite(rStr, Uerr);
+    BinaryWrite(rStr, snPrec);
+    BinaryWrite(rStr, liqPrec);
+    BinaryWrite(rStr, snPrecm);
+    BinaryWrite(rStr, liqPrecm);
+    BinaryWrite(rStr, snPrecmm);
+    BinaryWrite(rStr, liqPrecmm);
+    BinaryWrite(rStr, snUnload);
+    BinaryWrite(rStr, snCanWE);
+    BinaryWrite(rStr, vapPressSmb);
+    BinaryWrite(rStr, vapPresskSPa);
 
-  BinaryWrite(rStr, resFact);
-  BinaryWrite(rStr, albedo);
-  BinaryWrite(rStr, hillalbedo);
-  BinaryWrite(rStr, compactParam);
-  BinaryWrite(rStr, rhoSnFreshkg);
-  BinaryWrite(rStr, minSnTemp);
+    BinaryWrite(rStr, rholiqcgs);
+    BinaryWrite(rStr, rhoicecgs);
+    BinaryWrite(rStr, rhosncgs);
+    BinaryWrite(rStr, rholiqkg);
+    BinaryWrite(rStr, rhoicekg);
+    BinaryWrite(rStr, rhosnkg);
+    BinaryWrite(rStr, rhoAir);
+    BinaryWrite(rStr, phfOnOff);
 
-  BinaryWrite(rStr, snDepth);
-  BinaryWrite(rStr, snDepthm);
-  BinaryWrite(rStr, snOnOff);
-  BinaryWrite(rStr, peakSnWE);
-  BinaryWrite(rStr, peakSnWEtemp);
-  BinaryWrite(rStr, persMax);
-  BinaryWrite(rStr, persMaxtemp);
-  BinaryWrite(rStr, inittime);
-  BinaryWrite(rStr, inittimeTemp);
-  BinaryWrite(rStr, peaktime);
+    BinaryWrite(rStr, cpsnowkJ);
+    BinaryWrite(rStr, cpicekJ);
+    BinaryWrite(rStr, cpwaterkJ);
+    BinaryWrite(rStr, cpairkJ);
+    BinaryWrite(rStr, latFreezekJ);
+    BinaryWrite(rStr, latVapkJ);
+    BinaryWrite(rStr, latSubkJ);
 
-  BinaryWrite(rStr, naughttokilo);
-  BinaryWrite(rStr, kilotonaught);
-  BinaryWrite(rStr, cgsRHOtomks);
-  BinaryWrite(rStr, mksRHOtocgs);
-  BinaryWrite(rStr, naughttocm);
-  BinaryWrite(rStr, cmtonaught);
-  BinaryWrite(rStr, ctom);
-  BinaryWrite(rStr, mtoc);
+    BinaryWrite(rStr, resFact);
+    BinaryWrite(rStr, albedo);
+    BinaryWrite(rStr, hillalbedo);
+    BinaryWrite(rStr, compactParam);
+    BinaryWrite(rStr, rhoSnFreshkg);
+    BinaryWrite(rStr, minSnTemp);
 
-  tEvapoTrans::writeRestart(rStr);
+    BinaryWrite(rStr, snDepth);
+    BinaryWrite(rStr, snDepthm);
+    BinaryWrite(rStr, snOnOff);
+    BinaryWrite(rStr, peakSnWE);
+    BinaryWrite(rStr, peakSnWEtemp);
+    BinaryWrite(rStr, persMax);
+    BinaryWrite(rStr, persMaxtemp);
+    BinaryWrite(rStr, inittime);
+    BinaryWrite(rStr, inittimeTemp);
+    BinaryWrite(rStr, peaktime);
+
+    BinaryWrite(rStr, naughttokilo);
+    BinaryWrite(rStr, kilotonaught);
+    BinaryWrite(rStr, cgsRHOtomks);
+    BinaryWrite(rStr, mksRHOtocgs);
+    BinaryWrite(rStr, naughttocm);
+    BinaryWrite(rStr, cmtonaught);
+    BinaryWrite(rStr, ctom);
+    BinaryWrite(rStr, mtoc);
+
+    BinaryWrite(rStr, Qcs);
+    BinaryWrite(rStr, Ce);
+    BinaryWrite(rStr, I);
+    BinaryWrite(rStr, Iold);
+    BinaryWrite(rStr, psiS);
+    BinaryWrite(rStr, Imax);
+    BinaryWrite(rStr, prec);
+    BinaryWrite(rStr, LAI);
+    BinaryWrite(rStr, kc);
+    BinaryWrite(rStr, iceRad);
+    BinaryWrite(rStr, dmdt);
+    BinaryWrite(rStr, Omega);
+    BinaryWrite(rStr, Sp);
+    BinaryWrite(rStr, RH);
+    BinaryWrite(rStr, D);
+    BinaryWrite(rStr, rhoVap);
+    BinaryWrite(rStr, Sh);
+    BinaryWrite(rStr, Nu);
+    BinaryWrite(rStr, Re);
+    BinaryWrite(rStr, KtAtm);
+    BinaryWrite(rStr, Ta);
+    BinaryWrite(rStr, Mwater);
+    BinaryWrite(rStr, R);
+    BinaryWrite(rStr, RdryAir);
+    BinaryWrite(rStr, esatIce);
+    BinaryWrite(rStr, nu);
+    BinaryWrite(rStr, beta);
+    BinaryWrite(rStr, acoefficient);
+    BinaryWrite(rStr, Lm);
+    BinaryWrite(rStr, airTempK);
+    BinaryWrite(rStr, effPrecip);
+
+    tEvapoTrans::writeRestart(rStr);
 }
 
 /***************************************************************************
@@ -2678,107 +2119,207 @@ void tSnowPack::writeRestart(fstream & rStr) const
 ** tSnowPack::readRestart() Function
 **
 ***************************************************************************/
-void tSnowPack::readRestart(fstream & rStr)
-{
-  BinaryRead(rStr, hillAlbedoOption);
-  BinaryRead(rStr, densityAge);
-  BinaryRead(rStr, rainTemp);
-  BinaryRead(rStr, ETAge);
+void tSnowPack::readRestart(fstream &rStr) {
+    BinaryRead(rStr, hillAlbedoOption);
+    BinaryRead(rStr, densityAge);
+    BinaryRead(rStr, rainTemp);
+    BinaryRead(rStr, ETAge);
 
-  BinaryRead(rStr, timeSteph);
-  BinaryRead(rStr, timeSteps);
-  BinaryRead(rStr, timeStepm);
-  BinaryRead(rStr, minutelyTimeStep);
-  
-  BinaryRead(rStr, liqWE);
-  BinaryRead(rStr, iceWE);
-  BinaryRead(rStr, snWE);
-  BinaryRead(rStr, canWE);
-  BinaryRead(rStr, liqRoute);
-  BinaryRead(rStr, liqWEm);
-  BinaryRead(rStr, iceWEm);
-  BinaryRead(rStr, snWEm);
-  BinaryRead(rStr, liqRoutem);
-  BinaryRead(rStr, Utot);
-  BinaryRead(rStr, Usn);
-  BinaryRead(rStr, Uwat);
-  BinaryRead(rStr, Utotold);
-  BinaryRead(rStr, liqWatCont);
-  BinaryRead(rStr, liqTempC);
-  BinaryRead(rStr, iceTempC); 
-  BinaryRead(rStr, snTempC);
-  BinaryRead(rStr, liqTempK);
-  BinaryRead(rStr, iceTempK); 
-  BinaryRead(rStr, snTempK);
-  BinaryRead(rStr, crustAge);
+    BinaryRead(rStr, timeSteph);
+    BinaryRead(rStr, timeSteps);
+    BinaryRead(rStr, timeStepm);
+    BinaryRead(rStr, minutelyTimeStep);
 
-  BinaryRead(rStr, H);
-  BinaryRead(rStr, L);
-  BinaryRead(rStr, G);
-  BinaryRead(rStr, Prec);
-  BinaryRead(rStr, Rn);
-  BinaryRead(rStr, dUint); 
-  BinaryRead(rStr, RLin);
-  BinaryRead(rStr, RLout);
-  BinaryRead(rStr, RSin);
-  BinaryRead(rStr, Uerr);
-  BinaryRead(rStr, snPrec);
-  BinaryRead(rStr, liqPrec);
-  BinaryRead(rStr, snPrecm);
-  BinaryRead(rStr, liqPrecm);
-  BinaryRead(rStr, snPrecmm);
-  BinaryRead(rStr, liqPrecmm);
-  BinaryRead(rStr, snUnload);
-  BinaryRead(rStr, snCanWE);
-  BinaryRead(rStr, vapPressSmb); 
-  BinaryRead(rStr, vapPresskSPa);
-  
-  BinaryRead(rStr, rholiqcgs);
-  BinaryRead(rStr, rhoicecgs);
-  BinaryRead(rStr, rhosncgs);
-  BinaryRead(rStr, rholiqkg);
-  BinaryRead(rStr, rhoicekg); 
-  BinaryRead(rStr, rhosnkg);
-  BinaryRead(rStr, rhoAir);
-  BinaryRead(rStr, phfOnOff);
+    BinaryRead(rStr, liqWE);
+    BinaryRead(rStr, iceWE);
+    BinaryRead(rStr, snWE);
+    BinaryRead(rStr, canWE);
+    BinaryRead(rStr, liqRoute);
+    BinaryRead(rStr, liqWEm);
+    BinaryRead(rStr, iceWEm);
+    BinaryRead(rStr, snWEm);
+    BinaryRead(rStr, Utot);
+    BinaryRead(rStr, Usn);
+    BinaryRead(rStr, Uwat);
+    BinaryRead(rStr, Utotold);
+    BinaryRead(rStr, liqWatCont);
+    BinaryRead(rStr, liqTempC);
+    BinaryRead(rStr, iceTempC);
+    BinaryRead(rStr, snTempC);
+    BinaryRead(rStr, liqTempK);
+    BinaryRead(rStr, iceTempK);
+    BinaryRead(rStr, snTempK);
+    BinaryRead(rStr, crustAge);
 
-  BinaryRead(rStr, cpsnowkJ);
-  BinaryRead(rStr, cpicekJ);
-  BinaryRead(rStr, cpwaterkJ);
-  BinaryRead(rStr, cpairkJ);
-  BinaryRead(rStr, latFreezekJ);
-  BinaryRead(rStr, latVapkJ);
-  BinaryRead(rStr, latSubkJ);
+    BinaryRead(rStr, H);
+    BinaryRead(rStr, L);
+    BinaryRead(rStr, G);
+    BinaryRead(rStr, Prec);
+    BinaryRead(rStr, Rn);
+    BinaryRead(rStr, dUint);
+    BinaryRead(rStr, RLin);
+    BinaryRead(rStr, RLout);
+    BinaryRead(rStr, RSin);
+    BinaryRead(rStr, Uerr);
+    BinaryRead(rStr, snPrec);
+    BinaryRead(rStr, liqPrec);
+    BinaryRead(rStr, snPrecm);
+    BinaryRead(rStr, liqPrecm);
+    BinaryRead(rStr, snPrecmm);
+    BinaryRead(rStr, liqPrecmm);
+    BinaryRead(rStr, snUnload);
+    BinaryRead(rStr, snCanWE);
+    BinaryRead(rStr, vapPressSmb);
+    BinaryRead(rStr, vapPresskSPa);
 
-  BinaryRead(rStr, resFact);
-  BinaryRead(rStr, albedo);
-  BinaryRead(rStr, hillalbedo);
-  BinaryRead(rStr, compactParam);
-  BinaryRead(rStr, rhoSnFreshkg);
-  BinaryRead(rStr, minSnTemp);
+    BinaryRead(rStr, rholiqcgs);
+    BinaryRead(rStr, rhoicecgs);
+    BinaryRead(rStr, rhosncgs);
+    BinaryRead(rStr, rholiqkg);
+    BinaryRead(rStr, rhoicekg);
+    BinaryRead(rStr, rhosnkg);
+    BinaryRead(rStr, rhoAir);
+    BinaryRead(rStr, phfOnOff);
 
-  BinaryRead(rStr, snDepth);
-  BinaryRead(rStr, snDepthm);
-  BinaryRead(rStr, snOnOff);
-  BinaryRead(rStr, peakSnWE);
-  BinaryRead(rStr, peakSnWEtemp);
-  BinaryRead(rStr, persMax);
-  BinaryRead(rStr, persMaxtemp);
-  BinaryRead(rStr, inittime);
-  BinaryRead(rStr, inittimeTemp);
-  BinaryRead(rStr, peaktime);
+    BinaryRead(rStr, cpsnowkJ);
+    BinaryRead(rStr, cpicekJ);
+    BinaryRead(rStr, cpwaterkJ);
+    BinaryRead(rStr, cpairkJ);
+    BinaryRead(rStr, latFreezekJ);
+    BinaryRead(rStr, latVapkJ);
+    BinaryRead(rStr, latSubkJ);
 
-  BinaryRead(rStr, naughttokilo);
-  BinaryRead(rStr, kilotonaught);
-  BinaryRead(rStr, cgsRHOtomks);
-  BinaryRead(rStr, mksRHOtocgs);
-  BinaryRead(rStr, naughttocm);
-  BinaryRead(rStr, cmtonaught);
-  BinaryRead(rStr, ctom);
-  BinaryRead(rStr, mtoc);
+    BinaryRead(rStr, resFact);
+    BinaryRead(rStr, albedo);
+    BinaryRead(rStr, hillalbedo);
+    BinaryRead(rStr, compactParam);
+    BinaryRead(rStr, rhoSnFreshkg);
+    BinaryRead(rStr, minSnTemp);
 
-  tEvapoTrans::readRestart(rStr);
+    BinaryRead(rStr, snDepth);
+    BinaryRead(rStr, snDepthm);
+    BinaryRead(rStr, snOnOff);
+    BinaryRead(rStr, peakSnWE);
+    BinaryRead(rStr, peakSnWEtemp);
+    BinaryRead(rStr, persMax);
+    BinaryRead(rStr, persMaxtemp);
+    BinaryRead(rStr, inittime);
+    BinaryRead(rStr, inittimeTemp);
+    BinaryRead(rStr, peaktime);
+
+    BinaryRead(rStr, naughttokilo);
+    BinaryRead(rStr, kilotonaught);
+    BinaryRead(rStr, cgsRHOtomks);
+    BinaryRead(rStr, mksRHOtocgs);
+    BinaryRead(rStr, naughttocm);
+    BinaryRead(rStr, cmtonaught);
+    BinaryRead(rStr, ctom);
+    BinaryRead(rStr, mtoc);
+
+    BinaryRead(rStr, Qcs);
+    BinaryRead(rStr, Ce);
+    BinaryRead(rStr, I);
+    BinaryRead(rStr, Iold);
+    BinaryRead(rStr, psiS);
+    BinaryRead(rStr, Imax);
+    BinaryRead(rStr, prec);
+    BinaryRead(rStr, LAI);
+    BinaryRead(rStr, kc);
+    BinaryRead(rStr, iceRad);
+    BinaryRead(rStr, dmdt);
+    BinaryRead(rStr, Omega);
+    BinaryRead(rStr, Sp);
+    BinaryRead(rStr, RH);
+    BinaryRead(rStr, D);
+    BinaryRead(rStr, rhoVap);
+    BinaryRead(rStr, Sh);
+    BinaryRead(rStr, Nu);
+    BinaryRead(rStr, Re);
+    BinaryRead(rStr, KtAtm);
+    BinaryRead(rStr, Ta);
+    BinaryRead(rStr, Mwater);
+    BinaryRead(rStr, R);
+    BinaryRead(rStr, RdryAir);
+    BinaryRead(rStr, esatIce);
+    BinaryRead(rStr, nu);
+    BinaryRead(rStr, beta);
+    BinaryRead(rStr, acoefficient);
+    BinaryRead(rStr, Lm);
+    BinaryRead(rStr, airTempK);
+    BinaryRead(rStr, effPrecip);
+
+    tEvapoTrans::readRestart(rStr);
 }
+
+void tSnowPack::checkShelter(tCNode *cNode) {
+    if ((shelterOption > 0) && (shelterOption < 4)) {//CHANGED 2008
+        int tempIndex;
+        for (tempIndex = 0; tempIndex < 16; tempIndex++) {
+            switch (tempIndex) {
+                case 0:
+                    ha2700 = cNode->getHorAngle2700();
+                    break;
+                case 1:
+                    ha2925 = cNode->getHorAngle2925();
+                    break;
+                case 2:
+                    ha3150 = cNode->getHorAngle3150();
+                    break;
+                case 3:
+                    ha3375 = cNode->getHorAngle3375();
+                    break;
+                case 4:
+                    ha0000 = cNode->getHorAngle0000();
+                    break;
+                case 5:
+                    ha0225 = cNode->getHorAngle0225();
+                    break;
+                case 6:
+                    ha0450 = cNode->getHorAngle0450();
+                    break;
+                case 7:
+                    ha0675 = cNode->getHorAngle0675();
+                    break;
+                case 8:
+                    ha0900 = cNode->getHorAngle0900();
+                    break;
+                case 9:
+                    ha1125 = cNode->getHorAngle1125();
+                    break;
+                case 10:
+                    ha1350 = cNode->getHorAngle1350();
+                    break;
+                case 11:
+                    ha1575 = cNode->getHorAngle1575();
+                    break;
+                case 12:
+                    ha1800 = cNode->getHorAngle1800();
+                    break;
+                case 13:
+                    ha2025 = cNode->getHorAngle2025();
+                    break;
+                case 14:
+                    ha2250 = cNode->getHorAngle2250();
+                    break;
+                case 15:
+                    ha2475 = cNode->getHorAngle2475();
+                    break;
+                default:
+                    cout << "\nCheck tempInd -- did not exist or assign" << endl;
+            }//end-switch
+        }    //end-for
+
+        shelterFactorGlobal = cNode->getSheltFact(); //computed in tShelter
+
+    } else if (shelterOption == 0) { // local sheltering for factor only
+        shelterFactorGlobal = 0.5 * (1 + cos(slope)); //computed here for output purposes
+        cNode->setSheltFact(shelterFactorGlobal); // SKYnGM2008LU
+    } else {
+        shelterFactorGlobal = 1; //no sheltering
+    }
+    return;
+}
+
 
 /******************************************************************************
 **

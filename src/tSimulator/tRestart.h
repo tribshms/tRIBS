@@ -32,7 +32,6 @@
 #include "src/tFlowNet/tReservoir.h" // JECR2015
 #include "src/tFlowNet/tResData.h" // JECR2015
 #include "src/tHydro/tSnowPack.h"
-#include "src/tHydro/tSnowIntercept.h"
 
 //=========================================================================
 //
@@ -56,8 +55,7 @@ public:
         tRainfall* r,
         tEvapoTrans* e,
         tIntercept* i,
-        tSnowPack* s,
-        tSnowIntercept* c);
+        tSnowPack* s);
 
   /// Destructor
   ~tRestart() {}
@@ -77,7 +75,6 @@ private:
   tEvapoTrans*       evap;            //!< Evapotranspiration
   tIntercept*        intercept;       //!< Intercept structure
   tSnowPack*         snowpack;        //!< Snow pack structure
-  tSnowIntercept*    snowintercept;   //!< Snow intercept structure
 };
 
 #endif
