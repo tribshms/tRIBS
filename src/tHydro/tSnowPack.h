@@ -104,6 +104,8 @@ public:
   double densityFromAge();
   void computeSub();
   void computeUnload();
+  void updateRipeSnowPack();
+  void updateSolidSnowPack();
 
   //EB functions
 

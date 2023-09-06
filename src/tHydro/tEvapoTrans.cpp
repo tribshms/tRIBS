@@ -1128,9 +1128,13 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		
 		// Evaporation from Bare Soil
 
-		if(cNode->getBedrockDepth() <= 0) //TODO: Consider scenario where this is true--but coeffV ~=0, catch and end run? Or explicitly let user know they're simulating something that is not resolved by the model
+		if(cNode->getBedrockDepth() <= 0) //
         {
             evapSoil = 0;
+
+            if(coeffV<0);{
+                cerr<<"Zero depth to bedrock but fraction of vegetation does not equal zero, model behavior maybe unrealisitc"<<endl;
+            }
         }
         else{
 		evapSoil = (1-coeffV)*(actEvaporation);

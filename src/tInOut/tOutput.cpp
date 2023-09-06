@@ -1095,11 +1095,11 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				<<setw(13)<<extension<<" "
 				/* 3 */   <<setw(10)<<(this->uzel[i]->getNwtNew())<<" "
 				
-				<<setprecision(1)
+				<<setprecision(7)
 				<<setw(6)<<this->uzel[i]->getNfNew()<<" "
 				/* 5 */	  <<setw(6)<<this->uzel[i]->getNtNew()<<" "
 				
-				<<setprecision(5)
+				<<setprecision(7)
 				<<setw(7)<<this->uzel[i]->getMuNew()<<" "
 				<<setw(7)<<this->uzel[i]->getMiNew()<<"   "
 				
@@ -1109,13 +1109,13 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				/* 10 */  <<setw(10)<<this->uzel[i]->getTransmiss()*1.E-6<<"    "
 				<<setw(10)<<this->uzel[i]->getGwaterChng()*1.E-9<<"  "
 				
-				<<setprecision(5)
+				<<setprecision(7)
 				<<setw(8) <<this->uzel[i]->getSrf()<<"  "
 				<<setw(10)<<this->uzel[i]->getRain()<<"  "
 				<<setw(10)<<this->uzel[i]->getSoilMoistureSC()<<"  "
 				/* 15 */  <<setw(10)<<this->uzel[i]->getRootMoistureSC()<<" "
 				
-				<<setprecision(3)
+				<<setprecision(7)
 				<<this->uzel[i]->getAirTemp()<<" "
 				<<this->uzel[i]->getDewTemp()<<" "
 				<<this->uzel[i]->getSurfTemp()<<" "

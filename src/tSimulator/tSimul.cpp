@@ -442,7 +442,7 @@ void Simulator::SurfaceHydroProcesses(tEvapoTrans *EvapoTrans,
 			if ( timer->getCurrentTime() == met_hour ) {
 
 				SnowPack->callSnowPack(Intercept,1);
-			}
+            }
 		}
 		// 2) INTERCEPTION ON
 		if (SnowPack->getEToption() == 0 && Intercept->getIoption() != 0) {
