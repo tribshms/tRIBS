@@ -79,8 +79,8 @@ void tSnowPack::SetSnowPackVariables(tInputFile &infile) {
     rhoSnFreshkg = 100;
     snOnOff = 0.0;
 }
-void tSnowPack::SetSnowInterceptVariables()
-{
+
+void tSnowPack::SetSnowInterceptVariables() {
     Qcs = Ce = I = psiS = 0.0;
     Imax = prec = LAI = 0.0;
     RH = D = rhoVap = Omega = 0.0;
@@ -91,12 +91,13 @@ void tSnowPack::SetSnowInterceptVariables()
     R = 8313; //J/kmol K
     RdryAir = 287; //J/kg K
     nu = 1.3e-5; //m^2/s
-    KtAtm = 0.025; //J/msK
+    KtAtm = 0.024; //J/msK WR updated value from Liston and Elder
     esatIce = 0.0;
     beta = 0.9;
     acoefficient = 0.0;
     Lm = 0.0;
 }
+
 void tSnowPack::SetSnowVariables(tInputFile &infile) {
 
     //time steps
@@ -242,8 +243,7 @@ void tSnowPack::SetSnowVariables(tInputFile &infile) {
 //				    
 //---------------------------------------------------------------------------
 // SKY2008Snow, AJR2008
-void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
-{
+void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
 
     tCNode *cNode;
     tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
@@ -275,9 +275,8 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
     if (luOption == 1) { // resampling Land Use grids done here, i.e., dynamic case
         if (AtFirstTimeStepLUFlag) {
             initialLUGridAssignment();
-            AtFirstTimeStepLUFlag=0;
-        }
-        else {
+            AtFirstTimeStepLUFlag = 0;
+        } else {
             LUGridAssignment();
         }
     }
@@ -285,6 +284,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
     // BEGIN LOOP THROUGH NODES
     cNode = nodeIter.FirstP();
     while (nodeIter.IsActive()) {
+        double precip = 0.0;
         // Set static land use tCnode members before being assigned dynamically further below.
         landPtr->setLandPtr(cNode->getLandUse());
         cNode->setCanStorParam(landPtr->getLandProp(1));
@@ -301,44 +301,16 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
         cNode->setLeafAI(landPtr->getLandProp(12));
 
         if (luOption == 1) {
-            if ( luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values
+            if (luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values
                 interpolateLUGrids(cNode);
             }
         }
 
         // Elapsed MET steps from the beginning, used for averaging dynamic LU grid values below over time for integ. output
-        auto te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
+        auto te = (double) timer->getElapsedMETSteps(timer->getCurrentTime());
         integratedLUVars(cNode, te);
 
-<<<<<<< HEAD
-       	//added by XYT2023,liqRoute
-        if (liqWE > snliqfrac*iceWE) { // Added snliqfrac by CJC2020
-              //there is enough water left over
-              if (liqWE != snWE ) {
-                liqRoute = (liqWE - snliqfrac*iceWE); // Added snliqfrac by CJC2020
-                liqWE = liqWE - liqRoute;
-                snWE = liqWE + iceWE;
-              }
-              //there is no more pack
-              else {
-                liqRoute = snWE;
-                liqWE = 0.0;
-                iceWE = 0.0;
-                snWE = 0.0;
-              }
-        }
-        if (liqWE < 0) {    // caused by snVap, XYT2023
-                 liqWE = 0;
-                 snWE = iceWE;
-        }
-
-        //initialize and record energy balance
-        Utot = dUint = iceWE*rhoicekg*cpicekJ*snTempC // Changed to use rhoicekg CJC 2020
-		+ liqWE*rholiqkg*latFreezekJ;
-=======
-        //Get NodeID
         ID = cNode->getID();
->>>>>>> origin/SnowMerge
 
         //Get Rainfall
         rain = cNode->getRain(); // get new rainfall
@@ -349,7 +321,6 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
         elevation = cNode->getZ();
 
         snOnOff = 0.0;
-
 
 
         checkShelter(cNode);
@@ -466,18 +437,18 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
         {
 
             // Implement interception schemes for snow, refactored WR 6/21/23
-            if (Ioption && coeffV>0 && Intercept->IsThereCanopy( cNode )) {
-                callSnowIntercept(cNode, Intercept,count);
+            if (Ioption && Intercept->IsThereCanopy(cNode)) { // && coeffV>0
+                callSnowIntercept(cNode, Intercept, count);
                 snUnload = cNode->getIntSnUnload(); //calculated in callSnowIntercept() units in cm
                 snCanWE = cNode->getIntSWE();//units in cm
             } else {
                 cNode->setNetPrecipitation(rain);
             }
 
-            rain = cNode->getNetPrecipitation(); //units in mm
-            rain += snUnload * ctom; // units in mm
+            precip = cNode->getNetPrecipitation(); //units in mm
+            precip += snUnload * ctom; // units in mm
 
-            // Here rain is being set by net precipitation which is set from callSnowIntercept
+            // Here precip is being set by net precipitation which is set from callSnowIntercept
             // and represents throughfall + unloaded snow  from snow interception (so scaled by coeffV) and precipitation
             // that falls on the no vegetated fraction of the cell (1-coeffV). refactored WR 6/21/23
 
@@ -521,11 +492,11 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
                 // evaporate liquid from ripe pack snWE +=
                 // note evaporation/sublimation flux can be negative or positive, with latter representing condensation/deposition
                 if (snTempC == 0.0) {
-                    updateRipeSnowPack();
+                    updateRipeSnowPack(precip);
                 }
                     //sublimate solid from frozen pack
                 else {
-                    updateSolidSnowPack();
+                    updateSolidSnowPack(precip);
                 }
 
                 snWE = iceWE + liqWE; // unit in meters here
@@ -534,6 +505,27 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
 
                 //set other fluxes
                 L = H = G = Prec = Utotold = 0.0;
+
+                //added by XYT2023,liqRoute
+                if (liqWE > snliqfrac * iceWE) { // Added snliqfrac by CJC2020
+                    //there is enough water left over
+                    if (liqWE != snWE) {
+                        liqRoute = (liqWE - snliqfrac * iceWE); // Added snliqfrac by CJC2020
+                        liqWE = liqWE - liqRoute;
+                        snWE = liqWE + iceWE;
+                    }
+                        //there is no more pack
+                    else {
+                        liqRoute = snWE;
+                        liqWE = 0.0;
+                        iceWE = 0.0;
+                        snWE = 0.0;
+                    }
+                }
+                if (liqWE < 0) {    // caused by snVap, XYT2023
+                    liqWE = 0;
+                    snWE = iceWE;
+                }
 
                 //initialize and record energy balance
                 Utot = dUint = iceWE * rhoicekg * cpicekJ * snTempC // Changed to use rhoicekg CJC 2020
@@ -545,21 +537,21 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
                 phfOnOff = 1.0;
 
                 //find the new density age
-                densityAge = (snWE * densityAge) / (snWE + mtoc * rain);
+                densityAge = (snWE * densityAge) / (snWE + mtoc * precip);
 
                 //reset crust age if snowing out
-                if (rain * snowFracCalc() > 1e-3) {
+                if (precip * snowFracCalc() > 1e-3) {
                     crustAge = 0.0;
                 }
 
                 //snowMB
                 //ripe pack -- evaporate water
                 if (snTempC == 0.0) {
-                    updateRipeSnowPack();
+                    updateRipeSnowPack(precip);
                 }
                     //sublimate solid from frozen pack
                 else {
-                    updateSolidSnowPack();
+                    updateSolidSnowPack(precip);
                 }
 
                 snWE = iceWE + liqWE;// unit in meters here
@@ -690,18 +682,21 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
 
             // check water balance of snow pack
             //if(rain * snowFracCalc() >= 5e-2) {
-                packWaterBalance = snWE - (snWEold + (mtoc * rain) + snEvap + snSub - liqRoute); // Length unit in cm, snEvap and snSub have - as signs are alread computed
-                if (fabs(packWaterBalance) > 1e-4) {
-                    cerr << "SnowPack water balance error is greater than 5% of precipitation" << endl;
-                    //liqRoute +=
-                }
-            //}
+            packWaterBalance = snWE - (snWEold + (mtoc * precip) + snEvap + snSub -
+                                       liqRoute); // Length unit in cm, snEvap and snSub have - as signs are alread computed
+//            if (fabs(packWaterBalance) > 1e-4) {
+//                cerr << "SnowPack water balance  " << endl;
+//                //liqRoute +=
+//            }
+//            //}
 
 
             // Set ET variables equal to zero due to snowpack
             // ET variables are set to zero for canopy when snow in canopy, see tSnowIntercept
             cNode->setEvapSoil(0.0);
             cNode->setActEvap(0.0);
+            cNode->setEvapoTrans(
+                    cNode->getEvapWetCanopy()); //should be set to zero in most cases when snow is present, as its set to zero in callSnowIntercept except for rain on snow events.
 
             setToNodeSnP(cNode);
             setToNode(cNode);
@@ -748,7 +743,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
             weatherSimul->OutputHydrometVars();
         }
     }
-    }
+}
 
 //---------------------------------------------------------------------------
 //
@@ -760,9 +755,8 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag)
 //
 //---------------------------------------------------------------------------
 
-void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int count)
-{
-    double CanStorage,can_flx;
+void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int count) {
+    double CanStorage, can_flx;
     double subFrac, unlFrac, precip, Isnow, throughfall;// SKY2008Snow, AJR2008
     int flag;
     flag = 1;
@@ -774,15 +768,15 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
     airTemp = node->getAirTemp();
     airTempK = CtoK(airTemp);
     windSpeed = node->getWindSpeed();
-    precip = node->getRain()*coeffV; //precip scaled by veg fraction
+    precip = node->getRain() * coeffV; //precip scaled by veg fraction
     LAI = coeffLAI;
 
     //reinitialize snow interception model
-    Iold = rholiqkg*cmtonaught*(node->getIntSWE());
+    Iold = rholiqkg * cmtonaught * (node->getIntSWE());
     Qcs = 0.0;
     Lm = 0.0;
 
-    if ( (precip*snowFracCalc() < 1e-4) && (Iold < 1e-3) ) {
+    if ((precip * snowFracCalc() < 1e-4) && (Iold < 1e-3)) {
         //The below code block account for the case where there is no snow in canopy and it's not snowing
         // but could be raining (i.e. rain on snow). Basically this emulates callEvapPotential and callEvapoTrans,
         // This is necessary to simulate potential evaporation and subsequently evaporation from the canopy. Terms that are related
@@ -791,27 +785,23 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         I = Iold = Lm = Qcs = 0.0;
 
         //Calculate the Potential and Actual Evaporation
-        if(evapotransOption == 1){
+        if (evapotransOption == 1) {
             EvapPenmanMonteith(node); // call to get EvapPot, but energy balance for soil es
-        }
-        else if(evapotransOption == 2){
+        } else if (evapotransOption == 2) {
             EvapDeardorff(node); // SKY2008Snow
-        }
-        else if(evapotransOption == 3){
+        } else if (evapotransOption == 3) {
             EvapPriestlyTaylor(node); // SKY2008Snow
-        }
-        else if(evapotransOption == 4){
+        } else if (evapotransOption == 4) {
             EvapPan();
-        }
-        else{
+        } else {
             cout << "\nEvapotranspiration Option " << evapotransOption;
-            cout <<" not valid." << endl;
+            cout << " not valid." << endl;
             cout << "\tPlease use :" << endl;
             cout << "\t\t(1) for Penman-Monteith Method" << endl;
-            cout << "\t\t(2) for Deardorff Method"<< endl;
+            cout << "\t\t(2) for Deardorff Method" << endl;
             cout << "\t\t(3) for Priestly-Taylor Method" << endl;
             cout << "\t\t(4) for Pan Evaporation Measurements" << endl;
-            cout << "Exiting Program...\n\n"<<endl;
+            cout << "Exiting Program...\n\n" << endl;
             exit(1);
         }
         // Set actual evaporation to 0 since snow pack exists and soil evaporation is function of actual evap
@@ -823,7 +813,8 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         node->setHFlux(0.0);
         node->setLFlux(0.0);
         node->setLongRadOut(0.0);
-        node->setSurfTemp(node->getSnTempC()); //assume surface temp == snow temp, note if snWE < 1e-4 snow intercept should not be called
+        node->setSurfTemp(
+                node->getSnTempC()); //assume surface temp == snow temp, note if snWE < 1e-4 snow intercept should not be called
         node->setSoilTemp(node->getSnTempC()); //this should be updated with n-layer snow model
 
         // follows structure of
@@ -843,23 +834,23 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         //snowing with or without snow in canopy
     else {
 
-        albedo = 0.8;
+        //albedo = 0.8; WR debug this is set elsewhere and should be double checked
 
         //Note no actual unit conversion is necessary from mm to kg/m^2\
         //Here mm values (i.e. canopy storage, precip) are assumed to be converted to kg/m^2
 
         //Add CanStorage to I_old and reset to node canopy storage to zero
-        if(CanStorage>1e-5){
+        if (CanStorage > 1e-5) {
             Iold += CanStorage; //CanStorage has been scaled by coeffV, through scaling of precip
             node->setCanStorage(0.0);
             flag = 0; // WR refactor, initial setup did not compute Qcs and Lm on first event of snow
         }
 
         //maximum mass of snow stored in canopy (kg/m^2)
-        Imax = 4.4*LAI;
+        Imax = 4.4 * LAI;
 
         //compute new intercepted snow (kg/m^2)
-        Isnow = 0.7*(Imax - Iold)*(1 - exp(-precip/Imax));
+        Isnow = 0.7 * (Imax - Iold) * (1 - exp(-precip / Imax));
         I = Iold + Isnow;
 
         //precip minus intercepted snow (i.e. throughfall)
@@ -869,36 +860,38 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         if (Iold > 0.0 && flag) {
             computeSub();
             computeUnload();
-        }
-        else {
+        } else {
             Qcs = 0.0;//sublimation term
             Lm = 0.0;//unloading term
         }
 
-        I += Qcs - Lm; //I == interception (kg), Qcs == sublimation (kg) (sign computed), Lm == unloading (computed positive) (kg)
+        I += Qcs -
+             Lm; //I == interception (kg), Qcs == sublimation (kg) (sign computed), Lm == unloading (computed positive) (kg)
 
         // SKY2008Snow based on AJR2008's recommendation starts here (water balance now preserved)
         if (I < 0.0) {
 
             if (Qcs < 0.0) {
-                subFrac = fabs(Qcs)/(fabs(Qcs)+Lm);
-                unlFrac = Lm/(fabs(Qcs)+Lm);
-            }
-            else {
+                subFrac = fabs(Qcs) / (fabs(Qcs) + Lm);
+                unlFrac = Lm / (fabs(Qcs) + Lm);
+            } else {
                 subFrac = 0.0;
                 unlFrac = 1.0;
             }
-            Qcs -= I*subFrac;
-            Lm += I*unlFrac;
+            Qcs -= I * subFrac;
+            Lm += I * unlFrac;
             I = 0.0;
         }
 
-        // Check for numerical errors: change in intSWE should equal Isnow minus (sign computed) Qcs and Lm
-        can_flx = ctom*naughttocm*( 1/rholiqkg )*((I-Iold)-Isnow - Qcs +Lm); // units in mm
-        if (fabs(can_flx)>1e-4) {
-           // cerr << "snow intercept water balance error is greater than 5% of precipitation" << endl;
-            throughfall+=can_flx;
-        }
+//        // Check for numerical errors: change in intSWE should equal Isnow minus (sign computed) Qcs and Lm and debug
+//        can_flx = ctom * naughttocm * (1 / rholiqkg) * ((I - Iold) - Isnow - Qcs + Lm); // units in mm
+//        if (fabs(can_flx) > 1e-4) {
+//            cerr << "snow intercept water balance error " << endl;
+//        }
+//
+//        if (fabs(naughttocm * (1 / rholiqkg) * Qcs) > 0.05) {
+//            cerr << "break" << endl;
+//        }
 
 
         //adjust amount of snow in canopy
@@ -907,14 +900,14 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         // SKY2008Snow based on AJR2008's recommendation ends here
         //set adjusted fluxes and states to node
         // because precip is now scaled by coeffV these values now only reflect fluxes and stores in the canopy
-        node->setIntSWE( naughttocm*( 1/rholiqkg )*I ); //length units in cm
-        node->setIntSnUnload(naughttocm*( 1/rholiqkg )*Lm);
-        node->setIntSub( naughttocm*( 1/rholiqkg )*Qcs);
-        node->addIntSub( naughttocm*( 1/rholiqkg )*Qcs);
-        node->addIntUnl( naughttocm*( 1/rholiqkg )*Lm );
-        node->setIntPrec(Isnow*( 1/rholiqkg )*naughttocm);
+        node->setIntSWE(naughttocm * (1 / rholiqkg) * I); //length units in cm
+        node->setIntSnUnload(naughttocm * (1 / rholiqkg) * Lm);
+        node->setIntSub(naughttocm * (1 / rholiqkg) * Qcs);
+        node->addIntSub(naughttocm * (1 / rholiqkg) * Qcs);
+        node->addIntUnl(naughttocm * (1 / rholiqkg) * Lm);
+        node->setIntPrec(Isnow * (1 / rholiqkg) * naughttocm);
         // Rate for the _ENTIRE_ cell:
-        node->setNetPrecipitation(throughfall + (1-coeffV)*node->getRain());
+        node->setNetPrecipitation(throughfall + (1 - coeffV) * node->getRain());
         // note mm and kg/m^2 requires no conversion
 
         //set wet and dry evap to 0 when snow in canopy
@@ -936,11 +929,11 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
 **
 ****************************************************************************/
 
-void tSnowPack::updateRipeSnowPack(){
+void tSnowPack::updateRipeSnowPack(double precip) {
     //liq WE update
     snEvap = (1 - coeffV) * latentHFCalc(resFactCalc()) * timeSteps /
              (rholiqkg * latVapkJ); // units should be in meters
-    liqWE += cmtonaught * ((mtoc * rain) * (1 - snowFracCalc())) * timeSteps /
+    liqWE += cmtonaught * ((mtoc * precip) * (1 - snowFracCalc())) * timeSteps /
              3600; // Removed snUnload term CJC2020
 
     if (liqWE + snEvap <= 0) {
@@ -951,21 +944,21 @@ void tSnowPack::updateRipeSnowPack(){
     }
 
     //solid WE update
-    iceWE += cmtonaught * (mtoc * (rain * snowFracCalc())) * timeSteps / 3600;
+    iceWE += cmtonaught * (mtoc * (precip * snowFracCalc())) * timeSteps / 3600;
     snSub = 0.0; // No sublimation occurs CJC2020
 }
 
-void tSnowPack::updateSolidSnowPack() {
+void tSnowPack::updateSolidSnowPack(double precip) {
     //liq WE update
-    liqWE += cmtonaught * (mtoc * (rain * (1 - snowFracCalc()))) * timeSteps /
+    liqWE += cmtonaught * (mtoc * (precip * (1 - snowFracCalc()))) * timeSteps /
              3600; // Removed snUnload term CJC2020
     snEvap = 0.0; // No evaporation occurs CJC2020
+
 
     //ice WE update
     snSub = (1 - coeffV) * latentHFCalc(resFactCalc()) * timeSteps /
             (rholiqkg * latSubkJ);// units should be in meters
-    iceWE += cmtonaught * (mtoc * (rain * snowFracCalc())) * timeSteps / 3600;
-    
+    iceWE += cmtonaught * (mtoc * (precip * snowFracCalc())) * timeSteps / 3600;
 
     if (iceWE + snSub <= 0) {
         snSub = iceWE;
@@ -1062,13 +1055,6 @@ void tSnowPack::setToNodeSnP(tCNode *node) {
     //energy fluxes, changes
     node->setDU(dUint);
     node->setUnode(Utot);
-/*  node->setSnLHF(L*kilotonaught);
-  node->setSnSHF(H*kilotonaught);
-  node->setSnPHF(Prec*kilotonaught);
-  node->setSnGHF(G*kilotonaught);
-  node->setSnRLin(RLin*kilotonaught);
-  node->setSnRLout(RLout*kilotonaught);
-  node->setSnRSin(RSin*kilotonaught);*/
 
     //outputs
     node->setUerror(Uerr);
@@ -1401,57 +1387,56 @@ double tSnowPack::resFactCalc() {
 //
 //----------------------------------------------------------------------------
 
-void tSnowPack::computeSub()
-{
+void tSnowPack::computeSub() {
 
     //compute incoming shortwave radiation
     inShortR = inShortWaveCan();// W
 
     //compute effective incident shortwave radiation on snow crystal
-    Sp = 3.1416*pow(iceRad,2.0)*(1 - 0.8)*inShortR;//check units--check (W)
+    Sp = PI * pow(iceRad, 2.0) * (1 - albedo) * inShortR;//check units--check (W)//WR debug change 0.8 to albedo
 
     //Find coefficient for changing windspeed
-    acoefficient = beta*coeffLAI;
+    acoefficient = beta * coeffLAI;
 
     //find windspeed
     if (windSpeed == 0.0) {
         windSpeed = 0.1;
     }
-    windSpeed = windSpeed*exp(-acoefficient*0.4);
+    windSpeed = windSpeed * exp(-acoefficient * 0.4);
 
     //Calculate Reynolds number
-    Re = 2*iceRad*windSpeed/nu;
+    Re = 2 * iceRad * windSpeed / nu;
 
     //Calculate Sherwood number
-    Sh = 1.79 + 0.606*pow(Re,0.5);
+    Sh = 1.79 + 0.606 * pow(Re, 0.5);
 
     //Calculate Nusselt number
     Nu = Sh;
 
     //calculate saturated vapor pressure of at ice interface
-    esatIce = 611.15*exp( 22.452*( airTempK - 273.16)/(airTempK - 0.61)); //check units--check
+    esatIce = 611.15 * exp(22.452 * (airTempK - 273.16) / (airTempK - 0.61)); //check units--check
 
     //calculate density of vapor
-    rhoVap = 0.622*esatIce/(RdryAir*airTempK);
+    rhoVap = 0.622 * esatIce / (RdryAir * airTempK);
 
     //compute vapor diffusivity
-    D = 2.06e-5 * pow(airTempK/273,1.75);
+    D = 2.06e-5 * pow(airTempK / 273, 1.75);
 
     //Place holder in algorithm
-    Omega = (1/(KtAtm*airTempK*Nu))*(1000*latSubkJ*Mwater/(R*airTempK) - 1);//check units--check
+    Omega = (1 / (KtAtm * airTempK * Nu)) * (1000 * latSubkJ * Mwater / (R * airTempK) - 1);//check units--check
 
     //find change of mass of ice crystal with respect to time
-    dmdt = (2*3.1416*iceRad*(rHumidity/100 - 1) - Sp*Omega) /
-           (1000*latSubkJ*Omega + (1/(D*rhoVap*Sh)));
+    dmdt = (2 * PI * iceRad * (rHumidity / 100 - 1) - Sp * Omega) /
+           (1000 * latSubkJ * Omega + (1 / (D * rhoVap * Sh)));//1000 conversion from KJ to J
 
     //relative sublimation from ice sphere
-    psiS = dmdt/( (4/3)*3.1416*rhoicekg*iceRad*iceRad*iceRad );
+    psiS = dmdt / ((4 / 3) * PI * rhoicekg * iceRad * iceRad * iceRad);
 
     //canopy exposure coefficient
-    Ce = kc*pow(I/Imax,-0.4);
+    Ce = kc * pow(I / Imax, -0.4);
 
     //compute total sublimated snow during timestep
-    Qcs = Ce*I*psiS*timeSteps;
+    Qcs = Ce * I * psiS * timeSteps;
 
     //RMK: Qcs IS AN INTERNAL VARIABLE TO THE CLASS SO WE DO NOT NEED TO
     //	 RETURN IT TO THE CALLING FUNCTION.
@@ -1469,14 +1454,12 @@ void tSnowPack::computeSub()
 //
 //----------------------------------------------------------------------------
 
-void tSnowPack::computeUnload()
-{
+void tSnowPack::computeUnload() {
 
     //find if over critical temperature
     if (airTempK >= 273.16) {
-        Lm = 5.8e-5*(airTempK - 273.16)*timeSteps;//unload
-    }
-    else {
+        Lm = 5.8e-5 * (airTempK - 273.16) * timeSteps;//unload
+    } else {
         Lm = 0.0;//do not unload
     }
 
@@ -1626,7 +1609,8 @@ double tSnowPack::inShortWaveSn(tCNode *cNode) {
         // Account for vegetation
         if ((evapotransOption == 1) || (snowOption)) {
             //Iv = Is * coeffKt * coeffV + Is * (1.0 - coeffV);
-            Iv = Is*exp((coeffKt-1)*coeffLAI)*coeffV + Is*(1.0-coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016) CJC 2020
+            Iv = Is * exp((coeffKt - 1) * coeffLAI) * coeffV +
+                 Is * (1.0 - coeffV); // Changed to use Beer-Lambert following Moreno et al. (2016) CJC 2020
         } else
             Iv = Is;
 
