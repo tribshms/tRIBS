@@ -90,7 +90,7 @@ tFlowNet::tFlowNet(SimulationControl *simCtrPtr, tMesh<tCNode> *gridRef,
 	Cout<<"Stream velocity: \t\t"<<streamvel<<" m/sec"<<endl;
 	
 	// Initialize Hydrograph class
-	res = new tFlowResults( simCtrl, infile, timptr, MaxTravel() ); 
+	res = new tFlowResults( simCtrl, infile, timer, MaxTravel() );
 
 	percolationOption = infile.ReadItem(percolationOption, "OPTPERCOLATION"); // ASM percolation option
 
@@ -216,7 +216,7 @@ void tFlowNet::SetFlowVariables(tInputFile &infile)
 *****************************************************************************/
 int tFlowNet::MaxTravel() 
 {
-	flowboxes = (int)ceil( (maxttime + timespan)/dOtp );
+	flowboxes = static_cast<int>(ceil( (maxttime + timespan)/dOtp ));
 	Cout<<"Hydrograph array size: \t\t"<<flowboxes<<endl; 
 	if (maxttimeInitial == 0.0)	// added by Ara Ko 2017	
 	   maxttimeInitial=maxttime; // added by Ara Ko 2017	
@@ -673,7 +673,7 @@ void tFlowNet::initializeTravelTimeOnly()
 void tFlowNet::setMaxTravelTime() 
 {
 	// Update the limit time of simulation added Ara Ko in 2017
-	res->limit = flowboxes =(int)ceil( (timer->RemainingTime(0.0) + maxttimeInitial)/dOtp); 	
+	//res->limit = flowboxes = static_cast<int>(ceil( (timer->RemainingTime(0.0) + maxttimeInitial)/dOtp)); 	//WR Debug restart, cause error in restart.
 	
 	maxttime = dist_hill_max/hillvel + dist_stream_max/streamvel; //SECONDS
 	res->iimax = timer->getResStep(maxttime/(3600.0));

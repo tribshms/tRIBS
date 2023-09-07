@@ -20,12 +20,13 @@ set(CMAKE_CXX_STANDARD 20)
 
 
 # used while testing and developing
-set(CMAKE_CXX_EXTENSIONS OFF)
+#set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0") # no optimization here
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -gdwarf-3")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g") # no optimization here
 
 ### sanitizer finds leaks in parallel version--open mpi is known to have leaks
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g") # different options available for using Sanitizer
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
 
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
 
@@ -100,8 +101,6 @@ if(OFF)
             src/tHydro/tHydroModel.h
             src/tHydro/tIntercept.cpp
             src/tHydro/tIntercept.h
-            src/tHydro/tSnowIntercept.cpp
-            src/tHydro/tSnowIntercept.h
             src/tHydro/tSnowPack.cpp
             src/tHydro/tSnowPack.h
             src/tHydro/tWaterBalance.cpp
@@ -224,8 +223,6 @@ else()
             src/tHydro/tHydroModel.h
             src/tHydro/tIntercept.cpp
             src/tHydro/tIntercept.h
-            src/tHydro/tSnowIntercept.cpp
-            src/tHydro/tSnowIntercept.h
             src/tHydro/tSnowPack.cpp
             src/tHydro/tSnowPack.h
             src/tHydro/tWaterBalance.cpp

@@ -62,7 +62,7 @@
 
 #include "src/Headers/Inclusions.h"
 #include "src/tHydro/tEvapoTrans.h"
-#include "src/tHydro/tSnowIntercept.h"
+
 
 
 //=========================================================================
@@ -86,12 +86,15 @@ public:
   //destructor
   ~tSnowPack();
 
-  //initialization routine
-  void SetSnowPackVariables(tInputFile &, tHydroModel *);
-  void SetSnowVariables(tInputFile &, tHydroModel *);
+  //initialization and update routine
+  void SetSnowPackVariables(tInputFile &);
+  void SetSnowVariables(tInputFile &);
+  void SetSnowInterceptVariables();
+  void checkShelter(tCNode *cNode);
 
   //calling functions
-  void callSnowPack(tIntercept *, int, tSnowIntercept *);
+  void callSnowPack(tIntercept *, int);
+  void callSnowIntercept(tCNode *, tIntercept *,int count);
 
   //initialization, interact w/ tCNode
   void getFrNodeSnP(tCNode *);
@@ -99,6 +102,10 @@ public:
   
   //physical routines
   double densityFromAge();
+  void computeSub();
+  void computeUnload();
+  void updateRipeSnowPack(double);
+  void updateSolidSnowPack(double);
 
   //EB functions
 
@@ -107,19 +114,12 @@ public:
   double sensibleHFCalc(double);
   double snowFracCalc();
   double precipitationHFCalc();
-  double latHeatVapCalc();
-  double latHeatFreezeCalc();
-  double latHeatSubCalc();
-  double heatCapAirCalc();
-  double heatCapSolCalc();
-  double heatCapLiqCalc();
-  double vapPressSnowSurfCalc();
   double agingAlbedo();
   double resFactCalc();
   double inShortWaveSn(tCNode *);
+  double inShortWaveCan();
   double emmisSn();
-  double inLongWaveSn();
-  void SetSunVariablesSn();
+
   
   //EB function
   void snowEB(int, tCNode *); // AJR2008, SKY2008Snow
@@ -141,7 +141,6 @@ protected:
   double rainTemp;
   double ETAge; //min
 
-
   //discretization
   double timeSteph, timeSteps, timeStepm;
   double minutelyTimeStep;  
@@ -152,7 +151,6 @@ protected:
   double canWE; //cm
   double liqRoute; //cm
   double liqWEm, iceWEm, snWEm; //m
-  double liqRoutem; //m
   double Utot, Usn, Uwat, Utotold; //internal energy (kJ/m^2), set to 0 at T=0 C
   double liqWatCont; // degree of saturation
   double liqTempC, iceTempC, snTempC; //Celsius
@@ -168,7 +166,21 @@ protected:
   double snUnload, snCanWE; //cm
   double vapPressSmb, vapPresskSPa; //vapor pressure (mb and Pa)
 
-  //density parameters
+  //intercept variables (from Liston and Elder 2006, section 3)
+  double Qcs, Ce, I, Iold, psiS; //
+  double Imax, prec, LAI; //
+  double kc, iceRad, dmdt; //
+  double Omega, Sp, RH, D, rhoVap; //
+  double Sh, Nu, Re; //
+  double KtAtm, Ta, Mwater, R; //
+  double RdryAir, esatIce, nu, beta; //
+  double acoefficient; //
+  double Lm; // unloading
+  double airTempK; //
+  double effPrecip; //
+
+
+    //density parameters
   double rholiqcgs, rhoicecgs, rhosncgs; //g/cm^3
   double rholiqkg, rhoicekg, rhosnkg; //kg/m^3
   double rhoAir; //kg/m^3
@@ -192,12 +204,12 @@ protected:
   double peakSnWE, peakSnWEtemp; //maximum SWE (cm)
   double persMax, persMaxtemp; //time of peristence of pack (hours)
   double inittime, inittimeTemp, peaktime; //time of initial bulk of snow pack and time of peak
-  			      //(absolute time)
-  
+
   //conversion factors
   double naughttokilo, kilotonaught, cgsRHOtomks, mksRHOtocgs;
   double naughttocm, cmtonaught, ctom, mtoc;
-  
+
+
 };
 
 #endif
