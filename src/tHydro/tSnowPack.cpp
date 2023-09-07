@@ -235,9 +235,9 @@ void tSnowPack::SetSnowVariables(tInputFile &infile) {
 //
 //
 //				    Pertinent references: Wigmosta et al (1994)
-//							  Tarboton et al (?)
+//							  Tarboton and Luce (1996)
 //							  Tuteja et al (1996)
-//							  Marks et al (?)
+//							  Marks et al (1999)
 //							  Anderson (1976)
 //							  Jordan (1991)
 //				    
@@ -252,9 +252,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
     int cnt = 0;
     double EP = 0.0; //double tmp = 0.0;
     double SkyC = 0.0; //double tmpC = 0.0;
-    double vegHeight;
-    double snWEold = 0.0;
-    double packWaterBalance = 0.0;
+    double vegHeight = 0;
 
     // SKY2008Snow, AJR2008
     //  metHour = metStep;
@@ -370,18 +368,12 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
 
         //get the necessary information from tCNode for snow model
         getFrNodeSnP(cNode);
-        // among others getFrNodeSnP returns these values from node
-        //liqWE = node->getLiqWE(); //cm
-        //iceWE = node->getIceWE(); //cm
-        //liqRoute = 0.0; //cm
-        //snWE = liqWE + iceWE; //cm
 
         // ensure routed liquid is reset
         cNode->setLiqRouted(0.0);
 
         snUnload = 0.0;
         canWE = cNode->getIntSWE();
-        snWEold = snWE; // cm
 
         //No Snow on ground and canopy and not snowing
         if ((snWE <= 1e-4) && (rain * snowFracCalc() <= 5e-2) && rholiqkg * cmtonaught * (cNode->getIntSWE()) < 1e-3) {
@@ -484,8 +476,6 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
 
                 //reinitialize crust age
                 crustAge = 0.0;
-
-
 
 
                 //snowMB
@@ -680,16 +670,6 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             liqWE = naughttocm * liqWE; // m to cm
             liqRoute = naughttocm * liqRoute; // m to cm
 
-            // check water balance of snow pack
-            //if(rain * snowFracCalc() >= 5e-2) {
-            packWaterBalance = snWE - (snWEold + (mtoc * precip) + snEvap + snSub -
-                                       liqRoute); // Length unit in cm, snEvap and snSub have - as signs are alread computed
-//            if (fabs(packWaterBalance) > 1e-4) {
-//                cerr << "SnowPack water balance  " << endl;
-//                //liqRoute +=
-//            }
-//            //}
-
 
             // Set ET variables equal to zero due to snowpack
             // ET variables are set to zero for canopy when snow in canopy, see tSnowIntercept
@@ -756,12 +736,11 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
 //---------------------------------------------------------------------------
 
 void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int count) {
-    double CanStorage, can_flx;
+    double CanStorage;
     double subFrac, unlFrac, precip, Isnow, throughfall;// SKY2008Snow, AJR2008
     int flag;
     flag = 1;
     CanStorage = node->getCanStorage();
-    can_flx = 0;
 
     //set meteorolgical conditions
     rHumidity = node->getRelHumid();
@@ -882,16 +861,6 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
             Lm += I * unlFrac;
             I = 0.0;
         }
-
-//        // Check for numerical errors: change in intSWE should equal Isnow minus (sign computed) Qcs and Lm and debug
-//        can_flx = ctom * naughttocm * (1 / rholiqkg) * ((I - Iold) - Isnow - Qcs + Lm); // units in mm
-//        if (fabs(can_flx) > 1e-4) {
-//            cerr << "snow intercept water balance error " << endl;
-//        }
-//
-//        if (fabs(naughttocm * (1 / rholiqkg) * Qcs) > 0.05) {
-//            cerr << "break" << endl;
-//        }
 
 
         //adjust amount of snow in canopy

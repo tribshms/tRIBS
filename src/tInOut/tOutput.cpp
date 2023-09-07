@@ -320,12 +320,12 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					<<"Nt_mm " //5
 					<<"Mu_mm " //6
 					<<"Mi_mm " //7
-					<<"QpOut_mm/h " //8
-					<<"QpIn_mm/h " //9
-					<<"Trnsm_m2/h " //10
-					<<"GWflx_m3/h " //11
+					<<"QpOut_mm_h " //8
+					<<"QpIn_mm_h " //9
+					<<"Trnsm_m2_h " //10
+					<<"GWflx_m3_h " //11
 					<<"Srf_mm " //12
-					<<"Rain_mm/h " //13
+					<<"Rain_mm_h " //13
 					<<"SoilMoist_[] " //14
 					<<"RootMoist_[] "  //15
 					<<"AirT_oC " //16
@@ -335,43 +335,43 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					<<"Press_Pa " //20
 					<<"RelHum_[] " //21
 					<<"SkyCov_[] "  //22
-					<<"Wind_m/s " //23
-					<<"NetRad_W/m2 " //24
-					<<"ShrtRadIn_W/m2 " //25
-					<<"ShrtRadIn_dir_W/m2 " //26
-					<<"ShrtRadIn_dif_W/m2 " //27
-					<<"ShortAbsbVeg_W/m2 " //28
-					<<"ShortAbsbSoi_W/m2 " //29
-					<<"LngRadIn_W/m2 " //30
-					<<"LngRadOut_W/m2A " //31
-					<<"PotEvp_mm/h " //32
-					<<"ActEvp_mm/h " //33
-					<<"EvpTtrs_mm/h " //34
-					<<"EvpWetCan_mm/h " //35
-					<<"EvpDryCan_mm/h " //36
-					<<"EvpSoil_mm/h " //37
-					<<"Gflux_W/m2 " //38
-					<<"HFlux_W/m2 " //39
-					<<"Lflux_W/m2 " //40
-					<<"NetPrecip_mm/hr " //41
+					<<"Wind_m_s " //23
+					<<"NetRad_W_m2 " //24
+					<<"ShrtRadIn_W_m2 " //25
+					<<"ShrtRadIn_dir_W_m2 " //26
+					<<"ShrtRadIn_dif_W_m2 " //27
+					<<"ShortAbsbVeg_W_m2 " //28
+					<<"ShortAbsbSoi_W_m2 " //29
+					<<"LngRadIn_W_m2 " //30
+					<<"LngRadOut_W_m2A " //31
+					<<"PotEvp_mm_h " //32
+					<<"ActEvp_mm_h " //33
+					<<"EvpTtrs_mm_h " //34
+					<<"EvpWetCan_mm_h " //35
+					<<"EvpDryCan_mm_h " //36
+					<<"EvpSoil_mm_h " //37
+					<<"Gflux_W_m2 " //38
+					<<"HFlux_W_m2 " //39
+					<<"Lflux_W_m2 " //40
+					<<"NetPrecip_mm_hr " //41
 					<<"LiqWE_cm " //42
 					<<"IceWE_cm "	//43
 					<<"SnWE_cm "	//44
 					<<"SnSub_cm "	//45
 					<<"SnEvap_cm "	//46
-					<<"U_kJ/m2 "  //47
+					<<"U_kJ_m2 "  //47
 					<<"RouteWE_cm " //48
 					<<"SnTemp_C "	//49
 					<<"SurfAge_h "	//50
-					<<"DU_kJ/m2/etistep " //51
-					<<"snLHF_kJ/m2/etistep " //52
-					<<"snSHF_kJ/m2/etistep " //53
-					<<"snGHF_kJ/m2/etistep " //54
-					<<"snPHF_kJ/m2/etistep " //55
-					<<"snRLout_kJ/m2/etistep " //56
-					<<"snRLin_kJ/m2/etistep " //57
-					<<"snRSin_kJ/m2/etistep " //58
-					<<"Uerror_kJ/m2/etistep " //59
+					<<"DU_kJ_m2_etistep " //51
+					<<"snLHF_kJ_m2_etistep " //52
+					<<"snSHF_kJ_m2_etistep " //53
+					<<"snGHF_kJ_m2_etistep " //54
+					<<"snPHF_kJ_m2_etistep " //55
+					<<"snRLout_kJ_m2_etistep " //56
+					<<"snRLin_kJ_m2_etistep " //57
+					<<"snRSin_kJ_m2_etistep " //58
+					<<"Uerror_kJ_m2_etistep " //59
 					<<"IntSWEq_cm "		 //60
 					<<"IntSub_cm "		 //61
 					<<"IntSnUnload_cm "	 //62
@@ -381,18 +381,18 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					<<"Recharge_mm/hr " //66
 					<<"RunOn_mm " //67
 					<<"Srf_Hour_mm " //68
-					<<"Qstrm_m3/s " //69
+					<<"Qstrm_m3_s " //69
 					<<"Hlevel_m " //70
 					<<"CanStorParam_mm " //71
 					<<"IntercepCoeff_[] " //72
 					<<"ThroughFall_[] " //73
 					<<"CanFieldCap_mm " //74
-					<<"DrainCoeff_mm/hr " //75
-					<<"DrainExpPar_1/mm " //76
+					<<"DrainCoeff_mm_hr " //75
+					<<"DrainExpPar_1_mm " //76
 					<<"LandUseAlb_[] " //77
 					<<"VegHeight_m " //78
 					<<"OptTransmCoeff_[] " //79
-					<<"StomRes_s/m " //80
+					<<"StomRes_s_m " //80
 					<<"VegFraction[] " //81
 					<<"LeafAI_[] " //82
 					<<"\n";

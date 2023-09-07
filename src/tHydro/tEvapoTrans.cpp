@@ -1132,8 +1132,9 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
         {
             evapSoil = 0;
 
-            if(coeffV<0);{
-                cerr<<"Zero depth to bedrock but fraction of vegetation does not equal zero, model behavior maybe unrealisitc"<<endl;
+            if(coeffV<0);{ //
+                cerr<<"Zero depth to bedrock but fraction of vegetation does not equal zero, model behavior is unrealistic."<<endl;
+                exit(1);
             }
         }
         else{

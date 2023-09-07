@@ -16,7 +16,7 @@
 #include "src/Headers/globalIO.h"
 
 #ifdef PARALLEL_TRIBS
-                                                                                                                        #include "src/tGraph/tGraph.h"
+#include "src/tGraph/tGraph.h"
 #include "src/tParallel/tParallel.h"
 #endif
 
