@@ -263,9 +263,6 @@ int parallelSimulation(int argc, char **argv)
 		tSnowPack SnowPack( &SimCtrl, &BasinMesh, InputFile, &Timer, &RsmplMaster, 
                         &Moisture, &Rainfall); // SKY2008Snow from AJR2007
 
-		cout<<"\nCreating SnowInterception setup...\n";
-		tSnowIntercept SnowIntercept( &SimCtrl, &BasinMesh, InputFile, &Timer, 
-               &RsmplMaster, &Moisture, &Rainfall); // SKY2008Snow from AJR2007
 
 		cout<<"\nCreating Restart setup...\n";
 		tRestart<tCNode> Restart( &Timer, &BasinMesh, &Flow, &Balance,
@@ -344,9 +341,6 @@ int parallelSimulation(int argc, char **argv)
 		Cout<<"\nInitializing SnowPack setup... \n";
 		tSnowPack SnowPack( &SimCtrl, &BasinMesh, InputFile, &Timer, &RsmplMaster, 
                         &Moisture, &Rainfall); // SKY2008Snow from AJR2007
-		Cout<<"\nCreating SnowInterception setup...\n";
-		tSnowIntercept SnowIntercept( &SimCtrl, &BasinMesh, InputFile, &Timer, 
-             &RsmplMaster, &Moisture, &Rainfall); // SKY2008Snow from AJR2007
 
 		Cout<<"\nCreating Restart setup...\n";
 		tRestart<tCNode> Restart( &Timer, &BasinMesh, &Flow, &Balance,
