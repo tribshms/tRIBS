@@ -9,7 +9,7 @@ add_executable(${exe} src/main.cpp)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #set standard
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 #set compiler if necessary
 #set (CMAKE_CXX_COMPILER <specify compiler here>)
@@ -22,16 +22,16 @@ set(CMAKE_CXX_STANDARD 20)
 # used while testing and developing
 #set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -gdwarf-3")
+#set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -gdwarf-3")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g") # no optimization here
 
 ### sanitizer finds leaks in parallel version--open mpi is known to have leaks
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
 
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
 
 # set to ON to compile parallel version, set to OFF to compile serial version
-if(OFF)
+if(ON)
     message(WARNING "Compiling parallel version of tRIBS")
 
     target_compile_definitions(${exe}

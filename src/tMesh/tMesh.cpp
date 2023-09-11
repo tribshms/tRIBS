@@ -802,7 +802,7 @@ MakeMeshFromTriangulator( tInputFile &infile ){
 	int i, numpts;                      // no. of points in mesh
 	tArray<double> x, y, z;          // arrays of x, y, and z coordinates
 	tArray<int> bnd;                 // array of boundary codes 
-	char pointFilenm[80];            // name of file containing (x,y,z,b) data
+	char pointFilenm[kMaxNameLength+kMaxExt];            // name of file containing (x,y,z,b) data
 	ifstream pointfile;              // the file (stream) itself
 	
 	tMeshListIter< tSubNode > nodIter( nodeList );   //Node List
