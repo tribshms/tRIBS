@@ -2167,14 +2167,14 @@ void tGraph::sendInitial() {
       for (il = localFlux[i].begin(); il != localFlux[i].end(); ++il) {
         int soilID = (*il)->getSoilID();
         double vArea = (*il)->getVArea();
-        ndata[d++] = *(reinterpret_cast<double*>(&soilID));
+        ndata[d++] = static_cast<double>(soilID);//*(reinterpret_cast<double*>(&soilID)); //WR debug converts int pointer to double pointer and derefs as double--possible source undefined behavior
         ndata[d++] = vArea;
       }
 
       for (il = upFlow[i].begin(); il != upFlow[i].end(); ++il) {
         int soilID = (*il)->getSoilID();
         double vArea = (*il)->getVArea();
-        ndata[d++] = *(reinterpret_cast<double*>(&soilID));
+        ndata[d++] = static_cast<double>(soilID);//*(reinterpret_cast<double*>(&soilID));//WR debug converts int pointer to double pointer and derefs as double--possible source undefined behavior
         ndata[d++] = vArea;
       }
       tParallel::send(i, INITIAL, ndata, dsizeN);
@@ -2204,13 +2204,13 @@ void tGraph::receiveInitial() {
       std::set<tCNode*>::iterator ir;
       int d = 0;
       for (ir = remoteFlux[i].begin(); ir != remoteFlux[i].end(); ++ir) {
-        int soilID = *(reinterpret_cast<int*>(&ndata[d++]));
+          int soilID = static_cast<int>(ndata[d++]);//int soilID = *(reinterpret_cast<int*>(&ndata[d++]));//WR debug converts double pointer to int pointer and derefs as int--possible source undefined behavior
         (*ir)->setSoilID(soilID);
         (*ir)->setVArea(ndata[d++]);
       }
 
       for (ir = downFlow[i].begin(); ir != downFlow[i].end(); ++ir) {
-        int soilID = *(reinterpret_cast<int*>(&ndata[d++]));
+          int soilID = static_cast<int>(ndata[d++]);// int soilID = *(reinterpret_cast<int*>(&ndata[d++])); //WR debug converts int pointer to double pointer and derefs as int--possible source undefined behavior
         (*ir)->setSoilID(soilID);
         (*ir)->setVArea(ndata[d++]);
       }
