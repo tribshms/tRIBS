@@ -60,8 +60,7 @@ void tRestart<tSubNode>::writeRestart(fstream & rStr)
   balance->writeRestart(rStr);
   hydro->writeRestart(rStr);
   rainfall->writeRestart(rStr);
-  evap->writeRestart(rStr);
-  intercept->writeRestart(rStr);
+  intercept->readRestart(rStr);
   mesh->writeRestart(rStr);
 	// Giuseppe DEBUG Restart 2012 - START 
 	// I have introduced an IF that checks whether
@@ -69,7 +68,10 @@ void tRestart<tSubNode>::writeRestart(fstream & rStr)
 	// are not saved in the binary Restart files.
 	if (snowpack->getSnowOpt() != 0){
 		snowpack->writeRestart(rStr);
-	}// Giuseppe DEBUG Restart 2012 - END
+	}
+    else{
+        evap->writeRestart(rStr);
+    }// Giuseppe DEBUG Restart 2012 - END
 	
 
 }
@@ -88,7 +90,6 @@ void tRestart<tSubNode>::readRestart(fstream & rStr)
 	balance->readRestart(rStr);
 	hydro->readRestart(rStr);
 	rainfall->readRestart(rStr);
-	evap->readRestart(rStr);
 	intercept->readRestart(rStr);
 	mesh->readRestart(rStr);
 	// Giuseppe DEBUG Restart 2012 - START 
@@ -97,7 +98,10 @@ void tRestart<tSubNode>::readRestart(fstream & rStr)
 	// with the writeRestart function.
 	if (snowpack->getSnowOpt() != 0){	
 		snowpack->readRestart(rStr);
-	}// Giuseppe DEBUG Restart 2012 - END
+	}
+    else{
+        evap->readRestart(rStr);
+    }// Giuseppe DEBUG Restart 2012 - END// Giuseppe DEBUG Restart 2012 - END
 }
 
 //=========================================================================

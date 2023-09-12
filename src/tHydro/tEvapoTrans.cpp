@@ -3173,7 +3173,7 @@ void tEvapoTrans::readHydroMetStat(char *stationfile)
 	readFile >> nParams;
 	
 	weatherStations = new tHydroMet[nStations];
-	assert(weatherStations != 0);
+	assert(weatherStations != nullptr);
 	
 	numStations = nStations;
 	
