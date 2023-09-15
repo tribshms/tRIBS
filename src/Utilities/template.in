@@ -1,0 +1,547 @@
+##############################################################################
+##
+##                    tRIBS Distributed Hydrologic Model
+##
+##              TIN-based Real-time Integrated Basin Simulator
+##                       Ralph M. Parsons Laboratory
+##                  Massachusetts Institute of Technology
+## 
+##
+##  template.in		Input File Template for Generation of tRIBS *.in
+##                      files used for model parameters and file path names.
+##
+##############################################################################
+
+
+##=========================================================================
+##
+##
+##			Section 1: Model Run Parameters
+##
+##
+##=========================================================================
+
+## Time Variables
+## ------------------
+
+STARTDATE: 	Starting time (MM/DD/YYYY/HH/MM)
+
+
+RUNTIME:     	Run duration (hours)
+
+
+TIMESTEP:    	Unsaturated zone computational time step (mins)
+
+
+GWSTEP:      	Saturated zone computational time step (mins)
+
+
+METSTEP:     	Meteorological data time step (mins)
+
+
+ETISTEP:	ET, interception and snow time step (hours)
+
+
+RAININTRVL:  	Time interval in rainfall input (hours)
+
+
+OPINTRVL:    	Output interval (hours)   
+
+
+SPOPINTRVL:   	Spatial output interval (hours)
+
+
+INTSTORMMAX: 	Interstorm interval (hours)     
+
+
+RAINSEARCH:	Rainfall search interval (hours)
+
+
+
+## Routing Variables
+## ------------------
+
+BASEFLOW:    	Baseflow discharge (m3/s)  
+
+
+VELOCITYCOEF: 	Discharge-velocity coefficient 
+
+
+KINEMVELCOEF:	Kinematic routing velocity coefficient
+
+
+VELOCITYRATIO: 	Stream to hillslope velocity coefficient
+
+
+FLOWEXP: 	Nonlinear discharge coefficient
+
+
+CHANNELROUGHNESS: Uniform channel roughness value     
+
+
+CHANNELWIDTH:     Uniform channel width  (meters)
+
+
+CHANNELWIDTHCOEFF:	Coefficient in width-area relationship 
+
+
+CHANNELWIDTHEXPNT:	Exponent in width-area relationship 
+
+
+CHANNELWIDTHFILE:	Filename that contains channel widths
+
+
+CHANNELCONDUCTIVITY:	Hydraulic conductivity in channel (m/s)
+
+
+TRANSIENTCONDUCTIVITY:	Hydraulic conductivity during transient infiltration (m/s)
+
+
+TRANSIENTTIME: 		Time until the transient period ends (mins)
+
+
+CHANNELPOROSITY:	Porosity in channel (-)
+
+
+CHANPOREINDEX:		Pore index parameter in channel (-)
+
+
+CHANPSIB:		Matric potential in channel (mm - must be negative)
+
+
+##=========================================================================
+##
+##
+##			Section 2: Model Run Options
+##
+##
+##  OPTMESHINPUT:	1  tMesh data		5  Arc/Info *.net
+##			2  Point file		6  Arc/Info *.lin,*.pnt
+##			3  ArcGrid (random)	7  Scratch
+##			4  ArcGrid (hex)	8  Point Triangulator
+##                                              9  Meshbuilder for Large Domains
+##
+##  RAINSOURCE:		1  Stage III radar
+##			2  WSI radar
+##                      3  Rain gauges
+##
+##  OPTEVAPOTRANS:	0  Inactive evapotranspiration
+##			1  Penman-Monteith method
+##                      2  Deardorff method
+##  			3  Priestley-Taylor method
+##                      4  Pan evaporation measurements
+##
+##  OPTSNOW:		0  Inactive snow layer
+##			1  Single snow layer
+##
+##  HILLALBOPT:		0  Snow albedo for hillslopes
+##			1  Land-cover albedo for hillslopes
+##			2  Dynamic albedo for hillslopes
+##
+##  OPTRADSHELT:	0  Local controls on shortwave radiation
+##			1  Remote controls on diffuse shortwave 
+##			2  Remote controls on entire shortwave
+## 			3  No sheltering
+##
+##  OPTINTERCEPT:	0  Inactive interception 
+## 			1  Canopy storage method
+##			2  Canopy water balance method
+##  
+##  OPTLANDUSE:		0  Static land cover maps
+##			1  Dynamic updating of land cover maps
+##
+##  OPTLUINTERP:  	0  Constant (previous) values between land cover
+##			1  Linear interpolation between land cover
+##
+##  OPTSOILTYPE:	0  Tabular data (default)
+##			1  Gridded parameter fields 
+##
+##  GFLUXOPTION:	0  Inactive ground heat flux
+##			1  Temperature gradient method
+##                      2  Force_Restore method
+##
+##  METDATAOPTION:	0  Inactive meteorological data
+##			1  Weather station point data
+##			2  Gridded meteorological data
+##
+##  CONVERTDATA:	0  Inactive data preprocessing
+##			1  Active met data preprocessing
+##     			2  Active rain gauge data preprocessing
+##			3  Active DMIP met data preprocessing
+##
+##  OPTBEDROCK:		0  Uniform bedrock depth (double)
+##			1  Variable bedrock depth (grid)
+##
+##  WIDTHINTERPOLATION: 0  Interpolate between measured and observed
+##	                1  Interpolate only between measured
+##
+##  OPTGWFILE:		0  Resample ASCII grid file in GWATERFILE
+##		      	1  Read in Voronoi polygon file with GW levels
+##
+##  OPTRUNON:		0  No Runon
+##			1  Runon 
+##
+##  OPTRESERVOIR:	0  No Reservoir
+##			1  Reservoir (linear) routing scheme
+## 
+##  OPTPERCOLATION:	0  No Channel Percolation
+##			1  Constant channel loss mechanism
+##			2  Transient then constant loss mechanism
+##			3  Green-Ampt Infiltration
+##
+##=========================================================================
+
+
+OPTMESHINPUT:   Mesh input data option
+
+
+RAINSOURCE:  	Rainfall data source option 
+
+
+OPTEVAPOTRANS: 	Option for evapoTranspiration scheme
+
+
+OPTSNOW:	Option for single layer snow model
+
+
+HILLALBOPT: 	Option for albedo of surrounding hillslopes
+
+
+OPTRADSHELT:	Option for local and remote radiation sheltering
+
+
+OPTINTERCEPT: 	Option for interception scheme
+
+
+OPTLANDUSE:	Option for static or dynamic land cover
+
+
+OPTLUINTERP:	Option for interpolation of land cover 
+
+
+OPTSOILTYPE:	Option for tabular or gridded soil parameters
+
+
+GFLUXOPTION: 	Option for ground heat flux
+
+
+METDATAOPTION:  Option for meteorological data
+
+
+CONVERTDATA:   	Option to convert met data format
+
+
+OPTBEDROCK:	Option for uniform or variable depth
+
+
+WIDTHINTERPOLATION:  Option for interpolating width values
+
+
+OPTGWFILE: 	Option for groundwater initial file
+
+
+OPTRUNON:	Option for runon in overland flow paths
+
+
+OPTRESERVOIR:	Option to activate the use of reservoir routing scheme
+
+
+OPTPERCOLATION:	Option for channel percolation losses
+
+
+##=========================================================================
+##
+##
+##			Section 3: Model Input Files and Pathnames
+##
+##
+##=========================================================================
+
+## Mesh Generation
+## ------------------
+
+INPUTDATAFILE:    tMesh input file base name for Mesh files
+
+
+INPUTTIME:	  tMesh input time slice (Option 1)
+
+
+ARCINFOFILENAME:  tMesh input file base name Arc files
+
+
+POINTFILENAME:    tMesh input file name Points files
+
+
+
+## Resampling Grids
+## ------------------
+
+SOILTABLENAME:    Soil parameter reference table (*.sdt)
+
+
+SOILMAPNAME:      Soil texture ASCII grid (*.soi)
+
+
+LANDTABLENAME:    Land use parameter reference table (*.ldt)
+
+
+LANDMAPNAME:  	  Land use ASCII grid (*.lan)
+
+
+GWATERFILE:       Ground water ASCII grid (*.iwt) 
+
+
+DEMFILE:	  DEM ASCII grid for sky and land view factors (*.dem)
+
+
+RAINFILE:         Base name of the radar ASCII grid
+
+
+RAINEXTENSION:    Extension for the radar ASCII grid 
+
+
+DEPTHTOBEDROCK:   Uniform depth to bedrock (meters)
+
+
+BEDROCKFILE:      Bedrock depth ASCII grid (*.brd)
+
+
+LUGRID:		  Land cover grid data file (*.gdf)
+
+
+SCGRID:		  Soil cover grid data file (*.gdf)
+
+
+
+## Meteorological Variables
+## ------------------
+
+TLINKE:		  Atmospheric turbidity parameter
+
+
+MINSNTEMP:	  Minimum snow temperature 
+
+
+TEMPLAPSE:	  Temperature lapse rate
+
+
+PRECLAPSE:	  Precipitation lapse rate
+
+
+
+## Meterological Data
+## ------------------
+
+HYDROMETSTATIONS:  Hydrometeorological station file (*.sdf)
+
+
+HYDROMETGRID:  	   Hydrometeorological grid data file (*.gdf)
+
+
+HYDROMETCONVERT:   Hydrometeorological data conversion file (*.mdi)
+
+
+HYDROMETBASENAME:  Hydrometeorological data BASE name (*.mdf)
+
+
+GAUGESTATIONS: 	   Rain Gauge station file (*.sdf)
+
+
+GAUGECONVERT:      Rain Gauge data conversion file (*.mdi)
+
+
+GAUGEBASENAME:	   Rain Gauge data BASE name (*.mdf)
+
+
+
+## Reservoir Information
+## ------------------
+
+RESPOLYGONID:	  Reservoir Polygon ID number and type table (*.res)
+
+
+RESDATA:	  Reservoir elevation-discharge-storage data table (*.eds)
+
+
+
+## Output Data
+## ------------------
+
+OUTFILENAME:	   Base name of the tMesh and variable output
+
+
+OUTHYDROFILENAME:  Base name for hydrograph output
+
+
+OUTHYDROEXTENSION: Extension for hydrograph output
+
+
+RIBSHYDOUTPUT:	   Compatibility with RIBS User Interphase
+
+
+NODEOUTPUTLIST:    Filename with Nodes for Dynamic Output (*.nol)
+
+
+HYDRONODELIST:     Filename with Nodes for HydroModel Output (*.nol)
+
+
+OUTLETNODELIST:    Filename with Interior Nodes for  Output (*.nol)
+
+
+##=========================================================================
+##
+##
+##			Section 4: Model Modes
+##
+##
+##  FORECASTMODE:	0  No Forecasting		
+##			1  Single or Updating QPF Forecast
+##			2  Persistence Forecast
+## 	                3  Climatological Forecast
+##
+##  RAINDISTRIBUTION:	0  Spatially-distributed Radar
+##			1  Mean Areal Precipitation Radar
+##
+##  STOCHASTICMODE:	0  No Stochastic Mode	 4  Mean+Sine Forcing
+##                      1  Mean Forcing     	 5  Random+Sine Forcing
+##                      2  Random Forcing	 6  Weather Generator
+##                      3  Sinusoidal Forcing
+##                      
+##=========================================================================
+
+## Rainfall Forecasting
+## ------------------
+
+FORECASTMODE:	   Rainfall Forecasting Mode Option
+
+
+FORECASTTIME:	   Forecast Time (hours from start)
+
+
+FORECASTLEADTIME:  Forecast Lead Time (hours) 
+
+
+FORECASTLENGTH:	   Forecast Window Length (hours)
+
+
+FORECASTFILE:	   Base name of the radar QPF grids
+
+
+CLIMATOLOGY:	   Rainfall climatology (mm/hr)
+
+
+RAINDISTRIBUTION:  Distributed or MAP radar rainfall	
+
+
+
+## Stochastic Climate Forcing
+## ------------------
+
+STOCHASTICMODE:	   Stochastic Climate Mode Option
+ 
+
+PMEAN:		   Mean rainfall intensity (mm/hr)	
+
+
+STDUR:		   Mean storm duration (hours) 
+
+
+ISTDUR:		   Mean time interval between storms (hours) 
+
+
+SEED:		   Random seed 
+
+
+PERIOD:		   Period of variation (hours) 
+
+
+MAXPMEAN:	   Maximum value of mean rainfall intensity (mm/hr) 
+
+
+MAXSTDURMN:        Maximum value of mean storm duration (hours) 
+
+
+MAXISTDURMN: 	   Maximum value of mean interstorm period (hours) 
+
+
+WEATHERTABLENAME:	File with Stochastic Weather Table
+
+
+##=========================================================================
+##
+##
+## 			Section 5: Restart Mode Options
+##
+##
+##  RESTARTMODE:        0  No reading or writing of restart (for fast development)
+##                      1  Write files only (for initial runs)
+##                      2  Read file only (to start at some specified time)
+##                      3  Read a restart file and continue to write 
+##                         restart files
+##
+##=========================================================================
+
+RESTARTMODE:	    Restart Mode Option
+
+
+RESTARTINTRVL:      Time set for restart output (hours)
+
+
+RESTARTDIR:         Path of directory for restart output
+
+
+RESTARTFILE:        Actual file to restart a run
+
+
+##=========================================================================
+##
+##
+##                      Section 6: Parallel Mode Options
+##
+##
+##  PARALLELMODE:       0  Run in serial mode
+##                      1  Run in parallel mode
+##
+##  GRAPHOPTION:    	0  Default partitioning of the graph
+##                      1  Reach-based partitioning
+##                      2  Inlet/outlet-based partitioning
+##
+##  GRAPHFILE:	  	Reach connectivity file (parallel only)
+##
+##=========================================================================
+
+PARALLELMODE:       Parallel or Serial Mode Option
+
+ 
+GRAPHOPTION:        Graph File Type Option
+
+
+GRAPHFILE:          Reach connectivity filename (graph file option 1,2)
+
+
+##=========================================================================
+##
+##
+##                      Section 7: Visualization Options
+##
+##
+##  OPTVIZ:		0  Do NOT write binary output files for viz
+##			1  Write binary output files for viz
+##
+##  OUTVIZFILENAME:	Filename of the binary visualization outputs
+##
+##=========================================================================
+
+OPTVIZ:		    Option to write binary output files for visualization
+
+
+OUTVIZFILENAME:	    Filename for viz binary files
+
+
+##=========================================================================
+##
+##
+##			End of template.in
+##
+##
+##=========================================================================

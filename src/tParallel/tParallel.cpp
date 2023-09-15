@@ -320,7 +320,9 @@ double* tParallel::sum(double* value, int n) {
    for (int i = 0; i < n; i++) localValue[i] = value[i];
    MPI_Reduce(localValue, valueSum, n, MPI_DOUBLE, MPI_SUM, MASTER_PROC,
       MPI_COMM_WORLD);
-                                                                                
+
+   delete [] localValue;
+
    return valueSum;
 }
 
@@ -342,7 +344,9 @@ double* tParallel::min(double* value, int n) {
    for (int i = 0; i < n; i++) localValue[i] = value[i];
    MPI_Reduce(localValue, valueSum, n, MPI_DOUBLE, MPI_MIN, MASTER_PROC,
       MPI_COMM_WORLD);
-                                                                                
+
+   delete [] localValue;
+
    return valueSum;
 }
 
@@ -359,12 +363,17 @@ double* tParallel::max(double* value, int n) {
       return valueSum;
    } 
 
-   for (int i = 0; i < n; i++) valueSum[i] = 0;
+   for (int i = 0; i < n; i++)
+       valueSum[i] = 0;
+
    double* localValue = new double[n];
+
    for (int i = 0; i < n; i++) localValue[i] = value[i];
    MPI_Reduce(localValue, valueSum, n, MPI_DOUBLE, MPI_MAX, MASTER_PROC,
       MPI_COMM_WORLD);
-                                                                                
+
+   delete [] localValue;
+
    return valueSum;
 }
 

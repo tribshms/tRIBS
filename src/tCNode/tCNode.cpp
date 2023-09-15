@@ -296,7 +296,7 @@ tCNode::~tCNode() {//}
 	
 	// GMnSKY2008MLE to fix memory leaks
 	deleteVertArrays(); 
-	deleteDataStack(); 
+	//deleteDataStack(); //WR not necessary as TimeInd and Qeff are now smart pointers
 }
 
 //=========================================================================
@@ -498,8 +498,8 @@ int    tCNode::getLandUse()      { return LandUse; }
 tEdge * tCNode::getFlowEdg()     { return flowedge; }
 tCNode * tCNode::getStreamNode() { return StreamPtr; }
 
-tList< int >    * tCNode::getTimeIndList() { return TimeInd; }
-tList< double > * tCNode::getQeffList()    { return Qeff; }
+tList< int >    * tCNode::getTimeIndList() { return TimeInd.get(); }
+tList< double > * tCNode::getQeffList()    { return Qeff.get(); }
 
 // SKY2008Snow from AJR2007
 // snowpack -- RINEHART 2007 @ NMT
@@ -966,8 +966,12 @@ void tCNode::allocVertArrays(int n)
 
 void tCNode::allocDataStack()
 {
-	TimeInd = new tList< int >;
-	Qeff = new tList< double >;
+    //WR debug convert to smart pointers
+	//TimeInd = new tList< int >;
+	//Qeff = new tList< double >;
+    TimeInd = make_shared<tList<int>>();
+    Qeff = make_shared<tList<double>>();
+
 	assert(TimeInd != 0);
 	assert(Qeff != 0);
 	return; 

@@ -613,8 +613,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 #ifdef PARALLEL_TRIBS
    }
 
-   // Remove sum variables
-   delete [] pPhydro;
+     delete [] pPhydro;
    delete [] pMhydro;
    delete [] pCrr;
    delete [] pMax;

@@ -258,6 +258,16 @@ tKinemat::~tKinemat() {
     ControlOut.close();
     GeomtFile.close();
 
+    // Deallocate memory for stacks in stream nodes //WR debug
+    tCNode *cn;
+    tMeshListIter<tCNode> nodIter(gridPtr->getNodeList());
+    for (cn = nodIter.FirstP(); nodIter.IsActive(); cn = nodIter.NextP()) {
+        if (cn->getBoundaryFlag() == kStream) {
+            cn->deleteDataStack();
+        }
+    }
+    OutletNode->deleteDataStack();
+
     Cout << "tKinemat Object has been destroyed..." << endl << flush;
 }
 
@@ -692,6 +702,8 @@ void tKinemat::FreeMemory() {
     if (Y1 != NULL) delete[] Y1;
     if (Y2 != NULL) delete[] Y2;
     if (Y3 != NULL) delete[] Y3;
+    if (clis != NULL) delete[] clis;
+    if (NodeLoss != NULL) delete[] NodeLoss;
 
     ais = NULL;
     bis = NULL;
@@ -705,6 +717,7 @@ void tKinemat::FreeMemory() {
     Y2 = NULL;
     Y3 = NULL;
     clis = NULL; // ASM 2/10/2017
+    NodeLoss = nullptr;
 
     return;
 }

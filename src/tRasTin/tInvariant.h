@@ -47,9 +47,19 @@ public:
     void printSoilPars();
     void SetSoilParameters(tMesh<tCNode>*, tResample*, tInputFile&, int);
     double getSoilProp(int);
-    
-    // Changes added by Giuseppe in August 2016 to allow reading soil grids
-    char **SCgridParamNames, **SCgridBaseNames, **SCgridExtNames, **SCgridName;
+
+    // WR debug convert read grid flow to use smart pointes
+    // Define a typedef for convenience
+    using CharArrayPtr = std::unique_ptr<char[]>;
+
+    // Create vectors of unique_ptr to manage your character arrays
+    vector<CharArrayPtr> SCgridParamNames;
+    vector<CharArrayPtr> SCgridBaseNames;
+    vector<CharArrayPtr> SCgridExtNames;
+    vector<CharArrayPtr> SCgridName;
+
+    // Changes added by Giuseppe in August 2016 to allow reading soil grids WR debug converted to smart pointers to minimize memory leak
+    // char **SCgridParamNames, **SCgridBaseNames, **SCgridExtNames, **SCgridName;
 	
 	
 };
