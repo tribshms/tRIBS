@@ -692,6 +692,8 @@ void tKinemat::FreeMemory() {
     if (Y1 != NULL) delete[] Y1;
     if (Y2 != NULL) delete[] Y2;
     if (Y3 != NULL) delete[] Y3;
+    if (clis != NULL) delete[] clis;
+    if (NodeLoss != NULL) delete[] NodeLoss;
 
     ais = NULL;
     bis = NULL;
@@ -705,6 +707,7 @@ void tKinemat::FreeMemory() {
     Y2 = NULL;
     Y3 = NULL;
     clis = NULL; // ASM 2/10/2017
+    NodeLoss = nullptr;
 
     return;
 }
