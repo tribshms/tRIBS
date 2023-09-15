@@ -864,9 +864,9 @@ protected:
   int LandUse;  
   int Reach;
 
-  tList< int >    * TimeInd;  // Time steps at which a Q value is expected
-  tList< double > * Qeff;     // Expected value of Q
-  
+  shared_ptr<tList<double>> Qeff; //WR debug convert to smart shared pointer to prevent memory leak
+  shared_ptr<tList<int>> TimeInd;
+
   double xC;
   double yC;
 

@@ -1967,6 +1967,7 @@ void tGraph::sendDownstream(int rid, tCNode* snode, double value) {
       tParallel::send(to_proc, DOWNSTREAM+snode->getReach(), ndata, 1);
     }
   }
+    delete [] ndata;
 #endif
 }
 
@@ -2045,7 +2046,10 @@ void tGraph::sendOverlap() {
       }
 
       tParallel::send(i, OVERLAP, ndata, dsizeN);
-    } 
+
+      //WR debug memory leak
+      delete[] ndata;
+    }
   }
 
 #endif
@@ -2112,6 +2116,8 @@ void tGraph::sendQpin(int rid, tCNode* snode, double value) {
       tParallel::send(to_proc, QPIN+snode->getReach(), ndata, 1);
     }
   }
+
+    delete[] ndata;
 #endif
 }
 
@@ -2178,6 +2184,7 @@ void tGraph::sendInitial() {
         ndata[d++] = vArea;
       }
       tParallel::send(i, INITIAL, ndata, dsizeN);
+      delete [] ndata;
     }
   }
 #endif
@@ -2250,6 +2257,8 @@ void tGraph::sendRunFlux(tCNode* cn) {
 
    }
  }
+
+  delete [] ndata;
 #endif
 }
 
@@ -2310,6 +2319,7 @@ void tGraph::sendUpstreamFlow() {
         ndata[d++] = (*iup)->getQstrm();
       }
       tParallel::send(i, UPSTREAM, ndata, dsizeN);
+      delete [] ndata;
     }
   }
 #endif
@@ -2364,13 +2374,14 @@ void tGraph::sendGroundWater() {
           ++iflux) {
         list<double>& rflist = (*iflux)->getGwaterChngList();
         int count = rflist.size();
-        ndata[c++] = *(reinterpret_cast<double*>(&count));
+        ndata[c++] = static_cast<double>(count);//*(reinterpret_cast<double*>(&count));//WR debug converts int pointer to double pointer and derefs as int--possible source undefined behavior
         list<double>::iterator iter;
         for (iter = rflist.begin(); iter != rflist.end(); ++iter) {
           ndata[c++] = (*iter);
         }
       }
       tParallel::send(i, GROUNDWATER, ndata, dsizeN);
+      delete [] ndata;
     }
   }
 #endif 
@@ -2397,11 +2408,12 @@ void tGraph::receiveGroundWater() {
       std::set<tCNode*>::iterator iflux;
       for (iflux = localFlux[i].begin(); iflux != localFlux[i].end();
           ++iflux) {
-        int count = *(reinterpret_cast<int*>(&ndata[c++]));
+        int count = static_cast<int>(ndata[c++]);//*(reinterpret_cast<int*>(&ndata[c++]));//WR debug: static_cast is safer
         for (int j = 0; j < count; j++) {
           (*iflux)->addGwaterChng(ndata[c++]);
         }
       }
+        delete [] ndata;
     }
   }
 #endif
@@ -2428,6 +2440,7 @@ void tGraph::sendNwt() {
         ndata[d++] = (*iflux)->getNwtOld();
       }
       tParallel::send(i, NWT, ndata, dsizeN);
+      delete [] ndata;
     }
   }
 

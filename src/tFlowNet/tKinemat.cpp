@@ -258,6 +258,16 @@ tKinemat::~tKinemat() {
     ControlOut.close();
     GeomtFile.close();
 
+    // Deallocate memory for stacks in stream nodes //WR debug
+    tCNode *cn;
+    tMeshListIter<tCNode> nodIter(gridPtr->getNodeList());
+    for (cn = nodIter.FirstP(); nodIter.IsActive(); cn = nodIter.NextP()) {
+        if (cn->getBoundaryFlag() == kStream) {
+            cn->deleteDataStack();
+        }
+    }
+    OutletNode->deleteDataStack();
+
     Cout << "tKinemat Object has been destroyed..." << endl << flush;
 }
 
