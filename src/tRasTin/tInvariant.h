@@ -19,6 +19,8 @@
 
 #include "src/Headers/Inclusions.h"
 
+using namespace std;
+
 class SoilType;
 class LandType;   
 

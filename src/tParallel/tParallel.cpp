@@ -115,8 +115,8 @@ void tParallel::inputArgs(int& argc, char** argv) {
     //cout << "Master argv 1 = " << argv[1] << endl;
     delete [] obuf;
     // Input options
-    if (argc == 2) return;
-    obuf = new char[2];
+    if (argc == 2) return; // No-command line flags
+    obuf = new char[3]; //WR debug: added additional space for good measure
     for (int i = 2; i < argc; i++) { 
       strcpy(obuf, argv[i]);
       MPI_Bcast(obuf, 2, MPI_CHAR, MASTER_PROC, MPI_COMM_WORLD); 
@@ -227,9 +227,6 @@ void tParallel::freeBuffers() {
    list<double*>::iterator biter = buffers.begin();
    list<MPI_Request>::iterator riter = requests.begin();
 
-   list<double*>::iterator bremove;
-   list<MPI_Request>::iterator rremove;
-
    int complete;
    MPI_Status status;
 
@@ -239,7 +236,7 @@ void tParallel::freeBuffers() {
          double* buf = (*biter);
          biter = buffers.erase(biter);
          riter = requests.erase(riter);
-         delete buf;
+         delete [] buf; //WR debug: buf should be array and not single object
       } else {
          riter++;
          biter++;
@@ -321,7 +318,7 @@ double* tParallel::sum(double* value, int n) {
    MPI_Reduce(localValue, valueSum, n, MPI_DOUBLE, MPI_SUM, MASTER_PROC,
       MPI_COMM_WORLD);
 
-   delete [] localValue;
+   delete [] localValue; //WR debug, I think  deleting local value in this context is okay as MPI_reduce is blocking, Value Sum is later deleted, also implemented in other functions.
 
    return valueSum;
 }

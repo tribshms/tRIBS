@@ -864,8 +864,8 @@ protected:
   int LandUse;  
   int Reach;
 
-  shared_ptr<tList<double>> Qeff; //WR debug convert to smart shared pointer to prevent memory leak
-  shared_ptr<tList<int>> TimeInd;
+  shared_ptr<tList<double> > Qeff; //WR debug convert to smart shared pointer to prevent memory leak
+  shared_ptr<tList<int> > TimeInd;
 
   double xC;
   double yC;

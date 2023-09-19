@@ -51,11 +51,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Commented out #include t*(parallel code).cpp in parallel header files because it led to redefinition
 
 ### Changed
-- layout of folder structure all tRIBS source code is now in the [src](./src) folder.
+- layout of folder structure all tRIBS source code is now in the [src](./../src) folder.
 
 ### Removed
 - removed register calls (no longer supported at c++ 17 or earlier)
 - removed old make files
 
-## Return to [README](../README.md)
+## Return to [README](../../README.md)
 
