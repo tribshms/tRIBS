@@ -29,7 +29,7 @@
 #include "src/tMeshElements/meshElements.h"
 #include "src/tInOut/tInputFile.h"
 #include "src/Headers/globalFns.h"
-
+#include <memory> // WR - added 09192023 :)
 #include <list> //SMM - added 09232008
 
 #ifdef ALPHA_64
