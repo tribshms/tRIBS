@@ -39,6 +39,7 @@
 #include <string>
 #include <cassert>
 #include <memory>
+#include <vector>
 
 #elif defined MAC
 #include <cstdlib>
@@ -50,6 +51,7 @@
 #include <string>
 #include <cassert>
 #include <memory>
+#include <vector>
 
 #elif defined WIN
 #include <stdlib.h>
