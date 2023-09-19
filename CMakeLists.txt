@@ -25,7 +25,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3") # no optimization here
 
 ### sanitizer finds leaks in parallel version--open mpi is known to have leaks
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
 
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
 
@@ -117,7 +117,6 @@ if(ON)
             src/tMesh/tTriangulator.h
             src/tMeshElements/meshElements.cpp
             src/tMeshElements/meshElements.h
-            src/tMeshList/tMeshList.cpp
             src/tMeshList/tMeshList.h
             src/tParallel/tParallel.cpp
             src/tParallel/tParallel.h
@@ -235,7 +234,6 @@ else()
             src/tMesh/tTriangulator.h
             src/tMeshElements/meshElements.cpp
             src/tMeshElements/meshElements.h
-            src/tMeshList/tMeshList.cpp
             src/tMeshList/tMeshList.h
             src/tPtrList/tPtrList.cpp
             src/tPtrList/tPtrList.h
