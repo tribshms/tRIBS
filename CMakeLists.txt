@@ -22,8 +22,7 @@ set(CMAKE_CXX_STANDARD 17)
 # used while testing and developing
 #set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
-#set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -gdwarf-3")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g") # no optimization here
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3") # no optimization here
 
 ### sanitizer finds leaks in parallel version--open mpi is known to have leaks
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
@@ -66,10 +65,6 @@ if(ON)
             src/Mathutil/mathutil.h
             src/Mathutil/predicates.cpp
             src/Mathutil/predicates.h
-            src/#Utilities/InitialGW.cpp
-            src/#Utilities/RainInputCheck.cpp
-            src/#Utilities/RunsTracker.cpp
-            src/tArray/tArray.cpp
             src/tArray/tArray.h
             src/tArray/tMatrix.cpp
             src/tArray/tMatrix.h
@@ -188,10 +183,6 @@ else()
             src/Mathutil/mathutil.h
             src/Mathutil/predicates.cpp
             src/Mathutil/predicates.h
-            src/#Utilities/InitialGW.cpp
-            src/#Utilities/RainInputCheck.cpp
-            src/#Utilities/RunsTracker.cpp
-            src/tArray/tArray.cpp
             src/tArray/tArray.h
             src/tArray/tMatrix.cpp
             src/tArray/tMatrix.h
