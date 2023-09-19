@@ -35,4 +35,4 @@ The first command tells CMake to generate the make files for tribs in a folder c
  In some instance you may want to modify the CMakeFile.txt, for example if you want to change the name of the executable, or change compilation parallel mode to serial, or add additional compiler flags. This section will be updated with more detail to demonstrate how this is possible here, but the CMakeFile.txt is documented with where these changes can be made.
 
 
-## Return to [README](../README.md)
+## Return to [README](../../README.md)

@@ -969,8 +969,8 @@ void tCNode::allocDataStack()
     //WR debug convert to smart pointers
 	//TimeInd = new tList< int >;
 	//Qeff = new tList< double >;
-    TimeInd = make_shared<tList<int>>();
-    Qeff = make_shared<tList<double>>();
+    TimeInd = make_shared<tList<int> >();
+    Qeff = make_shared<tList<double> >();
 
 	assert(TimeInd != 0);
 	assert(Qeff != 0);

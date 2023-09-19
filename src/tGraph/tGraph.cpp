@@ -1952,7 +1952,7 @@ bool tGraph::isRemotefluxNode(tCNode* cn) {
 void tGraph::sendDownstream(int rid, tCNode* snode, double value) {
   assert(rid >= 0 && rid < numGlobalReach);
 #ifdef PARALLEL_TRIBS
-  double* ndata = new double[1];
+  // double* ndata = new double[1]; //WR debug moved to inside scope of if statment to prevent memory leak
   // Get list of downstream reaches
   std::vector<int> dreach = conn[rid].getDownstream();
   // For each on another processor, send data
@@ -1960,14 +1960,13 @@ void tGraph::sendDownstream(int rid, tCNode* snode, double value) {
 
     // Send if last reach
     if ( !inLocalPartition(dreach[i])) {
-
+        double* ndata = new double[1]; // WR debug added
       int to_proc = reach2partition[ dreach[i] ]; // To processor
       // Collect node data and send
       ndata[0] = value;
       tParallel::send(to_proc, DOWNSTREAM+snode->getReach(), ndata, 1);
     }
   }
-    delete [] ndata;
 #endif
 }
 
@@ -1996,6 +1995,7 @@ void tGraph::receiveUpstream(int rid, tCNode* rnode) {
     }
   }
   delete [] ndata;
+  tParallel::freeBuffers();// WR debug: put this at end of each receive call, it checks to see which previously assinged pointer  arrays can be safely deleted
 #endif
 }
 
@@ -2046,9 +2046,6 @@ void tGraph::sendOverlap() {
       }
 
       tParallel::send(i, OVERLAP, ndata, dsizeN);
-
-      //WR debug memory leak
-      delete[] ndata;
     }
   }
 
@@ -2086,6 +2083,7 @@ void tGraph::receiveOverlap() {
       delete [] ndata;
     }
   }
+  tParallel::freeBuffers();// WR debug: put this at end of each receive call, it checks to see which previously assinged pointer  arrays can be safely deleted
 #endif
 }
 
@@ -2099,7 +2097,7 @@ void tGraph::sendQpin(int rid, tCNode* snode, double value) {
   assert(rid >= 0 && rid < numGlobalReach);
 
 #ifdef PARALLEL_TRIBS
-  double* ndata = new double[1];
+  //double* ndata = new double[1]; //WR debug added to scope of if statment to prevent memory leak
   // Get list of downstream reaches
   std::vector<int> dreach = conn[rid].getDownstream();
 
@@ -2108,16 +2106,14 @@ void tGraph::sendQpin(int rid, tCNode* snode, double value) {
 
     // Send from last reach
     if ( !inLocalPartition(dreach[i])) {
-
-      int to_proc = reach2partition[ dreach[i] ]; // To processor
+        double* ndata = new double[1];
+        int to_proc = reach2partition[ dreach[i] ]; // To processor
 
       // Collect node data and send
       ndata[0] = value;
       tParallel::send(to_proc, QPIN+snode->getReach(), ndata, 1);
     }
   }
-
-    delete[] ndata;
 #endif
 }
 
@@ -2149,6 +2145,7 @@ void tGraph::receiveQpin(int rid, tCNode* rnode) {
     }
   }
   delete [] ndata;
+  tParallel::freeBuffers();// WR debug: put this at end of each receive call, it checks to see which previously assinged pointer  arrays can be safely deleted
 #endif
 }
 
@@ -2184,7 +2181,6 @@ void tGraph::sendInitial() {
         ndata[d++] = vArea;
       }
       tParallel::send(i, INITIAL, ndata, dsizeN);
-      delete [] ndata;
     }
   }
 #endif
@@ -2224,6 +2220,7 @@ void tGraph::receiveInitial() {
       delete [] ndata;
     }
   }
+  tParallel::freeBuffers();// WR debug: put this at end of each receive call, it checks to see which previously assinged pointer  arrays can be safely deleted
 #endif
 }
 
@@ -2295,6 +2292,7 @@ void tGraph::receiveRunFlux(tCNode* cn) {
     }
   }
   delete [] ndata;
+  tParallel::freeBuffers();// WR debug: put this at end of each receive call, it checks to see which previously assinged pointer  arrays can be safely deleted
 #endif
 }
 
@@ -2319,7 +2317,6 @@ void tGraph::sendUpstreamFlow() {
         ndata[d++] = (*iup)->getQstrm();
       }
       tParallel::send(i, UPSTREAM, ndata, dsizeN);
-      delete [] ndata;
     }
   }
 #endif
@@ -2349,6 +2346,7 @@ void tGraph::receiveDownstreamFlow() {
       delete [] ndata;
     }
   }
+  tParallel::freeBuffers();// WR debug: put this at end of each receive call, it checks to see which previously assinged pointer  arrays can be safely deleted
 #endif
 }
 
@@ -2381,7 +2379,6 @@ void tGraph::sendGroundWater() {
         }
       }
       tParallel::send(i, GROUNDWATER, ndata, dsizeN);
-      delete [] ndata;
     }
   }
 #endif 
@@ -2413,9 +2410,10 @@ void tGraph::receiveGroundWater() {
           (*iflux)->addGwaterChng(ndata[c++]);
         }
       }
-        delete [] ndata;
+      delete [] ndata; //WR debug: ndata can be deleted here as tParallel:receive uses MPI_Recv which is a blocking process
     }
   }
+    tParallel::freeBuffers();// WR debug: put this at end of each receive call, it checks to see which previously assinged pointer  arrays can be safely deleted
 #endif
 }
 
@@ -2440,7 +2438,6 @@ void tGraph::sendNwt() {
         ndata[d++] = (*iflux)->getNwtOld();
       }
       tParallel::send(i, NWT, ndata, dsizeN);
-      delete [] ndata;
     }
   }
 
@@ -2472,7 +2469,7 @@ void tGraph::receiveNwt() {
       delete [] ndata;
     }
   }
-  tParallel::freeBuffers();
+    tParallel::freeBuffers();// WR debug: put this at end of each receive call, it checks to see which previously assinged pointer  arrays can be safely deleted
 #endif
 }
 
