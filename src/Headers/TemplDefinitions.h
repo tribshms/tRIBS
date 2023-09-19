@@ -12,10 +12,8 @@
 ***************************************************************************/
 
 #include "src/tMesh/tMesh.cpp"
-#include "src/tArray/tArray.cpp"
 #include "src/tArray/tMatrix.cpp"
 #include "src/tList/tList.cpp"
-#include "src/tMeshList/tMeshList.cpp"
 #include "src/tPtrList/tPtrList.cpp"
 #include "src/tListInputData/tListInputData.cpp"
 #include "src/tInOut/tOutput.cpp"
