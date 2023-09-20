@@ -893,7 +893,7 @@ void tTriangle::TellAll()
 {
 	int i;
 	
-	assert( this!=0 );
+	//assert( this!=0 );//WR--09192023:'this' pointer cannot be null in well-defined C++ code; comparison may be assumed to always evaluate to true
 	cout << "TRIANGLE #" << id << ":\n";
 	for( i=0; i<3; i++ ){
 		cout << "  P" << i << " ";

@@ -83,7 +83,7 @@ int Next3Delaunay( tPtrList< tSubNode > &nbrList,
 	ncalls++;
 	tSubNode *cn, *nbrnd;
 	
-	assert( (&nbrList != 0) && (&nbrIter != 0) );
+	//assert( (&nbrList != 0) && (&nbrIter != 0) ); //WR--09192023:reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
 	
 	nbrnd = nbrIter.DatPtr();
 	tPtrListIter< tSubNode > nbrIterCopy( nbrList );
@@ -1929,9 +1929,22 @@ MakePointFromFileArcInfoGen( tInputFile &infile )
 	delete [] rix; delete[] riy; delete[] riz; 
 	delete [] pdx; delete[] pdy; delete[] pdz;
 	delete [] rdx; delete[] rdy; delete[] rdz;
-	delete xstream, ystream, zstream, xbound, ybound, zbound; //
-	delete xinterior, yinterior, zinterior;
-	delete bstream, bbound, binterior;
+    delete xstream;
+    delete ystream;
+    delete zstream;
+    delete xbound;
+    delete ybound;
+    delete zbound;
+    delete xinterior;
+    delete yinterior;
+    delete zinterior;
+    delete bstream;
+    delete bbound;
+    delete binterior;
+// WR--09192023: replaced with above as left operand of comma operator has no effect
+//    delete xstream, ystream, zstream, xbound, ybound, zbound; //
+//	delete xinterior, yinterior, zinterior;
+//	delete bstream, bbound, binterior;
 //	delete[] cnumx;
 //  delete[] cnumy;
 //  delete[] cnumz;
@@ -3568,7 +3581,7 @@ DeleteEdge( tEdge * edgePtr )
 		if( !( edgeList.removeFromFront( edgeVal2 ) ) ) return 0;
 	}
 	
-	if( &edgeVal1 == 0 || &edgeVal2 == 0 ) return 0;
+	//if( &edgeVal1 == 0 || &edgeVal2 == 0 ) return 0;//WR--09192023:  comparison of address of 'edgeVal*' equal to a null pointer is always false
 	return 1;
 }
 
@@ -3931,7 +3944,7 @@ template< class tSubNode >
 int tMesh< tSubNode >::
 RepairMesh( tPtrList< tSubNode > &nbrList )
 {
-	assert( &nbrList != 0 );
+	//assert( &nbrList != 0 );//WR--09192023: reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
 	if( nbrList.getSize() < 3 ) return 0;
 	tSubNode * meshnodePtr = 0;
 	nbrList.makeCircular();
@@ -4149,7 +4162,7 @@ int tMesh< tSubNode >::
 AddEdgeAndMakeTriangle( tPtrList< tSubNode > &nbrList,
                         tPtrListIter< tSubNode > &nbrIter )
 {
-	assert( (&nbrList != 0) && (&nbrIter != 0) );
+	//assert( (&nbrList != 0) && (&nbrIter != 0) ); //WR--09192023: reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
 	
 	tSubNode *cn, *cnn, *cnnn;
 	tPtrList< tSubNode > tmpList;
@@ -4198,7 +4211,7 @@ int tMesh< tSubNode >::
 MakeTriangle( tPtrList< tSubNode > &nbrList,
               tPtrListIter< tSubNode > &nbrIter )
 {
-	assert( (&nbrList != 0) && (&nbrIter != 0) );
+	//assert( (&nbrList != 0) && (&nbrIter != 0) ); //WR-09192023: warning: reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
 	assert( nbrList.getSize() == 3 );
 	int i, j;
 	
@@ -4335,7 +4348,7 @@ AddNode( tSubNode &nodeRef, int updatemesh, double time )
 	tSubNode *cn;
 	tArray< double > xyz( nodeRef.get3DCoords() );
 	tMeshListIter< tSubNode > nodIter( nodeList );
-	assert( &nodeRef != 0 );
+	//assert( &nodeRef != 0 ); //WR--09192023:  reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
 	
 	tri = LocateTriangle( xyz[0], xyz[1] );
 	if( tri == 0 ){
@@ -4513,7 +4526,7 @@ template< class tSubNode >
 tSubNode *tMesh< tSubNode >::
 AddNodeAt( tArray< double > &xyz, double time )
 {
-	assert( &xyz != 0 );
+	//assert( &xyz != 0 ); //WR--09192023: reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
 	tTriangle *tri;
 	if( xyz.getSize() == 3 ) tri = LocateTriangle( xyz[0], xyz[1] );
 	else tri = LocateNewTriangle( xyz[0], xyz[1] );

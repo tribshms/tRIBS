@@ -409,7 +409,7 @@ insertAtBoundFront( const NodeType &value )
 {
     tListNode< NodeType > * newPtr = this -> getNewNode( value ); //Added this-> CL 09/05/2020
     assert( newPtr != nullptr ); //updated to reflect new c++ standards -WR
-    assert( this != 0 );
+    //assert( this != 0 ); //WR--09192023: 'this' pointer cannot be null in well-defined C++ code; comparison may be assumed to always evaluate to true
 
     if( this->isEmpty() )
         this->first = this->last = newPtr;
@@ -449,7 +449,7 @@ void tMeshList< NodeType >::
 insertAtActiveBack( const NodeType &value )
 {
     tListNode< NodeType > * newPtr = this -> getNewNode( value ); // Added this-> CL 09/05/2020
-    assert( this != 0 );
+    //assert( this != 0 );//WR--09192023:'this' pointer cannot be null in well-defined C++ code; comparison may be assumed to always evaluate to true
     if( this->isEmpty() )
         this->first = this->last = lastactive = newPtr;
 
@@ -744,7 +744,7 @@ tMeshListIter< NodeType >::
 tMeshListIter( tMeshList< NodeType > &list )
         : tListIter< NodeType >( list )
 {
-    assert( &list != 0 );
+    //assert( &list != 0 ); //WR--09192023: reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
     this->curnode = this->listPtr->first;
 }
 

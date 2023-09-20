@@ -153,7 +153,7 @@ double tHydroMet::getOther(){
 }
 
 void tHydroMet::setFileName(char* file){
-	sprintf(fileName, "%s", file);
+	snprintf(fileName,sizeof(fileName),"%s", file);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
 }
 
 char* tHydroMet::getFileName(){

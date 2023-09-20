@@ -2,6 +2,15 @@
 cmake_minimum_required(VERSION 3.20)
 set(exe "tRIBS") # this line is not required but can be changed to change name of executable
 set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross compilation see: https://stackoverflow.com/questions/53633705/cmake-the-c-compiler-is-not-able-to-compile-a-simple-test-program
+
+#set compiler if necessary, this has to be done before project()
+#set (CMAKE_CXX_COMPILER <specify compiler here>)
+#if(CMAKE_CXX_COMPILER_LOADED)
+#    message(STATUS "Configured for C++, with compiler: ")
+#    message(STATUS "${CMAKE_CXX_COMPILER_VERSION}}")
+#endif()
+
+
 project(${exe})
 add_executable(${exe} src/main.cpp)
 
@@ -11,18 +20,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #set standard
 set(CMAKE_CXX_STANDARD 17)
 
-#set compiler if necessary
-#set (CMAKE_CXX_COMPILER <specify compiler here>)
-#if(CMAKE_CXX_COMPILER_LOADED)
-#    message(STATUS "Configured for C++, with compiler: ")
-#    message(STATUS "${CMAKE_CXX_COMPILER_VERSION}}")
-#endif()
-
 
 # used while testing and developing
 #set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3") # no optimization here
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2") # -O2 appears to be the fastest option
 
 ### sanitizer finds leaks in parallel version--open mpi is known to have leaks
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer

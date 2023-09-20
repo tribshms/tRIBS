@@ -1566,7 +1566,7 @@ void tGraph::listActiveNodes() {
   // Open file and write out node ids
   ofstream PartNodeOut;
   char fname[100];
-  sprintf(fname, "partition%d.nodes", localPart);
+  snprintf(fname,sizeof(fname),"partition%d.nodes", localPart);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
   PartNodeOut.open(fname);
 
   // Create iterator for all nodes
@@ -1617,9 +1617,11 @@ void tGraph::calculateRunFlux() {
   // Loop through reach heads and outlets, looking for 
   // a head in another partition and outlet in the local partition
   // The node upstream from the outlet is the flux node (node above outlet)
-  for (chead = HeadIter.FirstP(), coutlet = OutletIter.FirstP(), i=0;
-       !(HeadIter.AtEnd()), i < numGlobalReach-1; //TODO: warning: left operand of comma operator has no effect [-Wunused-value] -WR
-    chead = HeadIter.NextP(), coutlet = OutletIter.NextP(), i++) {
+
+  chead = HeadIter.FirstP();
+  coutlet = OutletIter.FirstP();
+
+  for (i=0;!(HeadIter.AtEnd()) && i < numGlobalReach-1;i++) { //WR--09192023: modified for loop to address this warning: left operand of comma operator has no effect [-Wunused-value]
 
     int hpart = getPartition(chead->getReach());
     int opart = getPartition(coutlet->getReach());
@@ -1640,6 +1642,8 @@ void tGraph::calculateRunFlux() {
              << " " << localPart << endl;
       }
     }
+    chead = HeadIter.NextP();
+    coutlet = OutletIter.NextP();
   }
 }
 

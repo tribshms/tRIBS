@@ -918,14 +918,14 @@ inline tTriangle::tTriangle( const tTriangle &init ) :
    id(init.id)
 {
 
-   if( &init != 0 ){
+   //if( &init != 0 ){ //WR--09192023:  reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
       id = init.id;
       for( int i=0; i<3; i++ ){
          p[i] = init.p[i];
          e[i] = init.e[i];
          t[i] = init.t[i];
       }
-   }
+   //}
 }
 
 // construct with id and 3 vertices

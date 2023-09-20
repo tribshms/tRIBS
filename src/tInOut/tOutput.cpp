@@ -196,7 +196,7 @@ void tOutput<tSubNode>::CreateAndOpenFile( ofstream *theOFStream,
 #ifdef PARALLEL_TRIBS
 // Add processor extension if running in parallel
   char procex[10];
-  sprintf( procex, ".%-d", tParallel::getMyProc());
+  snprintf( procex,sizeof(procex), ".%-d", tParallel::getMyProc()); //WR--09192023: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.
   strcat(fullName, procex);
 #endif
 
@@ -221,7 +221,7 @@ void tOutput<tSubNode>::CreateAndOpenVizFile( ofstream *theOFStream,
 	strcpy( fullName, vizName );
 	strcat( fullName, extension );
 #ifdef PARALLEL_TRIBS
-	sprintf( procex, ".%-d", tParallel::getMyProc());
+	snprintf( procex,sizeof(procex),".%-d", tParallel::getMyProc()); //WR 09192023: converted sprintf to snprintf, needed to add sizeof(procex): warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.
 	strcat(fullName, procex);
 #else
 	snprintf( procex, sizeof(procex), "");

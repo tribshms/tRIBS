@@ -480,7 +480,7 @@ inline void tList< NodeType >::
 insertAtBack( const NodeType &value )
 {
    tListNode< NodeType > * newPtr = getNewNode( value );
-   assert( this != 0 );
+   //assert( this != 0 ); /WR--09192023:'this' pointer cannot be null in well-defined C++ code; comparison may be assumed to always evaluate to true
    if( isEmpty() ){
       first = last = currentItem = newPtr;
    }
@@ -985,7 +985,7 @@ tListIter() :
   listPtr(0),
   counter(0)
 {
-   assert( this != 0 );
+   //assert( this != 0 ); WR--09192023
 }
 
 template< class NodeType >        
@@ -995,7 +995,7 @@ tListIter( tList< NodeType > &list ) :
   listPtr(&list),
   counter(0)
 {
-  assert( &list != 0 );
+  //assert( &list != 0 ); //WR--09192023: Warning: reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
 }
 
 template< class NodeType >        
@@ -1031,7 +1031,7 @@ template< class NodeType >
 inline void tListIter< NodeType >::
 Reset( tList< NodeType > &list )
 {
-   assert( &list != 0 );
+   //assert( &list != 0 ); WR--09192023
    listPtr = &list;
    curnode = list.first;
    counter = 0;

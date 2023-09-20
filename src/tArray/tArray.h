@@ -151,7 +151,7 @@ tArray( const tArray< T > &original ) :
 template< class T >
 const tArray< T > &tArray< T >::operator=( const tArray< T > &right )
 {
-    assert( &right != 0 );
+    //assert( &right != 0 );//WR--09192023:warning: reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
     int i;
     if( &right != this ){
         delete [] avalue; avalue = 0;
