@@ -100,7 +100,7 @@ tKinemat::tKinemat(SimulationControl *sPtr, tMesh<tCNode> *gridRef, tInputFile &
 #ifdef PARALLEL_TRIBS
                                                                                                                             // Add processor extension if running in parallel
    char procex[10];
-   sprintf( procex, ".%-d", tParallel::getMyProc());
+   snprintf( procex,sizeof(procex),".%-d", tParallel::getMyProc());//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
    strcat(fullName1, procex);
 #endif
 
@@ -747,7 +747,7 @@ void tKinemat::SurfaceFlow() {
 
     hour = (int) floor(timer->getCurrentTime());
     minute = (int) ((timer->getCurrentTime() - hour) * 100);
-    sprintf(extension, "%04d.%02d", hour, minute);
+    snprintf(extension,sizeof(extension),"%04d.%02d", hour, minute);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
 
 #ifdef PARALLEL_TRIBS
                                                                                                                             // If running in parallel, only partition with last reach writes

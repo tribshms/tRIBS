@@ -338,7 +338,7 @@ tPtrListIter( tPtrList< NodeType > &ptrlist ) :
   curptrnode(ptrlist.first),
   counter(0)
 {
-   assert( &ptrlist != 0 );
+   //assert( &ptrlist != 0 );//WR--09192023: reference cannot be bound to dereferenced null pointer in well-defined C++ code;
 }
 
 template< class NodeType >    //tPtrListIter
@@ -518,7 +518,7 @@ template< class NodeType >
 inline void tPtrList< NodeType >::
 insertAtBack( NodeType *NTPtr ){
    tPtrListNode< NodeType > * newPtr = getNewNode( NTPtr );
-   assert( this != 0 );
+   //assert( this != 0 );//WR--09192023: warning: reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
    if( isEmpty() )
       first = last = newPtr;
    else{
@@ -746,7 +746,7 @@ template< class NodeType >
 inline void tPtrList< NodeType >::
 Flush()
 {
-   assert( this!=0 );
+   //assert( this!=0 ); //WR--09192023: warning: reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
    if( !isEmpty() ){
       tPtrListNode<NodeType > * current = first, * temp;
       first = 0;
@@ -895,7 +895,7 @@ DataCopy()
 template< class NodeType >     
 inline void tPtrListIter< NodeType >::
 Reset( tPtrList< NodeType > &ptrlist ){
-   assert( &ptrlist != 0 );
+   //assert( &ptrlist != 0 );//WR--09192023:reference cannot be bound to dereferenced null pointer in well-defined C++ code; comparison may be assumed to always evaluate to true
    ptrlistPtr = &ptrlist;
    assert( ptrlistPtr != 0 );
    curptrnode = ptrlistPtr->first;

@@ -3279,7 +3279,6 @@ void tHydroModel::SaturatedZone(double dtGW)
 									// It is still unsaturated
 									else {
 										NfNew = NtNew = NfOld;
-										NfNew;
 									}
 									MuNew = MiNew + (MuOld - MiOld);
 									RiNew = 0.0;

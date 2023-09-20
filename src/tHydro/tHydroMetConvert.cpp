@@ -644,7 +644,7 @@ void tHydroMetConvert::writeMDF(int ct)
 		double lineWrite[11];
 		//<--- Compose Year, Month, Day  
 		//<--- Y2K Fix!
-		sprintf(pDate,"%f",currentDate);
+		snprintf(pDate,sizeof(pDate),"%f",currentDate);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
 		for(int i = 0; i<4; i++)
 			tmpChar[i] = pDate[i];
 		yearStr = tmpChar;;
@@ -808,7 +808,7 @@ void tHydroMetConvert::writeGaugeMDF(int ct)
 		double lineWrite[11];
 		
 		//<--- Compose Year, Month, Day
-		sprintf(pDate,"%f",currentDate);
+        snprintf(pDate,sizeof (pDate),"%f",currentDate);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
 		for(int i = 0; i<4; i++)
 			tmpChar[i] = pDate[i];
 		yearStr = tmpChar;;
@@ -837,12 +837,13 @@ void tHydroMetConvert::writeGaugeMDF(int ct)
 		
 		for(int sc=0;sc<numLines;sc++){
 			if(date[lookFor[sc]]==currentDate && hour[lookFor[sc]]==currentHour){
-				if(strcmp(param[lookFor[sc]],"PP")==0)   // for rain gauge mdf
-					if(value[lookFor[sc]] >= 0)     
-						lineWrite[4] = value[lookFor[sc]]*25.4;  //conversion from in to mm
-					else {
+				if(strcmp(param[lookFor[sc]],"PP")==0) {   // for rain gauge mdf
+                    if (value[lookFor[sc]] >= 0) {
+                        lineWrite[4] = value[lookFor[sc]] * 25.4;  //conversion from in to mm
+                    } else {
                         lineWrite[4] = 9999.99;        //convert null values
                     }
+                }
 			}
 		}
 		

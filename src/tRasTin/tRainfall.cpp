@@ -196,11 +196,11 @@ int tRainfall::Compose_In_Mrain_Name(tRunTimer *t)
 	if (fState == 0) {
 		
 		if (t->minuteRn || t->dtRain < 1) //If 'minute' is NOT equal to '0'  
-			sprintf(mrainfileIn, "%s%02d%02d%04d%02d%02d.%s", inputname, 
-					t->monthRn, t->dayRn, t->yearRn, t->hourRn, t->minuteRn, extension);
+			snprintf(mrainfileIn,sizeof(mrainfileIn), "%s%02d%02d%04d%02d%02d.%s", inputname,
+					t->monthRn, t->dayRn, t->yearRn, t->hourRn, t->minuteRn, extension);//WR--09192023:'sprintf' is deprecated: This function is provided for compatibility reasons only.
 		else {           //If 'minute' IS equal to '0'
-			sprintf(mrainfileIn, "%s%02d%02d%04d%02d.%s", inputname, 
-					t->monthRn, t->dayRn, t->yearRn, t->hourRn, extension);
+			snprintf(mrainfileIn,sizeof(mrainfileIn),"%s%02d%02d%04d%02d.%s", inputname,
+					t->monthRn, t->dayRn, t->yearRn, t->hourRn, extension);//WR--09192023:'sprintf' is deprecated: This function is provided for compatibility reasons only.
 		}
 		infile.open(mrainfileIn);
 	}
@@ -209,11 +209,11 @@ int tRainfall::Compose_In_Mrain_Name(tRunTimer *t)
 		
 		if (t->getoptForecast() == 1) {
 			if (t->minuteRn || t->dtRain < 1) //If 'minute' is NOT equal to '0'  
-				sprintf(mrainfileIn, "%s%02d%02d%04d%02d%02d.%s", forecastname, 
-						t->monthRn, t->dayRn, t->yearRn, t->hourRn, t->minuteRn, extension);
+				snprintf(mrainfileIn,sizeof(mrainfileIn), "%s%02d%02d%04d%02d%02d.%s", forecastname,
+						t->monthRn, t->dayRn, t->yearRn, t->hourRn, t->minuteRn, extension); //WR--09192023:'sprintf' is deprecated: This function is provided for compatibility reasons only.
 			else {           //If 'minute' IS equal to '0'
-				sprintf(mrainfileIn, "%s%02d%02d%04d%02d.%s", forecastname, 
-						t->monthRn, t->dayRn, t->yearRn, t->hourRn, extension);
+				snprintf(mrainfileIn,sizeof(mrainfileIn),"%s%02d%02d%04d%02d.%s", forecastname,
+						t->monthRn, t->dayRn, t->yearRn, t->hourRn, extension);//WR--09192023:'sprintf' is deprecated: This function is provided for compatibility reasons only.
 			}
 			infile.open(mrainfileIn);
 		}
@@ -561,7 +561,7 @@ void tRainfall::readGaugeStat(char *stationfile)
 	char fileName[kName];
 
 	// SKY2008Snow from AJR2007
-	assert(fileName != 0);
+	//assert(fileName != 0); //WR--09192023: comparison of array 'fileName' not equal to a null pointer is always true
 	
 	Cout<<"\nReading Rain Gauge Station File '";
 	Cout<< stationfile<<"'..."<<endl<<flush;
@@ -648,7 +648,7 @@ void tRainfall::readGaugeData(int num)
 	char *tmpstr;
 	
 	tmpstr = rainGauges[num].getFileName();
-	sprintf(fileName,"%s", tmpstr);
+    snprintf(fileName,sizeof(fileName),"%s", tmpstr);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
 	numParams = rainGauges[num].getParm();
 	numTimes  = rainGauges[num].getTime();
 	

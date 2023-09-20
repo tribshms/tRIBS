@@ -53,7 +53,7 @@ double FindCosineAngle0_2_1( tArray< double > &p0,
                              tArray< double > &p1,
                              tArray< double > &p2 )
 {
-	assert( (&p0 != 0) && (&p1 != 0) && (&p1 != 0) );
+	//assert( (&p0 != 0) && (&p1 != 0) && (&p1 != 0) );
 	double dx0, dx1, dy0, dy1;
 	double dotp, magp;
 	dx0 = p0[0] - p2[0];
@@ -77,7 +77,7 @@ int TriPasses( tArray< double > &ptest,
                tArray< double > &p1,
                tArray< double > &p2 )
 {
-	assert( (&ptest != 0) && (&p0 != 0) && (&p1 != 0) && (&p1 != 0) );
+	//assert( (&ptest != 0) && (&p0 != 0) && (&p1 != 0) && (&p1 != 0) );//WR--09192023
 	double dx0, dx1, dy0, dy1;
 	double crossp, dotp, angle0_2_1, angle0_test_1;
 	
@@ -119,7 +119,7 @@ int PointsCCW( tArray< double > &p0,
                tArray< double > &p1,
                tArray< double > &p2 )
 {
-	assert( &p0 != 0 && &p1 != 0 && &p1 != 0 );
+	//assert( &p0 != 0 && &p1 != 0 && &p1 != 0 ); //WR--09192023
 	double* a0 = p0.getArrayPtr();
 	double* a1 = p1.getArrayPtr();
 	double* a2 = p2.getArrayPtr();

@@ -1132,10 +1132,6 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
         {
             evapSoil = 0;
 
-            if(coeffV<0);{ //
-                cerr<<"Zero depth to bedrock but fraction of vegetation does not equal zero, model behavior is unrealistic."<<endl;
-                exit(1);
-            }
         }
         else{
 		evapSoil = (1-coeffV)*(actEvaporation);
@@ -2961,7 +2957,7 @@ void tEvapoTrans::betaFunc(tCNode* cNode)
 	// Check that Thw <= Th_star <= Ths
 	if ((Th_star > Ths) || (Th_star < Thr))
 		{ 
-		printf("Th_star %d out of the range residual Th_r-Th_s in land cover class %d\n", Th_star, cNode->getLandUse());
+		printf("Th_star %f out of the range residual Th_r-Th_s in land cover class %d\n", Th_star, cNode->getLandUse());
 		printf("Modify the value of the land cover class\n");
 		exit(1);
 		}
@@ -3157,7 +3153,7 @@ void tEvapoTrans::readHydroMetStat(char *stationfile)
 	int Gmt, stationID, numTimes, numParams;
 	double alat, along, rlat, rlong, otherVar;
 	char fileName[kName];
-	assert(fileName != 0);
+	//assert(fileName != 0);//WR--09192023: comparison of array 'fileName' not equal to a null pointer is always true
 	
 	Cout<<"\nReading HydroMeteorological Station File '";
 	Cout<< stationfile<<"'..."<<endl<<flush;
@@ -3299,7 +3295,7 @@ void tEvapoTrans::readHydroMetData(int num)
 	double tempo;
 	
 	tmpstr = weatherStations[num].getFileName();
-	sprintf(fileName,"%s", tmpstr);
+    snprintf(fileName,sizeof(fileName),"%s", tmpstr);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
 	numParams = weatherStations[num].getParm();
 	numTimes  = weatherStations[num].getTime();
 	
@@ -4772,8 +4768,8 @@ void tEvapoTrans::SetGridTimeInfoVariables(tVariant *VariantLU, char *LUgridPara
 		if ( VariantLU->infile2.is_open() )
 			VariantLU->infile2.close();
 
-		sprintf(VariantLU->fileIn, "%s%02d%02d%04d%02d.%s", VariantLU->getInputName(), 
-			checkmonth, checkday, checkyear, checkhour, VariantLU->getExtension() );
+		snprintf(VariantLU->fileIn,sizeof(VariantLU->fileIn),"%s%02d%02d%04d%02d.%s", VariantLU->getInputName(),
+			checkmonth, checkday, checkyear, checkhour, VariantLU->getExtension() );//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
 
 		VariantLU->infile2.open(VariantLU->fileIn);
 	
@@ -4917,8 +4913,8 @@ void tEvapoTrans::SetGridTimeInfoVariables(tVariant *VariantLU, char *LUgridPara
 			VariantLU->infile2.close();
 		}
 
-		sprintf(VariantLU->fileIn, "%s%02d%02d%04d%02d.%s", VariantLU->getInputName(), 
-			checkmonth, checkday, checkyear, checkhour, VariantLU->getExtension() );
+		snprintf(VariantLU->fileIn,sizeof(VariantLU->fileIn),"%s%02d%02d%04d%02d.%s", VariantLU->getInputName(),
+			checkmonth, checkday, checkyear, checkhour, VariantLU->getExtension() );//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
 
 		VariantLU->infile2.open(VariantLU->fileIn);
 	
