@@ -1180,16 +1180,34 @@ double tSnowPack::sensibleHFCalc(double Kaero) {
 
 double tSnowPack::snowFracCalc() {
 
-    double snowfrac;
+  double snowfrac;
+  double Tw, RH, Ta, f1;
+  Ta = airTemp;
+  RH = rHumidity;
 
-    double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)—updated for CJC thesis (see table 11)
+  // Calculate wet-Bulb Temperature according to Stull (2011) https://doi.org/10.1175/JAMC-D-11-0143.1
+  Tw = Ta*atan(0.151977*pow(RH + 8.313659,0.5)) + atan(Ta + RH) - atan(RH - 1.676331) +
+		0.00391838*pow(RH,1.5)*atan(0.023101*RH) - 4.686035; // in degC
 
-    if (airTemp <= TMin)
-        snowfrac = 1; // all ice
-    if (airTemp >= TMax)
-        snowfrac = 0; // all liquid
-    if ((airTemp >= TMin) && (airTemp <= TMax))
-        snowfrac = (TMax - airTemp) / (TMax - TMin); //mixture
+  // Calculate  snowfall fraction according to Wang et al. (2019) https://doi.org/10.1029/2019GL085722
+  f1 = 1 + 6.99*pow(10,-5)*exp(2*(Tw + 3.97));
+
+  // Wet-bulb temperture > 5C corresponds to Ta = 10C and RH = 50%, assuming no snowfall
+  if ( Tw > 5 ) {
+	  snowfrac = 0;
+  }
+  else {
+	  snowfrac = 1/f1;
+  }
+
+
+/*   double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)
+  if ( airTemp <= TMin )
+	  snowfrac = 1; // all ice
+  if ( airTemp >= TMax )
+	  snowfrac = 0; // all liquid
+  if ( (airTemp >= TMin)&&(airTemp <= TMax) )
+	  snowfrac = (TMax - airTemp)/(TMax - TMin); //mixture */
 
 
     return snowfrac;

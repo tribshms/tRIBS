@@ -147,7 +147,8 @@ GenericSoilData::GenericSoilData(tMesh<tCNode> *mesh,
 
             string temp;
             readFile >> temp;
-            SCgridParamNames[ct] = make_unique<char[]>(temp.length() + 1);
+            // SCgridParamNames[ct] = make_unique<char[]>(temp.length() + 1);
+            SCgridParamNames[ct] = std::unique_ptr<char[]>(new char[temp.length() + 1]);
             strcpy(SCgridParamNames[ct].get(), temp.c_str());
             
             if ( (strcmp(SCgridParamNames[ct].get(),"KS")!=0) &&
@@ -170,7 +171,8 @@ GenericSoilData::GenericSoilData(tMesh<tCNode> *mesh,
             }
 
             readFile >> temp;
-            SCgridBaseNames[ct] = make_unique<char[]>(temp.length() + 1);
+            SCgridBaseNames[ct] = std::unique_ptr<char[]>(new char[temp.length() + 1]);
+
             strcpy(SCgridBaseNames[ct].get(), temp.c_str());
 
             if (strcmp(SCgridBaseNames[ct].get(),"NO_DATA")==0) {
@@ -180,10 +182,12 @@ GenericSoilData::GenericSoilData(tMesh<tCNode> *mesh,
             }
 
             readFile >> temp;
-            SCgridExtNames[ct] = make_unique<char[]>(temp.length() + 1);
+            SCgridExtNames[ct] =  std::unique_ptr<char[]>(new char[temp.length() + 1]);
+
             strcpy(SCgridExtNames[ct].get(), temp.c_str());
 
-            SCgridName[ct] = make_unique<char[]>(100);//new char[100];
+            SCgridName[ct] = std::unique_ptr<char[]>(new char[100]); //new char[100];
+
 
             strcpy(SCgridName[ct].get(),SCgridBaseNames[ct].get()); // copy the first string into SCgridName[ct]
             strcat(SCgridName[ct].get(),"."); // append "."
