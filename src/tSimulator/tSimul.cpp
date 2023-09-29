@@ -90,8 +90,37 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
 {
 	simCtrl->first_time = 'Y';
 
+    //Read in previous command line arguments that are now specified in the input file WR 08282023
+    /*  removed command line arguments that should be specified in input file
+    "OPTGROUNDWATER" -G    Run groundwater model: GW_model_label
+    "OPTSPATIAL" -R    Write intermediate states (spatial output): inter_results
+    "OPTINTERHYDRO")-H    Write intermediate hydrographs (.mrf): hydrog_results
+    "OPTHEADER"); -M    Do NOT Write headers in pixel/hydrograph/voronoi output files: : Header_label
+    */
+
+    if (InFl.IsItemIn( "OPTGROUNDWATER" ))
+        simCtrl->GW_model_label = InFl.ReadItem(simCtrl->GW_model_label, "OPTGROUNDWATER");
+    else
+        simCtrl->GW_model_label = true; //Default option
+
+    if (InFl.IsItemIn( "OPTSPATIAL" ))
+        simCtrl->inter_results = InFl.ReadItem(simCtrl->inter_results, "OPTSPATIAL");
+    else
+        simCtrl->inter_results = false; //Default option
+
+    if (InFl.IsItemIn( "OPTINTERHYDRO" ))
+        simCtrl->hydrog_results = InFl.ReadItem(simCtrl->hydrog_results, "OPTINTERHYDRO");
+    else
+        simCtrl->hydrog_results = false; //Default option
+
+    if (InFl.IsItemIn( "OPTHEADER" ))
+        simCtrl->Header_label = InFl.ReadItem(simCtrl->Header_label, "OPTHEADER");
+    else
+        simCtrl->Header_label = true; //Default option
+
+
 	// Ouput pre-processing
-	if ( simCtrl->inter_results == 'Y' )
+	if (simCtrl->inter_results)
 		outp->CreateAndOpenDynVar();
 	
 	// Output initial conditions
@@ -223,7 +252,9 @@ void Simulator::simulation_loop(tHydroModel *Moisture, tKinemat *Flow,
 		
 		// Output current time info depending on I/O options
 		timer->Advance(timer->getTimeStep());
-		PrintRunTimeVars( Moisture, 0 );   
+        if (simCtrl->disp_time == 'Y') {
+            PrintRunTimeVars(Moisture, 0);
+        }
 	
 		// Check if precipitation variables have to be updated
 		UpdatePrecipitationInput( rainIn->getoptStorm() );
@@ -275,7 +306,7 @@ void Simulator::simulation_loop(tHydroModel *Moisture, tKinemat *Flow,
 *****************************************************************************/
 void Simulator::end_simulation(tKinemat *Flow) 
 { 
-	if ( simCtrl->hydrog_results == 'N' )
+	if ( !simCtrl->hydrog_results )
 		Flow->getResultsPtr()->
 			writeAndUpdate( timer->getCurrentTime(), 0 );
 	
@@ -285,9 +316,9 @@ void Simulator::end_simulation(tKinemat *Flow)
 	double tend  = timer->getEndTime();
 	double spout = timer->getSpatialOutputInterval();
 	
-	if (simCtrl->inter_results == 'N' || 
-		(simCtrl->inter_results == 'Y' && spout > tend) ||
-		(simCtrl->inter_results == 'Y' && (tend/spout-floor(tend/spout)) > 0))
+	if (!simCtrl->inter_results ||
+		(simCtrl->inter_results && spout > tend) ||
+		(simCtrl->inter_results && (tend/spout-floor(tend/spout)) > 0))
 		
 		outp->WriteDynamicVars( timer->getCurrentTime() );
 	
@@ -310,16 +341,18 @@ void Simulator::PrintRunTimeVars(tHydroModel *Moisture, int opt)
 	if (opt) 
 		Cout<<"  "<<timer->year<<"\t"<<timer->month<<"\t"
 			<<timer->day<<"\t"<<timer->hour<<"\t"<<timer->minute<<endl;
-	
-	if (Moisture->HydroNodesExist()) {
-      Cout<<"\n\tx=x=x Current time: "<<timer->getCurrentTime()
-		<<" hour x=x=x"<<endl;
-	}	
-	else if (!fmod(timer->getCurrentTime(), timer->getGWTimeStep())) {
-      Cout<<"\tx=x=x Current time: "<<timer->getCurrentTime()
+
+
+        if (Moisture->HydroNodesExist()) {
+          Cout<<"\n\tx=x=x Current time: "<<timer->getCurrentTime()
             <<" hour x=x=x"<<endl;
-	}
-	return;
+        }
+        else if (!fmod(timer->getCurrentTime(), timer->getGWTimeStep())) {
+          Cout<<"\tx=x=x Current time: "<<timer->getCurrentTime()
+                <<" hour x=x=x"<<endl;
+        }
+
+
 }
 
 /*****************************************************************************
@@ -481,13 +514,12 @@ void Simulator::SubSurfaceHydroProcesses(tHydroModel *Moisture)
 	GW_label = fmod(timer->getCurrentTime(), timer->getGWTimeStep());
 	
 	// Call Saturated Zone in tHydroModel 
-	if (simCtrl->GW_model_label == 'Y') {
+	if (simCtrl->GW_model_label) {
 		if ( !GW_label ) {
 			Moisture->ResetGW(); 
 			Moisture->SaturatedZone( timer->getGWTimeStep() );
 		}
 	}
-	return;
 }
 
 /*****************************************************************************
@@ -518,7 +550,7 @@ void Simulator::OutputSimulatedVars(tKinemat *Flow)
 			forenum=0;
 		else 
 			forenum=1;
-        if ((simCtrl->hydrog_results == 'Y') && (timer->getCurrentTime())) {
+        if ((simCtrl->hydrog_results) && (timer->getCurrentTime())) {
             Flow->getResultsPtr()->
                     writeAndUpdate( timer->getCurrentTime(), forenum );
         }
@@ -531,7 +563,7 @@ void Simulator::OutputSimulatedVars(tKinemat *Flow)
 	// Write spatial output
 	if ( timer->CheckSpatialOutputTime() ) {
 		// If it's time -> Output DynVars     
-		if ( simCtrl->inter_results == 'Y' )
+		if ( simCtrl->inter_results )
 			outp->WriteDynamicVars( timer->getCurrentTime() );
 	}
 	return;

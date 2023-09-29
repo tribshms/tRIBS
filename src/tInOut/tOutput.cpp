@@ -311,7 +311,7 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 				
 				CreateAndOpenFile( &pixinfo[i], pixelnode );
 				
-				if (simCtrl->Header_label == 'Y') {
+				if (simCtrl->Header_label) {
                     // first row name
 					pixinfo[i]<<"NodeID "//1
 					<<"Time_hr " //2
@@ -1235,7 +1235,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 	minute = (int)floor((time-hour)*60);
 
 	// SKY2008Snow from AJR2007
-	if(simCtrl->Header_label == 'Y'){
+	if(simCtrl->Header_label){
 		cout<<"\n\tHOUR = "<<hour<<"\tMINUTE = "<<minute<<"\n";
 		//cout<<"\ttCOutput:     Time to write vars; nActiveNodes = "
 		//   <<nActiveNodes<<";  nTotalNodes = "<<nnodes<<"\n";
@@ -1244,7 +1244,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
     snprintf(extension,sizeof(extension),".%04d_%02dd", hour, minute);
 	this->CreateAndOpenFile( &arcofs, extension);  //Opens file for writing
 	
-	if (simCtrl->Header_label == 'Y') {
+	if (simCtrl->Header_label) {
 		arcofs<<"ID"<<','<<"Z"<<','<<"S"<<','<<"CAr"<<','<<"Nwt"<<','<<"Mu"<<','
 		<<"Mi"<<','<<"Nf"<<','<<"Nt"<<','<<"Qpout"<<','<<"Qpin"<<','
 		<<"Srf"<<','<<"Rain"<<','
@@ -1609,7 +1609,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 	snprintf(extension, sizeof(extension), ".%04d_%02di", hour, minute);
 	this->CreateAndOpenFile(&intofs, extension);
 	
-	if (simCtrl->Header_label == 'Y') {
+	if (simCtrl->Header_label) {
 		intofs<<"ID"<<','<<"BndCd"<<','<<"Z"<<','<<"VAr"<<','<<"CAr"<<','<<"Curv"
 		<<','<<"EdgL"<<','<<"Slp"
 		<<','<<"FWidth"<<','<<"Aspect"
@@ -1885,7 +1885,7 @@ void tCOutput<tSubNode>::CreateAndOpenOutlet()
 						Cout<<"Creating Output File: \t '"<<fullName<<"' "<<endl;
 */
 					
-					if (simCtrl->Header_label == 'Y') {
+					if (simCtrl->Header_label) {
 						outletinfo[i]<<"1-Time,hr\t "
 						<<"2-Qstrm,m3/s\t"
 						<<"3-Hlev,m"
