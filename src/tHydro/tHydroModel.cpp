@@ -3591,7 +3591,7 @@ void tHydroModel::SaturatedZone(double dtGW)
 	fSoi100=fTop100=fClm100=fGW100=dM100=dMRt=mTh100=mThRt=0.0;
 
 #ifndef PARALLEL_TRIBS
-	if (nodeList) {
+    if (simCtrl->Verbose_label == 'Y') { //WR 08292023 change conditions from nodelist to Verbose
 		cout<<"\t\tRUNOFF = "<<Stok<<" M^3"<<endl<<flush;
 		cout<<"\t\tMOISTCHN = "<<TotMoist<<" M^3"<<endl<<flush;
 		cout<<"\t\tGWCHANGE = "<<TotGWchange<<" M^3"<<endl<<flush;

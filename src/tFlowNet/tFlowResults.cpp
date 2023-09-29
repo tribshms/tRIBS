@@ -557,7 +557,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 #endif
 
 		// Print out header information
-		if (simCtrl->Header_label == 'Y' && writeFlag == 0) {
+		if (simCtrl->Header_label && writeFlag == 0) {
 			
 			// fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 			// SKY2008Snow from AJR2007
@@ -597,7 +597,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 
 #else
 			// SKY2008Snow from AJR2007
-			fprintf(ifile,"%d.%d\t%f\t%f\t%f\t%f\t%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
+			fprintf(ifile,"%d.%d\t%f\t%f\t%f\t%f\t%d\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
 					it_hour, it_min, phydro[ii]+mhydro[ii], crr[ii], 
 					max[ii], min[ii], fState[ii], msm[ii], msmRt[ii],msmU[ii], mgw[ii], met[ii], sat[ii], frac[ii],
 					swe[ii], melt[ii], snsub[ii], snevap[ii], stC[ii], DUint[ii], slhf[ii], sshf[ii], sphf[ii], sghf[ii],//added by AJR 2007 @ NMT // Added snsub[ii], snevap[ii] CJC2020
@@ -748,7 +748,7 @@ void tFlowResults::write_Runoff_Types(char *filename, char *)
 		exit(2);
 	}
 	
-	if (simCtrl->Header_label == 'Y') {
+	if (simCtrl->Header_label) {
 		fprintf(ifile,"%s\t","Time");
 		fprintf(ifile,"%s\t","Hsrf");
 		fprintf(ifile,"%s\t","Sbsrf");

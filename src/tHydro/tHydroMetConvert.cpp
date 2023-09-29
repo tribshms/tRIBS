@@ -413,7 +413,7 @@ void tHydroMetConvert::writeSDF(int Option)
     unlink(sdfFile);
 #elif defined WIN
 #else 
-    sprintf(command, "rm %s", sdfFile);
+    snprintf(command,sizeof(command), "rm %s", sdfFile);
     system(command);
 #endif
 	
@@ -492,7 +492,7 @@ void tHydroMetConvert::writeGaugeSDF(int Option)
     unlink(sdfFile);
 #elif defined WIN
 #else 
-    sprintf(command, "rm %s", sdfFile);
+    snprintf(command,sizeof(command), "rm %s", sdfFile);
     system(command);
 #endif
 	
