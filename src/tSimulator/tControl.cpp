@@ -38,23 +38,19 @@ SimulationControl::SimulationControl(int argc, char **argv)
 	Cout<<"-----------------------------------------------------------------"
 		<<"-------"<<endl;
 	
-	char VERSION[50] = "3.0 Revision 33, June 2008";
+	char VERSION[50] = "4.0, Fall 2023";
 	
 	Cout <<"\n\ntRIBS Version "<< VERSION <<endl<<endl;
 	
 	static char usage[]=
-		"Usage : %s [-R] [-G] [-A] [-V NodeID] [-O] [-K] [-W] [-M] [-H] [-F]\n";
+		"Usage : %s [-A] [-V NodeID] [-O] [-K] [-W] [-F]\n";
 	
 	mode = STD_INPUT;       //Default: If file doesn't exist, assume zero rainfall
-	fore_rain_label  = 'N';   
-	GW_model_label   = 'N';   
-	inter_results    = 'N';
-	hydrog_results   = 'N';
+	fore_rain_label  = 'N';
 	Verbose_label    = 'N';
 	Check_label      = 'Y';    //Default is yes
 	mod_is_on        = 'N';    //Single run is default
 	hydro_visual     = 'N';
-	Header_label     = 'Y';
 	smooth_weather   = 'N';
     debug            = 'N';
 	num_simul = 0;
@@ -69,10 +65,6 @@ SimulationControl::SimulationControl(int argc, char **argv)
 		Cout<<"\n\nUsage: " << argv[0] <<" <input file>  [options]"<<endl<<endl;
 		Cout<<"Options: "<<endl;
 		Cout<<"\t-A    Automatic listing of rainfall files (zero if missing)"<<endl;
-		Cout<<"\t-G    Run groundwater model"<<endl;
-		Cout<<"\t-R    Write intermediate states (spatial output)"<<endl;
-		Cout<<"\t-H    Write intermediate hydrographs (.mrf)"<<endl;
-		Cout<<"\t-M    Do NOT Write headers in pixel/hydrograph/voronoi output files"<<endl;
 		Cout<<"\t-F    Measured and forecasted rainfall"<<endl;
 		Cout<<"\t-O    On after simulation completion, awaiting user's input"<<endl;
 		Cout<<"\t-K    Check output"<<endl;
@@ -83,7 +75,14 @@ SimulationControl::SimulationControl(int argc, char **argv)
 	
 	infile = argv[1];  		//Name of input file 
 	
-	for (int i=2; i < argc; i++)  //Start from the 3rd argument 
+    /* WR 08282023 removed command line arguments and specified in input file
+    "OPTGROUNDWATER" -G    Run groundwater model: GW_model_label
+    "OPTSPATIAL" -R    Write intermediate states (spatial output): inter_results
+    "OPTINTERHYDO")-H    Write intermediate hydrographs (.mrf): hydrog_results
+    "OPTNOHEADER"); -M    Do NOT Write headers in pixel/hydrograph/voronoi output files: : Header_label
+    */
+
+	for (int i=2; i < argc; i++)  //Start from the 3rd argument
     { 
 		if (*argv[i] != '-'){ 
 			if (i > 2) {
@@ -110,20 +109,10 @@ SimulationControl::SimulationControl(int argc, char **argv)
 				mode=AUTO_INPUT;      // if file does not exist -> assumes '0'-s!
 				break; 
 			}
-			case 'R': 		//Write intermediate results
-			{ 
-				inter_results = 'Y';
-				break;
-			}
 			case 'F': 		//Measured and forecasted rainfall
 			{ 
 				fore_rain_label = 'Y';
-				inter_results = 'Y';
-				break;
-			}
-			case 'G': 		//Run Groundwater model
-			{ 
-				GW_model_label = 'Y';
+				inter_results = 1;
 				break;
 			}
 			case 'V':                 //Verbose Output
@@ -144,16 +133,6 @@ SimulationControl::SimulationControl(int argc, char **argv)
 			case 'W':                 //Hydrograph visualization (SGI only)
 			{
 				hydro_visual = 'Y';
-				break;
-			}
-			case 'H':                 //Write intermediate hydrographs (.mrf)
-			{
-				hydrog_results = 'Y';
-				break;
-			}
-			case 'M':                 //Headers in pix, hydrogr and voron output
-			{
-				Header_label = 'N';
 				break;
 			}
 			case 'U':                 //Special option: no randomness in climate 
