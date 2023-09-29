@@ -69,19 +69,20 @@ class SimulationControl {
   int  VerbID;            // ID of a verbose node 
   int  num_simul;         // # of simulation runs 
   char first_time;        // First computation loop Y or N 
-  char mode;              // Mode of rainfall input 
-  char inter_results;     // Write intermediate results Y or N, 
-  char GW_model_label;    // Run groundwater model Y or N 
+  char mode;              // Mode of rainfall input
+  bool inter_results;     // Write intermediate results Y or N,
+  bool GW_model_label;    // Run groundwater model Y or N
   char Verbose_label;     // Verbose screen output Y or N
   char Check_label;       // Checking input file Y or N
   char *infile;           // Name of input file containing data
   char mod_is_on;         // The model stays on and waits for commands
   char hydro_visual;      // To turn on hydrograph visualization
-  char Header_label;      // Suppress header information in outputs 
-  char hydrog_results;    // Write intermediate hydrographs (.mrf) Y or N
+  bool Header_label;      // Suppress header information in outputs
+  bool hydrog_results;    // Write intermediate hydrographs (.mrf) true or fals
   char fore_rain_label;   // Forecasted rain = Y or N 
   char smooth_weather;    // Special option: no randomness in climate
-                          // *Do NOT display it in help menu: confusing
+  char disp_time;
+    // *Do NOT display it in help menu: confusing
   char debug;             // For debugging output for tGraph SMM
 
   SimulationControl(int, char **);

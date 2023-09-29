@@ -121,9 +121,15 @@ void tPreProcess::CheckInputFile(tInputFile &infile)
 	// SKYnGM2008LU
 	int optluinterp;
 
-	// Commented out several items for compatibility of existing data sets -VIVA
-	
-	//IterReadItem(infile, tempString,"STARTDATE");     //Run and time parameters
+	// Commented out several items for compatibility of existing data sets -VIVA //WR reverted 08282023
+
+    // BEGIN Move tControl Arguments to .in file WR 08282023
+    IterReadItem(infile, tempVariable,"OPTGROUNDWATER"); //   Cout<<"\t-G    Run groundwater model"<<endl;
+    IterReadItem(infile, tempVariable,"OPTSPATIAL"); //  Cout<<"\t-R    Write intermediate states (spatial output)"<<endl;
+    IterReadItem(infile, tempVariable,"OPTINTERHYDRO"); // Cout<<"\t-H    Write intermediate hydrographs (.mrf)"<<endl;
+    IterReadItem(infile, tempVariable,"OPTHEADER"); //  Cout<<"\t-M    Do NOT Write headers in pixel/hydrograph/voronoi output files"<<endl;
+    // END
+	IterReadItem(infile, tempString,"STARTDATE");     //Run and time parameters
 	IterReadItem(infile, tempVariable,"RUNTIME");
 	IterReadItem(infile, tempVariable,"TIMESTEP");
 	IterReadItem(infile, tempVariable,"GWSTEP");
