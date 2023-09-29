@@ -37,8 +37,8 @@ Simulator::Simulator(SimulationControl *simctrlptr, tRainfall *rainptr,
 	timer   = tmrptr;
 	outp    = otpptr;
    restart = restartptr;
-	
-	// Time tag of initial time, hour 
+
+	// Time tag of initial time, hour
 	begin_hour = timer->getCurrentTime(); 
 	
 	// For forecasted rainfall, turned off
@@ -113,13 +113,6 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
     else
         simCtrl->hydrog_results = false; //Default option
 
-
-    if (InFl.IsItemIn( "OPTHEADER" ))
-        simCtrl->Header_label = InFl.ReadItem(simCtrl->Header_label, "OPTHEADER");
-    else
-        simCtrl->Header_label = true; //Default option
-
-
 	// Ouput pre-processing
 	if (simCtrl->inter_results)
 		outp->CreateAndOpenDynVar();
@@ -127,6 +120,7 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
 	// Output initial conditions
 	outp->WriteDynamicVars( timer->getCurrentTime() );
 	outp->WritePixelInfo(   timer->getCurrentTime() );
+    outp->WritePixelInvariantInfo();
 	
 	// Prepare rainfall input if stochastic rainfall Off
 	if ( !rainIn->getoptStorm()) {

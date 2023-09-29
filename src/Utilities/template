@@ -7,7 +7,9 @@
 ##                  Massachusetts Institute of Technology
 ## 
 ##
-##
+## 	 Input File for single element model run of Happy Jack SNOTEL site
+##   (https://wcc.sc.egov.usda.gov/nwcc/site?sitenum=969)
+##                      
 ##
 ##############################################################################
 
@@ -22,39 +24,62 @@
 
 ## Time Variables
 ## --------------
-STARTDATE: Starting time (MM/DD/YYYY/HH/MM) 
+STARTDATE: Starting time (MM/DD/YYYY/HH/MM) 06/01/2002/00/00 (full 06/01/2002/00/00 to 09/30/2018/23/00)  08/02/2002/03/00 <- rain event; 10/03/2002/06/00 03-Oct-2002 06:00:00 <- snow event + 11 hrs
+06/01/2002/00/00
 
-RUNTIME: Run duration (hours)
+RUNTIME:  Run duration (hours)  03-Oct-2002 07:00:00 2976 8760 -- first snow event (full time: 143183) -- august rainfall event peak:  08/02/2002/ 03:00
+143183
+
+OPTSNOW:	Option for single layer snow model
+1
+
+OUTFILENAME:	   Base name of the tMesh and variable output or 
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/results/HJ_results
+
+OUTHYDROFILENAME:  Base name for hydrograph output
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/results/HJ_results
+
+GAUGESTATIONS: 	   Rain Gauge station file (*.sdf) HJR_GF_2002-2018.sdf HJR_2002_AugEvent.sdf
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HJ_PRECIP_2002-2018.sdf
+
+GAUGECONVERT:      Rain Gauge data conversion file (*.mdi)
+
+
+GAUGEBASENAME:	   Rain Gauge data BASE name (*.mdf) HJR_GF_2002-2018.mdf HJR_2002_AugEvent.mdf
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HJ_PRECIP_2002-2018.mdf
+
+
 
 RAINSEARCH:	Rainfall search interval (hours)
 24
 
-TIMESTEP: Unsaturated zone computational time step (mins)3
+TIMESTEP:    	Unsaturated zone computational time step (mins)3
 3.75
 
-GWSTEP: Saturated zone computational time step (mins)
+GWSTEP:      	Saturated zone computational time step (mins)
 30.0
 
-METSTEP: Meteorological data time step (mins)
+METSTEP:     	Meteorological data time step (mins)
 60.0
 
-ETISTEP: ET, interception and snow time step (hours)
+ETISTEP:	ET, interception and snow time step (hours)
 1
 
-RAININTRVL: Time interval in rainfall input (hours)
+RAININTRVL:  	Time interval in rainfall input (hours)
 1
 
-OPINTRVL: Output interval (hours)   
+OPINTRVL:    	Output interval (hours)   
 1
 
-SPOPINTRVL: Spatial output interval (hours)
+SPOPINTRVL:   	Spatial output interval (hours)
 50000
 
-INTSTORMMAX: Interstorm interval (hours)     
+INTSTORMMAX: 	Interstorm interval (hours)     
 10000
 
 ## Routing Variables
 ## -----------------
+
 
 BASEFLOW:    	Baseflow discharge (m3/s)  
 0.2
@@ -157,34 +182,36 @@ CHANNELWIDTHFILE:	Filename that contains channel widths
 ##=========================================================================
 
 
-OPTMESHINPUT: Mesh input data option
+OPTMESHINPUT:   Mesh input data option
 8
 
-RAINSOURCE: Rainfall data source option 
+RAINSOURCE:  	Rainfall data source option 
 3
 
 OPTEVAPOTRANS: 	Option for evapoTranspiration scheme
 1
 
-HILLALBOPT: Option for albedo of surrounding hillslopes
+
+
+HILLALBOPT: 	Option for albedo of surrounding hillslopes
 0
 
-OPTRADSHELT: Option for local and remote radiation sheltering
+OPTRADSHELT:	Option for local and remote radiation sheltering
 0
 
-OPTINTERCEPT: Option for interception scheme
+OPTINTERCEPT: 	Option for interception scheme
 2
 
 OPTLANDUSE:	Option for static or dynamic land cover
 0
 
-OPTLUINTERP: Option for interpolation of land cover 
+OPTLUINTERP:	Option for interpolation of land cover 
 1
 
-GFLUXOPTION: Option for ground heat flux
+GFLUXOPTION: 	Option for ground heat flux
 2
 
-METDATAOPTION: Option for meteorological data
+METDATAOPTION:  Option for meteorological data
 1
 
 CONVERTDATA:   	Option to convert met data format
@@ -202,10 +229,10 @@ OPTGWFILE: 	Option for groundwater initial file
 OPTRUNON:	Option for runon in overland flow paths
 0
 
-OPTRESERVOIR:                      
+OPTRESERVOIR                      
 0
 
-OPTSOILTYPE:
+OPTSOILTYPE
 0
 
 OPTSPATIAL:Option for turning on spatial model output at time steps specified by SPOPINTRVL
@@ -220,9 +247,6 @@ OPTINTERHYDRO:
 OPTHEADER:
 1
 
-OPTSNOW: Option for single layer snow model
-1
-
 ##=========================================================================
 ##
 ##
@@ -234,40 +258,56 @@ OPTSNOW: Option for single layer snow model
 ## Mesh Generation
 ## -----------------
 
-INPUTDATAFILE: tMesh input file base name for Mesh files
 
-INPUTTIME: tMesh input time slice (Option 1)
+INPUTDATAFILE:    tMesh input file base name for Mesh files
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/Output/Results/Voi/HJ_results_on_
+
+INPUTTIME:	  tMesh input time slice (Option 1)
 0
 
 ARCINFOFILENAME:  tMesh input file base name Arc files
 
+
 POINTFILENAME:    tMesh input file name Points files
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HappyJack.points
+
 
 ## Resampling Grids
 ## -----------------
 
+
 SOILTABLENAME:    Soil parameter reference table (*.sdt)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HJ_Soil_Table.sdt
 
 SOILMAPNAME:      Soil texture ASCII grid (*.soi)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HJ_Soil_Map.soi
 
 LANDTABLENAME:    Land use parameter reference table (*.ldt)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HJ_Veg_Table.ldt
 
 LANDMAPNAME:  	  Land use ASCII grid (*.lan)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HJ_Veg_Map.lan
 
 GWATERFILE:       Ground water ASCII grid (*.iwt) 
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HJ_Water_Table_Map.iwt
 
 DEMFILE:	  DEM ASCII grid for sky and land view factors (*.dem)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/Sheltering_DEM.dem
 
 RAINFILE:         Base name of the radar ASCII grid
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/
 
 RAINEXTENSION:    Extension for the radar ASCII grid 
 txt
 
 DEPTHTOBEDROCK:   Uniform depth to bedrock (meters)
+15
 
 BEDROCKFILE:      Bedrock depth ASCII grid (*.brd)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/
 
 LUGRID:		  Land cover grid data file (*.gdf)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/Dynamic_Veg_Grid_Data.gdf
 
 
 ## Meteorological Variables
@@ -293,19 +333,21 @@ PRECLAPSE:	  Precipitation lapse rate
 ## Meterological Data
 ## ------------------
 
+
 HYDROMETSTATIONS:  Hydrometeorological station file (*.sdf)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HJ_WEATHER_2002-2018.sdf
 
-HYDROMETGRID: Hydrometeorological grid data file (*.gdf)
+HYDROMETGRID:  	   Hydrometeorological grid data file (*.gdf)
 
-HYDROMETCONVERT: Hydrometeorological data conversion file (*.mdi)
+
+HYDROMETCONVERT:   Hydrometeorological data conversion file (*.mdi)
+
 
 HYDROMETBASENAME:  Hydrometeorological data BASE name (*.mdf)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/HJ_WEATHER_2002-2018.mdf
 
-GAUGESTATIONS: Rain Gauge station file (*.sdf) 
 
-GAUGECONVERT: Rain Gauge data conversion file (*.mdi)
 
-GAUGEBASENAME: Rain Gauge data BASE name (*.mdf) 
 
 ## Output Data
 ## -----------
@@ -317,14 +359,13 @@ RIBSHYDOUTPUT:	   Compatibility with RIBS User Interphase
 0
 
 NODEOUTPUTLIST:    Filename with Nodes for Dynamic Output (*.nol)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/Nodes/pNodes.dat
 
 HYDRONODELIST:     Filename with Nodes for HydroModel Output (*.nol)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/Nodes/hNodes.dat
 
 OUTLETNODELIST:    Filename with Interior Nodes for  Output (*.nol)
-
-OUTFILENAME: Base name of the tMesh and variable output or 
-
-OUTHYDROFILENAME: Base name for hydrograph output
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/Nodes/oNodes.dat
 
 ##=========================================================================
 ##
@@ -425,10 +466,13 @@ RESTARTMODE:	    Restart Mode Option
 0
 
 RESTARTINTRVL:      Time set for restart output (hours)
+12
 
 RESTARTDIR:         Path of directory for restart output
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/data/
 
 RESTARTFILE:        Actual file to restart a run
+tRIBS_Rstrt_00012
 
 ##=========================================================================
 ##
@@ -454,6 +498,7 @@ GRAPHOPTION:        Graph File Type Option
 0
 
 GRAPHFILE:          Reach connectivity filename (graph file option 1,2)
+/Users/lraming/Documents/Repos/Forked/tribsDev/cmake-build-debug/Modeling/HJ_BenchMark/
 
 ##=========================================================================
 ##

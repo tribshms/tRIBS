@@ -125,7 +125,7 @@ tKinemat::tKinemat(SimulationControl *sPtr, tMesh<tCNode> *gridRef, tInputFile &
              << "\nExiting Program..." << endl << flush;
         exit(2);
     }
-    if (simCtrl->Header_label)
+    if (simCtrl->Header_label=='Y')
         theOFStream << "1-Time,hr\t " << "2-Qstrm,m3/s\t" << "3-Hlev,m" << "\n";
 #endif
 
@@ -341,7 +341,7 @@ void tKinemat::UpdateForNewRun(tInputFile &infile, int keep) {
              << "\nExiting program..." << endl << flush;
         exit(2);
     }
-    if (simCtrl->Header_label)
+    if (simCtrl->Header_label=='Y')
         theOFStream << "1-Time,hr\t " << "2-Qstrm,m3/s\t" << "3-Hlev,m" << "\n";
 
 
@@ -2525,7 +2525,7 @@ void tKinemat::openOutletFile(tInputFile &infile)
       exit(2);
     }
 
-    if (simCtrl->Header_label)
+    if (simCtrl->Header_label=='Y')
       theOFStream<<"1-Time,hr\t "<<"2-Qstrm,m3/s\t"<<"3-Hlev,m"<<"\n";
   }
 
