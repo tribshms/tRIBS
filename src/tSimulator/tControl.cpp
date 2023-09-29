@@ -44,6 +44,7 @@ SimulationControl::SimulationControl(int argc, char **argv)
 	
 	static char usage[]=
 		"Usage : %s [-A] [-V NodeID] [-O] [-K] [-W] [-F] [-T]\n";
+
 	
 	mode = STD_INPUT;       //Default: If file doesn't exist, assume zero rainfall
 	fore_rain_label  = 'N';
@@ -114,6 +115,7 @@ SimulationControl::SimulationControl(int argc, char **argv)
 			{ 
 				fore_rain_label = 'Y';
 				inter_results = true;
+
 				break;
 			}
 			case 'V':                 //Verbose Output

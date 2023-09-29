@@ -113,6 +113,7 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
     else
         simCtrl->hydrog_results = false; //Default option
 
+
     if (InFl.IsItemIn( "OPTHEADER" ))
         simCtrl->Header_label = InFl.ReadItem(simCtrl->Header_label, "OPTHEADER");
     else

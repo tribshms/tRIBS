@@ -69,7 +69,7 @@ class SimulationControl {
   int  VerbID;            // ID of a verbose node 
   int  num_simul;         // # of simulation runs 
   char first_time;        // First computation loop Y or N 
-  char mode;              // Mode of rainfall input 
+  char mode;              // Mode of rainfall input
   bool inter_results;     // Write intermediate results Y or N,
   bool GW_model_label;    // Run groundwater model Y or N
   char Verbose_label;     // Verbose screen output Y or N
