@@ -155,8 +155,6 @@ tOutput<tSubNode>::~tOutput()
 		delete [] uzel;
 	if (pixinfo)
 		delete [] pixinfo;
-    if (ivr_pixinfo)
-        delete [] ivr_pixinfo;
 	if (dynvars)
 		delete [] dynvars;
 	
@@ -262,7 +260,6 @@ void tOutput<tSubNode>::ReadNodeOutputList() {
         nodeList = nullptr;
         uzel = nullptr;
         pixinfo = nullptr;
-        ivr_pixinfo = nullptr;
 		return;
 	}
 	
@@ -270,7 +267,6 @@ void tOutput<tSubNode>::ReadNodeOutputList() {
 	nodeList = new int[numNodes];
 	uzel = new tSubNode*[numNodes];
 	pixinfo = new ofstream[numNodes];
-    ivr_pixinfo = new ofstream[numNodes];
 	
 #ifdef PARALLEL_TRIBS
   // Initialize to NULL
@@ -423,38 +419,31 @@ void tOutput<tSubNode>::CreateAndOpenPixelInvariant()
 {
     if ( nodeList ) {
         char pixelext[15] = ".ivpixel";
-        char nodeNum[10], pixelnode[100];
-
         //SMM - Set interior nodes, added 08132008
         SetInteriorNode();
-
-        //TODO WR 08292023, make this so it only writes to one file--don't need a seperate .ivpixel file for each node of interest
-        for (int i = 0; i < numNodes; i++) {
-#ifdef PARALLEL_TRIBS
-            // Check if node is on this processor
-            if ( (uzel[i] != NULL) && (nodeList[i] >= 0) ) {
-#else
-                if (nodeList[i] >= 0) {
-#endif
-                snprintf(nodeNum, sizeof(nodeNum), "%d",nodeList[i]);
-                strcpy(pixelnode, nodeNum);
-                strcat(pixelnode, pixelext);
-
-                CreateAndOpenFile( &ivr_pixinfo[i], pixelnode );
-
-                if (simCtrl->Header_label=='Y') {
-                    // first row name
-                    ivr_pixinfo[i]<<"NodeID "//1
-                              <<"Area_m^2 " //2
-                              <<"Bedrock_Depth_mm " //3
-                              <<"SoilID "//5
-                              <<"LandUseID" //4
-                              <<"\n";
-                }
-                ivr_pixinfo[i].setf( ios::right, ios::adjustfield );
-                ivr_pixinfo[i].setf( ios::fixed, ios::floatfield);
-            }
+        CreateAndOpenFile( ivr_pixinfo, pixelext);
+        if (simCtrl->Header_label=='Y') {
+            // first row name
+            ivr_pixinfo<<"NodeID "//1
+                      <<"Area_m^2 " //2
+                      <<"Bedrock_Depth_mm " //3
+                      <<"Ks" //double getKs(); TODO: Add units
+                      <<"ThetaS" //double getThetaS();
+                      <<"ThetaR();"//double g
+                      <<"PoreSize"//double
+                      <<"AirEBubPress"//double get
+                      <<"DecayF;"//double g
+                      <<"SatAnRatio"//double ge
+                      <<"UnsatAnRatio"//double getUo
+                      <<"Porosity"//double
+                      <<"VolHeatCond"//double get
+                      <<"SoilHeatCap"//double get
+                      <<"SoilID "//5
+                      <<"LandUseID" //4
+                      <<"\n";
         }
+        ivr_pixinfo.setf( ios::right, ios::adjustfield );
+        ivr_pixinfo.setf( ios::fixed, ios::floatfield);
     }
 }
 
@@ -824,7 +813,7 @@ void tOutput<tSubNode>::end_simulation()
         // Check if node is on this processor
         if ((uzel[i] != NULL) && (nodeList[i] >= 0))
 #endif
-            ivr_pixinfo[i].close();
+            ivr_pixinfo.close();
     }
 }
 
@@ -1280,16 +1269,22 @@ void tCOutput<tSubNode>::WritePixelInvariantInfo()
         // Writing to a file dynamic variables of node of interest
         // The output format should be readable by ArcInfo & Matlab
         for (int i = 0; i < this->numNodes; i++) {
-#ifdef PARALLEL_TRIBS
-            // Doesn't need to be less than active size
-            if ((this->uzel[i] != NULL) && (this->nodeList[i] >= 0)) {
-#else
                 if ( this->uzel[i] && this->nodeList[i] < this->g->getNodeList()->getActiveSize()) {
-#endif
-                this->ivr_pixinfo[i] << setw(8) << this->nodeList[i]<< " "/* 1 id */
+                this->ivr_pixinfo << setw(8) << this->nodeList[i]<< " "/* 1 id */
                                      << setprecision(7)
                                      << setw(9) << this->uzel[i]->getVArea() << " " /* 2 area m^2 */
                                      << setw(9) << this->uzel[i]->getBedrockDepth() << " "   /* 5 bedrock depth mm */
+                                     << setw(9) << this->uzel[i]->getKs() << " "
+                                     << setw(9) << this->uzel[i]->getThetaS() << " "
+                                     << setw(9) << this->uzel[i]->getThetaR() << " "
+                                     << setw(9) << this->uzel[i]->getPoreSize() << " "
+                                     << setw(9) << this->uzel[i]->getAirEBubPress() << " "
+                                     << setw(9) << this->uzel[i]->getDecayF() << " "
+                                     << setw(9) << this->uzel[i]->getSatAnRatio() << " "
+                                     << setw(9) << this->uzel[i]->getUnsatAnRatio() << " "
+                                     << setw(9) << this->uzel[i]->getPorosity() << " "
+                                     << setw(9) << this->uzel[i]->getVolHeatCond() << " "
+                                     << setw(9) << this->uzel[i]->getSoilHeatCap() << " "
                                      << setprecision(4)
                                      << setw(6) << this->uzel[i]->getSoilID() << " " /* 4 Soil ID */
                                      << setw(6) << this->uzel[i]->getLandUse() << " "; /* 5 Land Use ID */

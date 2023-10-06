@@ -62,14 +62,16 @@ tKinemat::tKinemat(SimulationControl *sPtr, tMesh<tCNode> *gridRef, tInputFile &
     Roughness = infile.ReadItem(Roughness, "CHANNELROUGHNESS");
 
     percolationOption = infile.ReadItem(percolationOption, "OPTPERCOLATION"); // ASM 2/9/2017
-    ChannelConduc = infile.ReadItem(ChannelConduc, "CHANNELCONDUCTIVITY"); // ASM
-    TransientConduc = infile.ReadItem(TransientConduc, "TRANSIENTCONDUCTIVITY"); //ASM
-    TransientTime = infile.ReadItem(TransientTime, "TRANSIENTTIME"); //ASM
-    channelPorosity = infile.ReadItem(channelPorosity, "CHANNELPOROSITY"); // ASM
-    ChanWidth = infile.ReadItem(ChanWidth, "CHANNELWIDTH"); //ASM temporary fix
-    PoreInd = infile.ReadItem(PoreInd, "CHANPOREINDEX");//ASM
-    PsiB = infile.ReadItem(PsiB, "CHANPSIB");//ASM
-    //PsiB = PsiB/1000.; //ASM convert to m
+    if(percolationOption==1) { //TODO WR 10062023 should not need if statement but currently CHANPOREINDEX fails assert in read function
+        ChannelConduc = infile.ReadItem(ChannelConduc, "CHANNELCONDUCTIVITY"); // ASM
+        TransientConduc = infile.ReadItem(TransientConduc, "TRANSIENTCONDUCTIVITY"); //ASM
+        TransientTime = infile.ReadItem(TransientTime, "TRANSIENTTIME"); //ASM
+        channelPorosity = infile.ReadItem(channelPorosity, "CHANNELPOROSITY"); // ASM
+        ChanWidth = infile.ReadItem(ChanWidth, "CHANNELWIDTH"); //ASM temporary fix
+        PoreInd = infile.ReadItem(PoreInd, "CHANPOREINDEX");//ASM
+        PsiB = infile.ReadItem(PsiB, "CHANPSIB");//ASM
+        //PsiB = PsiB/1000.; //ASM convert to m
+    }
     IntStormMax = infile.ReadItem(IntStormMax, "INTSTORMMAX"); //ASM
 
     Cout << "\nChannel Characteristics:" << endl << endl;
