@@ -421,7 +421,7 @@ void tOutput<tSubNode>::CreateAndOpenPixelInvariant()
         char pixelext[15] = ".ivpixel";
         //SMM - Set interior nodes, added 08132008
         SetInteriorNode();
-        CreateAndOpenFile( ivr_pixinfo, pixelext);
+        CreateAndOpenFile( &ivr_pixinfo, pixelext);
         if (simCtrl->Header_label=='Y') {
             // first row name
             ivr_pixinfo<<"NodeID "//1
@@ -1278,7 +1278,7 @@ void tCOutput<tSubNode>::WritePixelInvariantInfo()
                                      << setw(9) << this->uzel[i]->getThetaS() << " "
                                      << setw(9) << this->uzel[i]->getThetaR() << " "
                                      << setw(9) << this->uzel[i]->getPoreSize() << " "
-                                     << setw(9) << this->uzel[i]->getAirEBubPress() << " "
+                                     << setw(9) << this->uzel[i]->getAirEBubPres() << " "
                                      << setw(9) << this->uzel[i]->getDecayF() << " "
                                      << setw(9) << this->uzel[i]->getSatAnRatio() << " "
                                      << setw(9) << this->uzel[i]->getUnsatAnRatio() << " "
