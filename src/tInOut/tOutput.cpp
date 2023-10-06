@@ -425,19 +425,19 @@ void tOutput<tSubNode>::CreateAndOpenPixelInvariant()
         if (simCtrl->Header_label=='Y') {
             // first row name
             ivr_pixinfo<<"NodeID "//1
-                      <<"Area_m^2 " //2
+                      <<"Area_m_sq " //2
                       <<"Bedrock_Depth_mm " //3
-                      <<"Ks" //double getKs(); TODO: Add units
-                      <<"ThetaS" //double getThetaS();
-                      <<"ThetaR();"//double g
-                      <<"PoreSize"//double
-                      <<"AirEBubPress"//double get
-                      <<"DecayF;"//double g
-                      <<"SatAnRatio"//double ge
-                      <<"UnsatAnRatio"//double getUo
-                      <<"Porosity"//double
-                      <<"VolHeatCond"//double get
-                      <<"SoilHeatCap"//double get
+                      <<"Ks " //double getKs(); TODO: Add units
+                      <<"ThetaS " //double getThetaS();
+                      <<"ThetaR "//double g
+                      <<"PoreSize "//double
+                      <<"AirEBubPress "//double get
+                      <<"DecayF "//double g
+                      <<"SatAnRatio "//double ge
+                      <<"UnsatAnRatio "//double getUo
+                      <<"Porosity "//double
+                      <<"VolHeatCond "//double get
+                      <<"SoilHeatCap "//double get
                       <<"SoilID "//5
                       <<"LandUseID" //4
                       <<"\n";
