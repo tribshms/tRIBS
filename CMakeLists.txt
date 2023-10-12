@@ -6,8 +6,10 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross co
 
 #variables that can be specified using tP4
 set(exe "tRIBS")
-set(parallel "ON")
+
+set(parallel ON)
 set(cxx_flags "-O2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
 
 #set compiler if necessary, this has to be done before project()
 #set (CMAKE_CXX_COMPILER <specify compiler here>)
@@ -36,7 +38,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the f
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
 
 # set to ON to compile parallel version, set to OFF to compile serial version
-if(${parllel})
+if(parallel)
     message(WARNING "Compiling parallel version of tRIBS")
 
     target_compile_definitions(${exe}
