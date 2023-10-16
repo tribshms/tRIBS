@@ -65,17 +65,17 @@ GenericSoilData::GenericSoilData(tMesh<tCNode> *mesh,
 	
 	assert(numClass > 0 && np > 0);
 	SoilClass = new SoilType* [numClass];
-	assert(SoilClass != 0);
+	assert(SoilClass != nullptr);
 	
 	sc = new double [np];
-	assert(sc != 0);
+	assert(sc != nullptr);
 	
 	// Reads in the soil parameters 
 	for (int i=0; i < numClass; i++) {
 		for (int j=0; j < np; j++)
 			Inp0 >> sc[j];
 		SoilClass[i] = new SoilType(sc, np);
-		assert(SoilClass[i] != 0);
+		assert(SoilClass[i] != nullptr);
 	}
 	
 	Inp0.close();
@@ -435,8 +435,7 @@ void GenericSoilData::SetSoilParameters(tMesh<tCNode> *mesh,
 		}
 		Inp0.close();
 	}
-	return;
-}
+	}
 
 void GenericSoilData::printSoilPars() 
 {
@@ -498,7 +497,7 @@ SoilType::SoilType(double *a, int n)
 
 SoilType::SoilType() 
 {
-	sProperty = NULL;
+	sProperty = nullptr;
 	numProps  = -999;
 }
 
@@ -712,7 +711,7 @@ LandType::LandType(double *a, int n)
 	numProps  = n;
 	assert(n > 0);
 	lProperty = new double [n];
-	assert(lProperty != 0);
+	assert(lProperty != nullptr);
 	
 	for (int i=0; i < numProps; i++)
 		lProperty[i] = a[i];
@@ -720,7 +719,7 @@ LandType::LandType(double *a, int n)
 
 LandType::LandType() 
 {
-	lProperty = NULL;
+	lProperty = nullptr;
 	numProps  = -999;
 }
 

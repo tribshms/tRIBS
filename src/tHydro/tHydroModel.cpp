@@ -242,7 +242,7 @@ void tHydroModel::InitSet(tResample *resamp)
 	Cout<<"Ground Heat Flux Option: \t"<< gFluxOption<<endl;
 	Cout<<"Bedrock Depth Option: \t\t" << BRoption<<endl;
 
-	// Groundwater initial file option for resampling
+	// Groundwater initial file option for g
 	if (!GWoption) {
 		// Resample ASCII grid
 		Cout<<"\nResampling groundwater table grid..."<<endl;
