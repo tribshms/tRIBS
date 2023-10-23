@@ -249,25 +249,28 @@ void tHydroModel::InitSet(tResample *resamp)
 		tmp = resamp->doIt(gwatfile, 1); // resamples input GW ASCII grid
 	}
 	else if (GWoption == 1) {
-		Cout<<endl<<endl;
-		Cout<<"  tHydroModel: Please input groundwater initialization\n"
-			<<"  file in Voronoi polygon format. (the file must contain water table\n"
-			<<"  depth values arranged in the order to correspond to Voronoi IDs\n"
-			<<endl
-			<<"  Format (no headers assumed in the file):\n"
-			<<"         ID        Water_table_depth [mm]\n\n"<<flush;
+        //WR 10232023: updated so that it just reads in the gwatfile, versus needing an input from the shell.
+//		Cout<<endl<<endl;
+//		Cout<<"  tHydroModel: Please input groundwater initialization\n"
+//			<<"  file in Voronoi polygon format. (the file must contain water table\n"
+//			<<"  depth values arranged in the order to correspond to Voronoi IDs\n"
+//			<<endl
+//			<<"  Format (no headers assumed in the file):\n"
+//			<<"         ID        Water_table_depth [mm]\n\n"<<flush;
+//
+//		// Resample Voronoi GW table file
+//		Cout<<"\tEnter input data filename: ";
+//		cin>>filein;
 
-		// Resample Voronoi GW table file
-		Cout<<"\tEnter input data filename: ";
-		cin>>filein;
-
-		ifstream source( filein );
-		while ( !source.good() ) {
-			cout<<"\n   File does NOT exist: Check pathame and spelling...?\n"
-			<<"\tEnter input data filename: ";
-			cin >> filein;
-			source.open( filein );
-		}
+		ifstream source( gwatfile );
+        source.open(gwatfile);
+        
+//		while ( !source.good() ) {
+//			cout<<"\n   File does NOT exist: Check pathame and spelling...?\n"
+//			<<"\tEnter input data filename: ";
+//			cin >> filein;
+//			source.open( filein );
+//		}
 
 		int Vcnt = (gridPtr->getNodeList()->getActiveSize());
 		tmp = new double[Vcnt];
