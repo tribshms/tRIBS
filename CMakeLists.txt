@@ -7,8 +7,8 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross co
 #variables that can be specified using tP4
 set(exe "tRIBS")
 
-set(parallel OFF)
-set(cxx_flags "-O1")
+set(parallel ON)
+set(cxx_flags "-O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -28,7 +28,7 @@ add_executable(${exe} src/main.cpp)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 ### sanitizer finds leaks in parallel version--open mpi is known to have leaks
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
 
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
 
