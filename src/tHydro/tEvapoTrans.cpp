@@ -3634,7 +3634,7 @@ void tEvapoTrans::readHydroMetGrid(char *gridFile)
 	for (int ct=0;ct<numParameters;ct++) {
 		gridParamNames[ct] = new char[10];
 		gridBaseNames[ct] = new char[kName];
-		gridExtNames[ct] = new char[10];
+		gridExtNames[ct] = new char[kMaxExt];
 		readFile >> gridParamNames[ct];
 		readFile >> gridBaseNames[ct];
 		readFile >> gridExtNames[ct];

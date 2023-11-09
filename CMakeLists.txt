@@ -10,6 +10,8 @@ set(exe "tRIBS")
 set(parallel ON)
 set(cxx_flags "-O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 #set compiler if necessary, this has to be done before project()
 #set (CMAKE_CXX_COMPILER <specify compiler here>)
@@ -17,7 +19,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the f
 #    message(STATUS "Configured for C++, with compiler: ")
 #    message(STATUS "${CMAKE_CXX_COMPILER_VERSION}}")
 #endif()
-
 
 project(${exe})
 add_executable(${exe} src/main.cpp)
