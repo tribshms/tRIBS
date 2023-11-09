@@ -81,6 +81,7 @@ class tEvapoTrans
   void initialLUGridAssignment();
   void LUGridAssignment();
   void interpolateLUGrids(tCNode *);
+  void constantLUGrids(tCNode* );
   void integratedLUVars(tCNode *, double);
 
   int  getEToption();

@@ -270,6 +270,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
         resampleGrids(timer);
     }
 
+
     if (luOption == 1) { // resampling Land Use grids done here, i.e., dynamic case
         if (AtFirstTimeStepLUFlag) {
             initialLUGridAssignment();
@@ -283,7 +284,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
     cNode = nodeIter.FirstP();
     while (nodeIter.IsActive()) {
         double precip = 0.0;
-        // Set static land use tCnode members before being assigned dynamically further below.
+
         landPtr->setLandPtr(cNode->getLandUse());
         cNode->setCanStorParam(landPtr->getLandProp(1));
         cNode->setIntercepCoeff(landPtr->getLandProp(2));
@@ -301,6 +302,9 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
         if (luOption == 1) {
             if (luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values
                 interpolateLUGrids(cNode);
+            }
+            else if (luInterpOption == 0) {// LU values set from 'previous' grid
+                constantLUGrids(cNode);
             }
         }
 
@@ -323,7 +327,10 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
 
         checkShelter(cNode);
 
+        // this sets coeffs from land classification table
         setCoeffs(cNode);
+
+        // this overwrites a given parameter if the landuse option is selected and the gridded data exists
         if (luOption == 1) {
             newLUGridData(cNode);
         }
