@@ -557,7 +557,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 #endif
 
 		// Print out header information
-		if (simCtrl->Header_label && writeFlag == 0) {
+		if (simCtrl->Header_label=='Y' && writeFlag == 0) {
 			
 			// fprintf(ifile,"%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 			// SKY2008Snow from AJR2007
@@ -748,7 +748,7 @@ void tFlowResults::write_Runoff_Types(char *filename, char *)
 		exit(2);
 	}
 	
-	if (simCtrl->Header_label) {
+	if (simCtrl->Header_label=='Y') {
 		fprintf(ifile,"%s\t","Time");
 		fprintf(ifile,"%s\t","Hsrf");
 		fprintf(ifile,"%s\t","Sbsrf");

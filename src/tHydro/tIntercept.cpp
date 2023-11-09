@@ -206,7 +206,7 @@ void tIntercept::callInterception(tCNode *cNode, double Ep)
 ** Uses coeffA, coeffB as parameters read from Land Use Table
 **
 **    I(t) = R(t)          while cumI <= coeffA    (mm/hr)
-**    I(t) = coeffB*R(t)   while cumI >  coeffA
+**    I(t) = coeffB*R(t)   while cumI >  coeff
 **
 ***************************************************************************/
 void tIntercept::InterceptGray(tCNode *cNode)

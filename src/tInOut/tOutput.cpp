@@ -140,6 +140,7 @@ tOutput<tSubNode>::tOutput( SimulationControl *simCtrPtr,
 
 	ReadNodeOutputList(); 
 	CreateAndOpenPixel();
+    CreateAndOpenPixelInvariant();
 	dynvars = NULL;
 }
 
@@ -311,7 +312,7 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 				
 				CreateAndOpenFile( &pixinfo[i], pixelnode );
 				
-				if (simCtrl->Header_label) {
+				if (simCtrl->Header_label=='Y') {
                     // first row name
 					pixinfo[i]<<"NodeID "//1
 					<<"Time_hr " //2
@@ -403,6 +404,47 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 		}
 	}
 	return;
+}
+/*************************************************************************
+**
+**  tOutput::CreateAndOpenPixelInvariant()
+**
+**  Write the header for the *.ivpixel output file. A file that provides
+**  information about time invariant information about the given voronoi
+ *  polygon
+**
+*************************************************************************/
+template< class tSubNode >
+void tOutput<tSubNode>::CreateAndOpenPixelInvariant()
+{
+    if ( nodeList ) {
+        char pixelext[15] = ".ivpixel";
+        //SMM - Set interior nodes, added 08132008
+        SetInteriorNode();
+        CreateAndOpenFile( &ivr_pixinfo, pixelext);
+        if (simCtrl->Header_label=='Y') {
+            // first row name
+            ivr_pixinfo<<"NodeID "//1
+                      <<"Area_m_sq " //2
+                      <<"Bedrock_Depth_mm " //3
+                      <<"Ks " //double getKs(); TODO: Add units
+                      <<"ThetaS " //double getThetaS();
+                      <<"ThetaR "//double g
+                      <<"PoreSize "//double
+                      <<"AirEBubPress "//double get
+                      <<"DecayF "//double g
+                      <<"SatAnRatio "//double ge
+                      <<"UnsatAnRatio "//double getUo
+                      <<"Porosity "//double
+                      <<"VolHeatCond "//double get
+                      <<"SoilHeatCap "//double get
+                      <<"SoilID "//5
+                      <<"LandUseID" //4
+                      <<"\n";
+        }
+        ivr_pixinfo.setf( ios::right, ios::adjustfield );
+        ivr_pixinfo.setf( ios::fixed, ios::floatfield);
+    }
 }
 
 /*************************************************************************
@@ -760,13 +802,19 @@ void tOutput<tSubNode>::WritePixelInfo( double )
 template< class tSubNode >
 void tOutput<tSubNode>::end_simulation()
 {
-	for (int i = 0; i < numNodes; i++)
+	for (int i = 0; i < numNodes; i++) {
 #ifdef PARALLEL_TRIBS
-    // Check if node is on this processor
-    if ( (uzel[i] != NULL) && (nodeList[i] >= 0) )
+        // Check if node is on this processor
+        if ((uzel[i] != NULL) && (nodeList[i] >= 0))
 #endif
-		pixinfo[i].close();
-	return;  
+            pixinfo[i].close();
+
+#ifdef PARALLEL_TRIBS
+        // Check if node is on this processor
+        if ((uzel[i] != NULL) && (nodeList[i] >= 0))
+#endif
+            ivr_pixinfo.close();
+    }
 }
 
 //=========================================================================
@@ -1204,9 +1252,46 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 			}
 		}
 	}
-	return;
 }
 
+/*************************************************************************
+**
+**  tCOutput::WritePixelInvariantInfo()
+**
+**  Writes the time invariant variables of node of interest to a *.ivpixel file
+**  The output format should be readable by ArcInfo & Matlab
+**
+*************************************************************************/
+template< class tSubNode >
+void tCOutput<tSubNode>::WritePixelInvariantInfo()
+{
+
+        // Writing to a file dynamic variables of node of interest
+        // The output format should be readable by ArcInfo & Matlab
+        for (int i = 0; i < this->numNodes; i++) {
+                if ( this->uzel[i] && this->nodeList[i] < this->g->getNodeList()->getActiveSize()) {
+                this->ivr_pixinfo << setw(8) << this->nodeList[i]<< " "/* 1 id */
+                                     << setprecision(7)
+                                     << setw(9) << this->uzel[i]->getVArea() << " " /* 2 area m^2 */
+                                     << setw(9) << this->uzel[i]->getBedrockDepth() << " "   /* 5 bedrock depth mm */
+                                     << setw(9) << this->uzel[i]->getKs() << " "
+                                     << setw(9) << this->uzel[i]->getThetaS() << " "
+                                     << setw(9) << this->uzel[i]->getThetaR() << " "
+                                     << setw(9) << this->uzel[i]->getPoreSize() << " "
+                                     << setw(9) << this->uzel[i]->getAirEBubPres() << " "
+                                     << setw(9) << this->uzel[i]->getDecayF() << " "
+                                     << setw(9) << this->uzel[i]->getSatAnRatio() << " "
+                                     << setw(9) << this->uzel[i]->getUnsatAnRatio() << " "
+                                     << setw(9) << this->uzel[i]->getPorosity() << " "
+                                     << setw(9) << this->uzel[i]->getVolHeatCond() << " "
+                                     << setw(9) << this->uzel[i]->getSoilHeatCap() << " "
+                                     << setprecision(4)
+                                     << setw(6) << this->uzel[i]->getSoilID() << " " /* 4 Soil ID */
+                                     << setw(6) << this->uzel[i]->getLandUse() << " "; /* 5 Land Use ID */
+
+            }
+        }
+}
 /*************************************************************************
 **
 **  tCOutput::WriteDynamicVars()
@@ -1235,7 +1320,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 	minute = (int)floor((time-hour)*60);
 
 	// SKY2008Snow from AJR2007
-	if(simCtrl->Header_label){
+	if(simCtrl->Header_label=='Y'){
 		cout<<"\n\tHOUR = "<<hour<<"\tMINUTE = "<<minute<<"\n";
 		//cout<<"\ttCOutput:     Time to write vars; nActiveNodes = "
 		//   <<nActiveNodes<<";  nTotalNodes = "<<nnodes<<"\n";
@@ -1244,7 +1329,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
     snprintf(extension,sizeof(extension),".%04d_%02dd", hour, minute);
 	this->CreateAndOpenFile( &arcofs, extension);  //Opens file for writing
 	
-	if (simCtrl->Header_label) {
+	if (simCtrl->Header_label=='Y') {
 		arcofs<<"ID"<<','<<"Z"<<','<<"S"<<','<<"CAr"<<','<<"Nwt"<<','<<"Mu"<<','
 		<<"Mi"<<','<<"Nf"<<','<<"Nt"<<','<<"Qpout"<<','<<"Qpin"<<','
 		<<"Srf"<<','<<"Rain"<<','
@@ -1609,7 +1694,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 	snprintf(extension, sizeof(extension), ".%04d_%02di", hour, minute);
 	this->CreateAndOpenFile(&intofs, extension);
 	
-	if (simCtrl->Header_label) {
+	if (simCtrl->Header_label=='Y') {
 		intofs<<"ID"<<','<<"BndCd"<<','<<"Z"<<','<<"VAr"<<','<<"CAr"<<','<<"Curv"
 		<<','<<"EdgL"<<','<<"Slp"
 		<<','<<"FWidth"<<','<<"Aspect"
@@ -1885,7 +1970,7 @@ void tCOutput<tSubNode>::CreateAndOpenOutlet()
 						Cout<<"Creating Output File: \t '"<<fullName<<"' "<<endl;
 */
 					
-					if (simCtrl->Header_label) {
+					if (simCtrl->Header_label=='Y') {
 						outletinfo[i]<<"1-Time,hr\t "
 						<<"2-Qstrm,m3/s\t"
 						<<"3-Hlev,m"

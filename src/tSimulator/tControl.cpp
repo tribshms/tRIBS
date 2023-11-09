@@ -54,6 +54,7 @@ SimulationControl::SimulationControl(int argc, char **argv)
 	hydro_visual     = 'N';
 	smooth_weather   = 'N';
     debug            = 'N';
+    Header_label = 'Y'; //Default is yes
     disp_time = 'N';
 	num_simul = 0;
 	VerbID = -999;
@@ -70,7 +71,8 @@ SimulationControl::SimulationControl(int argc, char **argv)
 		Cout<<"\t-F    Measured and forecasted rainfall"<<endl;
 		Cout<<"\t-O    On after simulation completion, awaiting user's input"<<endl;
 		Cout<<"\t-K    Check output"<<endl;
-		Cout<<"\t-V [NodeID] Verbose mode (output run-time information)"<<endl<<endl;
+		Cout<<"\t-V [NodeID] Verbose mode (output run-time information)"<<endl;
+        Cout<<"\t-M  Do NOT Write headers in pixel/hydrograph/voronoi output files"<<endl<<endl;
 		Cout<<"Provide name of an input file. Exiting program...\n"<<endl;
 		exit(1);
 	}
@@ -81,7 +83,6 @@ SimulationControl::SimulationControl(int argc, char **argv)
     "OPTGROUNDWATER" -G    Run groundwater model: GW_model_label
     "OPTSPATIAL" -R    Write intermediate states (spatial output): inter_results
     "OPTINTERHYDO")-H    Write intermediate hydrographs (.mrf): hydrog_results
-    "OPTNOHEADER"); -M    Do NOT Write headers in pixel/hydrograph/voronoi output files: : Header_label
     */
 
 	for (int i=2; i < argc; i++)  //Start from the 3rd argument
@@ -133,6 +134,11 @@ SimulationControl::SimulationControl(int argc, char **argv)
 				mod_is_on = 'Y';
 				break;
 			}
+            case 'M':                 //turn off headers
+            {
+                Header_label = 'N';
+                break;
+            }
 			case 'W':                 //Hydrograph visualization (SGI only)
 			{
 				hydro_visual = 'Y';
