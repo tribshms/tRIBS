@@ -7,7 +7,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross co
 #variables that can be specified using tP4
 set(exe "tRIBS")
 
-set(parallel ON)
+set(parallel OFF)
 set(cxx_flags "-O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
 set(CMAKE_CXX_EXTENSIONS OFF)
