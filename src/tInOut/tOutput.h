@@ -57,6 +57,7 @@ public:
   void CreateAndOpenVizFile(ofstream*, char*);
   void ReadNodeOutputList();
   void CreateAndOpenPixel();
+  void CreateAndOpenPixelInvariant();
   void CreateAndOpenDynVar();
   void end_simulation();
   void SetInteriorNode();
@@ -67,7 +68,8 @@ public:
   virtual void WriteNodeData(double);    
   virtual void WriteNodeData(double, tResample*);
   virtual void WriteGeometry(tResample*);
-  virtual void WritePixelInfo(double);    
+  virtual void WritePixelInfo(double);
+
 
   int numNodes;
   int *nodeList;
@@ -88,7 +90,8 @@ protected:
   ofstream edgofs;
   ofstream triofs;
   ofstream zofs;
-  ofstream *pixinfo;   
+  ofstream *pixinfo;
+  ofstream ivr_pixinfo;
   ofstream *dynvars;              
 };
 
@@ -119,7 +122,8 @@ public:
   void WriteDynamicVarsBinary(double);
   void WriteDynamicVar(double);
   void WriteIntegrVars(double);
-  void WritePixelInfo(double);  
+  void WritePixelInfo(double);
+  void WritePixelInvariantInfo();
   void WriteNodeData(double);
   void WriteNodeData(double, tResample*); 
   void WriteGeometry(tResample*);

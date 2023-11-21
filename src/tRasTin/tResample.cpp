@@ -922,8 +922,9 @@ double* tResample::doIt(char *GridIn, int flag)
 	tPtrList< tCNode >     NodesLst;
 	tPtrListIter< tCNode > NodesIter( NodesLst );
 	NodesLst.Flush();
-	
-	Cout<<"\nResampling "<<GridIn<<endl<<flush; 
+
+    if (simCtrl->Verbose_label == 'Y')
+	    Cout<<"\nResampling "<<GridIn<<endl<<flush;
 	
 	// Reads Input Grid
 	readInputGrid(GridIn);

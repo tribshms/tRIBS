@@ -1,7 +1,17 @@
 # Required CMake arguments
 cmake_minimum_required(VERSION 3.20)
-set(exe "tRIBS") # this line is not required but can be changed to change name of executable
+#set standard
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross compilation see: https://stackoverflow.com/questions/53633705/cmake-the-c-compiler-is-not-able-to-compile-a-simple-test-program
+
+#variables that can be specified using tP4
+set(exe "tRIBS")
+
+set(parallel ON)
+set(cxx_flags "-O2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 #set compiler if necessary, this has to be done before project()
 #set (CMAKE_CXX_COMPILER <specify compiler here>)
@@ -10,21 +20,16 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross co
 #    message(STATUS "${CMAKE_CXX_COMPILER_VERSION}}")
 #endif()
 
-
 project(${exe})
 add_executable(${exe} src/main.cpp)
 
 # project files
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-#set standard
-set(CMAKE_CXX_STANDARD 17)
-
-
 # used while testing and developing
 #set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2") # -O2 appears to be the fastest option
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
 
 ### sanitizer finds leaks in parallel version--open mpi is known to have leaks
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
@@ -32,7 +37,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2") # -O2 appears to be the fastest op
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
 
 # set to ON to compile parallel version, set to OFF to compile serial version
-if(ON)
+if(parallel)
     message(WARNING "Compiling parallel version of tRIBS")
 
     target_compile_definitions(${exe}

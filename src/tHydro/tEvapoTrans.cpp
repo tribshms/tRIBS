@@ -3634,7 +3634,7 @@ void tEvapoTrans::readHydroMetGrid(char *gridFile)
 	for (int ct=0;ct<numParameters;ct++) {
 		gridParamNames[ct] = new char[10];
 		gridBaseNames[ct] = new char[kName];
-		gridExtNames[ct] = new char[10];
+		gridExtNames[ct] = new char[kMaxExt];
 		readFile >> gridParamNames[ct];
 		readFile >> gridBaseNames[ct];
 		readFile >> gridExtNames[ct];
@@ -4372,9 +4372,9 @@ void tEvapoTrans::initialLUGridAssignment()
 void tEvapoTrans::LUGridAssignment()
 {
   for (int ct=0;ct<nParmLU;ct++) { 
-    if (strcmp(LUgridParamNames[ct],"AL")==0) {
-      if (NowTillWhichALgrid <= numALfiles) {
-	if ((timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid]))) { 
+    if (strcmp(LUgridParamNames[ct],"AL")==0) { //if parameter exists
+      if (NowTillWhichALgrid <= numALfiles) { // if you have not exceeded the file amount
+	if ((timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid]))) {// the time is greater then the ALgrid hours
 	  NowTillWhichALgrid++;
 	  if ( (NowTillWhichALgrid-1)<numALfiles) {
 	    LandUseAlbGrid->updateLUVarOfBothGrids("AL", ALgridFileNames[NowTillWhichALgrid]);
@@ -4641,6 +4641,68 @@ void tEvapoTrans::interpolateLUGrids(tCNode* cNode)
   } // end for loop
   
   return;
+
+}
+
+/***************************************************************************
+**
+** constantLUGrids() Function
+**
+***************************************************************************/
+void tEvapoTrans::constantLUGrids(tCNode* cNode)
+{
+    for (int ct=0;ct<nParmLU;ct++) {
+        if ( (strcmp(LUgridParamNames[ct],"AL")==0))
+        {
+            cNode->setLandUseAlb( cNode->getLandUseAlbInPrevGrid()) ;
+        }
+        if ( (strcmp(LUgridParamNames[ct],"TF")==0))
+        {
+            cNode->setThroughFall(cNode->getThroughFallInPrevGrid());
+        }
+        if ( (strcmp(LUgridParamNames[ct],"VH")==0))
+        {
+            cNode->setVegHeight( cNode->getVegHeightInPrevGrid() );
+        }
+        if ( (strcmp(LUgridParamNames[ct],"SR")==0))
+        {
+            cNode->setStomRes( cNode->getStomResInPrevGrid());
+        }
+        if ( (strcmp(LUgridParamNames[ct],"VF")==0))
+        {
+            cNode->setVegFraction( cNode->getVegFractionInPrevGrid() );
+        }
+        if ( (strcmp(LUgridParamNames[ct],"CS")==0))
+        {
+            cNode->setCanStorParam( cNode->getCanStorParamInPrevGrid());
+        }
+        if ( (strcmp(LUgridParamNames[ct],"IC")==0))
+        {
+            cNode->setIntercepCoeff( cNode->getIntercepCoeffInPrevGrid());
+        }
+        if ( (strcmp(LUgridParamNames[ct],"CC")==0))
+        {
+            cNode->setCanFieldCap( cNode->getCanFieldCapInPrevGrid());
+        }
+        if ( (strcmp(LUgridParamNames[ct],"DC")==0) )
+        {
+            cNode->setDrainCoeff( cNode->getDrainCoeffInPrevGrid());
+        }
+        if ( (strcmp(LUgridParamNames[ct],"DE")==0) )
+        {
+            cNode->setDrainExpPar( cNode->getDrainExpParInPrevGrid() );
+        }
+        if ( (strcmp(LUgridParamNames[ct],"OT")==0))
+        {
+            cNode->setOptTransmCoeff( cNode->getOptTransmCoeffInPrevGrid() );
+        }
+        if ( (strcmp(LUgridParamNames[ct],"LA")==0))
+        {
+            cNode->setLeafAI( cNode->getLeafAIInPrevGrid() );
+        }
+    } // end for loop
+
+    return;
 
 }
 
