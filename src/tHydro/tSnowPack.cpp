@@ -99,10 +99,7 @@ void tSnowPack::SetSnowInterceptVariables() {
 }
 
 void tSnowPack::SetSnowVariables(tInputFile &infile) {
-
-    //EVAP DEBUG WR
-    dummyx = 0;
-    LastTotEvap = 0;
+    
 
     //time steps
     timeStepm = infile.ReadItem(timeStepm, "METSTEP");
