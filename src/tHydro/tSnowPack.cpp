@@ -100,6 +100,10 @@ void tSnowPack::SetSnowInterceptVariables() {
 
 void tSnowPack::SetSnowVariables(tInputFile &infile) {
 
+    //EVAP DEBUG WR
+    dummyx = 0;
+    LastTotEvap = 0;
+
     //time steps
     timeStepm = infile.ReadItem(timeStepm, "METSTEP");
     timeSteph = timeStepm / 60;
@@ -683,13 +687,12 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             cNode->setEvapSoil(0.0);
             cNode->setActEvap(0.0);
             cNode->setEvapoTrans(
-                    cNode->getEvapWetCanopy()); //should be set to zero in most cases when snow is present, as its set to zero in callSnowIntercept except for rain on snow events.
+                    cNode->getEvapWetCanopy() + cNode->getEvapDryCanopy()); //should be set to zero in most cases when snow is present, as its set to zero in callSnowIntercept except for rain on snow events.
 
             setToNodeSnP(cNode);
             setToNode(cNode);
 
         }//end yes-snow
-
 
 
         // Estimate average Ep and cloudiness
@@ -790,8 +793,7 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
             cout << "Exiting Program...\n\n" << endl;
             exit(1);
         }
-        // Set actual evaporation to 0 since snow pack exists and soil evaporation is function of actual evap
-        node->setActEvap(0.0);
+
 
         // Set ground element-scale fluxes to zero and surface and soil to snow temp
         node->setNetRad(0.0);
@@ -806,6 +808,9 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         // follows structure of
         setToNode(node);
 
+        // Set actual evaporation to 0 since snow pack exists and soil evaporation is function of actual evap
+        node->setActEvap(0.0);
+
         ComputeETComponents(interceptModel, node, count, 1);
 
         //Set canopy snow components to 0
@@ -813,6 +818,7 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         node->setIntSnUnload(0);
         node->setIntSub(0);
         node->setIntPrec(0);
+        node->setEvapSoil(0.0);
 
 
     }//end -- no snow
@@ -889,6 +895,7 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         //set wet and dry evap to 0 when snow in canopy
         node->setEvapWetCanopy(0.0);
         node->setEvapDryCanopy(0.0);
+        node->setEvapSoil(0.0);
         node->setEvapoTrans(0.0);
         node->setPotEvap(0.0);
 
