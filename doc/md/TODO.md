@@ -5,6 +5,7 @@
 - [ ] Update input file and input work flow to address the fact that specifying .mdf in the input file does not work or is superseded by the .sdf
 - [ ] Update flow for reading in dynamic LU grids--this is a bottleneck in terms of speed
 - [ ] Remove InputTime from .in file and tRIBS processes as it should always be set to zero.
+- [ ] Update ivpixel naming convention. It doesn't work with parallelization as expected, i.e. the node id is not appended to the file.
 ### Finished
 - [x] Merged tSnowIntercept with tSnowPack
 - [x] Fixed larger memory leaks when running in parallel
