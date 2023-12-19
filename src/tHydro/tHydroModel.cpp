@@ -849,7 +849,8 @@ void tHydroModel::UnSaturatedZone(double dt)
 			snWE = cn->getLiqWE() + cn->getIceWE();
 			routeWE = cn->getLiqRouted();
 			if ((snWE > 1e-3) || (routeWE > 0.)) {
-				Ractual = 10*routeWE; //have to convert to mm // Changed from R to Ractual CJC2020
+                //WR 12182023 removed EvapVeg from route water following above approach and because transpiration can still occur w/snow
+				Ractual = 10*routeWE-EvapVeg; //have to convert to mm // Changed from R to Ractual CJC2020
 			}
 		}
 
@@ -1120,8 +1121,10 @@ void tHydroModel::UnSaturatedZone(double dt)
 
                 // account for case where no more moisture is available for evaporation -WR 7/28/23
                 if(NwtNew == DtoBedrock){
-                    EvapSoi = (DtoBedrock-NwtOld)*Ths*(EvapSoi/(EvapSoi+EvapVeg)); //set remaining moisture in saturated zone to evapsoil proportional to initial estimates of evapsoil
-                    EvapVeg = (DtoBedrock-NwtOld)*Ths*(EvapVeg/(EvapSoi+EvapVeg)); //same as above but for evap from veg
+                    double fevap = EvapSoi/(EvapSoi+EvapVeg);
+
+                    EvapSoi = (DtoBedrock-NwtOld)*Ths*fevap; //set remaining moisture in saturated zone to evapsoil proportional to initial estimates of evapsoil
+                    EvapVeg = (DtoBedrock-NwtOld)*Ths*(1-fevap); //same as above but for evap from veg
 
                     if(EvapSoi!=EvapSoi){
                         EvapSoi = 0;
