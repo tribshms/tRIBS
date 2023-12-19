@@ -7,6 +7,7 @@
 - [ ] Remove InputTime from .in file and tRIBS processes as it should always be set to zero.
 - [ ] Create parameter input file for snowpack.cpp
 - [ ] Consider flexible approach for specifying outputs, I.E. could we make it so that you could pass in attribute related to a node and have them returned in the dynamic and integrated files. Could also be nice for input parameters, i.e. make list of hard coded parameters and expose as inputs.
+- [ ] Update ivpixel naming convention. It doesn't work with parallelization as expected, i.e. the node id is not appended to the file.
 ### Finished
 - [x] Merged tSnowIntercept with tSnowPack
 - [x] Fixed larger memory leaks when running in parallel
