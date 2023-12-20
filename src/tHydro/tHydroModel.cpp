@@ -518,7 +518,7 @@ void tHydroModel::InitSet(tResample *resamp)
 			cn->setSoilMoistureUNSC(1.0);
 
 		// Set Initial Water Balance Storage
-		cn->setUnSaturatedStorage(MiNew);
+		cn->setUnSaturatedStorage(MiNew/1000*cn->getVArea()); // WR 12192023: convert to m3
 		cn->setSaturatedStorage(Ths*(bedRock-NwtNew)*cn->getVArea()/1000.0);
 
 		// Make sure that DtoBedrock assigned proper value
