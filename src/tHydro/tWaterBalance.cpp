@@ -295,31 +295,31 @@ void tWaterBalance::BasinStorage( double time )
 
     Balance = 0;
 	
-//	while(nodeIter.IsActive()){
-//        //WR 12192023: set stores to snapshots in time, not cumulative values, (i.e. removed +=)
-//		BasinCanopy = cNode->getCanStorage()*(cNode->getVArea()/1000.0);//WR 12192023:  Needs to be scaled by veg fract?
-//		BasinRainfall += cNode->getRain()*(cNode->getVArea()/1000.0) * unsStep/60.0;
-//		BasinEvaporation+= cNode->getEvapoTrans()*(cNode->getVArea()/1000.0)* unsStep/60.0;//WR 12192023: All ready scaled with vegetation fraciton
-//		BasinRunoff += cNode->getSrf()*(cNode->getVArea()/1000.0);
-//        BasinUnSaturated_old = cNode->getMuOld()*(cNode->getVArea()/1000.0);
-//        BasinSaturated_old = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtOld())*(cNode->getVArea()/1000.0);
-//        BasinUnSaturated = cNode->getMuNew()*(cNode->getVArea()/1000.0);
-//		BasinSaturated = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtNew())*(cNode->getVArea()/1000.0); //WR 12192023:  Needs to be scaled with porosity correct?
-//		cNode = nodeIter.NextP();
-//	}
-
-    while(nodeIter.IsActive()){ //  in mm
+	while(nodeIter.IsActive()){
         //WR 12192023: set stores to snapshots in time, not cumulative values, (i.e. removed +=)
-        BasinCanopy = cNode->getCanStorage();//WR 12192023:  Needs to be scaled by veg fract?
-        BasinRainfall += cNode->getRain()* unsStep/60.0;
-        BasinEvaporation+= cNode->getEvapoTrans()* unsStep/60.0;//WR 12192023: All ready scaled with vegetation fraciton
-        BasinRunoff += cNode->getSrf();
-        BasinUnSaturated_old = cNode->getMuOld();
-        BasinSaturated_old = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtOld());
-        BasinUnSaturated = cNode->getMuNew();
-        BasinSaturated = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtNew()); //WR 12192023:  Needs to be scaled with porosity correct?
-        cNode = nodeIter.NextP();
-    }
+		BasinCanopy = cNode->getCanStorage()*(cNode->getVArea()/1000.0);//WR 12192023:  Needs to be scaled by veg fract?
+		BasinRainfall += cNode->getRain()*(cNode->getVArea()/1000.0) * unsStep/60.0;
+		BasinEvaporation+= cNode->getEvapoTrans()*(cNode->getVArea()/1000.0)* unsStep/60.0;//WR 12192023: All ready scaled with vegetation fraciton
+		BasinRunoff += cNode->getSrf()*(cNode->getVArea()/1000.0);
+        BasinUnSaturated_old = cNode->getMuOld()*(cNode->getVArea()/1000.0);
+        BasinSaturated_old = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtOld())*(cNode->getVArea()/1000.0);
+        BasinUnSaturated = cNode->getMuNew()*(cNode->getVArea()/1000.0);
+		BasinSaturated = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtNew())*(cNode->getVArea()/1000.0); //WR 12192023:  Needs to be scaled with porosity correct?
+		cNode = nodeIter.NextP();
+	}
+
+//    while(nodeIter.IsActive()){ //  in mm
+//        //WR 12192023: set stores to snapshots in time, not cumulative values, (i.e. removed +=)
+//        BasinCanopy = cNode->getCanStorage();//WR 12192023:  Needs to be scaled by veg fract?
+//        BasinRainfall += cNode->getRain()* unsStep/60.0;
+//        BasinEvaporation+= cNode->getEvapoTrans()* unsStep/60.0;//WR 12192023: All ready scaled with vegetation fraciton
+//        BasinRunoff += cNode->getSrf();
+//        BasinUnSaturated_old = cNode->getMuOld();
+//        BasinSaturated_old = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtOld());
+//        BasinUnSaturated = cNode->getMuNew();
+//        BasinSaturated = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtNew()); //WR 12192023:  Needs to be scaled with porosity correct?
+//        cNode = nodeIter.NextP();
+//    }
 
     Balance = BasinRainfall-BasinEvaporation-BasinRunoff-(BasinSaturated-BasinSaturated_old+BasinUnSaturated-BasinUnSaturated_old+BasinCanopy-BasinStorages[2]);
 
