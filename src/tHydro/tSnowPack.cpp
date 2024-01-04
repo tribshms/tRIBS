@@ -336,7 +336,8 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             newLUGridData(cNode);
         }
 
-        //not in stochastic mode
+
+        //updates meteorological variables if not in stochastic mode
         if (!rainPtr->getoptStorm()) {
             if (metdataOption == 1) {
                 thisStation = assignedStation[count];
@@ -366,6 +367,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
 
         }
 
+
         if (Ioption == 0) {
             cNode->setNetPrecipitation(rain);
         }
@@ -373,6 +375,10 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
         //Call Beta functions
         betaFunc(cNode); // inherited
         betaFuncT(cNode); // inherited
+
+        // Get Soil/Surface Temperature --WR debug 01032024 same setup as callEvapPotential.
+        // Tso = cNode->getSurfTemp() + 273.15;
+        // Tlo = cNode->getSoilTemp() + 273.15;
 
         //get the necessary information from tCNode for snow model
         getFrNodeSnP(cNode);
@@ -687,7 +693,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
                     cNode->getEvapWetCanopy() + cNode->getEvapDryCanopy()); //should be set to zero in most cases when snow is present, as its set to zero in callSnowIntercept except for rain on snow events.
 
             setToNodeSnP(cNode);
-            setToNode(cNode);
+            //setToNode(cNode); // WR 01032024this also being set in callSnowIntercept, may be source of variation in AtmPress?
 
         }//end yes-snow
 
@@ -751,9 +757,15 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
 
     //set meteorolgical conditions
     rHumidity = node->getRelHumid();
+    vPress = node->getVapPressure();
+    dewTemp = node->getDewTemp();
+    skyCover = node->getSkyCover();
+    windSpeed = node->getWindSpeed();
+    atmPress = node->getAirPressure();
+    RadGlbObs = node->getShortRadIn();
     airTemp = node->getAirTemp();
     airTempK = CtoK(airTemp);
-    windSpeed = node->getWindSpeed();
+
     precip = node->getRain() * coeffV; //precip scaled by veg fraction
     LAI = coeffLAI;
 
@@ -895,7 +907,6 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         node->setEvapSoil(0.0);
         node->setEvapoTrans(0.0);
         node->setPotEvap(0.0);
-
     }//end -- snow exists
 
     return;
@@ -1398,12 +1409,12 @@ void tSnowPack::computeSub() {
 
     //find windspeed
     if (windSpeed == 0.0) {
-        windSpeed = 0.1;
+        windSpeedC = 0.1; // WR 01032024 switched to windSpeedC since that is what is set to node.
     }
-    windSpeed = windSpeed * exp(-acoefficient * 0.4);
+    windSpeedC = windSpeed * exp(-acoefficient * 0.4);// WR 01032024 switched to windSpeedC since that is what is set to node.
 
     //Calculate Reynolds number
-    Re = 2 * iceRad * windSpeed / nu;
+    Re = 2 * iceRad * windSpeedC / nu;
 
     //Calculate Sherwood number
     Sh = 1.79 + 0.606 * pow(Re, 0.5);
@@ -1424,7 +1435,7 @@ void tSnowPack::computeSub() {
     Omega = (1 / (KtAtm * airTempK * Nu)) * (1000 * latSubkJ * Mwater / (R * airTempK) - 1);//check units--check
 
     //find change of mass of ice crystal with respect to time
-    dmdt = (2 * PI * iceRad * (rHumidity / 100 - 1) - Sp * Omega) /
+    dmdt = (2 * PI * iceRad * (rHumidityC / 100 - 1) - Sp * Omega) / //WR 01032024 switched to rHumidtyC since that is what is set to node.
            (1000 * latSubkJ * Omega + (1 / (D * rhoVap * Sh)));//1000 conversion from KJ to J
 
     //relative sublimation from ice sphere
@@ -1435,11 +1446,6 @@ void tSnowPack::computeSub() {
 
     //compute total sublimated snow during timestep
     Qcs = Ce * I * psiS * timeSteps;
-
-    //RMK: Qcs IS AN INTERNAL VARIABLE TO THE CLASS SO WE DO NOT NEED TO
-    //	 RETURN IT TO THE CALLING FUNCTION.
-
-    return;
 }
 
 
@@ -1464,7 +1470,6 @@ void tSnowPack::computeUnload() {
     //RMK: Lm IS AN INTERNAL VARIABLE AND DOES NOT NEED TO BE RETURNED TO THE
     //	 CALLING FUNCTION.
 
-    return;
 
 }
 
@@ -1656,7 +1661,7 @@ double tSnowPack::inShortWaveCan() {
     double v, cosi, scover;
     double RadGlobClr;
 
-    // WR refactor 8-31-2023, this is a almost the same as inShortWave, but returns Iws before
+    // WR refactor 8-31-2023, this is a almost the same as inShortWave, but returns Isw before
     // accounting for the effects of optical transmission through the canopy. There is
     // certainly a cleaner way to do this, but for now this will have to do.
 

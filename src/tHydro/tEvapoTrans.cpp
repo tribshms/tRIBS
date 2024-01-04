@@ -310,7 +310,6 @@ void tEvapoTrans::CreateHydroMetAndLU(tInputFile &infile)
 			exit(1);
 		}
 	}
-	return;
 }
 
 /***************************************************************************
@@ -415,7 +414,6 @@ void tEvapoTrans::initializeVariables()
 	for (int count=0;count<4;count++) {
 		currentTime[count] = 0;
 	}
-	return;
 }
 
 /***************************************************************************
@@ -495,7 +493,6 @@ void tEvapoTrans::setTime(int time)
 //
 //
 //=========================================================================
-
 /***************************************************************************
 **
 ** tEvapoTrans::SetEnvironment()
@@ -505,7 +502,8 @@ void tEvapoTrans::SetEnvironment()
 {
 	tCNode * cNode;
 	tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
-	
+
+
 	// Set time variables ('hourlyTimeStep' is a 'tEvapoTrans' variable)
 	setTime( hourlyTimeStep );
 	
@@ -537,7 +535,42 @@ void tEvapoTrans::SetEnvironment()
 			cNode = nodeIter.NextP();
 		}
 	}
-	return;
+//    else{ // update met from station or gridded data
+//        int count;
+//        count = 0;
+//        cNode = nodeIter.FirstP();
+//
+//        while (nodeIter.IsActive()) {
+//            if (metdataOption == 1) {
+//                thisStation = assignedStation[count];
+//                newHydroMetData(hourlyTimeStep);
+//            } else if (metdataOption == 2) {
+//                newHydroMetGridData(cNode);
+//            }
+//
+//            //AJR2008, SKY2008Snow
+//            vPress = vaporPress(); //-- ADDED IN ORDER TO SET RH... CORRECTLY FOR SNOW
+//
+//            cNode->setAirTemp(airTemp);
+//            cNode->setDewTemp(dewTemp);
+//            cNode->setRelHumid(rHumidity);
+//            cNode->setVapPressure(vPress);
+//            cNode->setSkyCover(skyCover);
+//            cNode->setWindSpeed(windSpeed);
+//            cNode->setAirPressure(atmPress);
+//            cNode->setShortRadIn(RadGlbObs);//WR 01032024 this fixes discrepancy between met forcing input and what is recorded by cell, may need to be further tested w/ grid.
+//            //cNode->setShortRadIn(inShortR); //E.R.V. 3/6/2012
+//
+//            // Set Soil/Surface Temperature
+//            if (!hourlyTimeStep) {
+//                cNode->setSoilTemp(Tlo - 273.15);
+//                cNode->setSurfTemp(Tso - 273.15);
+//            }
+//            cNode = nodeIter.NextP();
+//            count++;
+//        }
+//    }
+
 }
 
 /***************************************************************************
@@ -692,35 +725,38 @@ void tEvapoTrans::callEvapoPotential()
 	  else{
 	    setCoeffs(cNode);
 	  }
-	  
-	  // If no stochastic rainfall - get Met Data
-	  if (!rainPtr->getoptStorm()) {
-	    if (metdataOption == 1) { 
-	      thisStation = assignedStation[count];
-	      newHydroMetData(hourlyTimeStep);
-	    }
-	    else if (metdataOption == 2) {
-	      newHydroMetGridData(cNode);
-	    }
-	    
-	    //AJR2008, SKY2008Snow
-	    vPress = vaporPress(); //-- ADDED IN ORDER TO SET RH... CORRECTLY FOR SNOW
-	    
-	    cNode->setAirTemp(airTemp);
-	    cNode->setDewTemp(dewTemp);
-	    cNode->setRelHumid(rHumidity);
-	    cNode->setVapPressure(vPress);
-	    cNode->setSkyCover(skyCover);
-	    cNode->setWindSpeed(windSpeed);
-	    cNode->setAirPressure(atmPress);
-	    cNode->setShortRadIn(inShortR); //E.R.V. 3/6/2012
 
-	    // Set Soil/Surface Temperature
-	    if (!hourlyTimeStep) {
-	      cNode->setSoilTemp(Tlo - 273.15);
-	      cNode->setSurfTemp(Tso - 273.15);
-	    }
-	  }
+
+      //updates meteorological variables if not in stochastic mode
+      if (!rainPtr->getoptStorm()) {
+          if (metdataOption == 1) {
+              thisStation = assignedStation[count];
+              newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
+          } else if (metdataOption == 2) {
+              //resampleGrids(timerET); // read in met grid data -- inherited function
+              newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
+          }
+
+          // Set the observed values to the node:
+          // they will be required by other function calls
+          vPress = vaporPress(); //-- ADDED IN ORDER TO SET RH... CORRECTLY FOR SNOW
+          cNode->setAirTemp(airTemp); // celsius
+          cNode->setDewTemp(dewTemp);
+          cNode->setRelHumid(rHumidity);
+          cNode->setVapPressure(vPress);
+          cNode->setSkyCover(skyCover);
+          cNode->setWindSpeed(windSpeed);
+          cNode->setAirPressure(atmPress);
+          cNode->setShortRadIn(RadGlbObs);
+
+          //Set Soil/Surface Temperature
+          if (hourlyTimeStep == 0) {
+              cNode->setSoilTemp(Tlo - 273.15);
+              cNode->setSurfTemp(Tso - 273.15);
+          }
+
+      }
+
 	  
 	  if (Ioption == 0) {
 	    cNode->setNetPrecipitation(rain);
@@ -3085,7 +3121,7 @@ void tEvapoTrans::setToNode(tCNode* cNode)
 	cNode->addCumHrsSun(SunHour);
 
 	// Elapsed MET steps from the beginning
-	double te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
+	auto te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
 	// Estimated evaporative fraction
 	double tmp = 0;
 	if ((fabs(hFlux)+fabs(lFlux)) > 1.0)
@@ -3098,10 +3134,7 @@ void tEvapoTrans::setToNode(tCNode* cNode)
 
 	cNode->setSheltFact(shelterFactorGlobal);
 	cNode->setLandFact(landRefGlobal);	
-	cNode->addRSin(inShortR*3600.0); // 3600 for hourly timestep
-
-	return;
-}
+	cNode->addRSin(inShortR*3600.0); }
 
 //=========================================================================
 //
