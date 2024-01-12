@@ -32,74 +32,74 @@
 ***************************************************************************/
 tEvapoTrans::tEvapoTrans()
 {
-        elevation = 0;
-	simCtrl = 0;
-        weatherSimul = 0;
-	respPtr = 0;	
-	timer = 0;
-	timeCount = 0;
-	rainPtr = 0;
-	weatherStations = 0;
-	hydrPtr = 0;
-	landPtr = 0;
-	soilPtr = 0;
-	currentTime = 0;
-	assignedStation = 0;
-	gridParamNames = 0;
-	gridBaseNames = 0;
-	gridExtNames = 0;
-	LUgridParamNames = 0;
-	LUgridBaseNames = 0;
-	LUgridExtNames = 0;
-	airpressure = 0;
-	dewtemperature = 0;
-	skycover = 0;
-	windspeed = 0;
-	airtemperature = 0;
-	surftemperature = 0;
-	netradiation = 0;
-	incomingsolar = 0; //E.R.V. 3/6/2012
-	evapotranspiration = 0;
-	relhumidity = 0;
-	vaporpressure = 0;	
-	LandUseAlbGrid = 0;
-	ThroughFallGrid = 0;
-	VegHeightGrid = 0;
-	StomResGrid = 0;
-	VegFractGrid = 0;
-	CanStorParamGrid = 0;
-	IntercepCoeffGrid = 0;
-	CanFieldCapGrid = 0;
-	DrainCoeffGrid = 0;
-	DrainExpParGrid = 0;
-	OptTransmCoeffGrid = 0;
-	LeafAIGrid = 0;
-	ALgridhours = 0;
-	TFgridhours = 0;
-	VHgridhours = 0;
-	SRgridhours = 0;
-	VFgridhours = 0;
-	CSgridhours = 0;
-	ICgridhours = 0;
-	CCgridhours = 0;
-	DCgridhours = 0;
-	DEgridhours = 0;
-	OTgridhours = 0;
-	LAgridhours = 0;
-	ALgridFileNames = 0;
-	TFgridFileNames = 0;
-	VHgridFileNames = 0;
-	SRgridFileNames = 0;
-	VFgridFileNames = 0;
-	CSgridFileNames = 0;
-	ICgridFileNames = 0;
-	CCgridFileNames = 0;
-	DCgridFileNames = 0;
-	DEgridFileNames = 0;
-	OTgridFileNames = 0;
-	LAgridFileNames = 0;	
+    elevation =  0.0;
+	simCtrl = nullptr;
+    weatherSimul = nullptr;
+	respPtr = nullptr;
+	timer = nullptr;
+	timeCount = 0.0;
+	rainPtr = nullptr;
+	weatherStations = nullptr;
+	hydrPtr = nullptr;
+	landPtr = nullptr;
+	soilPtr = nullptr;
+	currentTime = nullptr;
+	assignedStation = nullptr;
+	gridParamNames = nullptr;
+	gridBaseNames = nullptr;
+	gridExtNames = nullptr;
+	LUgridParamNames = nullptr;
+	LUgridBaseNames = nullptr;
+	LUgridExtNames = nullptr;
+	airpressure = nullptr;
+	dewtemperature = nullptr;
+	skycover = nullptr;
+	windspeed = nullptr;
+	airtemperature = nullptr;
+	surftemperature = nullptr;
+	netradiation = nullptr;
+	incomingsolar = nullptr; //E.R.V. 3/6/2012
+	evapotranspiration = nullptr;
+	relhumidity = nullptr;
+	vaporpressure= nullptr;
+	LandUseAlbGrid = nullptr;
+	ThroughFallGrid = nullptr;
+	VegHeightGrid = nullptr;
+	StomResGrid = nullptr;
+	VegFractGrid = nullptr;
+	CanStorParamGrid = nullptr;
+	IntercepCoeffGrid = nullptr;
+	CanFieldCapGrid = nullptr;
+	DrainCoeffGrid = nullptr;
+	DrainExpParGrid = nullptr;
+	OptTransmCoeffGrid = nullptr;
+	LeafAIGrid = nullptr;
+	ALgridhours = nullptr;
+	TFgridhours = nullptr;
+	VHgridhours = nullptr;
+	SRgridhours = nullptr;
+	VFgridhours = nullptr;
+	CSgridhours = nullptr;
+	ICgridhours = nullptr;
+	CCgridhours = nullptr;
+	DCgridhours = nullptr;
+	DEgridhours = nullptr;
+	OTgridhours = nullptr;
+	LAgridhours = nullptr;
+	ALgridFileNames = nullptr;
+	TFgridFileNames = nullptr;
+	VHgridFileNames = nullptr;
+	SRgridFileNames = nullptr;
+	VFgridFileNames = nullptr;
+	CSgridFileNames = nullptr;
+	ICgridFileNames = nullptr;
+	CCgridFileNames = nullptr;
+	DCgridFileNames = nullptr;
+	DEgridFileNames = nullptr;
+	OTgridFileNames = nullptr;
+	LAgridFileNames = nullptr;
 
-	gridPtr = 0; 	nParmLU = 0;
+	gridPtr = nullptr; 	nParmLU = 0;
 }
 
 tEvapoTrans::tEvapoTrans(SimulationControl *simCtrPtr, tMesh<tCNode> *gridRef,
@@ -107,71 +107,71 @@ tEvapoTrans::tEvapoTrans(SimulationControl *simCtrPtr, tMesh<tCNode> *gridRef,
 						 tHydroModel *hydro, tRainfall *storm)
 {
 	timeCount = 0;	
-	simCtrl = 0;
-        weatherSimul = 0;
-	gridPtr = 0;
-	respPtr = 0;
-	timer = 0;
-	rainPtr = 0;
-	weatherStations = 0;
-	hydrPtr = 0;
-	landPtr = 0;
-	soilPtr = 0;
-	currentTime = 0;
-	assignedStation = 0;
-	gridParamNames = 0;
-	gridBaseNames = 0;
-	gridExtNames = 0;
-	LUgridParamNames = 0;
-	LUgridBaseNames = 0;
-	LUgridExtNames = 0;
-	airpressure = 0;
-	dewtemperature = 0;
-	skycover = 0;
-	windspeed = 0;
-	airtemperature = 0;
-	surftemperature = 0;
-	netradiation = 0;
-	incomingsolar = 0; //E.R.V. 3/6/2012
-	evapotranspiration = 0;
-	relhumidity = 0;
-	vaporpressure = 0;
-	LandUseAlbGrid = 0;
-	ThroughFallGrid = 0;
-	VegHeightGrid = 0;
-	StomResGrid = 0;
-	VegFractGrid = 0;
-	CanStorParamGrid = 0;
-	IntercepCoeffGrid = 0;
-	CanFieldCapGrid = 0;
-	DrainCoeffGrid = 0;
-	DrainExpParGrid = 0;
-	OptTransmCoeffGrid = 0;
-	LeafAIGrid = 0;
-	ALgridhours = 0;
-	TFgridhours = 0;
-	VHgridhours = 0;
-	SRgridhours = 0;
-	VFgridhours = 0;
-	CSgridhours = 0;
-	ICgridhours = 0;
-	CCgridhours = 0;
-	DCgridhours = 0;
-	DEgridhours = 0;
-	OTgridhours = 0;
-	LAgridhours = 0;
-	ALgridFileNames = 0;
-	TFgridFileNames = 0;
-	VHgridFileNames = 0;
-	SRgridFileNames = 0;
-	VFgridFileNames = 0;
-	CSgridFileNames = 0;
-	ICgridFileNames = 0;
-	CCgridFileNames = 0;
-	DCgridFileNames = 0;
-	DEgridFileNames = 0;
-	OTgridFileNames = 0;
-	LAgridFileNames = 0; 	nParmLU = 0;
+	simCtrl = nullptr;
+        weatherSimul = nullptr;
+	gridPtr = nullptr;
+	respPtr = nullptr;
+	timer = nullptr;
+	rainPtr = nullptr;
+	weatherStations = nullptr;
+	hydrPtr = nullptr;
+	landPtr = nullptr;
+	soilPtr = nullptr;
+	currentTime = nullptr;
+	assignedStation = nullptr;
+	gridParamNames = nullptr;
+	gridBaseNames = nullptr;
+	gridExtNames = nullptr;
+	LUgridParamNames = nullptr;
+	LUgridBaseNames = nullptr;
+	LUgridExtNames = nullptr;
+	airpressure = nullptr;
+	dewtemperature = nullptr;
+	skycover = nullptr;
+	windspeed = nullptr;
+	airtemperature = nullptr;
+	surftemperature = nullptr;
+	netradiation = nullptr;
+	incomingsolar = nullptr; //E.R.V. 3/6/2012
+	evapotranspiration = nullptr;
+	relhumidity = nullptr;
+	vaporpressure = nullptr;
+	LandUseAlbGrid = nullptr;
+	ThroughFallGrid = nullptr;
+	VegHeightGrid = nullptr;
+	StomResGrid = nullptr;
+	VegFractGrid = nullptr;
+	CanStorParamGrid = nullptr;
+	IntercepCoeffGrid = nullptr;
+	CanFieldCapGrid = nullptr;
+	DrainCoeffGrid = nullptr;
+	DrainExpParGrid = nullptr;
+	OptTransmCoeffGrid = nullptr;
+	LeafAIGrid = nullptr;
+	ALgridhours = nullptr;
+	TFgridhours = nullptr;
+	VHgridhours = nullptr;
+	SRgridhours = nullptr;
+	VFgridhours = nullptr;
+	CSgridhours = nullptr;
+	ICgridhours = nullptr;
+	CCgridhours = nullptr;
+	DCgridhours = nullptr;
+	DEgridhours = nullptr;
+	OTgridhours = nullptr;
+	LAgridhours = nullptr;
+	ALgridFileNames = nullptr;
+	TFgridFileNames = nullptr;
+	VHgridFileNames = nullptr;
+	SRgridFileNames = nullptr;
+	VFgridFileNames = nullptr;
+	CSgridFileNames = nullptr;
+	ICgridFileNames = nullptr;
+	CCgridFileNames = nullptr;
+	DCgridFileNames = nullptr;
+	DEgridFileNames = nullptr;
+	OTgridFileNames = nullptr;
+	LAgridFileNames = nullptr; 	nParmLU = 0;
 
 	gridPtr = gridRef;
 	respPtr = resamp;
@@ -238,8 +238,7 @@ void tEvapoTrans::SetEvapTVariables(tInputFile &infile, tHydroModel *hydro)
 		}
 
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -359,8 +358,7 @@ void tEvapoTrans::DeleteEvapoTrans()
 		  deleteLUGrids();
 		}	
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -450,7 +448,6 @@ void tEvapoTrans::assignStationToNode()
 	delete [] stationID; 
 	delete [] stationLong; 
 	delete [] stationLat;
-	return;
 }
 
 /***************************************************************************
@@ -482,8 +479,7 @@ void tEvapoTrans::setTime(int time)
 		currentTime[2] = timer->day;
 		currentTime[3] = timer->hour;
 	}
-	return;
-}
+	}
 
 
 //=========================================================================
@@ -498,79 +494,42 @@ void tEvapoTrans::setTime(int time)
 ** tEvapoTrans::SetEnvironment()
 **
 ***************************************************************************/
-void tEvapoTrans::SetEnvironment()
-{
-	tCNode * cNode;
-	tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
+void tEvapoTrans::SetEnvironment() {
 
+    // Set time variables ('hourlyTimeStep' is a 'tEvapoTrans' variable)
+    setTime(hourlyTimeStep);
 
-	// Set time variables ('hourlyTimeStep' is a 'tEvapoTrans' variable)
-	setTime( hourlyTimeStep );
-	
-	// Compute Sun variables for given hour (basin average,
-	// although spatially distributed variables can be easily
-	// obtained by re-defining lat/long values for each node)
-	SetSunVariables();
-	
-	// If stochastic rainfall is used -- use simulated 
-	// hydrometeorological variables (spatially uniform)
-	if (rainPtr->getoptStorm()) {
-		newHydroMetStochData(hourlyTimeStep);
-		
-		cNode = nodeIter.FirstP();
-		while (nodeIter.IsActive()) {
-			// Set simulated values to the node
+    // Compute Sun variables for given hour (basin average,
+    // although spatially distributed variables can be easily
+    // obtained by re-defining lat/long values for each node)
+    SetSunVariables();
 
-			cNode->setAirTemp(airTemp);
-			cNode->setDewTemp(dewTemp);
-			cNode->setRelHumid(rHumidity);
-			cNode->setVapPressure(vPress);
-			cNode->setSkyCover(skyCover);
-			cNode->setWindSpeed(windSpeed);
-			cNode->setAirPressure(atmPress);
-			if (!hourlyTimeStep) {
-				cNode->setSoilTemp(Tlo - 273.15);
-				cNode->setSurfTemp(Tso - 273.15);
-			}
-			cNode = nodeIter.NextP();
-		}
-	}
-//    else{ // update met from station or gridded data
-//        int count;
-//        count = 0;
-//        cNode = nodeIter.FirstP();
-//
-//        while (nodeIter.IsActive()) {
-//            if (metdataOption == 1) {
-//                thisStation = assignedStation[count];
-//                newHydroMetData(hourlyTimeStep);
-//            } else if (metdataOption == 2) {
-//                newHydroMetGridData(cNode);
-//            }
-//
-//            //AJR2008, SKY2008Snow
-//            vPress = vaporPress(); //-- ADDED IN ORDER TO SET RH... CORRECTLY FOR SNOW
-//
-//            cNode->setAirTemp(airTemp);
-//            cNode->setDewTemp(dewTemp);
-//            cNode->setRelHumid(rHumidity);
-//            cNode->setVapPressure(vPress);
-//            cNode->setSkyCover(skyCover);
-//            cNode->setWindSpeed(windSpeed);
-//            cNode->setAirPressure(atmPress);
-//            cNode->setShortRadIn(RadGlbObs);//WR 01032024 this fixes discrepancy between met forcing input and what is recorded by cell, may need to be further tested w/ grid.
-//            //cNode->setShortRadIn(inShortR); //E.R.V. 3/6/2012
-//
-//            // Set Soil/Surface Temperature
-//            if (!hourlyTimeStep) {
-//                cNode->setSoilTemp(Tlo - 273.15);
-//                cNode->setSurfTemp(Tso - 273.15);
-//            }
-//            cNode = nodeIter.NextP();
-//            count++;
-//        }
-//    }
+    // If stochastic rainfall is used -- use simulated
+    // hydrometeorological variables (spatially uniform)
+    if (rainPtr->getoptStorm()) {
+        tCNode *cNode;
+        tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
 
+        newHydroMetStochData(hourlyTimeStep);
+
+        cNode = nodeIter.FirstP();
+        while (nodeIter.IsActive()) {
+            // Set simulated values to the node
+
+            cNode->setAirTemp(airTemp);
+            cNode->setDewTemp(dewTemp);
+            cNode->setRelHumid(rHumidity);
+            cNode->setVapPressure(vPress);
+            cNode->setSkyCover(skyCover);
+            cNode->setWindSpeed(windSpeed);
+            cNode->setAirPressure(atmPress);
+            if (!hourlyTimeStep) {
+                cNode->setSoilTemp(Tlo - 273.15);
+                cNode->setSurfTemp(Tso - 273.15);
+            }
+            cNode = nodeIter.NextP();
+        }
+    }
 }
 
 /***************************************************************************
@@ -585,11 +544,11 @@ void tEvapoTrans::callEvapoPotential()
 
 	tCNode * cNode;
 	tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
-	int cnt = 0;
-	int count = 0;
-	int tempIndex(0);
-	double EP = 0.0;
-	double SkyC = 0.0;
+	int cnt {};
+	int count {};
+	int tempIndex {};
+	double EP {};
+	double SkyC {};
 	
 	if (simCtrl->Verbose_label == 'Y')
 		cout << "\nPotential Evaporation Routine Call..."<<endl;
@@ -630,7 +589,7 @@ void tEvapoTrans::callEvapoPotential()
 	  }
 	  
 	  // Elapsed MET steps from the beginning, used for averaging dynamic LU grid values below over time for integ. output
-	  double te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
+	  auto te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
 	  integratedLUVars(cNode, te);
 
 	  // Use ID for debugging purposes 
@@ -838,8 +797,7 @@ void tEvapoTrans::callEvapoPotential()
 			weatherSimul->OutputHydrometVars();
 		}
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -954,8 +912,7 @@ void tEvapoTrans::setCoeffs(tCNode* cNode)
 		// Giuseppe 2016 - End changes to allow reading soil properties from grids
 	}
 	
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -1031,7 +988,7 @@ void tEvapoTrans::callEvapoTrans(tIntercept *Intercept, int flag)
 	  }
 		
 	  // Elapsed MET steps from the beginning, used for averaging dynamic LU grid values below over time for integ. output
-	  double te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
+	  auto te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
 	  integratedLUVars(cNode, te);			
 
 	  ID = cNode->getID();
@@ -1040,9 +997,7 @@ void tEvapoTrans::callEvapoTrans(tIntercept *Intercept, int flag)
 	  cNode = nodeIter.NextP();
 	  count++;
 	}
-	timeCount++; // bug fixed by Pat - June 2009
-
-	return;
+	timeCount++;
 }
 
 /***************************************************************************
@@ -1190,7 +1145,7 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		cNode->addBarEvap(evapSoil); // add to cumulative totals CJC2020
 		
 		// Update average ET rate from an element
-		double te = (double)timer->getElapsedETISteps(timer->getCurrentTime());
+		auto te = (double)timer->getElapsedETISteps(timer->getCurrentTime());
 		if (fabs(te - 1.0) < 1.0E-6)
 			cNode->setAvET(evapoTranspiration);
 		else if (te > 1.0) 
@@ -1200,8 +1155,7 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		if ( flag && Intercept->IsThereCanopy( cNode ))
 			Intercept->callInterception(cNode, 0.0);
 	}
-	return;
-}
+	}
 
 //=========================================================================
 //
@@ -1576,7 +1530,7 @@ int tEvapoTrans::julianDay()
 void tEvapoTrans::SetSunVariables()
 {
 	int JDay, month;
-	double r, dtau, dgmt, alphaR;
+	double r, dgmt, alphaR;
 	double Ts, Tsp1, longSM, longM;
 	double tau1, tau2;
 	double Wo = 1367.0;
@@ -1660,22 +1614,6 @@ void tEvapoTrans::SetSunVariables()
 	
 	// The total day length
 	DayLength = 2.*acos(-tan(del)*tan(phi))*180./pi/15.;
-	
-        
-	/*cout<<"\n\nGMT  =   "<<gmt<<";\tJDay = "<<JDay<<";\tmonth = "<<month<<";\tETistep = "<<timer->getEtIStep()<<endl;
-	cout<<"\nlatit = "<<latitude<<";\tlongSM = "<<longSM
-	    <<";\tlongM = "<<longM<<"; "<<"\tphi = "<<phi<<endl;
-	cout<<"Hour = "<<Ts<<";\tDayLgth = "<<DayLength
-		<<";\tdeltaT = "<<deltaT<<"; "
-		<<"\tSunRise = "<<SunRisHrLoc
-		<<";\tSunSet = "<<SunSetHrLoc<<endl;
-	cout<<"del  = "<<del<<";\ttau = "<<tau<<endl
-		<<"sinAlpha = "<<sinAlpha<<";"<<"\talphaR = "<<alphaR
-		<<";\talphaD = "<<alphaD<<"; "<<endl;
-	cout<<"Io = "<<Io<<endl;
-	*/
-	
-	return;
 }
 
 /***************************************************************************
@@ -1773,8 +1711,8 @@ double tEvapoTrans::ComputeHourAngle(double TT, double delta)
 ***************************************************************************/
 double tEvapoTrans::inShortWave(tCNode *cNode)
 {
-	double Is, N, Iv, Isw, Ir;
-	double v, t, cosi, scover;
+	double  N, Iv, Isw, Ir; //WR IS is a shadow, to be consistent reoved from decleration Is,
+	double v, cosi, scover;
 	double RadGlobClr;
 
 	Ic=Is=Id=Ir=Ids=Ics=Isw=Iv=0.0;
@@ -1790,7 +1728,7 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 
 		// Estimate direct beam and diffuse fluxes for horizontal surface
 		// Raditaion fluxes 'Ic' and 'Id' will be estimated
-		DirectDiffuse(Tlinke, elevation);
+		DirectDiffuse(elevation);
 
 		// Cloud cover information
 		if (fabs(skyCover-9999.99) < 1.0E-3) {
@@ -1891,7 +1829,6 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 		}
 		else {
 			Ir = 0.0;//AJR2008, SKY2008Snow
-			Is = Is;
 		}
 
 		// 5) Account for vegetation
@@ -1938,7 +1875,7 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 ** Estimates clear sky direct beam and diffuse radiative fluxes
 **
 ***************************************************************************/
-void tEvapoTrans::DirectDiffuse(double Tlinke, double elev) 
+void tEvapoTrans::DirectDiffuse( double elev)
 {
 	double h0, m, pp0, Dh0ref, h0ref, drm;
 	double TnTLK, Fdh0, A1p, A1, A2, A3;
@@ -1985,8 +1922,6 @@ void tEvapoTrans::DirectDiffuse(double Tlinke, double elev)
 	
 	// Estimation of diffuse radiation on horizontal surface [W m^-2]
 	Id = Io*TnTLK*Fdh0;
-
-	return;
 }
 
 /***************************************************************************
@@ -2284,12 +2219,12 @@ double tEvapoTrans::aboveHorizon(int IDinside) {
 ***************************************************************************/
 double tEvapoTrans::energyBalance(tCNode* cNode)
 {
-	int i, SurfOption, cnt;
-	double Lsoi, Hsoi, lEsoi, G, f, df;
+	int cnt;
+	double f, df;
 	double Tg, eps;
 
 	double cosi,v;
-	double Ic,Ics,Id,Ids,Is,Isw;
+	double Isw; // Following were removed as shadows WR: Ic,Ics,Id,Ids,Is
 	SunHour=0;
 	Ic=Ics=Id=Ids=Is=Isw=0.0;
 	
@@ -2314,7 +2249,7 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	    //tiantian 05/15/2012: incorporate adjustments for sloping  surface, vegetation and albedo
 		if(alphaD > 0.0)
 		{
-			DirectDiffuse(Tlinke, elevation);//estimate direct and diffuse radiation
+			DirectDiffuse(elevation);//estimate direct and diffuse radiation
 			Ic=inShortR;//replace direct radiation with grid NLDAS input
 
 		//  Only do this computation if sheltering is turned on.
@@ -2429,9 +2364,7 @@ void tEvapoTrans::HeatTransferProperties(tCNode* cNode)
     SoilHeatCpctTh = cNode->getSoilHeatCap(); // Capacity     [J m^-3 K^-1]
 	// Giuseppe 2016 - End changes to allow reading soil properties from grids
 	
-	SoilHeatDiffTh = SoilHeatCondTh/SoilHeatCpctTh; // Diffusivity  [m^2 s^-1]
-	return;
-}
+	SoilHeatDiffTh = SoilHeatCondTh/SoilHeatCpctTh; }
 
 #define MAXITER 100
 /*****************************************************************************\
@@ -2544,8 +2477,8 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 										double Tg, double& fv, double& dv, 
 										double Rabsb_soi)
 {
-	double Rn, Lsoi, Hsoi, lEsoi, G, dQ, num;
-	double Ep, Eps, LE, H, ccTs;
+	double Rn, Lsoi, Hsoi, lEsoi, G(0), dQ, num;
+	double Ep(0), Eps, LE(0), H(0), ccTs;
 	double alpha = 1.26;
 	double sigma = 5.67E-8;
 	double Es = 0.98;   //Calibrated for site (may need to be land parameter)
@@ -2564,7 +2497,7 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 	double pi = 4.0*atan(1.0);
 	double DTime  = timeStep*60.0;  //Seconds
 	
-	double dRndTg, dLdTg, dHdTg, dlEdTg, dGdTg;
+	double dRndTg(0), dLdTg, dHdTg(0), dlEdTg(0), dGdTg(0);
 	double soiFct, vegFct, esat, qhSatTs, qhTa;
 	double v1;
 
@@ -2593,14 +2526,11 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 	Rn = Rabsb_soi - Lsoi;
 	
 	// 4.) == Sensible heat flux ==
-	if (evapotransOption == 1) {
+	if (evapotransOption == 1 || evapotransOption == 3) {
         H = rho * Cp * (Tg - (airTemp + 273.15)) / Rah;
     }
 	else if (evapotransOption == 2) {
         H = rho * Cp * (Tg - (airTemp + 273.15)) * Ch * windSpeedC;
-    }
-	else if (evapotransOption == 3) {
-        H = rho*Cp*(Tg - (airTemp+273.15))/Rah;
     }
 	Hsoi = H;
 	
@@ -2671,7 +2601,7 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 	potEvap = Ep;
 	surfTempC = surfTemp = Tg - 273.15;
 	
-	if (simCtrl->Verbose_label == 'Y' && ID == VerbID && 0) {
+	if (simCtrl->Verbose_label == 'Y' && ID == VerbID && false) {
 		cout<<"\n ---------> Tg = "<<Tg-273.15<<endl<<flush;
 		cout<<"\t---> Tair = "<<airTemp<<"; dewTemp = "<<dewTemp
 			<<"; dewTempC = "<<dewTempC<<";"<<endl;
@@ -2689,8 +2619,7 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 			<<";\t dlEdTg = "<<dlEdTg<<";\t dGdTg = "<<dGdTg<<endl<<flush;
 		cout<<">>>>>>> fT = "<<fv<<";\t dfdT = "<<dv<<endl<<flush;
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -2724,7 +2653,7 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 double tEvapoTrans::ForceRestore(double Ts, int option) 
 {
 	double w1, d1, k, cs, ddel, pi, dt;    // input
-	double alpha, nd, G, Tg, Tl, dg, dTgdt, dGdTg, dTK, tempo;
+	double alpha, nd, G, Tg, Tl, dg, dTgdt, dGdTg, dTK, tempo = {};
 	
 	dTK = 0.001;                  // Delta T 
 	pi = 4.0*atan(1.0);
@@ -2813,8 +2742,7 @@ void tEvapoTrans::DeriveAspect()
 		cNode->setAspect(alpha);
 		cNode = nodeIter.NextP();
 	}
-	return;
-}
+	}
 
 //=========================================================================
 //
@@ -2853,7 +2781,6 @@ void tEvapoTrans::EvapPenmanMonteith(tCNode* cNode)
 {
 	potEvap = 3600.0*energyBalance(cNode);   // Actual rate, including resistances
 	actEvap = 3600.0*(lFlux/(latentHeat()));  
-	return;
 }
 
 /***************************************************************************
@@ -2892,7 +2819,6 @@ void tEvapoTrans::EvapDeardorff(tCNode* cNode)
 {
 	potEvap = 3600.0*energyBalance(cNode);
 	actEvap = potEvap*betaS;
-	return;
 }
 
 /***************************************************************************
@@ -2923,7 +2849,6 @@ void tEvapoTrans::EvapPriestlyTaylor(tCNode* cNode)
 {
 	potEvap = 3600.0*energyBalance(cNode);
 	actEvap = potEvap*betaS;
-	return;
 }
 
 /***************************************************************************
@@ -2949,7 +2874,6 @@ void tEvapoTrans::EvapPan()
 	// Very approximate: we would need stomatal resistance 
 	// to obtain the transpiration component right
 	actEvap = potEvap*(betaS*(1.0-coeffV) + coeffV*betaT);
-	return;
 }
 
 /***************************************************************************
@@ -3009,7 +2933,6 @@ void tEvapoTrans::betaFunc(tCNode* cNode)
 	else
 		beta = ratio;
 	betaS = beta;
-	return;
 }
 
 /***************************************************************************
@@ -3067,7 +2990,6 @@ void tEvapoTrans::betaFuncT(tCNode* cNode)
 	else
 		beta = 1.0;
 	betaT = beta;
-	return;
 }
 
 //=========================================================================
@@ -3270,7 +3192,6 @@ void tEvapoTrans::readHydroMetStat(char *stationfile)
 		}
 	}
 	readFile.close();
-	return;
 }
 
 /***************************************************************************
@@ -3314,10 +3235,10 @@ void tEvapoTrans::readHydroMetData(int num)
 {
 	int numParams, numTimes;
 	char fileName[kName];
-	char paramNames[10];
+	char paramNames[10] = {};
 	char notUsed[10];
-	char paramNames2[10];
-	char paramNames3[10];
+	char paramNames2[10] = {};
+	char paramNames3[10] = {};
 	char *tmpstr;
 	
 	int *year, *month, *day, *hour;
@@ -3508,7 +3429,7 @@ void tEvapoTrans::readHydroMetData(int num)
 	}
 	else {
 		PanEvap = new double[numTimes]; 
-		assert(PanEvap != 0);
+		assert(PanEvap != nullptr);
 		
 		for (int sount = 0;sount<numTimes;sount++) {
 			for (int sct = 0;sct<numParams;sct++) {
@@ -3582,7 +3503,6 @@ void tEvapoTrans::readHydroMetData(int num)
 	delete [] month; 
 	delete [] day; 
 	delete [] hour;
-	return;
 }
 
 /***************************************************************************
@@ -3612,8 +3532,7 @@ void tEvapoTrans::robustNess(double *variable, int size)
 		if (fabs(variable[dt]-9999.99) < 1.0E-3)
 			variable[dt] = firstStored;
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -3672,8 +3591,7 @@ void tEvapoTrans::readHydroMetGrid(char *gridFile)
 		readFile >> gridBaseNames[ct];
 		readFile >> gridExtNames[ct];
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -3765,8 +3683,7 @@ void tEvapoTrans::readLUGrid(char *gridFile)
 
 		readFile >> LUgridExtNames[ct];
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -3999,8 +3916,7 @@ void tEvapoTrans::newHydroMetStochData(int time)
 		Tso = weatherSimul->getAirTemp() + 273.15;
 		Tlo = Tso; //Assumption
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -4033,7 +3949,7 @@ void tEvapoTrans::newHydroMetData(int time)
 				RadGlbObs = weatherStations[i].getRadGlobal(time);
 
 				// For run-time checks of input data
-				if (0) {
+				if (false) {
 					cout<<"\t---> Time = "<<time<<"; Station ID = "<<i<<endl;
 					cout<<"\t---> Tair = "<<airTemp<<"; dewTemp = "<<dewTemp<<";"<<endl;
 					cout<<"\trHumidity = "<<rHumidity<<"; vapPress = "<<vPress<<";"<<endl;
@@ -4068,8 +3984,7 @@ void tEvapoTrans::newHydroMetData(int time)
 			}
 		}
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -4112,8 +4027,7 @@ void tEvapoTrans::newHydroMetGridData(tCNode * cNode) {
 	else {
 		panEvap = cNode->getGridET();
 	}	
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -4168,8 +4082,7 @@ void tEvapoTrans::newLUGridData(tCNode * cNode)
 		IfNotFirstTStepLU = 1;
 	}
 
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -4222,8 +4135,7 @@ void tEvapoTrans::resampleGrids(tRunTimer *t)
 				evapotranspiration->updateVariable(gridParamNames[0]);}
 		}
 	}
-	return;
-}
+	}
 
 
 /***************************************************************************
@@ -4365,7 +4277,7 @@ void tEvapoTrans::initialLUGridAssignment()
       }
     }
     if (strcmp(LUgridParamNames[ct],"OT")==0) {
-      if ( (timer->getCurrentTime())>(double(OTgridhours[NowTillWhichOTgrid])) & numOTfiles > 1) {
+      if ( (timer->getCurrentTime())>(double(OTgridhours[NowTillWhichOTgrid])) && numOTfiles > 1) {
 	while ( (timer->getCurrentTime())>(double(OTgridhours[NowTillWhichOTgrid])) ) {
 	  NowTillWhichOTgrid++;
 	}
@@ -4392,8 +4304,7 @@ void tEvapoTrans::initialLUGridAssignment()
     }
   } // end for loop
 
-  return;  
-}
+  }
 
 /***************************************************************************
 **
@@ -4562,7 +4473,6 @@ void tEvapoTrans::LUGridAssignment()
       }
     }
   }
-  return;
 }
 
 
@@ -5245,8 +5155,7 @@ void tEvapoTrans::Debug(int time, int flag)
 			cNode = nodeIter.NextP();
 		}
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **

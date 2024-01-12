@@ -39,7 +39,7 @@ tHydroModel::tHydroModel(SimulationControl *simCtrPtr, tMesh<tCNode> *gptr,
 	NtOld = NtNew = 0.;
 	RuOld = RuNew = 0.;
 	RiOld = RiNew = 0.;
-	nodeList = NULL;
+	nodeList = nullptr;
 
 	gridPtr = gptr;
 	simCtrl = simCtrPtr;
@@ -117,7 +117,7 @@ void tHydroModel::SetHydroMVariables(tInputFile &infile,
 	else
 		InitIntegralVars();
 
-	if (nodeList != NULL)
+	if (nodeList != nullptr)
 		delete [] nodeList;
 	SetHydroNodes(nodeFile);
 
@@ -125,31 +125,15 @@ void tHydroModel::SetHydroMVariables(tInputFile &infile,
 	TotRain = 0.;
 	TotGWchange = 0.;
 	TotMoist = 0.;
-
-	// Open file to output relative contribution to SM dissipation
-	// from each of the factors: topography, soil, and climate
-	// **Auxiliary option: creates large output file
-	/*
-		infile.ReadItem( baseName, "OUTHYDROFILENAME" );
-	 strcpy( currName, baseName );
-	 strcat( currName, "_TopSoiClm.fct" );
-	 fctout.open(currName);
-	 if (!fctout.good()) {
-		 cerr<<"\nFile not created!\nExiting Program..."<<endl;
-		 exit(2);
-	 }
-	 fctout.setf(ios::fixed, ios::floatfield);
-	 */
-	return;
 }
 
 
 tHydroModel::~tHydroModel()
 {
-	gridPtr = NULL;
+	gridPtr = nullptr;
 	delete soilPtr;
 	delete landPtr;
-	if (nodeList != NULL)
+	if (nodeList != nullptr)
 		delete [] nodeList;
 	Cout <<"tHydroModel Object has been destroyed..."<<endl;
 }
@@ -199,11 +183,10 @@ void tHydroModel::SetHydroNodes(char *nodeFile)
 
 	if (!cnt) {
 		delete [] nodeList;
-		nodeList = NULL;
+		nodeList = nullptr;
 	}
 	else
 		Cout <<"\nHydroNodeList has been set up"<<endl;
-	return;
 }
 
 //=========================================================================
@@ -274,13 +257,13 @@ void tHydroModel::InitSet(tResample *resamp)
 
 		int Vcnt = (gridPtr->getNodeList()->getActiveSize());
 		tmp = new double[Vcnt];
-		assert(tmp != 0);
+		assert(tmp != nullptr);
 		for (int i=0; i < Vcnt; i++) {
 			source>>R>>NwtNew;
 			tmp[i] = NwtNew;
 			//cerr<<"R = "<<R<<";   Nwt = "<<NwtNew<<endl;
 		}
-		cerr<<"\tThe file '"<<filein<<"' has been successfully read..."<<endl;
+		//cerr<<"\tThe file '"<<filein<<"' has been successfully read..."<<endl; //WR Uninitialzied filein
 		source.close();
 	}
 	else {
@@ -536,8 +519,6 @@ void tHydroModel::InitSet(tResample *resamp)
 
 	// Variables to compute relative input from each factor - Viva (4/25/2004)
 	fSoi100=fTop100=fClm100=fGW100=dM100=dMRt=mTh100=mThRt=0.0;
-
-	return;
 }
 
 /*************************************************************************
@@ -602,8 +583,7 @@ void tHydroModel::InitIntegralVars()
 
 		CheckMoistureContent( cn );
 	}
-	return;
-}
+	}
 
 /*************************************************************************
 **
@@ -614,7 +594,7 @@ void tHydroModel::InitIntegralVars()
 *************************************************************************/
 void tHydroModel::CheckMoistureContent(tCNode *cn)
 {
-	double Mdelt, dM;
+    double Mdelt;
 	// An additional check is made for elements
 	// that behave in some strange fashion
 	SetupNodeUSZ( cn );
@@ -622,6 +602,8 @@ void tHydroModel::CheckMoistureContent(tCNode *cn)
 	Mdelt = get_Total_Moist(NwtOld);
 	if (fabs(MiOld-Mdelt) >= 1.0E-3) {
 		if (simCtrl->Verbose_label == 'Y') {
+            double dM;
+
 			cout <<"Warning! Initial. moist. imb., ID = "<<ID
 			<<"; MiOld = "<<MiOld<<"; MActual = "<<Mdelt<<endl;
 			cout << "Node #" << cn->getID()<<" ("<<cn->getX()<<","
@@ -654,8 +636,7 @@ void tHydroModel::CheckMoistureContent(tCNode *cn)
 			cn->setMiOld(MiNew);
 		}
 	}
-	return;
-}
+	}
 
 /*************************************************************************
 **
@@ -715,8 +696,6 @@ void tHydroModel::SetupNodeUSZ(tCNode *cn)
 	if ( !(fmod((timer->getCurrentTime() - timer->getTimeStep()),
 				timer->getEtIStep())) )
 		cn->setSrf_Hr(0.0);
-
-	return;
 }
 
 //=========================================================================
@@ -757,10 +736,10 @@ void tHydroModel::UnSaturatedZone(double dt)
 	double EvapSoi, EvapVeg;
 	double airTemp, Ta_hi, Ta_lo, alphat;
 
-   Kunsat = Ractual = xxsrf = 0.0;        //SMM - added 08132008
+   Ractual = xxsrf = 0.0;        //SMM - added 08132008
    Mperch = Mdelt = Mdva = AA = BB = 0.0; //SMM - added 08132008
    qn = Nstar = NwtNext = NfNext = 0.0;   //SMM - added 08132008
-   ThSurf = EvapSoi = EvapVeg = 0.0;
+   ThSurf = 0;
 
 	// SKY2008Snow from AJR2007
 	double routeWE, snWE; //RINEHART 2007 @ NMT
@@ -783,7 +762,7 @@ void tHydroModel::UnSaturatedZone(double dt)
   // Receive Qpin from incoming outlet node(s) on another processor
   // if this is a stream head node
   if (tGraph::isUpstreamNode(cn)) {
-    int id = cn->getReach();
+    id = cn->getReach();
     tGraph::receiveQpin(id, cn);
 
     // If runon option set, receive flux node values
@@ -953,7 +932,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 						ThRiNf = get_InitMoist_depthZ(NfOld);
 						ThReNf = Ths;
 						set_Suction_Term(NfOld);
-						qn = Ksat*F*NfOld/(exp(F*NfOld)-1)*(Cos + G/NfOld);
+						qn = Ksat*F*NfOld/expm1(F*NfOld)*(Cos + G/NfOld); //WR debug 01112024: Converted all instances of exp(x)-1 to expm1(x) to address loss in precision
 
 						xxsrf = qn - RiOld*Cos; // Net infiltration rate
 						if (R1 >= xxsrf) {
@@ -1013,13 +992,14 @@ void tHydroModel::UnSaturatedZone(double dt)
 
 				// If ExactInitial during interstorm period
 				// use 0.1 mm/hour is a threshold value for RADAR
-				if (R <= RADAR) {
+
+                if (R <= RADAR) {
 					IntStormVar += dt;
 				}
-					else {
-						if (IntStormVar > 0.0)
-							IntStormVar = 0.0;
-					}
+                else {
+                    if (IntStormVar > 0.0)
+                        IntStormVar = 0.0;
+                }
 					break;
 
 
@@ -1052,7 +1032,8 @@ void tHydroModel::UnSaturatedZone(double dt)
 
 				if (IntStormVar > 0.0)
 					IntStormVar = 0.0;
-					break;
+
+                break;
 
 
 				//----------------
@@ -1061,22 +1042,24 @@ void tHydroModel::UnSaturatedZone(double dt)
 				R1 = (R + (QpIn - QpOut))*Cos;
 				if (R1 < 0.0)
 					NwtNew = Newton(fabs(R1*dt), 0.0);
-					MiNew = get_Total_Moist(NwtNew);
+
+                MiNew = get_Total_Moist(NwtNew); //WR Clang-Tidy: Misleading indentation: statement is indented too deeply. Maybe should be in scope of if statement.
+
 				MuNew = MiNew;
 				RiNew = 0.0;
 				RuNew = 0.0;
 				QpOut=0.0;
 
 				IntStormVar += dt;
-				if (IntStormVar >= IntStormMAX) {
+
+                if(IntStormVar >= IntStormMAX) {
 					NfNew = 0.0;
 					NtNew = 0.0;
-				}
-					else {
-						NfNew=NwtNew;
-						NtNew=NwtNew;
-					}
-					break;
+				}else {
+                    NfNew=NwtNew;
+                    NtNew=NwtNew;
+                }
+                break;
 
 
 				//----------------
@@ -1093,21 +1076,22 @@ void tHydroModel::UnSaturatedZone(double dt)
 				if (R <= 0.0)
 					IntStormVar += dt;
 
-					if (NfOld == NwtOld) {
-						if (IntStormVar >= IntStormMAX) {
+                if (NfOld == NwtOld) {
+                    if (IntStormVar >= IntStormMAX) {
 							NfNew = 0.0;
 							NtNew = 0.0;
 						}
-						else {
+                    else {
 							NfNew=NwtNew;
 							NtNew=NwtNew;
 						}
 					}
-						else {
-							NfNew = 0.0;
-							NtNew = 0.0;
-						}
-						break;
+                else {
+                    NfNew = 0.0;
+                    NtNew = 0.0;
+                }
+
+                break;
 
 
 				//----------------
@@ -1149,20 +1133,19 @@ void tHydroModel::UnSaturatedZone(double dt)
 
 				// If preceding state was StormToInterTransition
 				// assign fronts to the surface
-				if ((NfOld < NwtOld) && (NfOld > 0.0)) {
+                if ((NfOld < NwtOld) && (NfOld > 0.0)) {
 					NfNew = NtNew = 0.0;
 				}
-
-					// If preceding state was {IntStormBelow, ExactInitial, WTDrops}
-					else {
-						if (IntStormVar < IntStormMAX) {
-							if (NfOld == 0.0)
-								NfNew = NtNew = 0.0;
-							else
-								NfNew = NtNew = NwtNew;
+                // If preceding state was {IntStormBelow, ExactInitial, WTDrops}
+                else {
+                    if (IntStormVar < IntStormMAX) {
+                        if (NfOld == 0.0)
+                            NfNew = NtNew = 0.0;
+                        else
+                            NfNew = NtNew = NwtNew;
 						}
-						else if (IntStormVar >= IntStormMAX)
-							NfNew = NtNew = 0.0;
+                    else
+                        NfNew = NtNew = 0.0;
 					}
 					QpOut = 0.0;
 				break;
@@ -1205,21 +1188,23 @@ void tHydroModel::UnSaturatedZone(double dt)
 					RiNew = 0.0;
 					RuNew = 0.0;
 				}
+                // Rainfall hiatus or interstorm beginning:
+                // T < Tmax (w/o rain on surface), wedge is moving down
 
-					// Rainfall hiatus or interstorm beginning:
-					// T < Tmax (w/o rain on surface), wedge is moving down
-					else {
-						Mdelt = get_Lower_Moist(NfOld, NwtNew);
-						Mdelt = MuNew - Mdelt;          //Amount of water in the wetted edge
-						AA = Eps/F*(Ths-Thr)*(1.0 - exp(-F*NfOld/Eps)) + Thr*NfOld;
+                else {
+                    Mdelt = get_Lower_Moist(NfOld, NwtNew);
+                    Mdelt = MuNew - Mdelt;          //Amount of water in the wetted edge
+                    AA = Eps/F*(Ths-Thr)*(1.0 - exp(-F*NfOld/Eps)) + Thr*NfOld;
 
-						// Correct variables in imbalance (artifacts of Perched_Evol case)
-						if (Mdelt > AA && NtOld == NfOld) {
-							Mdelt = AA - 1.0E-4;
-							if (simCtrl->Verbose_label == 'Y') {
-								cout<<"\nWarning: IMBALANCE: Correction by "<<Mdelt - AA<<" mm"<<endl;
-								cout<<"ID = "<<ID<<endl;
+                    // Correct variables in imbalance (artifacts of Perched_Evol case)
+                    if (Mdelt > AA && NtOld == NfOld) {
+                        Mdelt = AA - 1.0E-4;
+
+                        if (simCtrl->Verbose_label == 'Y') {
+                            cout<<"\nWarning: IMBALANCE: Correction by "<<Mdelt - AA<<" mm"<<endl;
+                            cout<<"ID = "<<ID<<endl;
 							}
+
 						}
 
 
@@ -1435,11 +1420,12 @@ void tHydroModel::UnSaturatedZone(double dt)
 					else
 						NfNew = NtNew = 0.0;
 				}
-					else {
-						if (IntStormVar > 0.0)
-							IntStormVar = 0.0;
-						NfNew=NtNew=NwtNew;
-					}
+
+                else {
+                    if (IntStormVar > 0.0)
+                        IntStormVar = 0.0;
+                    NfNew=NtNew=NwtNew;
+                }
 					break;
 
 
@@ -1521,7 +1507,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 									}
 									else {
 										NtNew = 0.0;
-										RuNew = Ksat*F*NfNew/(exp(F*NfNew)-1.0);
+										RuNew = Ksat*F*NfNew/expm1(F*NfNew);
 										AA = get_Lower_Moist(NfNew, NwtNew);
 										BB = NfNew*Ths;
 										MuNew = AA + BB;
@@ -1549,137 +1535,130 @@ void tHydroModel::UnSaturatedZone(double dt)
 							cout<<"\nWarning: UNSAT: RuNew > Ksat: id = "
 							<<cn->getID()<<"\n\tRuNew = "<<RuNew<<"\tKsat = "<<Ksat<<"\n";
 						}
-					}
+                    }
 				}
 
+                // CASE 2 : FRONTS BELOW THE SURFACE
+                //          A) Situation of surface perching
 
-					// CASE 2 : FRONTS BELOW THE SURFACE
-					//          A) Situation of surface perching
-					else if (NfOld > 0.0 && NtOld > 0.0) {
+                else if (NfOld > 0.0 && NtOld > 0.0) {
+                    Mdelt = get_Lower_Moist(NfOld, NwtNew);
+                    Mdelt = MuNew - Mdelt;
 
-						Mdelt = get_Lower_Moist(NfOld, NwtNew);
-						Mdelt = MuNew - Mdelt;
+                    // The following case can be caused by too high dt
+                    if (Mdelt >= NfOld*Ths) {
+                        ThRiNf = get_InitMoist_depthZ(NfOld);
+                        ThReNf = Ths;
+                        set_Suction_Term(NfOld);
+                        qn = Ksat*F*NfOld/expm1(F*NfOld);
 
-						// The following case can be caused by too high dt
-						if (Mdelt >= NfOld*Ths) {
-							ThRiNf = get_InitMoist_depthZ(NfOld);
-							ThReNf = Ths;
-							set_Suction_Term(NfOld);
-							qn = Ksat*F*NfOld/(exp(F*NfOld)-1.0);
+                        // Use SurfSatModel functions
+                        if ((qn*(Cos+G/NfOld)-RiOld*Cos) <= R1) {
+                            qn *= (Cos + G/NfOld);
+                            if (R1 >= (qn - RiOld*Cos)) {
+                                hsrf += (R1 - (qn - RiOld*Cos));
+                                R1 -= hsrf;
+                            }
+                            else
+                                cout<<"\nWarning: Wrong state def.: R < Keqviv-RiOld*Cos: id = "
+                                <<cn->getID()<<"\n\n";
 
-							// Use SurfSatModel functions
-							if ((qn*(Cos+G/NfOld)-RiOld*Cos) <= R1) {
-								qn *= (Cos + G/NfOld);
-								if (R1 >= (qn - RiOld*Cos)) {
-									hsrf += (R1 - (qn - RiOld*Cos));
-									R1 -= hsrf;
-								}
-								else
-									cout<<"\nWarning: Wrong state def.: R < Keqviv-RiOld*Cos: id = "
-										<<cn->getID()<<"\n\n";
+                            NtNew = 0.0;
+                            MuNew = MuOld + R1*dt;
+                            NfNew = NfOld + dt*(qn-RiNew*Cos)/(Ths-ThRiNf);
+                            RuNew = Ksat*F*NfNew/expm1(F*NfNew);
 
-								NtNew = 0.0;
-								MuNew = MuOld + R1*dt;
-								NfNew = NfOld + dt*(qn-RiNew*Cos)/(Ths-ThRiNf);
-								RuNew = Ksat*F*NfNew/(exp(F*NfNew)-1.0);
+                            // Check to see whether WT has to be modified
+                            if ((fabs(NfNew-(NwtNew+Psib))<=1.0E-3) || (NfNew>(NwtNew+Psib))) {
+                                NwtNew = MiNew = 0.0;
+                                RuNew = RiNew = 0.0;
+                                Mperch = MuNew - NwtOld*Ths;
+                                if (Mperch > 0.0)
+                                    sbsrf += Mperch/dt;
+                                MuNew = 0.0;
+                                NtNew = NfNew = 0.0;
+                            }
+                        }
+                        // Keep the unsaturated edge
+                        else {
+                            ThReNf = get_EdgeMoist_depthZ(NfOld);
+                            set_Suction_Term(NfOld);
+                            qn = RuOld*Cos + Ksat*exp(-F*NfOld)*G/NfOld;
+                            NfNew = NfOld + dt*(qn-RiNew*Cos)/(Ths-ThRiNf);
+                            NtNew = NfNew;
+                            if (NfNew < (NwtNew+Psib)) {
+                                Mdelt = get_Lower_Moist(NfNew, NwtNew);
+                                Mdelt = MuNew - Mdelt;
+                                RuNew = get_RechargeRate(Mdelt, NfNew);
+                            }
+                            else {
+                                if (MuNew > Ths*NwtNew) {
+                                    sbsrf += (MuNew  - Ths*NwtNew);
+                                    NfNew = NtNew = NwtNew = 0.0;
+                                    MuNew = MiNew = 0.0;
+                                    RuNew = RiNew = 0.0;
+                                }
+                            }
+                        }
+                    }
+                    // CASE 2 : FRONTS BELOW THE SURFACE
+                    //          B) unsaturated wedge evolution
+                    else {
+                        RuNew = get_RechargeRate(Mdelt, NfOld);
+                        Nstar = (log(Ksat/RuNew))/F;
 
-								// Check to see whether WT has to be modified
-								if ((fabs(NfNew-(NwtNew+Psib))<=1.0E-3) || (NfNew>(NwtNew+Psib))) {
-									NwtNew = MiNew = 0.0;
-									RuNew = RiNew = 0.0;
-									Mperch = MuNew - NwtOld*Ths;
-									if (Mperch > 0.0)
-										sbsrf += Mperch/dt;
-									MuNew = 0.0;
-									NtNew = NfNew = 0.0;
-								}
-							}
-							// Keep the unsaturated edge
-							else {
-								ThReNf = get_EdgeMoist_depthZ(NfOld);
-								set_Suction_Term(NfOld);
-								qn = RuOld*Cos + Ksat*exp(-F*NfOld)*G/NfOld;
+                        // The following situation occurs when a new slug of water
+                        // added to storage above NfOld exceeds the equivalent
+                        // moisture amount corresponding to NfOld depth but still
+                        // less than the maximum moisture capacity: NfOld*Ths
+                        // * The method used here to redefine Ntop and Ru is _approximate_
+                        // * More accurate way would be using LambertW function
 
-								NfNew = NfOld + dt*(qn-RiNew*Cos)/(Ths-ThRiNf);
-								NtNew = NfNew;
+                        if (Nstar <= NfOld) {
+                            NtNew = Nstar;
+                            NfNew = NfOld+1.0E-5;
+                        }
+                        // We also need to move the wetting front deeper but
+                        // it is inconvenient because this requires re-writing
+                        // Perched_Sat case. With another code implementation,
+                        // we would call "Perched_Evol" function
+                        else {  // NfOld < Nstar - edge is still to be saturated
+                            ThRiNf = get_InitMoist_depthZ(NfOld);
+                            ThReNf = get_EdgeMoist_depthZ(NfOld);
+                            if (ThReNf <= ThRiNf) { // not too much water has been added
 
-								if (NfNew < (NwtNew+Psib)) {
-									Mdelt = get_Lower_Moist(NfNew, NwtNew);
-									Mdelt = MuNew - Mdelt;
-									RuNew = get_RechargeRate(Mdelt, NfNew);
-								}
-								else {
-									if (MuNew > Ths*NwtNew) {
-										sbsrf += (MuNew  - Ths*NwtNew);
-										NfNew = NtNew = NwtNew = 0.0;
-										MuNew = MiNew = 0.0;
-										RuNew = RiNew = 0.0;
+                                // Water table is too close to the surface
+                                // The idea is to just redistribute the moisture
+                                // in the profile raising the local water table
+                                Mdelt = Ths*NwtOld - (MuOld + R1*dt);
+                                NwtNew = Newton(Mdelt, NwtOld);
+                                RuNew = RiNew = 0.0;
+                                MiNew = get_Total_Moist(NwtNew);
+                                MuNew = MiNew;
+                                QpOut = 0.0;
+
+                                if (NwtOld < 2.0*fabs(Psib)) {
+                                    NtNew = NfNew = NwtNew;
+                                }
+                                else {
+                                    NtNew = NfNew = 0.0;
 									}
-								}
-							}
-						}
+                            }
 
-						// CASE 2 : FRONTS BELOW THE SURFACE
-						//          B) unsaturated wedge evolution
-						else {
-							RuNew = get_RechargeRate(Mdelt, NfOld);
-							Nstar = (log(Ksat/RuNew))/F;
-
-							// The following situation occurs when a new slug of water
-							// added to storage above NfOld exceeds the equivalent
-							// moisture amount corresponding to NfOld depth but still
-							// less than the maximum moisture capacity: NfOld*Ths
-							// * The method used here to redefine Ntop and Ru is _approximate_
-							// * More accurate way would be using LambertW function
-
-							if (Nstar <= NfOld) {
-								NtNew = Nstar;
-								NfNew = NfOld+1.0E-5;
-							}
-							// We also need to move the wetting front deeper but
-							// it is inconvenient because this requires re-writing
-							// Perched_Sat case. With another code implementation,
-							// we would call "Perched_Evol" function
-							else {  // NfOld < Nstar - edge is still to be saturated
-								ThRiNf = get_InitMoist_depthZ(NfOld);
-								ThReNf = get_EdgeMoist_depthZ(NfOld);
-
-								if (ThReNf <= ThRiNf) { // not too much water has been added
-
-									// Water table is too close to the surface
-									// The idea is to just redistribute the moisture
-									// in the profile raising the local water table
-									Mdelt = Ths*NwtOld - (MuOld + R1*dt);
-									NwtNew = Newton(Mdelt, NwtOld);
-									RuNew = RiNew = 0.0;
-									MiNew = get_Total_Moist(NwtNew);
-									MuNew = MiNew;
-									QpOut = 0.0;
-
-									if (NwtOld < 2.0*fabs(Psib)) {
-										NtNew = NfNew = NwtNew;
-									}
-									else {
-										NtNew = NfNew = 0.0;
-									}
-								}
-								else {
-									set_Suction_Term(NfOld);
-									qn = RuNew*Cos + Ksat*exp(-F*NfOld)*G/NfOld;
-
-									NfNew  = NfOld + dt*(qn - RiNew*Cos)/(ThReNf-ThRiNf);
-									NtNew  = NfNew;
-
-									if (NfNew < (NwtNew+Psib)) {
-										Mdelt = get_Lower_Moist(NfNew, NwtNew);
-										Mdelt = MuNew - Mdelt;
-										RuNew = get_RechargeRate(Mdelt, NfNew);
-									}
-								}
-							} // matches NfOld < Nstar
-						}
-      }
-
+                            else {
+                                set_Suction_Term(NfOld);
+                                qn = RuNew*Cos + Ksat*exp(-F*NfOld)*G/NfOld;
+                                NfNew  = NfOld + dt*(qn - RiNew*Cos)/(ThReNf-ThRiNf);
+                                NtNew  = NfNew;
+                                if (NfNew < (NwtNew+Psib)) {
+                                    Mdelt = get_Lower_Moist(NfNew, NwtNew);
+                                    Mdelt = MuNew - Mdelt;
+                                    RuNew = get_RechargeRate(Mdelt, NfNew);
+                                }
+                            }
+                        } // matches NfOld < Nstar
+                    }
+                }
 					// Redistribute moisture along the profile:
 					// get to initialized state, raise water table
 					if ((NfNew > (NwtNew+Psib)) && (NfNew != NwtNew)) {
@@ -1695,9 +1674,11 @@ void tHydroModel::UnSaturatedZone(double dt)
 					QpOut = 0.0;
 				if ((NtNew == NfNew) && (NfNew != NwtNew) && (NfNew > 10.0))
 					QpOut = get_UnSat_LateralFlow(NfNew, RuNew, ce->getVEdgLen()*1000.0);
-					if ((NfNew-NtNew) > 1.0)
-						QpOut = get_Sat_LateralFlow(NtNew, NfNew, RuNew, ce->getVEdgLen()*1000.0);
-						QpOut *= Sin;
+
+                if ((NfNew-NtNew) > 1.0)
+                    QpOut = get_Sat_LateralFlow(NtNew, NfNew, RuNew, ce->getVEdgLen()*1000.0);
+
+                QpOut *= Sin;
 				break;
 
 
@@ -1736,92 +1717,93 @@ void tHydroModel::UnSaturatedZone(double dt)
 					NwtNew = NtOld-Psib;
 					NfNew = NwtNew;
 				}
-					else if (NfNew > (NwtNew+Psib)) {
-						NwtNew = NtOld-Psib;
-						NfNew = NwtNew;
-						R1 += qn - ((NwtOld+Psib-NfOld)*(Ths-ThRiNf)/dt + RiNew*Cos);
-					}
+                else if (NfNew > (NwtNew+Psib)) {
+                    NwtNew = NtOld-Psib;
+                    NfNew = NwtNew;
+                    R1 += qn - ((NwtOld+Psib-NfOld)*(Ths-ThRiNf)/dt + RiNew*Cos);
+                }
 
-					// Wetting front has reached the water table
-					if (NfNew == NwtNew) {
+                // Wetting front has reached the water table
+                if (NfNew == NwtNew) {
 
-						if (MuNew >= NwtOld*Ths) {
-							NwtNew = NtNew = NfNew = 0.0;
-							sbsrf = (MuNew - NwtOld*Ths)/dt;
-							MuNew = MiNew = 0.0;
-							RuNew = RiNew = 0.0;
-						}
-						else  {
-							Mdelt = Ths*NwtOld - MuNew;
-							NwtNew = Newton(Mdelt, NwtOld);
-							RiNew = RuNew = 0.0;
-							MiNew = get_Total_Moist(NwtNew);
-							MuNew = MiNew;
-							NtNew = NfNew = NwtNew;
-						}
-					}
+                    if (MuNew >= NwtOld*Ths) {
+                        NwtNew = NtNew = NfNew = 0.0;
+                        sbsrf = (MuNew - NwtOld*Ths)/dt;
+                        MuNew = MiNew = 0.0;
+                        RuNew = RiNew = 0.0;
+                    }
+                    else  {
+                        Mdelt = Ths*NwtOld - MuNew;
+                        NwtNew = Newton(Mdelt, NwtOld);
+                        RiNew = RuNew = 0.0;
+                        MiNew = get_Total_Moist(NwtNew);
+                        MuNew = MiNew;
+                        NtNew = NfNew = NwtNew;
+                    }
+                }
+                // If NfNew is still above water table
 
-					// If NfNew is still above water table
-					else if (NfNew != NwtNew) {
-						Mdelt = Eps/F*(Ths-Thr)*(1.0 - exp(-F*NtOld/Eps)) + Thr*NtOld;
-						Mdva  = Eps/F*(Ths-Thr)*(1.0 - exp(-F*NfNew/Eps)) + Thr*NfNew;
-						// Max amount of water that can be lost without
-						// transforming the state to unsaturated state
-						AA = (Mdelt+(NfNew-NtOld)*Ths - Mdva);
+                else if (NfNew != NwtNew) {
+                    Mdelt = Eps/F*(Ths-Thr)*(1.0 - exp(-F*NtOld/Eps)) + Thr*NtOld;
+                    Mdva  = Eps/F*(Ths-Thr)*(1.0 - exp(-F*NfNew/Eps)) + Thr*NfNew;
+                    // Max amount of water that can be lost without
+                    // transforming the state to unsaturated state
+                    AA = (Mdelt+(NfNew-NtOld)*Ths - Mdva);
 
-						// Next state is unsaturated
-						if ((R1+RiNew*Cos) < (qn - AA/dt)) {
-							Mperch = get_Lower_Moist(NfNew, NwtNew);
-							Mperch = MuNew - Mperch;
-							RuNew = get_RechargeRate(Mperch, NfNew);
-							NtNew = NfNew;
-						}
-						//  Next state is either Surf_Sat or Perch_Sat
-						else {
-							xxsrf = (R1 - qn)*dt + Mdelt;
-							// The influx is high enough to fill space above Ntop
-							if (xxsrf >= NtOld*Ths) {
-								NtNew = 0.0;
-								hsrf += (xxsrf - NtOld*Ths)/dt;
-								MuNew -= hsrf*dt;
-								RuNew = Ksat*F*NfNew/(exp(F*NfNew)-1.0);
-							}
-							else {
-								BB = -dt*(qn - R1)/(Ths-Thr) - Eps/F*exp(-F*NtOld/Eps);
-								AA = -exp(F*(BB-NtOld)/Eps);
-								if (AA < (-1.0/exp(1.0)))
-									cout<<"\n\n\t\tWarning: Value for LAMBERT f-n is too small\n\n";
-								NtNew = NtOld + (Eps/F*LambertW(AA) - BB);
-								RuNew = Ksat*exp(-F*NtNew);
-							}
+                    // Next state is unsaturated
+                    if ((R1+RiNew*Cos) < (qn - AA/dt)) {
+                        Mperch = get_Lower_Moist(NfNew, NwtNew);
+                        Mperch = MuNew - Mperch;
+                        RuNew = get_RechargeRate(Mperch, NfNew);
+                        NtNew = NfNew;
+                    }
+                    //  Next state is either Surf_Sat or Perch_Sat
+                    else {
+                        xxsrf = (R1 - qn)*dt + Mdelt;
+                        // The influx is high enough to fill space above Ntop
+                        if (xxsrf >= NtOld*Ths) {
+                            NtNew = 0.0;
+                            hsrf += (xxsrf - NtOld*Ths)/dt;
+                            MuNew -= hsrf*dt;
+                            RuNew = Ksat*F*NfNew/expm1(F*NfNew);
+                        }
+                        else {
+                            BB = -dt*(qn - R1)/(Ths-Thr) - Eps/F*exp(-F*NtOld/Eps);
+                            AA = -exp(F*(BB-NtOld)/Eps);
+                            if (AA < (-1.0/exp(1.0)))
+                                cout<<"\n\n\t\tWarning: Value for LAMBERT f-n is too small\n\n";
+                            NtNew = NtOld + (Eps/F*LambertW(AA) - BB);
+                            RuNew = Ksat*exp(-F*NtNew);
+                        }
 
-							// Only for the cases when Nf has not reached WT
-							if (NwtNew != 0.0) {
-								AA = get_Lower_Moist(NfNew, NwtNew);
-								BB=(NfNew-NtNew)*Ths + Eps/F*(Ths-Thr)*(1.0-exp(-F*NtNew/Eps))+Thr*NtNew;
+                        // Only for the cases when Nf has not reached WT
 
-								if (MuNew > (AA + BB)) {
-									ThRiNf = get_InitMoist_depthZ(NfNew);
-									// To redistribute imbalance
-									NfNew += (MuNew - (AA+BB))/(Ths - ThRiNf);
+                        if (NwtNew != 0.0) {
+                            AA = get_Lower_Moist(NfNew, NwtNew);
+                            BB=(NfNew-NtNew)*Ths + Eps/F*(Ths-Thr)*(1.0-exp(-F*NtNew/Eps))+Thr*NtNew;
 
-									if (NfNew >= (NwtNew+Psib)) {
-										if (NtNew > 0.0) {
-											NwtNew = NtNew - Psib;
-											NfNew = NtNew = NwtNew;
-											MuNew = MiNew = get_Total_Moist(NwtNew);
-											RiNew = RuNew = 0.0;
-										}
-										else if (NtNew == 0.0) {
-											NwtNew = NfNew = NtNew = 0.0;
-											MuNew = MiNew = 0.0;
-											RiNew = RuNew = 0.0;
-										}
-									}
-									else {
-										MuNew = AA+BB;
-										if (NtNew == 0.0)
-											RuNew = Ksat*F*NfNew/(exp(F*NfNew)-1.0);
+                            if (MuNew > (AA + BB)) {
+                                ThRiNf = get_InitMoist_depthZ(NfNew);
+                                // To redistribute imbalance
+                                NfNew += (MuNew - (AA+BB))/(Ths - ThRiNf);
+
+                                if (NfNew >= (NwtNew+Psib)) {
+                                    if (NtNew > 0.0) {
+                                        NwtNew = NtNew - Psib;
+                                        NfNew = NtNew = NwtNew;
+                                        MuNew = MiNew = get_Total_Moist(NwtNew);
+                                        RiNew = RuNew = 0.0;
+                                    }
+                                    else if (NtNew == 0.0) {
+                                        NwtNew = NfNew = NtNew = 0.0;
+                                        MuNew = MiNew = 0.0;
+                                        RiNew = RuNew = 0.0;
+                                    }
+                                }
+                                else {
+                                    MuNew = AA+BB;
+                                    if (NtNew == 0.0)
+                                        RuNew = Ksat*F*NfNew/expm1(F*NfNew);
 									}
 								}
 							}
@@ -1832,10 +1814,12 @@ void tHydroModel::UnSaturatedZone(double dt)
 				if ((NtNew == NfNew) && (NfNew != NwtNew) && (NfNew > 10.0))
 					QpOut = get_UnSat_LateralFlow(NfNew, RuNew, ce->getVEdgLen()*1000.0);
 
-					if ((NfNew-NtNew) > 1.0)
-						QpOut = get_Sat_LateralFlow(NtNew, NfNew, RuNew, ce->getVEdgLen()*1000.0);
-						QpOut *= Sin;
-				break;
+                if ((NfNew-NtNew) > 1.0)
+                    QpOut = get_Sat_LateralFlow(NtNew, NfNew, RuNew, ce->getVEdgLen()*1000.0);
+
+                QpOut *= Sin;
+
+                break;
 
 
 				//-------------------
@@ -1862,7 +1846,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 							ThRiNf = get_InitMoist_depthZ(NfOld);
 							ThReNf = Ths;
 							set_Suction_Term(NfOld);
-							qn = Ksat*F*NfOld/(exp(F*NfOld)-1.0);
+							qn = Ksat*F*NfOld/expm1(F*NfOld);
 							qn *= (Cos + G/NfOld);
 
 							// The newcoming moisture is not taken into account
@@ -1889,7 +1873,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 						}
 
 						if (NfNew >= 1.0) {
-							RuNew = Ksat*F*NfNew/(exp(F*NfNew)-1.0);
+							RuNew = Ksat*F*NfNew/expm1(F*NfNew);
 							if (RuNew > Ksat)
 								RuNew = Ksat;
 						}
@@ -1930,7 +1914,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 								}
 								else {
 									MuNew = AA+BB;
-									RuNew = Ksat*F*NfNew/(exp(F*NfNew)-1.0);
+									RuNew = Ksat*F*NfNew/expm1(F*NfNew);
 								}
 							}
 						}
@@ -1941,6 +1925,9 @@ void tHydroModel::UnSaturatedZone(double dt)
 						}
 					}
 					break;
+
+            default:
+                cerr<<"No Case Identified in tHydroModel::UnSaturatedZone"<<endl; //WR debug: Clang warning
   }
 
 		// End of case handling for unsat+perched timestep
@@ -2131,6 +2118,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 
 		// Code related to soil moisture study by Valerio Noto
 		double AreaF, fs, ft, fc;
+        fs = ft = fc = 0;
 
 		QpOut0 *= ((1.0E-6)/(cn->getVArea()));
 
@@ -2249,8 +2237,6 @@ void tHydroModel::UnSaturatedZone(double dt)
 			cn = nodIter.NextP();
 		}
 	}
-
-	return;
 }
 
 //=========================================================================
@@ -2330,7 +2316,7 @@ double tHydroModel::get_Upper_Moist(double Nf, double Nwt)
 **  Allows to get total moisture in the initial profile below point Nf
 **
 *************************************************************************/
-double tHydroModel::get_Lower_Moist(double Nf, double Nwt)
+double tHydroModel::get_Lower_Moist(double Nf, double Nwt) const
 {
 	double dM;
 	if (Nf <= (Nwt+Psib)) {
@@ -2352,7 +2338,7 @@ double tHydroModel::get_Lower_Moist(double Nf, double Nwt)
 **  Allows to get a moisture value at depth Nf
 **
 *************************************************************************/
-double tHydroModel::get_InitMoist_depthZ(double Nf)
+double tHydroModel::get_InitMoist_depthZ(double Nf) const
 {
 	if (Nf >= (NwtOld+Psib))
 		return Ths;
@@ -2367,7 +2353,7 @@ double tHydroModel::get_InitMoist_depthZ(double Nf)
 **  Allows to get a moisture value in the penetrating unsaturated edge
 **
 *************************************************************************/
-double tHydroModel::get_EdgeMoist_depthZ(double Nf)
+double tHydroModel::get_EdgeMoist_depthZ(double Nf) const
 {
 	return(Thr + exp(F*Nf/Eps)*(Ths-Thr)*pow((RuNew/Ksat),(1.0/Eps)));
 }
@@ -2392,19 +2378,18 @@ void tHydroModel::set_Suction_Term(double Nf)
 		Se0  = pow(((ThReNf-Thr)/(Ths-Thr)),(3. + 1./(PoreInd*exp(-F*Nf/2.))));
 		G = -Psib*(Se0 - SeIn)/(3.0*PoreInd*exp(-F*Nf/2.) + 1.);  // UNITS: mm
 	}
-	return;
-}
+	}
 
 /*************************************************************************
 **
 **  tHydroModel::get_RechargeRate( double,double )
 **
 *************************************************************************/
-double tHydroModel::get_RechargeRate(double dM, double Nf)
+double tHydroModel::get_RechargeRate(double dM, double Nf) const
 {
 	double BB;
 	BB = (dM - Thr*Nf)/(Ths-Thr);
-	BB = BB*F/(Eps*(exp(F*Nf/Eps) - 1.0));
+	BB = BB*F/(Eps*expm1(F*Nf/Eps));
 	return(Ksat*pow(BB, Eps));
 }
 
@@ -2414,7 +2399,7 @@ double tHydroModel::get_RechargeRate(double dM, double Nf)
 **
 *************************************************************************/
 double tHydroModel::get_UnSat_LateralFlow(double Nf, double Ru,
-										  double veLength)
+										  double veLength) const
 {
 	return(Nf*Ru*(UAr-1.0)*veLength); // UNITS: mm^3/hour
 }
@@ -2425,11 +2410,11 @@ double tHydroModel::get_UnSat_LateralFlow(double Nf, double Ru,
 **
 *************************************************************************/
 double tHydroModel::get_Sat_LateralFlow(double Nt, double Nf,
-										double Ru, double veLength)
+										double Ru, double veLength) const
 {
 	double BB;
 	if (Nt == 0.0)
-		BB = (Ksat*UAr/F*(1.-exp(-F*Nf))-Ksat*F*Nf*Nf/(exp(F*Nf)-1.))*veLength;
+		BB = (Ksat*UAr/F*(1.-exp(-F*Nf))-Ksat*F*Nf*Nf/expm1(F*Nf))*veLength;
 	else {
 		BB = Nt*Ru*(UAr-1.0) + Ksat*UAr/F*(exp(-F*Nt)-exp(-F*Nf));
 		BB = (BB - Ksat*F*(Nf-Nt)*(Nf-Nt)/(exp(F*Nf)-exp(F*Nt)))*veLength;
@@ -2442,7 +2427,7 @@ double tHydroModel::get_Sat_LateralFlow(double Nt, double Nf,
 **  tHydroModel::getTransmissivityFinD( double )
 **
 *************************************************************************/
-double tHydroModel::getTransmissivityFinD(double Nwt)
+double tHydroModel::getTransmissivityFinD(double Nwt) const
 {
 	return( Ar * Ksat * (exp(-F*Nwt) - exp(-F*DtoBedrock))/F );
 }
@@ -2452,7 +2437,7 @@ double tHydroModel::getTransmissivityFinD(double Nwt)
 **  tHydroModel::getTransmissivityInfD( double )
 **
 *************************************************************************/
-double tHydroModel::getTransmissivityInfD(double Nwt)
+double tHydroModel::getTransmissivityInfD(double Nwt) const
 {
 	return( Ar * Ksat * exp(-F*Nwt)/F );
 }
@@ -2492,7 +2477,6 @@ void tHydroModel::Reset()
 		cn->setGwaterChng( 0.0 );
 		cn = nodIter.NextP();
 	}
-	return;
 }
 
 /*************************************************************************
@@ -2518,8 +2502,7 @@ void tHydroModel::ResetGW()
 		cn->setGwaterChng( 0.0 );
 		cn = nodIter.NextP();
 	}
-	return;
-}
+	}
 
 //=========================================================================
 //
@@ -2683,8 +2666,7 @@ void tHydroModel::ComputeFluxesNodes1D()
 			DtoBedrock = cnorg->getBedrockDepth();
 		}
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **
@@ -2971,8 +2953,7 @@ void tHydroModel::ComputeFluxesEdgesND()
 		*/
 			}
 
-	return;
-}
+	}
 
 //=========================================================================
 //
@@ -3024,8 +3005,6 @@ void tHydroModel::SetupNodeSZ(tCNode *cn)
 	NfOld  = NfNew = cn->getNfOld();
 	RuOld  = RuNew = cn->getRuOld();
 	RiOld  = RiNew = cn->getRiOld();
-
-	return;
 }
 
 /*************************************************************************
@@ -3207,7 +3186,7 @@ void tHydroModel::SaturatedZone(double dtGW)
 							else if (NtOld == 0.0 && NfOld > 0.0) {
 								NfNew = Newton(Mdelt, NwtNew, NfOld, 0);
 								NtNew = NtOld;
-								RuNew = Ksat*F*NfNew/(exp(F*NfNew)-1.0);
+								RuNew = Ksat*F*NfNew/expm1(F*NfNew);
 							}
 							if (NtNew > NfOld) {
 								cout<<"\nWarning: Incorrect case definition:";
@@ -3353,7 +3332,7 @@ void tHydroModel::SaturatedZone(double dtGW)
 									MuNew = MiNew + (MuOld - MiOld);
 									RiNew = 0.0;
 									if (NtNew == 0.0)
-										RuNew = Ksat*F*NfNew/(exp(F*NfNew)-1.0);
+										RuNew = Ksat*F*NfNew/expm1(F*NfNew);
 									else
 										RuNew = RuOld;
 								}
@@ -3399,6 +3378,10 @@ void tHydroModel::SaturatedZone(double dtGW)
 					NfNew = NwtNew;
 				}
 				break;
+            default:
+                cerr<<"No case identified in tHydroModel::SaturatedZone"<<endl;
+                break;
+
 		}   //End of Switch Statements
 
 
@@ -3604,8 +3587,7 @@ void tHydroModel::SaturatedZone(double dtGW)
 	}
 #endif
 
-	return;
-} // End of SaturatedZone Routine...
+	} // End of SaturatedZone Routine...
 
 
 //=========================================================================
@@ -3628,7 +3610,8 @@ void tHydroModel::SaturatedZone(double dtGW)
 *************************************************************************/
 double tHydroModel::ComputeSurfSoilMoist(double Z)
 {
-	double dM, Nstar;
+	double dM = 0;
+    double Nstar = 0;
 
 	if (NwtNew == 0.0)
 		dM = Z*Ths;
@@ -3833,8 +3816,7 @@ void tHydroModel::SetCellRunon( tCNode *cn, double runoff,
 		}
 		curedg = curedg->getCCWEdg();
 	}
-	return;
-}
+	}
 
 //=========================================================================
 //
@@ -3977,7 +3959,7 @@ double tHydroModel::Newton(double dM, double Nwt)
 	double DX_TOL = 1.0E-5; //Tolerance for dx
 	int i;
 	double C1, C2, C3;
-	double fvalue, fdvalue, x, dx;
+	double fvalue, fdvalue, x(0), dx;
 	double xinit, xup, Nwt_estim;
 
 	C1 = Ths-Thr;
@@ -4041,12 +4023,10 @@ double tHydroModel::Newton(double dM, double Nwt)
 				<<endl<<endl<<flush;
 		}
 		
-		if (fabs(fdvalue) < DMIN) { // added by CJC2020
+		if ((fabs(fdvalue) < DMIN) || (fabs(dx) < DX_TOL))  { // added by CJC2020
 			x = Nwt_estim;
 		}
-		else if (fabs(dx) < DX_TOL) { // added by CJC2020
-			x = Nwt_estim;
-		}
+
 		else { // added by CJC2020
 			x = Nwt;
 		}
@@ -4071,7 +4051,7 @@ double tHydroModel::Newton(double dM, double Nwt)
 **  wetting front, used as initial guess, and flag: 0/1 - WT drop/rise case
 **
 ***************************************************************************/
-double tHydroModel::Newton(double dM, double Nwt, double Nf, int flag)
+double tHydroModel::Newton(double dM, double Nwt, double Nf, int flag) const
 {
 	int ITMAX = 30;
 	double DMIN   = 1.0E-5; // MINIMUM SLOPE OF THE DERIVATIVE F_N
@@ -4214,20 +4194,18 @@ double tHydroModel::rtsafe_mod(double c1, double c2, double c3,
 **
 ***************************************************************************/
 void tHydroModel::polyn(double x, double& fv, double& dv,
-                        double C1, double C2, double C3)
+                        double C1, double C2, double C3) const
 {
 	fv = C1*pow(x,PoreInd) + C3*pow(x,(PoreInd-1.0)) + C2;
 	dv = C1*PoreInd*pow(x,(PoreInd-1.0)) + C3*(PoreInd-1.0)*pow(x,(PoreInd-2.0));
-	return;
 }
 
 void tHydroModel::polyn(double x, double Nwt, double& fv, double& dv,
-						double C1, double C2, double C3)
+						double C1, double C2, double C3) const
 {
 	fv = C1*x*pow((Nwt-x),(PoreInd-1.0)) + C3*pow((Nwt-x),(PoreInd-1.0)) - C2;
 	dv = C1*pow((Nwt-x),(PoreInd-1.0))-C1*(PoreInd-1.0)*x*pow((Nwt-x),(PoreInd-2.0))-
 		C3*(PoreInd-1.0)*pow((Nwt-x),(PoreInd-2.0));
-	return;
 }
 
 
@@ -4310,8 +4288,7 @@ void tHydroModel::PrintOldVars(tCNode *cn, tEdge *ce, double Ractual,
 			}
 		}
 	}
-	return;
-}
+	}
 
 /*************************************************************************
 **
@@ -4357,8 +4334,7 @@ void tHydroModel::PrintNewVars(tCNode *cn, double Ractual)
 			}
 		}
 	}
-	return;
-}
+	}
 
 /*************************************************************************
 **
@@ -4408,8 +4384,7 @@ void tHydroModel::PrintNewGWVars(tCNode *cn, int Pixel_State)
 			}
 		}
 	}
-	return;
-}
+	}
 
 /***************************************************************************
 **

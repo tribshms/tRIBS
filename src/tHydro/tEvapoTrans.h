@@ -86,7 +86,7 @@ class tEvapoTrans
 
   int  getEToption();
   int  julianDay();
-  void DirectDiffuse(double, double);
+  void DirectDiffuse(double);
   double latentHeat();
   double clausClap();
   double satVaporPress();
@@ -138,49 +138,49 @@ class tEvapoTrans
   tHydroModel *hydrPtr;
   GenericLandData *landPtr;
   GenericSoilData *soilPtr;
-  char stationFile[kName];
+  char stationFile[kName]{};
 
-  char luFile[kName]; //SKYnGM2008LU: added by AJR 2007
+  char luFile[kName]{}; //SKYnGM2008LU: added by AJR 2007
 
   int *currentTime, *assignedStation;
-  int VerbID;
-  int evapotransOption, metdataOption, Ioption;
-  int snowOption; // NEW FOR SNOW.... SKY2008Snow from AJR2007
-  int shelterOption; // NEW FOR SHELTERING... SKY2008Snow from AJR2007
-  int gFluxOption, dewHumFlag, ID;
-  int gmt, nodeHour, thisStation, oldTimeStep;
-  int numStations, arraySize, hourlyTimeStep, nParm, gridgmt;
-  int LUgridgmt; //SKYnGM2008LU: added by AJR 2007
-  int vapOption, tsOption, nrOption;
-  int luOption, nParmLU;  //SKYnGM2008LU: added by AJR 2007
-  int luInterpOption;  //SKYnGM2008LU
+  int VerbID{};
+  int evapotransOption{}, metdataOption{}, Ioption{};
+  int snowOption{}; // NEW FOR SNOW.... SKY2008Snow from AJR2007
+  int shelterOption{}; // NEW FOR SHELTERING... SKY2008Snow from AJR2007
+  int gFluxOption{}, dewHumFlag{}, ID{};
+  int gmt{}, nodeHour{}, thisStation{}, oldTimeStep{};
+  int numStations{}, arraySize{}, hourlyTimeStep{}, nParm{}, gridgmt{};
+  int LUgridgmt{}; //SKYnGM2008LU: added by AJR 2007
+  int vapOption{}, tsOption{}, nrOption{};
+  int luOption{}, nParmLU;  //SKYnGM2008LU: added by AJR 2007
+  int luInterpOption{};  //SKYnGM2008LU
   int timeCount;
 
-  double timeStep, gridlat, gridlong;
-  double IfNotFirstTStepLU; //SKYnGM2008LU: added by AJR 2007
-  double metHour, etHour, rainInt; // SKY2008Snow from AJR2007
-  double LUgridlat, LUgridlong; //SKYnGM2008LU: added by AJR 2007
+  double timeStep{}, gridlat{}, gridlong{};
+  double IfNotFirstTStepLU{}; //SKYnGM2008LU: added by AJR 2007
+  double metHour{}, etHour{}, rainInt{}; // SKY2008Snow from AJR2007
+  double LUgridlat{}, LUgridlong{}; //SKYnGM2008LU: added by AJR 2007
 
-  double coeffH, coeffKt, coeffAl, coeffRs, coeffV;
-  double coeffKs, coeffCs, coeffPan;
+  double coeffH{}, coeffKt{}, coeffAl{}, coeffRs{}, coeffV{};
+  double coeffKs{}, coeffCs{}, coeffPan{};
   // SKY2008Snow from AJR2007
-  double coeffLAI;
+  double coeffLAI{};
 
-  double Rah, Rstm;
-  double SoilHeatCondTh, SoilHeatCpctTh, SoilHeatDiffTh;
-  double potEvap, actEvap, panEvap, betaS, betaT;
-  double airTemp, dewTemp, surfTemp, Tso, Tlo;
-  double rHumidity, atmPress, windSpeed, skyCover;
-  double netRad, latitude, longitude, vPress;
-  double inLongR, inShortR, outLongR;
-  double Tlinke;
-  double Is, Ic, Ics, Id, Ids;
-  double elevation, slope, aspect;
-  double atmPressC, surfTempC, skyCoverC, rHumidityC, dewTempC;
-  double windSpeedC, netRadC, vPressC, gFlux, hFlux, lFlux, Epot, rain, Gso;
-  double Io, alphaD, sinAlpha, del, phi, tau, circ, sunaz; 
-  double SunRisHrLoc, SunSetHrLoc, DayLength, deltaT;
-  double RadGlbObs, RadDirObs, RadDifObs;
+  double Rah{}, Rstm{};
+  double SoilHeatCondTh{}, SoilHeatCpctTh{}, SoilHeatDiffTh{};
+  double potEvap{}, actEvap{}, panEvap{}, betaS{}, betaT{};
+  double airTemp{}, dewTemp{}, surfTemp{}, Tso{}, Tlo{};
+  double rHumidity{}, atmPress{}, windSpeed{}, skyCover{};
+  double netRad{}, latitude{}, longitude{}, vPress{};
+  double inLongR{}, inShortR{}, outLongR{};
+  double Tlinke{};
+  double Is{}, Ic{}, Ics{}, Id{}, Ids{};
+  double elevation{}, slope{}, aspect{};
+  double atmPressC{}, surfTempC{}, skyCoverC{}, rHumidityC{}, dewTempC{};
+  double windSpeedC{}, netRadC{}, vPressC{}, gFlux{}, hFlux{}, lFlux{}, Epot{}, rain{}, Gso{};
+  double Io{}, alphaD{}, sinAlpha{}, del{}, phi{}, tau{}, circ{}, sunaz{};
+  double SunRisHrLoc{}, SunSetHrLoc{}, DayLength{}, deltaT{};
+  double RadGlbObs{}, RadDirObs{}, RadDifObs{};
   // SKY2008Snow from AJR2007
   //new for sheltering algorithm
   //	RMK: THE HA* VARIABLES SHOULD ACTUALLY BE HANDLED IN AN ARRAY
@@ -188,19 +188,19 @@ class tEvapoTrans
   //	WORK CORRECTLY
   //
   //	RINEHART 2007 @ NEW MEXICO TECH
-  double shelterFactorGlobal, landRefGlobal;
-  double horizonAngle;
-  double ha0000, ha0225, ha0450, ha0675, ha0900, ha1125;
-  double ha1350, ha1575, ha1800, ha2025, ha2250, ha2475;
-  double ha2700, ha2925, ha3150, ha3375;
+  double shelterFactorGlobal{}, landRefGlobal{};
+  double horizonAngle{};
+  double ha0000{}, ha0225{}, ha0450{}, ha0675{}, ha0900{}, ha1125{};
+  double ha1350{}, ha1575{}, ha1800{}, ha2025{}, ha2250{}, ha2475{};
+  double ha2700{}, ha2925{}, ha3150{}, ha3375{};
   //information for lapse rates
   //  RINEHART 2007 @ NEW MEXICO TECH
-  double tempLapseRate; //K/m -- make sure that time steps are consistent
+  double tempLapseRate{}; //K/m -- make sure that time steps are consistent
   //for output of cumulative number of hours of sunlight
   //  RINEHART 2007 @ NEW MEXICO TECH
-  double SunHour;
+  double SunHour{};
 
-  double BasAltitude; 
+  double BasAltitude{};
   char **gridParamNames, **gridBaseNames, **gridExtNames;
   char **LUgridParamNames, **LUgridBaseNames, **LUgridExtNames; // SKYnGM2008LU: added by AJR 2007
 
@@ -218,19 +218,19 @@ class tEvapoTrans
   tVariant *DrainExpParGrid, *OptTransmCoeffGrid, *LeafAIGrid;
 
   // SKYnGM2008LU
-  int numALfiles, numTFfiles, numVHfiles, numSRfiles;
-  int numVFfiles, numCSfiles, numICfiles, numCCfiles;
-  int numDCfiles, numDEfiles, numOTfiles, numLAfiles;
+  int numALfiles{}, numTFfiles{}, numVHfiles{}, numSRfiles{};
+  int numVFfiles{}, numCSfiles{}, numICfiles{}, numCCfiles{};
+  int numDCfiles{}, numDEfiles{}, numOTfiles{}, numLAfiles{};
   int *ALgridhours, *TFgridhours, *VHgridhours, *SRgridhours;
   int *VFgridhours, *CSgridhours, *ICgridhours, *CCgridhours;
   int *DCgridhours, *DEgridhours, *OTgridhours, *LAgridhours;  
-  int NowTillWhichALgrid, NowTillWhichTFgrid, NowTillWhichVHgrid, NowTillWhichSRgrid;
-  int NowTillWhichVFgrid, NowTillWhichCSgrid, NowTillWhichICgrid, NowTillWhichCCgrid;
-  int NowTillWhichDCgrid, NowTillWhichDEgrid, NowTillWhichOTgrid, NowTillWhichLAgrid;
+  int NowTillWhichALgrid{}, NowTillWhichTFgrid{}, NowTillWhichVHgrid{}, NowTillWhichSRgrid{};
+  int NowTillWhichVFgrid{}, NowTillWhichCSgrid{}, NowTillWhichICgrid{}, NowTillWhichCCgrid{};
+  int NowTillWhichDCgrid{}, NowTillWhichDEgrid{}, NowTillWhichOTgrid{}, NowTillWhichLAgrid{};
   char **ALgridFileNames, **TFgridFileNames, **VHgridFileNames, **SRgridFileNames;
   char **VFgridFileNames, **CSgridFileNames, **ICgridFileNames, **CCgridFileNames;
   char **DCgridFileNames, **DEgridFileNames, **OTgridFileNames, **LAgridFileNames;
-  int AtFirstTimeStepLUFlag;
+  int AtFirstTimeStepLUFlag{};
 
 
 };
