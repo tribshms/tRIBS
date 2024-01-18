@@ -1459,7 +1459,7 @@ MakePointFromFileArcInfo( tInputFile &infile ){
 				outtextfile<< setprecision(14)<< x[ikt]<< "\t";
 				outtextfile<< setprecision(14)<< y[ikt]<< "\t";
 				outtextfile<< z[ikt]<< "\t";
-				int flag;
+				int  flag {};
 				for(int j=0; j<nb; j++ ){
 					flag =0;
 					if (n[ikt]==nbbound[j]){       
@@ -2410,8 +2410,10 @@ MakeRandomPointsFromArcGrid( tInputFile &infile )
 		*stp1, *stp2, *stp3;         // supertriangle vertices
 	
 	char dumhead[3];
-	tSubNode *cn, *minzPtr;
-	tEdge* ce;
+	//tSubNode *cn, *minzPtr;
+    auto *cn = new tSubNode();  // Initialize with a dynamically allocated object
+    auto *minzPtr = new tSubNode();
+    tEdge* ce;
 	tMeshListIter< tSubNode > nI( nodeList );
 	tPtrList<tSubNode> supertriptlist, deletelist;
 	tPtrListIter<tSubNode> stpIter( supertriptlist ), dI( deletelist );

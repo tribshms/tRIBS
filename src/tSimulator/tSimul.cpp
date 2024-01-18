@@ -36,7 +36,7 @@ Simulator::Simulator(SimulationControl *simctrlptr, tRainfall *rainptr,
 	rainIn  = rainptr;
 	timer   = tmrptr;
 	outp    = otpptr;
-   restart = restartptr;
+    restart = restartptr;
 
 	// Time tag of initial time, hour
 	begin_hour = timer->getCurrentTime(); 
@@ -116,12 +116,13 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
 	// Ouput pre-processing
 	if (simCtrl->inter_results)
 		outp->CreateAndOpenDynVar();
-	
+
+    //WR debug 01032024: this was setting the met forcing values to 0 at time 0 in the Dynamic and Pixel files
 	// Output initial conditions
-	outp->WriteDynamicVars( timer->getCurrentTime() );
-	outp->WritePixelInfo(   timer->getCurrentTime() );
+	//outp->WriteDynamicVars( timer->getCurrentTime() );
+	//outp->WritePixelInfo(   timer->getCurrentTime() );
     outp->WritePixelInvariantInfo();
-	
+
 	// Prepare rainfall input if stochastic rainfall Off
 	if ( !rainIn->getoptStorm()) {
 		if (rainIn->rainfallType == 1 || rainIn->rainfallType == 2) {
@@ -153,7 +154,7 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
 			lmr_hour = timer->getRainTime();     //Time tag of LAST measured rain hour
 			dt_rain  = timer->getRainDT();   
 			
-			rainIn->NewRain(timer);
+			//rainIn->NewRain(timer); //WR debug 01032024: this was effectively truncating the rainfall vector, shifting all values by one hour toward the initial runtime
 			
 			if (simCtrl->Verbose_label == 'Y') {
 				Cout<<"\nNext rainfall input: "<<lmr_hour<<" hours in simulation."<<endl;
@@ -170,7 +171,7 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
 			count = 0;
 		} else {
 			// rainIn->callRainGauge(); 
-			rainIn->callRainGauge(timer); // SKY2008Snow
+			// rainIn->callRainGauge(timer); // SKY2008Snow//WR debug 01032024: this was effectively truncating the rainfall vector, shifting all values by one hour toward the initial runtime
 		}
 	}
 	
@@ -195,7 +196,6 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
       SnowPack->CreateHydroMetAndLU(InFl);
    }
 
-	return;
 }
 
 /*****************************************************************************
@@ -375,7 +375,7 @@ void Simulator::UpdatePrecipitationInput(int opt)
 		
 		else if (rainIn->rainfallType == 3) {
 			if ( timer->isGaugeTime(timer->getRainDT()) ) {
-				get_next_gaugerain();   
+				get_next_gaugerain();  // updates rain to nodes from station data
 			}
 		}
 	}

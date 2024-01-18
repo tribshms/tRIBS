@@ -124,16 +124,14 @@ void tRainfall::SetRainVariables(tInputFile &inFile)
 	numRains = 0;
 	aveMAP = 0.0;
 	cumMAP = 0.0;
-	
-	return;
 }
 
 // Destructor
 tRainfall::~tRainfall() 
 {
-	gridPtr = NULL;
-	respPtr = NULL;
-	simCtrl = NULL;
+	gridPtr = nullptr;
+	respPtr = nullptr;
+	simCtrl = nullptr;
 	
 	if (rainfallType == 1 || rainfallType == 2) {
 #ifdef ALPHA_64
@@ -518,7 +516,6 @@ void tRainfall::NewRainData(int time)
 		}
 	}
 	*/
-	return;
 }
 
 /***************************************************************************

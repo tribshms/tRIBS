@@ -129,9 +129,9 @@ void tWaterBalance::CanopyBalance()
 		DelI = Int - E;
 		
 		// SKYnGM2008LU
-		//CS = cNode->getCanopyStorage() + DelI*dt*A/1000.0;
 		//cNode->setCanopyStorage(CS);
-		CS = cNode->getCanopyStorVol() + DelI*dt*A/1000.0;
+
+		CS = cNode->getCanopyStorVol() + DelI*dt*A/1000.0; // WR 12192023: Should this be scaled by vegetated fraction of cell?
 		cNode->setCanopyStorVol(CS);
 
 		cNode = nodeIter.NextP();
@@ -168,7 +168,7 @@ void tWaterBalance::UnSaturatedBalance()
 	tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
 	cNode = nodeIter.FirstP();
 	
-	double DelU, Inf, ET, Rech, QUin, QUout, Run, A, dt, USS;
+	double DelU, Inf, ET, Rech, QUin, QUout, Run, A, dt, USS, Melt, dMu;
 	
 	dt = unsStep/60.0;
 	
@@ -179,12 +179,30 @@ void tWaterBalance::UnSaturatedBalance()
 		Run = cNode->getSrf()/unsStep;
 		A = cNode->getVArea();
 		Inf = cNode->getNetPrecipitation();
+        Melt = cNode->getLiqRouted()*10;//WR 12192023: to mm, but implicitly mm/hr as thats total amount melted in 1 hr
+
+        if(cNode->getLiqWE() + cNode->getIceWE() > 1e-4){
+            Inf = Melt; //WR 12192023: snow on the ground Inf set to Melt
+        }
+        else{
+            Inf = Inf+Melt; //WR 12192023: otherwise combined
+        }
+
+
 		ET = cNode->getEvapSoil()+cNode->getEvapDryCanopy();
 		
 		DelU = Inf + QUin - QUout - Rech - ET - Run;
 		USS =  cNode->getUnSaturatedStorage() + DelU*dt*A/1000.0;
 		cNode->setUnSaturatedStorage(USS);
-		
+
+        //WR 12192023: put check to error out if that chaning in total moisture above the water table (Mu) varies from the DelU by specified amount
+        dMu = cNode->getMuNew()-cNode->getMuOld();
+//        if (fabs(dMu-DelU*dt) > 10){
+//            cerr<<"Change in total moisture above the water table, exceeds combined lateral and vertical fluxes by 1% of 1 mm."<<endl;
+//        }
+
+
+
 		cNode = nodeIter.NextP();
 	}
 	return;
@@ -267,23 +285,50 @@ void tWaterBalance::BasinStorage( double time )
 	tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
 	cNode = nodeIter.FirstP();
 	
-	double BasinCanopy, BasinUnSaturated, BasinSaturated;
+	double BasinCanopy, BasinUnSaturated, BasinSaturated,BasinUnSaturated_old, BasinSaturated_old;
 	double BasinRainfall, BasinEvaporation, BasinRunoff;
+    double Balance;
 	
 	BasinCanopy = BasinUnSaturated = BasinRunoff = 0.0;
 	BasinSaturated = BasinRainfall = BasinEvaporation = 0.0;
+    BasinSaturated_old = BasinSaturated_old = 0.0;
+
+    Balance = 0;
 	
 	while(nodeIter.IsActive()){
-		BasinCanopy += cNode->getCanStorage()*(cNode->getVArea()/1000.0);
+        //WR 12192023: set stores to snapshots in time, not cumulative values, (i.e. removed +=)
+		BasinCanopy = cNode->getCanStorage()*(cNode->getVArea()/1000.0);//WR 12192023:  Needs to be scaled by veg fract?
 		BasinRainfall += cNode->getRain()*(cNode->getVArea()/1000.0) * unsStep/60.0;
-		BasinEvaporation+= cNode->getEvapoTrans()*(cNode->getVArea()/1000.0)* unsStep/60.0;
+		BasinEvaporation+= cNode->getEvapoTrans()*(cNode->getVArea()/1000.0)* unsStep/60.0;//WR 12192023: All ready scaled with vegetation fraciton
 		BasinRunoff += cNode->getSrf()*(cNode->getVArea()/1000.0);
-		BasinUnSaturated += cNode->getMuNew()*(cNode->getVArea()/1000.0);
-		BasinSaturated += (cNode->getBedrockDepth() - cNode->getNwtNew())*(cNode->getVArea()/1000.0);
+        BasinUnSaturated_old = cNode->getMuOld()*(cNode->getVArea()/1000.0);
+        BasinSaturated_old = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtOld())*(cNode->getVArea()/1000.0);
+        BasinUnSaturated = cNode->getMuNew()*(cNode->getVArea()/1000.0);
+		BasinSaturated = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtNew())*(cNode->getVArea()/1000.0); //WR 12192023:  Needs to be scaled with porosity correct?
 		cNode = nodeIter.NextP();
 	}
-	
-	BasinStorages[0] += BasinRainfall;
+
+//    while(nodeIter.IsActive()){ //  in mm
+//        //WR 12192023: set stores to snapshots in time, not cumulative values, (i.e. removed +=)
+//        BasinCanopy = cNode->getCanStorage();//WR 12192023:  Needs to be scaled by veg fract?
+//        BasinRainfall += cNode->getRain()* unsStep/60.0;
+//        BasinEvaporation+= cNode->getEvapoTrans()* unsStep/60.0;//WR 12192023: All ready scaled with vegetation fraciton
+//        BasinRunoff += cNode->getSrf();
+//        BasinUnSaturated_old = cNode->getMuOld();
+//        BasinSaturated_old = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtOld());
+//        BasinUnSaturated = cNode->getMuNew();
+//        BasinSaturated = cNode->getThetaS()*(cNode->getBedrockDepth() - cNode->getNwtNew()); //WR 12192023:  Needs to be scaled with porosity correct?
+//        cNode = nodeIter.NextP();
+//    }
+
+    Balance = BasinRainfall-BasinEvaporation-BasinRunoff-(BasinSaturated-BasinSaturated_old+BasinUnSaturated-BasinUnSaturated_old+BasinCanopy-BasinStorages[2]);
+
+    //WR 12192023: Set statement to check water balance error is above some acceptable threshold, in this case set to 1 m
+//    if (fabs(Balance) > 0.1){
+//        cerr << "Water balance error is above 1m^3: " << std::setprecision(5) << Balance << endl;
+//    }
+
+    BasinStorages[0] += BasinRainfall;
 	BasinStorages[1] += BasinEvaporation;
 	BasinStorages[2] = BasinCanopy;
 	BasinStorages[3] = BasinUnSaturated;

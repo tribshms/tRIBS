@@ -9,7 +9,6 @@ set(exe "tRIBS")
 
 set(parallel ON)
 set(cxx_flags "-O2")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 

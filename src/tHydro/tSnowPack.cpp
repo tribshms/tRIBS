@@ -99,6 +99,7 @@ void tSnowPack::SetSnowInterceptVariables() {
 }
 
 void tSnowPack::SetSnowVariables(tInputFile &infile) {
+    
 
     //time steps
     timeStepm = infile.ReadItem(timeStepm, "METSTEP");
@@ -335,7 +336,8 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             newLUGridData(cNode);
         }
 
-        //not in stochastic mode
+
+        //updates meteorological variables if not in stochastic mode
         if (!rainPtr->getoptStorm()) {
             if (metdataOption == 1) {
                 thisStation = assignedStation[count];
@@ -365,6 +367,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
 
         }
 
+
         if (Ioption == 0) {
             cNode->setNetPrecipitation(rain);
         }
@@ -372,6 +375,10 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
         //Call Beta functions
         betaFunc(cNode); // inherited
         betaFuncT(cNode); // inherited
+
+        // Get Soil/Surface Temperature --WR debug 01032024 same setup as callEvapPotential.
+        // Tso = cNode->getSurfTemp() + 273.15;
+        // Tlo = cNode->getSoilTemp() + 273.15;
 
         //get the necessary information from tCNode for snow model
         getFrNodeSnP(cNode);
@@ -683,13 +690,12 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             cNode->setEvapSoil(0.0);
             cNode->setActEvap(0.0);
             cNode->setEvapoTrans(
-                    cNode->getEvapWetCanopy()); //should be set to zero in most cases when snow is present, as its set to zero in callSnowIntercept except for rain on snow events.
+                    cNode->getEvapWetCanopy() + cNode->getEvapDryCanopy()); //should be set to zero in most cases when snow is present, as its set to zero in callSnowIntercept except for rain on snow events.
 
             setToNodeSnP(cNode);
-            setToNode(cNode);
+            //setToNode(cNode); // WR 01032024this also being set in callSnowIntercept, may be source of variation in AtmPress?
 
         }//end yes-snow
-
 
 
         // Estimate average Ep and cloudiness
@@ -751,9 +757,15 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
 
     //set meteorolgical conditions
     rHumidity = node->getRelHumid();
+    vPress = node->getVapPressure();
+    dewTemp = node->getDewTemp();
+    skyCover = node->getSkyCover();
+    windSpeed = node->getWindSpeed();
+    atmPress = node->getAirPressure();
+    RadGlbObs = node->getShortRadIn();
     airTemp = node->getAirTemp();
     airTempK = CtoK(airTemp);
-    windSpeed = node->getWindSpeed();
+
     precip = node->getRain() * coeffV; //precip scaled by veg fraction
     LAI = coeffLAI;
 
@@ -790,8 +802,7 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
             cout << "Exiting Program...\n\n" << endl;
             exit(1);
         }
-        // Set actual evaporation to 0 since snow pack exists and soil evaporation is function of actual evap
-        node->setActEvap(0.0);
+
 
         // Set ground element-scale fluxes to zero and surface and soil to snow temp
         node->setNetRad(0.0);
@@ -806,6 +817,9 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         // follows structure of
         setToNode(node);
 
+        // Set actual evaporation to 0 since snow pack exists and soil evaporation is function of actual evap
+        node->setActEvap(0.0);
+
         ComputeETComponents(interceptModel, node, count, 1);
 
         //Set canopy snow components to 0
@@ -813,6 +827,7 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         node->setIntSnUnload(0);
         node->setIntSub(0);
         node->setIntPrec(0);
+        node->setEvapSoil(0.0);
 
 
     }//end -- no snow
@@ -889,9 +904,9 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         //set wet and dry evap to 0 when snow in canopy
         node->setEvapWetCanopy(0.0);
         node->setEvapDryCanopy(0.0);
+        node->setEvapSoil(0.0);
         node->setEvapoTrans(0.0);
         node->setPotEvap(0.0);
-
     }//end -- snow exists
 
     return;
@@ -1188,16 +1203,34 @@ double tSnowPack::sensibleHFCalc(double Kaero) {
 double tSnowPack::snowFracCalc() {
 
     double snowfrac;
+    double Tw, RH, Ta, f1;
+    Ta = airTemp;
+    RH = rHumidity;
+    // Calculate wet-Bulb Temperature according to Stull (2011) https://doi.org/10.1175/JAMC-D-11-0143.1
+    Tw = Ta*atan(0.151977*pow(RH + 8.313659,0.5)) + atan(Ta + RH) - atan(RH - 1.676331) +
+         0.00391838*pow(RH,1.5)*atan(0.023101*RH) - 4.686035; // in degC
 
-    double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)—updated for CJC thesis (see table 11)
+    // Calculate  snowfall fraction according to Wang et al. (2019) https://doi.org/10.1029/2019GL085722
+    f1 = 1 + 6.99*pow(10,-5)*exp(2*(Tw + 3.97));
 
-    if (airTemp <= TMin)
-        snowfrac = 1; // all ice
-    if (airTemp >= TMax)
-        snowfrac = 0; // all liquid
-    if ((airTemp >= TMin) && (airTemp <= TMax))
-        snowfrac = (TMax - airTemp) / (TMax - TMin); //mixture
+    // Wet-bulb temperature > 5C corresponds to Ta = 10C and RH = 50%, assuming no snowfall
+    if ( Tw > 5 ) {
+        snowfrac = 0;
+    }
+    else {
+        snowfrac = 1/f1;
+    }
 
+/*  Updated as outlined above to reflect influence of RH on snow fall partitioning -WR 11272023
+//    double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)—updated for CJC thesis (see table 11)
+//
+//    if (airTemp <= TMin)
+//        snowfrac = 1; // all ice
+//    if (airTemp >= TMax)
+//        snowfrac = 0; // all liquid
+//    if ((airTemp >= TMin) && (airTemp <= TMax))
+//        snowfrac = (TMax - airTemp) / (TMax - TMin); //mixture
+*/
 
     return snowfrac;
 }
@@ -1376,12 +1409,12 @@ void tSnowPack::computeSub() {
 
     //find windspeed
     if (windSpeed == 0.0) {
-        windSpeed = 0.1;
+        windSpeedC = 0.1; // WR 01032024 switched to windSpeedC since that is what is set to node.
     }
-    windSpeed = windSpeed * exp(-acoefficient * 0.4);
+    windSpeedC = windSpeed * exp(-acoefficient * 0.4);// WR 01032024 switched to windSpeedC since that is what is set to node.
 
     //Calculate Reynolds number
-    Re = 2 * iceRad * windSpeed / nu;
+    Re = 2 * iceRad * windSpeedC / nu;
 
     //Calculate Sherwood number
     Sh = 1.79 + 0.606 * pow(Re, 0.5);
@@ -1396,28 +1429,23 @@ void tSnowPack::computeSub() {
     rhoVap = 0.622 * esatIce / (RdryAir * airTempK);
 
     //compute vapor diffusivity
-    D = 2.06e-5 * pow(airTempK / 273, 1.75);
+    D = 2.06e-5 * pow(airTempK / 273.0, 1.75);
 
     //Place holder in algorithm
     Omega = (1 / (KtAtm * airTempK * Nu)) * (1000 * latSubkJ * Mwater / (R * airTempK) - 1);//check units--check
 
     //find change of mass of ice crystal with respect to time
-    dmdt = (2 * PI * iceRad * (rHumidity / 100 - 1) - Sp * Omega) /
+    dmdt = (2.0 * PI * iceRad * (rHumidityC / 100 - 1) - Sp * Omega) / //WR 01032024 switched to rHumidtyC since that is what is set to node.
            (1000 * latSubkJ * Omega + (1 / (D * rhoVap * Sh)));//1000 conversion from KJ to J
 
     //relative sublimation from ice sphere
-    psiS = dmdt / ((4 / 3) * PI * rhoicekg * iceRad * iceRad * iceRad);
+    psiS = dmdt / ((4.0 / 3.0) * PI * rhoicekg * iceRad * iceRad * iceRad);
 
     //canopy exposure coefficient
     Ce = kc * pow(I / Imax, -0.4);
 
     //compute total sublimated snow during timestep
     Qcs = Ce * I * psiS * timeSteps;
-
-    //RMK: Qcs IS AN INTERNAL VARIABLE TO THE CLASS SO WE DO NOT NEED TO
-    //	 RETURN IT TO THE CALLING FUNCTION.
-
-    return;
 }
 
 
@@ -1442,7 +1470,6 @@ void tSnowPack::computeUnload() {
     //RMK: Lm IS AN INTERNAL VARIABLE AND DOES NOT NEED TO BE RETURNED TO THE
     //	 CALLING FUNCTION.
 
-    return;
 
 }
 
@@ -1467,7 +1494,7 @@ double tSnowPack::inShortWaveSn(tCNode *cNode) {
     if (alphaD > 0.0) {
 
         elevation = cNode->getZ(); //SMM 10142008
-        DirectDiffuse(Tlinke, elevation);  // SKY2008Snow, AJR2007
+        DirectDiffuse(elevation);  // SKY2008Snow, AJR2007
 
         // Cloud cover information
         if (fabs(skyCover - 9999.99) < 1.0E-3) {
@@ -1634,7 +1661,7 @@ double tSnowPack::inShortWaveCan() {
     double v, cosi, scover;
     double RadGlobClr;
 
-    // WR refactor 8-31-2023, this is a almost the same as inShortWave, but returns Iws before
+    // WR refactor 8-31-2023, this is a almost the same as inShortWave, but returns Isw before
     // accounting for the effects of optical transmission through the canopy. There is
     // certainly a cleaner way to do this, but for now this will have to do.
 
@@ -1646,7 +1673,7 @@ double tSnowPack::inShortWaveCan() {
 
     if (alphaD > 0.0) {
 
-        DirectDiffuse(Tlinke, elevation);  // SKY2008Snow, AJR2007
+        DirectDiffuse(elevation);  // SKY2008Snow, AJR2007
 
         // Cloud cover information
         if (fabs(skyCover - 9999.99) < 1.0E-3) {

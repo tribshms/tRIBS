@@ -1330,27 +1330,67 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 	this->CreateAndOpenFile( &arcofs, extension);  //Opens file for writing
 	
 	if (simCtrl->Header_label=='Y') {
-		arcofs<<"ID"<<','<<"Z"<<','<<"S"<<','<<"CAr"<<','<<"Nwt"<<','<<"Mu"<<','
-		<<"Mi"<<','<<"Nf"<<','<<"Nt"<<','<<"Qpout"<<','<<"Qpin"<<','
-		<<"Srf"<<','<<"Rain"<<','
+		arcofs
+        <<"ID"<<',' /*1*/
+        <<"Z"<<','
+        <<"S"<<','
+        <<"CAr"<<','
+        <<"Nwt"<<','/*5*/
+        <<"Mu"<<','
+		<<"Mi"<<','
+        <<"Nf"<<','
+        <<"Nt"<<','
+        <<"Qpout"<<','/*10*/
+        <<"Qpin"<<','
+		<<"Srf"<<','
+        <<"Rain"<<','
 		
 		// SKY2008Snow from AJR2007
 		<<"SWE"<<','//added by AJR 2007 @ NMT
-		<<"ST"<<','<<"IWE"<<','<<"LWE"<<','<<"SnSub"<<','<<"SnEvap"<<','<<"DU"<<','<<"Upack"<<','//added by AJR 2007 @ NMT // Adjusted by CJC2020
-		<<"sLHF"<<','<<"sSHF"<<','<<"sGHF"<<','<<"sPHF"<<','//added by AJR 2007 @ NMT
-		<<"sRLo"<<','<<"sRLi"<<','<<"sRSi"<<','<<"Uerr"<<','//added by AJR 2007 @ NMT
-		<<"IntSWE"<<','<<"IntSub"<<','<<"IntUnl"<<','//added by AJR 2007 @ NMT	
-		
-		<<"SoilMoist"<<','<<"RootMoist"<<','<<"CanStorage"<<','
-		<<"ActEvp"<<','<<"EvpSoil"<<','<<"ET"<<','<<"GFlux"<<','
-		<<"HFlux"<<','<<"LFlux"<<','<<"Qstrm"<<','<<"Hlev"<<','
-		//<<"FlwVlc";
+		<<"ST"<<',' /*15*/
+        <<"IWE"<<','
+        <<"LWE"<<','
+        <<"SnSub"<<','
+        <<"SnEvap"<<','
+        <<"DU"<<',' /*20*/
+        <<"Upack"<<','
+        //added by AJR 2007 @ NMT // Adjusted by CJC2020
+		<<"sLHF"<<','
+        <<"sSHF"<<','
+        <<"sGHF"<<','
+        <<"sPHF"<<','//added by AJR 2007 @ NMT /*25*/
+		<<"sRLo"<<','
+        <<"sRLi"<<','
+        <<"sRSi"<<','
+        <<"Uerr"<<','//added by AJR 2007 @ NMT
+		<<"IntSWE"<<',' /*30*/
+        <<"IntSub"<<','
+        <<"IntUnl"<<','//added by AJR 2007 @ NMT
+		<<"SoilMoist"<<','
+        <<"RootMoist"<<','
+        <<"CanStorage"<<',' /*35*/
+		<<"ActEvp"<<','
+        <<"EvpSoil"<<','
+        <<"ET"<<',' // 38
+        <<"GFlux"<<','
+		<<"HFlux"<<',' /*40*/
+        <<"LFlux"<<','
+        <<"Qstrm"<<','
+        <<"Hlev"<<','
 		<<"FlwVlc"<<','
-		
 		// SKYnGM2008LU
-		<<"CanStorParam"<<','<<"IntercepCoeff"<<','<<"ThroughFall"<<','<<"CanFieldCap"<<','
-		<<"DrainCoeff"<<','<<"DrainExpPar"<<','<<"LandUseAlb"<<','<<"VegHeight"<<','
-		<<"OptTransmCoeff "<<','<<"StomRes"<<','<<"VegFraction "<<','<<"LeafAI";
+		<<"CanStorParam"<<',' /*45*/
+        <<"IntercepCoeff"<<','
+        <<"ThroughFall"<<','
+        <<"CanFieldCap"<<','
+		<<"DrainCoeff"<<','
+        <<"DrainExpPar"<<',' /*50*/
+        <<"LandUseAlb"<<','
+        <<"VegHeight"<<','
+		<<"OptTransmCoeff "<<','
+        <<"StomRes"<<','
+        <<"VegFraction "<<',' /*55*/
+        <<"LeafAI";
 
 		if ( time == 0 )
 			arcofs<<','<<"SoilID"<<','<<"LUseID"<<endl<<flush;
@@ -1362,50 +1402,50 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 	while (ni.IsActive()) {
 
 		//cout << cn->getHlevel() << "\n";
-		arcofs<<cn->getID()<<','
+		arcofs<<cn->getID()<<','/*1*/
 		<<setprecision(4)<<cn->getZ()<<','
 		<<setprecision(5)<<fabs(atan(cn->getFlowEdg()->getSlope()))<<','
 		<<setprecision(5)<<cn->getContrArea()<<','
-		<<setprecision(5)<<cn->getNwtNew()<<','
+		<<setprecision(5)<<cn->getNwtNew()<<',' /*5*/
 		<<setprecision(5)<<cn->getMuNew()<<','
 		<<setprecision(5)<<cn->getMiNew()<<','
 		<<setprecision(5)<<cn->getNfNew()<<','
 		<<setprecision(5)<<cn->getNtNew()<<','
 		<<setprecision(5)
-		<<cn->getQpout()*1.E-6/cn->getVArea()<<','
+		<<cn->getQpout()*1.E-6/cn->getVArea()<<',' /*10*/
 		<<cn->getQpin()*1.E-6/cn->getVArea()<<','
 		<<setprecision(4)<<cn->getCumSrf()<<','
 		<<setprecision(3)<<cn->getRain()<<','
 
 		// SKY2008Snow from AJR2007
 		<<setprecision(3)<<cn->getIceWE()+cn->getLiqWE()<<','//added by AJR 2007 @ NMT
-		<<setprecision(3)<<cn->getSnTempC()<<','//added by AJR 2007 @ NMT
+		<<setprecision(3)<<cn->getSnTempC()<<','//added by AJR 2007 @ NMT /*15*/
 		<<setprecision(5)<<cn->getIceWE()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getLiqWE()<<','//added by AJR 2007 @ NMT
 		<<setprecision(7)<<cn->getCumSnSub()<<','//added by CJC2020
 		<<setprecision(7)<<cn->getCumSnEvap()<<','//added by CJC2020
-		<<setprecision(7)<<cn->getCumMelt()<<','//changed to cumulative melt CJC2021 <<setprecision(5)<<cn->getDU()<<','//added by AJR 2007 @ NMT
+		<<setprecision(7)<<cn->getCumMelt()<<','//changed to cumulative melt CJC2021 <<setprecision(5)<<cn->getDU()<<','//added by AJR 2007 @ NMT /*20*/
 		<<setprecision(7)<<cn->getCumHrsSnow()<<','//changed to cumulative hours snow CJC2021	<<setprecision(5)<<cn->getUnode()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getSnLHF()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getSnSHF()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getSnGHF()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getSnPHF()<<','//added by AJR 2007 @ NMT
+		<<setprecision(5)<<cn->getSnPHF()<<','//added by AJR 2007 @ NMT /*25*/
 		<<setprecision(5)<<cn->getSnRLout()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getSnRLin()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getSnRSin()<<','//added by AJR 2007 @ NMT
 		<<setprecision(5)<<cn->getUerror()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getIntSWE()<<','//added by AJR 2007 @ NMT 
+		<<setprecision(5)<<cn->getIntSWE()<<','//added by AJR 2007 @ NMT /*30*/
 		<<setprecision(5)<<cn->getCumIntSub()<<','//added by AJR 2007 @ NMT			
 		<<setprecision(7)<<cn->getCumIntUnl()<<','//changed to cumulative unload CJC2021	<<setprecision(5)<<cn->getIntSnUnload()<<','//added by AJR 2007 @ NMT
 
 		<<setprecision(3)<<cn->getSoilMoistureSC()<<','
 		<<setprecision(3)<<cn->getRootMoistureSC()<<','
-		<<setprecision(3)<<cn->getCanStorage()<<','
+		<<setprecision(3)<<cn->getCanStorage()<<',' /*35*/
 		<<setprecision(3)<<cn->getActEvap()<<','
 		<<setprecision(5)<<cn->getCumBarEvap()<<',' // change to cumulative outputs CJC2020 TODO review cumulative output added by josh
-		<<setprecision(5)<<cn->getCumTotEvap()<<',' // change to cumulative outputs CJC2020
+		<<setprecision(5)<<cn->getCumTotEvap()<<',' // change to cumulative outputs CJC2020 /38
 		<<setprecision(3)<<cn->getGFlux()<<','
-		<<setprecision(3)<<cn->getHFlux()<<','
+		<<setprecision(3)<<cn->getHFlux()<<',' /*40*/
 		<<setprecision(3)<<cn->getLFlux()<<','
 		<<setprecision(3)<<cn->getQstrm()<<','
 		<<setprecision(3)<<cn->getHlevel()<<','
@@ -1413,17 +1453,17 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		<<setprecision(3)<<cn->getFlowVelocity()<<','// SKYnGM2008LU
 
 		// SKYnGM2008LU
-		<<setprecision(5)<<cn->getCanStorParam()<<','
+		<<setprecision(5)<<cn->getCanStorParam()<<',' /*45*/
 		<<setprecision(5)<<cn->getIntercepCoeff()<<','
 		<<setprecision(5)<<cn->getThroughFall()<<','
 		<<setprecision(5)<<cn->getCanFieldCap()<<','
 		<<setprecision(5)<<cn->getDrainCoeff()<<','
-		<<setprecision(5)<<cn->getDrainExpPar()<<','
+		<<setprecision(5)<<cn->getDrainExpPar()<<',' /*50*/
 		<<setprecision(5)<<cn->getLandUseAlb()<<','
 		<<setprecision(5)<<cn->getVegHeight()<<','
 		<<setprecision(5)<<cn->getOptTransmCoeff()<<','
 		<<setprecision(5)<<cn->getStomRes()<<','
-		<<setprecision(5)<<cn->getVegFraction()<<','
+		<<setprecision(5)<<cn->getVegFraction()<<',' /*55*/
 		<<setprecision(5)<<cn->getLeafAI();
 
 		if ( time == 0 )

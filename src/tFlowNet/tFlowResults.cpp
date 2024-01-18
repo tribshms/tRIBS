@@ -1163,7 +1163,7 @@ void tFlowResults::store_saturation(double time, double value, int flag)
 *****************************************************************************/
 int tFlowResults::checkForecast() 
 {
-	int state;
+	int state {};
 	
 	if (timer->getCurrentTime() < timer->getfTime())
 		state = 0;
