@@ -1429,17 +1429,17 @@ void tSnowPack::computeSub() {
     rhoVap = 0.622 * esatIce / (RdryAir * airTempK);
 
     //compute vapor diffusivity
-    D = 2.06e-5 * pow(airTempK / 273, 1.75);
+    D = 2.06e-5 * pow(airTempK / 273.0, 1.75);
 
     //Place holder in algorithm
     Omega = (1 / (KtAtm * airTempK * Nu)) * (1000 * latSubkJ * Mwater / (R * airTempK) - 1);//check units--check
 
     //find change of mass of ice crystal with respect to time
-    dmdt = (2 * PI * iceRad * (rHumidityC / 100 - 1) - Sp * Omega) / //WR 01032024 switched to rHumidtyC since that is what is set to node.
+    dmdt = (2.0 * PI * iceRad * (rHumidityC / 100 - 1) - Sp * Omega) / //WR 01032024 switched to rHumidtyC since that is what is set to node.
            (1000 * latSubkJ * Omega + (1 / (D * rhoVap * Sh)));//1000 conversion from KJ to J
 
     //relative sublimation from ice sphere
-    psiS = dmdt / ((4 / 3) * PI * rhoicekg * iceRad * iceRad * iceRad);
+    psiS = dmdt / ((4.0 / 3.0) * PI * rhoicekg * iceRad * iceRad * iceRad);
 
     //canopy exposure coefficient
     Ce = kc * pow(I / Imax, -0.4);

@@ -197,9 +197,9 @@ void tWaterBalance::UnSaturatedBalance()
 
         //WR 12192023: put check to error out if that chaning in total moisture above the water table (Mu) varies from the DelU by specified amount
         dMu = cNode->getMuNew()-cNode->getMuOld();
-        if (fabs(dMu-DelU*dt) > 10){
-            cerr<<"Change in total moisture above the water table, exceeds combined lateral and vertical fluxes by 1% of 1 mm."<<endl;
-        }
+//        if (fabs(dMu-DelU*dt) > 10){
+//            cerr<<"Change in total moisture above the water table, exceeds combined lateral and vertical fluxes by 1% of 1 mm."<<endl;
+//        }
 
 
 
@@ -324,9 +324,9 @@ void tWaterBalance::BasinStorage( double time )
     Balance = BasinRainfall-BasinEvaporation-BasinRunoff-(BasinSaturated-BasinSaturated_old+BasinUnSaturated-BasinUnSaturated_old+BasinCanopy-BasinStorages[2]);
 
     //WR 12192023: Set statement to check water balance error is above some acceptable threshold, in this case set to 1 m
-    if (fabs(Balance) > 0.1){
-        cerr << "Water balance error is above 1m^3: " << std::setprecision(5) << Balance << endl;
-    }
+//    if (fabs(Balance) > 0.1){
+//        cerr << "Water balance error is above 1m^3: " << std::setprecision(5) << Balance << endl;
+//    }
 
     BasinStorages[0] += BasinRainfall;
 	BasinStorages[1] += BasinEvaporation;
