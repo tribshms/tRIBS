@@ -501,7 +501,7 @@ int tIntercept::getIoption()
 ***************************************************************************/
 double tIntercept::getCtoS(tCNode *cNode)
 {
-	double ctos;
+	double ctos {};
 	if (interceptOption == 1)
 		ctos = 1;
 	else if (interceptOption == 2) {
@@ -521,7 +521,7 @@ double tIntercept::getCtoS(tCNode *cNode)
 ***************************************************************************/
 int tIntercept::IsThereCanopy(tCNode *cNode)
 {
-	int answer;
+	int answer {};
 	if (interceptOption == 1)
 		answer = 1;
 	else if (interceptOption == 2) {

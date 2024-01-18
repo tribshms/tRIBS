@@ -66,20 +66,20 @@ public:
   
   double get_Total_Moist(double);         
   double get_Upper_Moist(double, double); 
-  double get_Lower_Moist(double, double); 
+  double get_Lower_Moist(double, double) const;
   
   //double get_Z1Z2_Moist(double, double, double);
   // SKY2008Snow from AJR2007
   double  get_Z1Z2_Moist(double, double, double, int);
   
-  double get_InitMoist_depthZ(double); 
-  double get_EdgeMoist_depthZ(double); 
+  double get_InitMoist_depthZ(double) const;
+  double get_EdgeMoist_depthZ(double) const;
 
-  double get_RechargeRate(double, double); 
-  double get_UnSat_LateralFlow(double, double, double ); 
-  double get_Sat_LateralFlow(double , double, double, double);  
-  double getTransmissivityFinD(double); 
-  double getTransmissivityInfD(double); 
+  double get_RechargeRate(double, double) const;
+  double get_UnSat_LateralFlow(double, double, double ) const;
+  double get_Sat_LateralFlow(double , double, double, double) const;
+  double getTransmissivityFinD(double) const;
+  double getTransmissivityInfD(double) const;
   double GetCellRunon(tCNode *, double);
   double ComputeSurfSoilMoist(double);
 
@@ -89,15 +89,15 @@ public:
   void   set_Suction_Term(double);    
   void   SetCellRunon(tCNode *, double, double, double, int);
 
-  void   polyn(double,double&,double&,double,double,double);  
-  void   polyn(double,double,double&,double&,double,double,double);
+  void   polyn(double,double&,double&,double,double,double) const;
+  void   polyn(double,double,double&,double&,double,double,double) const;
   double LambertW(double);
   double Newton(double, double);  
-  double Newton(double, double, double, int);    
+  double Newton(double, double, double, int) const;
   double rtsafe_mod(double, double, double, double, double, double, double);
 
-  char   gwatfile[kMaxNameSize];
-  char   bedrockfile[kMaxNameSize];
+  char   gwatfile[kMaxNameSize]{};
+  char   bedrockfile[kMaxNameSize]{};
 
   GenericSoilData *soilPtr;   
   GenericLandData *landPtr;     
@@ -119,17 +119,17 @@ protected:
   tArray<double> gwaterval;
 
 private: 
-  int ID, numNodes;
+  int ID{}, numNodes{};
   int *nodeList;
-  int EToption, Ioption;                // Options for hydrologic processs
+  int EToption{}, Ioption{};                // Options for hydrologic processs
   
   // SKY2008Snow from AJR2007
-  int SnOpt;
+  int SnOpt{};
   
-  int gFluxOption, BRoption, RdstrOption, GWoption;
-  int RunOnoption;
+  int gFluxOption{}, BRoption{}, RdstrOption{}, GWoption{};
+  int RunOnoption{};
 
-  int percolationOption; //ASM 2/14/2017
+  int percolationOption{}; //ASM 2/14/2017
 
   double NwtOld, NwtNew;   		// Water table depth in mm
   double MuOld,  MuNew;    		// Moisture Content above WT in mm
@@ -138,65 +138,65 @@ private:
   double NtOld,  NtNew;    		// Top Front in mm
   double RuOld,  RuNew;    		// Recharge rate above wet front in mm
   double RiOld,  RiNew;    		// Recharge rate in mm 
-  double QpIn, QpOut, QIn, QOut;
-  double IntStormVar;
-  double IntStormMAX;
+  double QpIn{}, QpOut{}, QIn{}, QOut{};
+  double IntStormVar{};
+  double IntStormMAX{};
 
-  double R, R1, Rain;      		// Rainfall in mm/h;
-  double BasArea;                       // Total basin area in m^2
-  double alpha;  			// Slope angle of the node in radians
-  double Cos, Sin;
-  double gwchange;
+  double R{}, R1{}, Rain{};      		// Rainfall in mm/h;
+  double BasArea{};                       // Total basin area in m^2
+  double alpha{};  			// Slope angle of the node in radians
+  double Cos{}, Sin{};
+  double gwchange{};
 
-  double srf;    			// Total Runoff Generation
-  double hsrf;   			// Hortonian Runoff
-  double esrf;   			// Exfiltration
-  double psrf;   			// Perched Saturation Runoff
-  double satsrf; 			// Groundwater Saturation
-  double sbsrf;  			// Saturation from Below runoff
-  double qrunon;                        // Runon amount [mm/hr]
+  double srf{};    			// Total Runoff Generation
+  double hsrf{};   			// Hortonian Runoff
+  double esrf{};   			// Exfiltration
+  double psrf{};   			// Perched Saturation Runoff
+  double satsrf{}; 			// Groundwater Saturation
+  double sbsrf{};  			// Saturation from Below runoff
+  double qrunon{};                        // Runon amount [mm/hr]
 
-  double G;           			// Capillary drive across the wet front
-  double SeIn, Se0;   			// Effective saturation in the power 
-  double ThRiNf, ThReNf;                // (3 + 1/lambda)
+  double G{};           			// Capillary drive across the wet front
+  double SeIn{}, Se0{};   			// Effective saturation in the power
+  double ThRiNf{}, ThReNf{};                // (3 + 1/lambda)
 
-  double Ksat;
-  double F;
-  double Ths;
-  double Thr;
-  double Ar;
-  double UAr;
-  double PoreInd;
-  double Eps;
-  double Psib;
-  double porosity;
-  double Stok;    			// Cumulative runoff value M^3
-  double TotRain; 			// Cumulative rainfall value M^3
+  double Ksat{};
+  double F{};
+  double Ths{};
+  double Thr{};
+  double Ar{};
+  double UAr{};
+  double PoreInd{};
+  double Eps{};
+  double Psib{};
+  double porosity{};
+  double Stok{};    			// Cumulative runoff value M^3
+  double TotRain{}; 			// Cumulative rainfall value M^3
 
   // SKYnGM2008LU: Land Use Parameters
-  double a_LU;
-  double b1_LU;
-  double P_LU;
-  double S_LU;
-  double K_LU;
-  double b2_LU;
-  double Al_LU;
-  double h_LU;
-  double Kt_LU;
-  double Rs_LU;
-  double V_LU;
-  double LAI_LU;
+  double a_LU{};
+  double b1_LU{};
+  double P_LU{};
+  double S_LU{};
+  double K_LU{};
+  double b2_LU{};
+  double Al_LU{};
+  double h_LU{};
+  double Kt_LU{};
+  double Rs_LU{};
+  double V_LU{};
+  double LAI_LU{};
 
   // SKY2008Snow from AJR2007
-  double snowMeltEx;
-  double swe;
+  double snowMeltEx{};
+  double swe{};
 
-  double TotGWchange; 			// Cumulative GW storage change M^3
-  double TotMoist; 			// Cumulative change in moisture storage
-  double DtoBedrock; 			// Depth to bedrock
+  double TotGWchange{}; 			// Cumulative GW storage change M^3
+  double TotMoist{}; 			// Cumulative change in moisture storage
+  double DtoBedrock{}; 			// Depth to bedrock
   
   ofstream fctout;
-  double fSoi100, fTop100, fClm100, fGW100, dM100, dMRt, mTh100, mThRt;
+  double fSoi100{}, fTop100{}, fClm100{}, fGW100{}, dM100{}, dMRt{}, mTh100{}, mThRt{};
 
   tMesh<tCNode>   *gridPtr;      // Pointer to mesh
   tRunTimer *timer;              // Pointer to timer

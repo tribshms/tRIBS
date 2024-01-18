@@ -1494,7 +1494,7 @@ double tSnowPack::inShortWaveSn(tCNode *cNode) {
     if (alphaD > 0.0) {
 
         elevation = cNode->getZ(); //SMM 10142008
-        DirectDiffuse(Tlinke, elevation);  // SKY2008Snow, AJR2007
+        DirectDiffuse(elevation);  // SKY2008Snow, AJR2007
 
         // Cloud cover information
         if (fabs(skyCover - 9999.99) < 1.0E-3) {
@@ -1673,7 +1673,7 @@ double tSnowPack::inShortWaveCan() {
 
     if (alphaD > 0.0) {
 
-        DirectDiffuse(Tlinke, elevation);  // SKY2008Snow, AJR2007
+        DirectDiffuse(elevation);  // SKY2008Snow, AJR2007
 
         // Cloud cover information
         if (fabs(skyCover - 9999.99) < 1.0E-3) {

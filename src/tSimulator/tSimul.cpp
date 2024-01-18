@@ -36,7 +36,7 @@ Simulator::Simulator(SimulationControl *simctrlptr, tRainfall *rainptr,
 	rainIn  = rainptr;
 	timer   = tmrptr;
 	outp    = otpptr;
-   restart = restartptr;
+    restart = restartptr;
 
 	// Time tag of initial time, hour
 	begin_hour = timer->getCurrentTime(); 
@@ -121,7 +121,7 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
 	// Output initial conditions
 	//outp->WriteDynamicVars( timer->getCurrentTime() );
 	//outp->WritePixelInfo(   timer->getCurrentTime() );
-    //outp->WritePixelInvariantInfo();
+    outp->WritePixelInvariantInfo();
 
 	// Prepare rainfall input if stochastic rainfall Off
 	if ( !rainIn->getoptStorm()) {
