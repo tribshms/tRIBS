@@ -8,7 +8,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross co
 set(exe "tRIBS")
 
 set(parallel ON)
-set(cxx_flags "-O2")
+set(cxx_flags "-g")
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 

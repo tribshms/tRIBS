@@ -91,7 +91,7 @@ protected:
   ofstream triofs;
   ofstream zofs;
   ofstream *pixinfo;
-  ofstream ivr_pixinfo;
+  ofstream *ivr_pixinfo;
   ofstream *dynvars;              
 };
 
