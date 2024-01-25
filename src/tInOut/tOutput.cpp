@@ -1785,6 +1785,24 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 		<<','<<"AvLUAlb"<<','<<"AvVegHeight"
 		<<','<<"AvOTCoeff"<<','<<"AvStomRes"
 		<<','<<"AvVegFract"<<','<<"AvLeafAI"
+        
+        // WR 01252023: Needed to add in indiviudal cell soil properties and bedrock depth for easier water balance calcs.
+        //<< "Area_m_sq "<<','<< //2
+        <<','<< "Bedrock_Depth_mm" //3
+        <<','<< "Ks" //double getKs(); TODO: Add units
+        <<','<< "ThetaS" //double getThetaS();
+        <<','<< "ThetaR"//double g
+        <<','<< "PoreSize"//double
+        <<','<<"AirEBubPress"//double get
+        <<','<<"DecayF"//double g
+        <<','<<"SatAnRatio"//double ge
+        <<','<<"UnsatAnRatio"//double getUo
+        <<','<<"Porosity"//double
+        <<','<<"VolHeatCond"//double get
+        <<','<<"SoilHeatCap"//double get
+        <<','<<"SoilID"//5
+        <<','<<"LandUseID" //4
+
 
 		<<"\n";
 	}
@@ -1906,9 +1924,42 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			<<setprecision(7)<<cn->getAvOptTransmCoeff()<<',' 
 			<<setprecision(7)<<cn->getAvStomRes()<<',' 
 			<<setprecision(7)<<cn->getAvVegFraction()<<','
-			<<setprecision(7)<<cn->getAvLeafAI();
+			<<setprecision(7)<<cn->getAvLeafAI()<<','
+            
+           << setprecision(7) << cn->getBedrockDepth() << ','   /* *** bedrock depth mm */
+           << setprecision(7) << cn->getKs() << ','
+           << setprecision(7) << cn->getThetaS() << ','
+           << setprecision(7) << cn->getThetaR() << ','
+           << setprecision(7) << cn->getPoreSize() << ','
+           << setprecision(7) << cn->getAirEBubPres() << ','
+           << setprecision(7) << cn->getDecayF() << ','
+           << setprecision(7) << cn->getSatAnRatio() << ','
+           << setprecision(7) << cn->getUnsatAnRatio() << ','
+           << setprecision(7) << cn->getPorosity() << ','
+           << setprecision(7) << cn->getVolHeatCond() << ','
+           << setprecision(7) << cn->getSoilHeatCap() << ','
+           << setprecision(7) << cn->getSoilID() << ',' /* 4 Soil ID */
+           << setprecision(7) << cn->getLandUse() << ','; /* 5 Land Use ID */
 
-		intofs<<setprecision(6)<<"\n";
+//        // WR 01252023: Needed to add in indiviudal cell soil properties and bedrock depth for easier water balance calcs.
+//        //<< "Area_m_sq "<<','<< //2
+//        <<','<< "Bedrock_Depth_mm" //3
+//             <<','<< "Ks" //double getKs(); TODO: Add units
+//             <<','<< "ThetaS" //double getThetaS();
+//             <<','<< "ThetaR"//double g
+//             <<','<< "PoreSize"//double
+//             <<','<<"AirEBubPress"//double get
+//             <<','<<"DecayF"//double g
+//             <<','<<"SatAnRatio"//double ge
+//             <<','<<"UnsatAnRatio"//double getUo
+//             <<','<<"Porosity"//double
+//             <<','<<"VolHeatCond"//double get
+//             <<','<<"SoilHeatCap"//double get
+//             <<','<<"SoilID"//5
+//             <<','<<"LandUseID" //4
+
+
+        intofs<<setprecision(6)<<"\n";
 		
 		cn = ni.NextP();
 	}

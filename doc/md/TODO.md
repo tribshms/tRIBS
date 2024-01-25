@@ -1,6 +1,7 @@
 # tRIBS TODO
 
 ### Todo
+- [ ] Remove invariant .pixel files--all relevant information can be written to the time integrated variable
 - [ ] Finalize updated benchmarks 
 - [ ] Update input file and input work flow to address the fact that specifying .mdf in the input file does not work or is superseded by the .sdf
 - [ ] Update flow for reading in dynamic LU grids--this is a bottleneck in terms of speed
