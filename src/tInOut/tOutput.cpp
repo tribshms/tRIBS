@@ -47,6 +47,7 @@ tOutput<tSubNode>::tOutput(SimulationControl *simCtrPtr,
 	g = gridPtr;  
 	respPtr = resamp;
 	simCtrl = simCtrPtr;
+
 	
 	Cout<<"\nOutput Files:"<<endl<<endl;
 	infile.ReadItem(baseName, "OUTFILENAME" );    //basename of output
@@ -82,7 +83,8 @@ tOutput<tSubNode>::tOutput(SimulationControl *simCtrPtr,
 
 	ReadNodeOutputList(); 
 	CreateAndOpenPixel();
-	dynvars = NULL;
+    CreateAndOpenPixelInvariant();
+	dynvars = nullptr;
 }
 
 /*************************************************************************
@@ -105,6 +107,7 @@ tOutput<tSubNode>::tOutput( SimulationControl *simCtrPtr,
 	timer = timptr;    
 	respPtr = resamp;
 	simCtrl = simCtrPtr;
+
 	
 	Cout<<"\nOutput Files:"<<endl<<endl;
 	infile.ReadItem( baseName, "OUTFILENAME" );          
@@ -141,7 +144,7 @@ tOutput<tSubNode>::tOutput( SimulationControl *simCtrPtr,
 	ReadNodeOutputList(); 
 	CreateAndOpenPixel();
     CreateAndOpenPixelInvariant();
-	dynvars = NULL;
+	dynvars = nullptr;
 }
 
 template< class tSubNode >
@@ -157,6 +160,8 @@ tOutput<tSubNode>::~tOutput()
 		delete [] pixinfo;
 	if (dynvars)
 		delete [] dynvars;
+    if (ivr_pixinfo)
+        delete [] ivr_pixinfo;
 	
 	Cout<<"tOutput Object has been destroyed..."<<endl<<flush;
 }
@@ -204,7 +209,7 @@ void tOutput<tSubNode>::CreateAndOpenFile( ofstream *theOFStream,
 	theOFStream->open( fullName );
 	
 	if ( !theOFStream->good() )
-		cerr << "File "<<fullName<<" not created.";
+		cerr << "File "<<fullName<<" not created." << endl;
 	
 /*SMM
 	Cout<<"Creating Output File: \t '"<<fullName<<"' "<<endl;
@@ -267,6 +272,7 @@ void tOutput<tSubNode>::ReadNodeOutputList() {
 	nodeList = new int[numNodes];
 	uzel = new tSubNode*[numNodes];
 	pixinfo = new ofstream[numNodes];
+    ivr_pixinfo = new ofstream[numNodes];
 	
 #ifdef PARALLEL_TRIBS
   // Initialize to NULL
@@ -418,32 +424,49 @@ template< class tSubNode >
 void tOutput<tSubNode>::CreateAndOpenPixelInvariant()
 {
     if ( nodeList ) {
-        char pixelext[15] = ".ivpixel";
+        char pixelext[10] = ".ivpixel";
+        char nodeNum[10], pixelnode[100];
+
         //SMM - Set interior nodes, added 08132008
         SetInteriorNode();
-        CreateAndOpenFile( &ivr_pixinfo, pixelext);
-        if (simCtrl->Header_label=='Y') {
-            // first row name
-            ivr_pixinfo<<"NodeID "//1
-                      <<"Area_m_sq " //2
-                      <<"Bedrock_Depth_mm " //3
-                      <<"Ks " //double getKs(); TODO: Add units
-                      <<"ThetaS " //double getThetaS();
-                      <<"ThetaR "//double g
-                      <<"PoreSize "//double
-                      <<"AirEBubPress "//double get
-                      <<"DecayF "//double g
-                      <<"SatAnRatio "//double ge
-                      <<"UnsatAnRatio "//double getUo
-                      <<"Porosity "//double
-                      <<"VolHeatCond "//double get
-                      <<"SoilHeatCap "//double get
-                      <<"SoilID "//5
-                      <<"LandUseID" //4
-                      <<"\n";
+
+        for (int i = 0; i < numNodes; i++) {
+#ifdef PARALLEL_TRIBS
+            // Check if node is on this processor
+            if ((uzel[i] != nullptr) && (nodeList[i] >= 0)) {
+#else
+                if (nodeList[i] >= 0) {
+#endif
+                    snprintf(nodeNum, sizeof(nodeNum), "%d", nodeList[i]);
+                    strcpy(pixelnode, nodeNum);
+                    strcat(pixelnode, pixelext);
+
+                    CreateAndOpenFile(&ivr_pixinfo[i], pixelnode);
+                    if (simCtrl->Header_label == 'Y') {
+                        // first row name
+                        ivr_pixinfo[i] << "NodeID "//1
+                                    << "Area_m_sq " //2
+                                    << "Bedrock_Depth_mm " //3
+                                    << "Ks " //double getKs(); TODO: Add units
+                                    << "ThetaS " //double getThetaS();
+                                    << "ThetaR "//double g
+                                    << "PoreSize "//double
+                                    << "AirEBubPress "//double get
+                                    << "DecayF "//double g
+                                    << "SatAnRatio "//double ge
+                                    << "UnsatAnRatio "//double getUo
+                                    << "Porosity "//double
+                                    << "VolHeatCond "//double get
+                                    << "SoilHeatCap "//double get
+                                    << "SoilID "//5
+                                    << "LandUseID" //4
+                                    << "\n";
+                    }
+                    ivr_pixinfo[i].setf(ios::right, ios::adjustfield);
+                    ivr_pixinfo[i].setf(ios::fixed, ios::floatfield);
+
+            }
         }
-        ivr_pixinfo.setf( ios::right, ios::adjustfield );
-        ivr_pixinfo.setf( ios::fixed, ios::floatfield);
     }
 }
 
@@ -809,11 +832,6 @@ void tOutput<tSubNode>::end_simulation()
 #endif
             pixinfo[i].close();
 
-#ifdef PARALLEL_TRIBS
-        // Check if node is on this processor
-        if ((uzel[i] != NULL) && (nodeList[i] >= 0))
-#endif
-            ivr_pixinfo.close();
     }
 }
 
@@ -1270,7 +1288,7 @@ void tCOutput<tSubNode>::WritePixelInvariantInfo()
         // The output format should be readable by ArcInfo & Matlab
         for (int i = 0; i < this->numNodes; i++) {
                 if ( this->uzel[i] && this->nodeList[i] < this->g->getNodeList()->getActiveSize()) {
-                this->ivr_pixinfo << setw(8) << this->nodeList[i]<< " "/* 1 id */
+                this->ivr_pixinfo[i] << setw(8) << this->nodeList[i]<< " "/* 1 id */
                                      << setprecision(7)
                                      << setw(9) << this->uzel[i]->getVArea() << " " /* 2 area m^2 */
                                      << setw(9) << this->uzel[i]->getBedrockDepth() << " "   /* 5 bedrock depth mm */
@@ -1290,6 +1308,7 @@ void tCOutput<tSubNode>::WritePixelInvariantInfo()
                                      << setw(6) << this->uzel[i]->getLandUse() << " "; /* 5 Land Use ID */
 
             }
+            this->ivr_pixinfo[i].close();
         }
 }
 /*************************************************************************
@@ -1735,23 +1754,38 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 	this->CreateAndOpenFile(&intofs, extension);
 	
 	if (simCtrl->Header_label=='Y') {
-		intofs<<"ID"<<','<<"BndCd"<<','<<"Z"<<','<<"VAr"<<','<<"CAr"<<','<<"Curv"
-		<<','<<"EdgL"<<','<<"Slp"
-		<<','<<"FWidth"<<','<<"Aspect"
+		intofs<<"ID"<<','
+        <<"BndCd"<<','
+        <<"Z"<<','
+        <<"VAr"<<','
+        <<"CAr"<<','
+        <<"Curv"<<','
+        <<"EdgL"<<','
+        <<"Slp"<<','
+        <<"FWidth"<<','
+        <<"Aspect"<<','
 
 		// SKY2008Snow from AJR2007
-		<<','<<"SV"<<','<<"LV"//added by AJR 2007 @ NMT
+		<<"SV"<<','
+        <<"LV"<<','//added by AJR 2007 @ NMT
 
-		<<','<<"AvSM"<<','<<"AvRtM"
-		<<','<<"HOccr"<<','<<"HRt"
-		<<','<<"SbOccr"<<','<<"SbRt"
-		<<','<<"POccr"<<','<<"PRt"
-		<<','<<"SatOccr"<<','<<"SatRt"
-		<<','<<"SoiSatOccr"<<','<<"RchDsch"
-		<<','<<"AvET"<<','<<"EvpFrct"
+		<<"AvSM"<<','
+        <<"AvRtM"<<','
+        <<"HOccr"<<','
+        <<"HRt"<<','
+        <<"SbOccr"<<','
+        <<"SbRt"<<','
+        <<"POccr"<<','
+        <<"PRt"<<','
+        <<"SatOccr"<<','
+        <<"SatRt"<<','
+        <<"SoiSatOccr"<<','
+        <<"RchDsch"<<','
+        <<"AvET"<<','
+        <<"EvpFrct"<<','
 
 		// SKY2008Snow from AJR2007
-		<<','<<"cLHF"<<','<<"cMelt"//added by AJR 2007 @ NMT
+		<<"cLHF"<<','<<"cMelt"//added by AJR 2007 @ NMT
 		<<','<<"cSHF"<<','<<"cPHF"//added by AJR 2007 @ NMT
 		<<','<<"cRLIn"<<','<<"cRLo"//added by AJR 2007 @ NMT
 		<<','<<"cRSIn"<<','<<"cGHF"//added by AJR 2007 @ NMT
@@ -1766,6 +1800,24 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 		<<','<<"AvLUAlb"<<','<<"AvVegHeight"
 		<<','<<"AvOTCoeff"<<','<<"AvStomRes"
 		<<','<<"AvVegFract"<<','<<"AvLeafAI"
+        
+        // WR 01252023: Needed to add in indiviudal cell soil properties and bedrock depth for easier water balance calcs.
+        //<< "Area_m_sq "<<','<< //2
+        <<','<< "Bedrock_Depth_mm" //3
+        <<','<< "Ks" //double getKs(); TODO: Add units
+        <<','<< "ThetaS" //double getThetaS();
+        <<','<< "ThetaR"//double g
+        <<','<< "PoreSize"//double
+        <<','<<"AirEBubPress"//double get
+        <<','<<"DecayF"//double g
+        <<','<<"SatAnRatio"//double ge
+        <<','<<"UnsatAnRatio"//double getUo
+        <<','<<"Porosity"//double
+        <<','<<"VolHeatCond"//double get
+        <<','<<"SoilHeatCap"//double get
+        <<','<<"SoilID"//5
+        <<','<<"LandUseID" //4
+
 
 		<<"\n";
 	}
@@ -1781,7 +1833,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 		<<cn->getFlowEdg()->getLength()<<','
 		<<cn->getFlowEdg()->getSlope()<<','
 		<<cn->getFlowEdg()->getVEdgLen()<<','
-		<<setprecision(4)<<cn->getAspect()<<',' //;
+		<<setprecision(4)<<cn->getAspect()<<','
 
 		// SKY2008Snow from AJR2007
 		<<setprecision(7)<<cn->getSheltFact()<<','//added by AJR 2007 @ NMT
@@ -1887,9 +1939,24 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			<<setprecision(7)<<cn->getAvOptTransmCoeff()<<',' 
 			<<setprecision(7)<<cn->getAvStomRes()<<',' 
 			<<setprecision(7)<<cn->getAvVegFraction()<<','
-			<<setprecision(7)<<cn->getAvLeafAI();
+			<<setprecision(7)<<cn->getAvLeafAI()<<','
+            
+            <<setprecision(7)<<cn->getBedrockDepth()<<','   /* *** bedrock depth mm */
+           << setprecision(7) << cn->getKs() << ','
+           << setprecision(7) << cn->getThetaS() << ','
+           << setprecision(7) << cn->getThetaR() << ','
+           << setprecision(7) << cn->getPoreSize() << ','
+           << setprecision(7) << cn->getAirEBubPres() << ','
+           << setprecision(7) << cn->getDecayF() << ','
+           << setprecision(7) << cn->getSatAnRatio() << ','
+           << setprecision(7) << cn->getUnsatAnRatio() << ','
+           << setprecision(7) << cn->getPorosity() << ','
+           << setprecision(7) << cn->getVolHeatCond() << ','
+           << setprecision(7) << cn->getSoilHeatCap() << ','
+           << setprecision(7) << cn->getSoilID() << ',' /* 4 Soil ID */
+           << setprecision(7) << cn->getLandUse(); /* 5 Land Use ID */
 
-		intofs<<setprecision(6)<<"\n";
+        intofs<<"\n";
 		
 		cn = ni.NextP();
 	}

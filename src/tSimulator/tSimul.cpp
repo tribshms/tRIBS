@@ -46,7 +46,10 @@ Simulator::Simulator(SimulationControl *simctrlptr, tRainfall *rainptr,
 	
 	// Counter of time, used for GW model
 	GW_label = 0.;                       
-	
+
+    // Write invariant pixel info first step
+    invarPixelFlag = true;
+
 	// Output data on Mesh and Voronoi elements
 	outp->WriteOutput( 0 );
 	
@@ -121,7 +124,6 @@ void Simulator::initialize_simulation(tEvapoTrans *EvapoTrans, tSnowPack *SnowPa
 	// Output initial conditions
 	//outp->WriteDynamicVars( timer->getCurrentTime() );
 	//outp->WritePixelInfo(   timer->getCurrentTime() );
-    outp->WritePixelInvariantInfo();
 
 	// Prepare rainfall input if stochastic rainfall Off
 	if ( !rainIn->getoptStorm()) {
@@ -528,7 +530,11 @@ void Simulator::SubSurfaceHydroProcesses(tHydroModel *Moisture)
 void Simulator::OutputSimulatedVars(tKinemat *Flow)
 { 
 	int forenum;
-	
+
+    if (invarPixelFlag){
+        outp->WritePixelInvariantInfo();
+        invarPixelFlag = false;
+    }
 	// If it's necessary -> Output PixelInfo
 	if ( ! (fmod(timer->getCurrentTime(), timer->getEtIStep())) ) {
 		if ( outp->nodeList )
