@@ -1754,23 +1754,38 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 	this->CreateAndOpenFile(&intofs, extension);
 	
 	if (simCtrl->Header_label=='Y') {
-		intofs<<"ID"<<','<<"BndCd"<<','<<"Z"<<','<<"VAr"<<','<<"CAr"<<','<<"Curv"
-		<<','<<"EdgL"<<','<<"Slp"
-		<<','<<"FWidth"<<','<<"Aspect"
+		intofs<<"ID"<<','
+        <<"BndCd"<<','
+        <<"Z"<<','
+        <<"VAr"<<','
+        <<"CAr"<<','
+        <<"Curv"<<','
+        <<"EdgL"<<','
+        <<"Slp"<<','
+        <<"FWidth"<<','
+        <<"Aspect"<<','
 
 		// SKY2008Snow from AJR2007
-		<<','<<"SV"<<','<<"LV"//added by AJR 2007 @ NMT
+		<<"SV"<<','
+        <<"LV"<<','//added by AJR 2007 @ NMT
 
-		<<','<<"AvSM"<<','<<"AvRtM"
-		<<','<<"HOccr"<<','<<"HRt"
-		<<','<<"SbOccr"<<','<<"SbRt"
-		<<','<<"POccr"<<','<<"PRt"
-		<<','<<"SatOccr"<<','<<"SatRt"
-		<<','<<"SoiSatOccr"<<','<<"RchDsch"
-		<<','<<"AvET"<<','<<"EvpFrct"
+		<<"AvSM"<<','
+        <<"AvRtM"<<','
+        <<"HOccr"<<','
+        <<"HRt"<<','
+        <<"SbOccr"<<','
+        <<"SbRt"<<','
+        <<"POccr"<<','
+        <<"PRt"<<','
+        <<"SatOccr"<<','
+        <<"SatRt"<<','
+        <<"SoiSatOccr"<<','
+        <<"RchDsch"<<','
+        <<"AvET"<<','
+        <<"EvpFrct"<<','
 
 		// SKY2008Snow from AJR2007
-		<<','<<"cLHF"<<','<<"cMelt"//added by AJR 2007 @ NMT
+		<<"cLHF"<<','<<"cMelt"//added by AJR 2007 @ NMT
 		<<','<<"cSHF"<<','<<"cPHF"//added by AJR 2007 @ NMT
 		<<','<<"cRLIn"<<','<<"cRLo"//added by AJR 2007 @ NMT
 		<<','<<"cRSIn"<<','<<"cGHF"//added by AJR 2007 @ NMT
@@ -1818,7 +1833,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 		<<cn->getFlowEdg()->getLength()<<','
 		<<cn->getFlowEdg()->getSlope()<<','
 		<<cn->getFlowEdg()->getVEdgLen()<<','
-		<<setprecision(4)<<cn->getAspect()<<',' //;
+		<<setprecision(4)<<cn->getAspect()<<','
 
 		// SKY2008Snow from AJR2007
 		<<setprecision(7)<<cn->getSheltFact()<<','//added by AJR 2007 @ NMT
@@ -1926,7 +1941,7 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			<<setprecision(7)<<cn->getAvVegFraction()<<','
 			<<setprecision(7)<<cn->getAvLeafAI()<<','
             
-           << setprecision(7) << cn->getBedrockDepth() << ','   /* *** bedrock depth mm */
+            <<setprecision(7)<<cn->getBedrockDepth()<<','   /* *** bedrock depth mm */
            << setprecision(7) << cn->getKs() << ','
            << setprecision(7) << cn->getThetaS() << ','
            << setprecision(7) << cn->getThetaR() << ','
@@ -1939,27 +1954,9 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
            << setprecision(7) << cn->getVolHeatCond() << ','
            << setprecision(7) << cn->getSoilHeatCap() << ','
            << setprecision(7) << cn->getSoilID() << ',' /* 4 Soil ID */
-           << setprecision(7) << cn->getLandUse() << ','; /* 5 Land Use ID */
+           << setprecision(7) << cn->getLandUse(); /* 5 Land Use ID */
 
-//        // WR 01252023: Needed to add in indiviudal cell soil properties and bedrock depth for easier water balance calcs.
-//        //<< "Area_m_sq "<<','<< //2
-//        <<','<< "Bedrock_Depth_mm" //3
-//             <<','<< "Ks" //double getKs(); TODO: Add units
-//             <<','<< "ThetaS" //double getThetaS();
-//             <<','<< "ThetaR"//double g
-//             <<','<< "PoreSize"//double
-//             <<','<<"AirEBubPress"//double get
-//             <<','<<"DecayF"//double g
-//             <<','<<"SatAnRatio"//double ge
-//             <<','<<"UnsatAnRatio"//double getUo
-//             <<','<<"Porosity"//double
-//             <<','<<"VolHeatCond"//double get
-//             <<','<<"SoilHeatCap"//double get
-//             <<','<<"SoilID"//5
-//             <<','<<"LandUseID" //4
-
-
-        intofs<<setprecision(6)<<"\n";
+        intofs<<"\n";
 		
 		cn = ni.NextP();
 	}
