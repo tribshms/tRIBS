@@ -273,7 +273,7 @@ void tFlowResults::free_results()
     //ASM 5/5/2016
     free(Perc); //ASM percolation option
 
-	prr=NULL;
+	prr=nullptr;
 	crr=NULL;
 	phydro=NULL;
 	mhydro=NULL;
@@ -289,7 +289,7 @@ void tFlowResults::free_results()
 	msmRt = NULL;
 	mgw = NULL;
 	met = NULL;
-	sat = NULL;
+	sat = nullptr;
 	frac = NULL;
 
 	// SKY2008Snow from AJR2007
@@ -448,7 +448,6 @@ void tFlowResults::writeAndUpdate( double time, int forenum )
 	update_prev_hyd();
 	
 	reset_meas_hyd();
-	return;
 }
 
 /***************************************************************************
@@ -481,7 +480,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 	int ii;              //Loop counter 
 	int it_hour,it_min;  //Hours and minutes to print results 
 	
-	if ((ifile=fopen(filename,"w")) == NULL) { 
+	if ((ifile=fopen(filename,"w")) == nullptr) {
 		cout<<"\nError: Unable to open *.mrf file: "<<filename<<endl;
 		cout<<"Exiting Program..."<<endl;
 		exit(2);

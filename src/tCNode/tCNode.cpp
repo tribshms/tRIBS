@@ -330,7 +330,7 @@ double tCNode::getQpout()  { return Qpout; }
 double tCNode::getRain()   { return Rain;  }
 double tCNode::getSrf_Hr() { return srf_hr;  }
 double tCNode::getSrf()    { return srf;  }
-double tCNode::getCumSrf()    { return cumsrf;  } // added CJC2021
+double tCNode::getCumSrf() { return cumsrf;  } // added CJC2021
 double tCNode::getHsrf()   { return hsrf; }
 double tCNode::getPsrf()   { return psrf; }
 double tCNode::getSatsrf() { return satsrf; }

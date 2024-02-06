@@ -1176,7 +1176,7 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				<<setw(10)<<this->uzel[i]->getGwaterChng()*1.E-9<<"  "
 				
 				<<setprecision(7)
-				<<setw(8) <<this->uzel[i]->getSrf()<<"  "
+				<<setw(8) <<this->uzel[i]->getSrf()<<"  "//WR debug 02062024, this is a total not a rate--and its reset every loop so every 3.75 minutes in sim time
 				<<setw(10)<<this->uzel[i]->getRain()<<"  "
 				<<setw(10)<<this->uzel[i]->getSoilMoistureSC()<<"  "
 				/* 15 */  <<setw(10)<<this->uzel[i]->getRootMoistureSC()<<" "
@@ -1433,7 +1433,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		<<setprecision(5)
 		<<cn->getQpout()*1.E-6/cn->getVArea()<<',' /*10*/
 		<<cn->getQpin()*1.E-6/cn->getVArea()<<','
-		<<setprecision(4)<<cn->getCumSrf()<<','
+		<<setprecision(4)<<cn->getCumSrf()<<',' // in mm
 		<<setprecision(3)<<cn->getRain()<<','
 
 		// SKY2008Snow from AJR2007
