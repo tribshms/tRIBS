@@ -1,11 +1,14 @@
+/*******************************************************************************
+ * TIN-based Real-time Integrated Basin Simulator (tRIBS)
+ * Distributed Hydrologic Model
+ * VERSION 5.2
+ *
+ * Copyright (c) 2024. tRIBS Developers
+ *
+ * See LICENSE file in the project root for full license information.
+ ******************************************************************************/
+
 /***************************************************************************
-**
-**  		     tRIBS Distributed Hydrologic Model
-**
-**              TIN-based Real-time Integrated Basin Simulator
-**		         Ralph M. Parsons Laboratory
-**  		    Massachusetts Institute of Technology
-**  
 **
 **  tFlowResults.cpp: Functions for class tFlowResults
 **			  (see tFlowResults.h)
@@ -273,7 +276,7 @@ void tFlowResults::free_results()
     //ASM 5/5/2016
     free(Perc); //ASM percolation option
 
-	prr=NULL;
+	prr=nullptr;
 	crr=NULL;
 	phydro=NULL;
 	mhydro=NULL;
@@ -289,7 +292,7 @@ void tFlowResults::free_results()
 	msmRt = NULL;
 	mgw = NULL;
 	met = NULL;
-	sat = NULL;
+	sat = nullptr;
 	frac = NULL;
 
 	// SKY2008Snow from AJR2007
@@ -448,7 +451,6 @@ void tFlowResults::writeAndUpdate( double time, int forenum )
 	update_prev_hyd();
 	
 	reset_meas_hyd();
-	return;
 }
 
 /***************************************************************************
@@ -481,7 +483,7 @@ void tFlowResults::write_inter_hyd(char *filename, char *identification,
 	int ii;              //Loop counter 
 	int it_hour,it_min;  //Hours and minutes to print results 
 	
-	if ((ifile=fopen(filename,"w")) == NULL) { 
+	if ((ifile=fopen(filename,"w")) == nullptr) {
 		cout<<"\nError: Unable to open *.mrf file: "<<filename<<endl;
 		cout<<"Exiting Program..."<<endl;
 		exit(2);

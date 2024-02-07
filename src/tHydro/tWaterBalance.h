@@ -1,11 +1,14 @@
+/*******************************************************************************
+ * TIN-based Real-time Integrated Basin Simulator (tRIBS)
+ * Distributed Hydrologic Model
+ * VERSION 5.2
+ *
+ * Copyright (c) 2024. tRIBS Developers
+ *
+ * See LICENSE file in the project root for full license information.
+ ******************************************************************************/
+
 /***************************************************************************
-**
-**                   tRIBS Distributed Hydrology Model
-**
-**              TIN-based Real-time Integrated Basin Simulator
-**                       Ralph M. Parsons Laboratory
-**                  Massachusetts Institute of Technology
-**  
 **
 **  tWaterBalance.h:   Header file for tWaterBalance Class
 **

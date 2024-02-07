@@ -1,11 +1,14 @@
+/*******************************************************************************
+ * TIN-based Real-time Integrated Basin Simulator (tRIBS)
+ * Distributed Hydrologic Model
+ * VERSION 5.2
+ *
+ * Copyright (c) 2024. tRIBS Developers
+ *
+ * See LICENSE file in the project root for full license information.
+ ******************************************************************************/
+
 /***************************************************************************
-**
-**  		     tRIBS Distributed Hydrologic Model
-**
-**              TIN-based Real-time Integrated Basin Simulator
-**		         Ralph M. Parsons Laboratory
-**  		    Massachusetts Institute of Technology
-**  
 **
 **  tOutput.cpp: Functions for output objects for classes tOutput and 
 **               tCOutput (see tOutput.h)
@@ -1176,7 +1179,7 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				<<setw(10)<<this->uzel[i]->getGwaterChng()*1.E-9<<"  "
 				
 				<<setprecision(7)
-				<<setw(8) <<this->uzel[i]->getSrf()<<"  "
+				<<setw(8) <<this->uzel[i]->getSrf()<<"  "//WR debug 02062024, this is a total not a rate--and its reset every loop so every 3.75 minutes in sim time
 				<<setw(10)<<this->uzel[i]->getRain()<<"  "
 				<<setw(10)<<this->uzel[i]->getSoilMoistureSC()<<"  "
 				/* 15 */  <<setw(10)<<this->uzel[i]->getRootMoistureSC()<<" "
@@ -1433,7 +1436,7 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 		<<setprecision(5)
 		<<cn->getQpout()*1.E-6/cn->getVArea()<<',' /*10*/
 		<<cn->getQpin()*1.E-6/cn->getVArea()<<','
-		<<setprecision(4)<<cn->getCumSrf()<<','
+		<<setprecision(4)<<cn->getCumSrf()<<',' // in mm
 		<<setprecision(3)<<cn->getRain()<<','
 
 		// SKY2008Snow from AJR2007

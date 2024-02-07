@@ -1,11 +1,14 @@
+/*******************************************************************************
+ * TIN-based Real-time Integrated Basin Simulator (tRIBS)
+ * Distributed Hydrologic Model
+ * VERSION 5.2
+ *
+ * Copyright (c) 2024. tRIBS Developers
+ *
+ * See LICENSE file in the project root for full license information.
+ ******************************************************************************/
+
 /***************************************************************************
-**
-**  		     tRIBS Distributed Hydrologic Model
-**
-**              TIN-based Real-time Integrated Basin Simulator
-**		         Ralph M. Parsons Laboratory
-**  		    Massachusetts Institute of Technology
-**
 **
 **  tHydroModel.cpp:   Function file for tHydroModel Class (see tHydroModel.h)
 **
@@ -1863,7 +1866,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 							else {
 						    	    cout<<"\nWarning: WRONG state def.: R < Keqviv-RiOld*Cos: id = "
 								<<cn->getID()<<"\n\n";
-                     }
+                            }
 
 							NtNew = 0.0;
 							RiNew = RiOld;
@@ -2038,8 +2041,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 		cn->setQpout(QpOut);
 		cn->setIntStormVar(IntStormVar);
 
-		cn->addSrf_Hr(srf*dt);
-		cn->setsrf(srf*dt);
+		cn->addSrf_Hr(srf*dt); // WR debug 02062024-- this scaled by dt so appears that it is only a total (mm), but its re-set every hour it the total runoff in an hour as written to .pixel file
 		cn->setsrf(srf*dt);
 		cn->addCumSrf(srf*dt);
 		cn->setsbsrf(sbsrf*dt);
@@ -3473,9 +3475,9 @@ void tHydroModel::SaturatedZone(double dtGW)
 		cn->setRuNew(RuNew);
 		cn->setRiNew(RiNew);
 
-		cn->addSrf_Hr(srf*dtGW);
-		cn->setsrf(cn->getSrf()+srf*dtGW);
-		cn->addCumSrf(cn->getSrf()+srf*dtGW); // Added line compared to old tRIBS version, not documented CJC 2022
+		cn->addSrf_Hr(srf*dtGW);// WR debug 02062024, this is not in hours?
+		cn->setsrf(cn->getSrf()+srf*dtGW); // this is a total depth in mm#
+		cn->addCumSrf(cn->getSrf()); // Added line compared to old tRIBS version, not documented CJC 2022 //WRdebug 02062024: Above line was called, then called again in addCumSrf doubling the
 		cn->setsatsrf(satsrf*dtGW);
 		cn->setesrf(esrf*dtGW);
 

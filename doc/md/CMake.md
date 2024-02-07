@@ -1,10 +1,10 @@
 # CMake 
 
-## instructions for compiling tRIBS on your machine using CMake
+## Instructions for compiling tRIBS on your machine using CMake
 
 Note: these instructions are for using CMake via terminal, there is additional documentation [here](https://cmake.org/cmake/help/latest/guide/user-interaction/index.html#guide:User%20Interaction%20Guide) for using the CMake gui. 
 
-1) Use [Homebrew](https://formulae.brew.sh/formula/cmake)to install CMake, alternatively you can download [CMake](https://cmake.org/download/), but Homebrew is preferred as it will catch additional dependencies.
+1) Use [Homebrew](https://formulae.brew.sh/formula/cmake) to install CMake, alternatively you can download [CMake](https://cmake.org/download/), but Homebrew is preferred as it will catch additional dependencies.
 
 2) You can check to see if CMake is on your path, by typing cmake into the command line. If it says its not found then you will need to set cmake to your path. For example if you downloaded CMake and its now in your application folder you can use:
 

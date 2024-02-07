@@ -1,31 +1,12 @@
-/***************************************************************************
-**
-**  		   tRIBS Distributed Hydrologic Model
-**
-**            TIN-based Real-time Integrated Basin Simulator
-**		       Ralph M. Parsons Laboratory
-**  		  Massachusetts Institute of Technology
-**  
-**                      VERSION 3.0, JULY 2006
-**
-**  Designed and created by the Hydrology group under supervision of
-**      prof. Rafael L. Bras, Department of Civil and Environmental 
-**      Engineering, Massachusetts Institute of Technology, 
-**      Cambridge, MA, U.S.A.
-**
-**  MAIN.CPP -- This file contains the main() routine that handles
-**              top-level initialization.
-**
-**  NOTE: This source code is copyrighted material. It is distributed
-**        solely for noncommercial research and educational purposes.
-**        Use in whole or in part for commercial purposes without a
-**        written license from the copyright holder(s) is expressly
-**        prohibited. Copies of this source code or any of its components 
-**        may not be transferred to any other individuals or organizations
-**        without written consent. Copyright (C) Massachusetts Institute
-**        of Technology, 2001-2003. All rights reserved.
-**
-***************************************************************************/
+/*******************************************************************************
+ * TIN-based Real-time Integrated Basin Simulator (tRIBS)
+ * Distributed Hydrologic Model
+ * VERSION 5.2
+ *
+ * Copyright (c) 2024. tRIBS Developers
+ *
+ * See LICENSE file in the project root for full license information.
+ ******************************************************************************/
 
 
 #include "src/Headers/globalIO.h"

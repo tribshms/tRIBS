@@ -1,11 +1,14 @@
+/*******************************************************************************
+ * TIN-based Real-time Integrated Basin Simulator (tRIBS)
+ * Distributed Hydrologic Model
+ * VERSION 5.2
+ *
+ * Copyright (c) 2024. tRIBS Developers
+ *
+ * See LICENSE file in the project root for full license information.
+ ******************************************************************************/
+
 /***************************************************************************
-**
-**  		      tRIBS Distributed Hydrologic Model
-**
-**              TIN-based Real-time Integrated Basin Simulator
-**		         Ralph M. Parsons Laboratory
-**  		    Massachusetts Institute of Technology
-**  
 **
 **  tFlowNet.cpp: Functions for class tFlowNet (see tFlowNet.h) based on
 **             CHILD and RIBS routines for Stream Net Routing
