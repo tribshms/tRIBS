@@ -8,4 +8,4 @@ tRIBS is an object-oriented based code written in c++. In order to run tRIBS you
 Instructions for using CMake to compile tRIBS can be found [here.](./doc/md/CMake.md)
 
 
-**For additional details in working with source code, including pertinent git commands, see the following instructions [here](./doc/md/DEV_INST.md). Additionally information about debugging tRIBS can be found [here](./doc/md/DEBUG.md)**
+**For additional details in working with source code, including pertinent git commands, see the following instructions [here](./doc/md/DEV_INST.md). Additional information about debugging tRIBS can be found [here](./doc/md/DEBUG.md)**
