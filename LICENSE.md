@@ -14,7 +14,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## References:
-[^1]: 1. Ivanov, V. Y., Vivoni, E. R., Bras, R. L. & Entekhabi, D. Catchment hydrologic response with a fully distributed triangulated irregular network model. Water Resources Research 40, (2004).
+[^1]: Ivanov, V. Y., Vivoni, E. R., Bras, R. L. & Entekhabi, D. Catchment hydrologic response with a fully distributed triangulated irregular network model. Water Resources Research 40, (2004).
 [^2]: Vivoni, E. R. et al. Real-world hydrologic assessment of a fully-distributed hydrological model in a parallel computing environment. Journal of Hydrology 409, 483–496 (2011).
 [^3]: Vivoni, E. R. Diagnosing Seasonal Vegetation Impacts on Evapotranspiration and Its Partitioning at the Catchment Scale during SMEX04–NAME. Journal of Hydrometeorology 13, 1631–1638 (2012).
 [^4]: Rinehart, A. J., Vivoni, E. R. & Brooks, P. D. Effects of vegetation, albedo, and solar radiation sheltering on the distribution of snow in the Valles Caldera, New Mexico. Ecohydrology 1, 253–270 (2008).
