@@ -35,13 +35,11 @@ SimulationControl::SimulationControl(int argc, char **argv)
 	Cout<<"\n-----------------------------------------------------------------"
 	<<"-------";
 	Cout<<"\n\n\t\t tRIBS Distributed Hydrologic Model";
-	Cout<<"\n\t\t TIN-based Real-time Integrated Basin Simulator";
-	Cout<<"\n\t\t Ralph M. Parsons Laboratory";
-	Cout<<"\n\t\t Massachusetts Institute of Technology \n\n";
+	Cout<<"\n\t\t TIN-based Real-time Integrated Basin Simulator \n\n";
 	Cout<<"-----------------------------------------------------------------"
 		<<"-------"<<endl;
 	
-	char VERSION[50] = "4.0, Fall 2023";
+	char VERSION[50] = "5.2, Winter 2024";
 	
 	Cout <<"\n\ntRIBS Version "<< VERSION <<endl<<endl;
 	
