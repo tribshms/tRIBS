@@ -126,7 +126,6 @@ public:
   void WriteDynamicVar(double);
   void WriteIntegrVars(double);
   void WritePixelInfo(double);
-  void WritePixelInvariantInfo();
   void WriteNodeData(double);
   void WriteNodeData(double, tResample*); 
   void WriteGeometry(tResample*);

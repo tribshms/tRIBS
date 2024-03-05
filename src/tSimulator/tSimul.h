@@ -68,7 +68,7 @@ class Simulator
   double GW_label;                // Label to check GW model run 
   
   int searchRain;                 // Search threshold (hours)
-  bool invarPixelFlag;             // Flag to write invariant pixel info to file on first step
+
 
   int  check_mod_status();
   int  checkForecast();

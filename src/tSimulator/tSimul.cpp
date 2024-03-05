@@ -49,10 +49,7 @@ Simulator::Simulator(SimulationControl *simctrlptr, tRainfall *rainptr,
 	lfr_hour = 0; 
 	
 	// Counter of time, used for GW model
-	GW_label = 0.;                       
-
-    // Write invariant pixel info first step
-    invarPixelFlag = true;
+	GW_label = 0.;
 
 	// Output data on Mesh and Voronoi elements
 	outp->WriteOutput( 0 );
@@ -535,10 +532,6 @@ void Simulator::OutputSimulatedVars(tKinemat *Flow)
 { 
 	int forenum;
 
-    if (invarPixelFlag){
-        outp->WritePixelInvariantInfo();
-        invarPixelFlag = false;
-    }
 	// If it's necessary -> Output PixelInfo
 	if ( ! (fmod(timer->getCurrentTime(), timer->getEtIStep())) ) {
 		if ( outp->nodeList )
