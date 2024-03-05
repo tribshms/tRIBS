@@ -1277,45 +1277,6 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 
 /*************************************************************************
 **
-**  tCOutput::WritePixelInvariantInfo()
-**
-**  Writes the time invariant variables of node of interest to a *.ivpixel file
-**  The output format should be readable by ArcInfo & Matlab
-**
-*************************************************************************/
-template< class tSubNode >
-void tCOutput<tSubNode>::WritePixelInvariantInfo()
-{
-
-        // Writing to a file dynamic variables of node of interest
-        // The output format should be readable by ArcInfo & Matlab
-        for (int i = 0; i < this->numNodes; i++) {
-                if ( this->uzel[i] && this->nodeList[i] < this->g->getNodeList()->getActiveSize()) {
-                this->ivr_pixinfo[i] << setw(8) << this->nodeList[i]<< " "/* 1 id */
-                                     << setprecision(7)
-                                     << setw(9) << this->uzel[i]->getVArea() << " " /* 2 area m^2 */
-                                     << setw(9) << this->uzel[i]->getBedrockDepth() << " "   /* 5 bedrock depth mm */
-                                     << setw(9) << this->uzel[i]->getKs() << " "
-                                     << setw(9) << this->uzel[i]->getThetaS() << " "
-                                     << setw(9) << this->uzel[i]->getThetaR() << " "
-                                     << setw(9) << this->uzel[i]->getPoreSize() << " "
-                                     << setw(9) << this->uzel[i]->getAirEBubPres() << " "
-                                     << setw(9) << this->uzel[i]->getDecayF() << " "
-                                     << setw(9) << this->uzel[i]->getSatAnRatio() << " "
-                                     << setw(9) << this->uzel[i]->getUnsatAnRatio() << " "
-                                     << setw(9) << this->uzel[i]->getPorosity() << " "
-                                     << setw(9) << this->uzel[i]->getVolHeatCond() << " "
-                                     << setw(9) << this->uzel[i]->getSoilHeatCap() << " "
-                                     << setprecision(4)
-                                     << setw(6) << this->uzel[i]->getSoilID() << " " /* 4 Soil ID */
-                                     << setw(6) << this->uzel[i]->getLandUse() << " "; /* 5 Land Use ID */
-
-            }
-            this->ivr_pixinfo[i].close();
-        }
-}
-/*************************************************************************
-**
 **  tCOutput::WriteDynamicVars()
 **
 **  Writes a file containing dynamic variables for all the nodes
@@ -1350,152 +1311,135 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 
     snprintf(extension,sizeof(extension),".%04d_%02dd", hour, minute);
 	this->CreateAndOpenFile( &arcofs, extension);  //Opens file for writing
-	
-	if (simCtrl->Header_label=='Y') {
-		arcofs
-        <<"ID"<<',' /*1*/
-        <<"Z"<<','
-        <<"S"<<','
-        <<"CAr"<<','
-        <<"Nwt"<<','/*5*/
-        <<"Mu"<<','
-		<<"Mi"<<','
-        <<"Nf"<<','
-        <<"Nt"<<','
-        <<"Qpout"<<','/*10*/
-        <<"Qpin"<<','
-		<<"Srf"<<','
-        <<"Rain"<<','
-		
-		// SKY2008Snow from AJR2007
-		<<"SWE"<<','//added by AJR 2007 @ NMT
-		<<"ST"<<',' /*15*/
-        <<"IWE"<<','
-        <<"LWE"<<','
-        <<"SnSub"<<','
-        <<"SnEvap"<<','
-        <<"DU"<<',' /*20*/
-        <<"Upack"<<','
-        //added by AJR 2007 @ NMT // Adjusted by CJC2020
-		<<"sLHF"<<','
-        <<"sSHF"<<','
-        <<"sGHF"<<','
-        <<"sPHF"<<','//added by AJR 2007 @ NMT /*25*/
-		<<"sRLo"<<','
-        <<"sRLi"<<','
-        <<"sRSi"<<','
-        <<"Uerr"<<','//added by AJR 2007 @ NMT
-		<<"IntSWE"<<',' /*30*/
-        <<"IntSub"<<','
-        <<"IntUnl"<<','//added by AJR 2007 @ NMT
-		<<"SoilMoist"<<','
-        <<"RootMoist"<<','
-        <<"CanStorage"<<',' /*35*/
-		<<"ActEvp"<<','
-        <<"EvpSoil"<<','
-        <<"ET"<<',' // 38
-        <<"GFlux"<<','
-		<<"HFlux"<<',' /*40*/
-        <<"LFlux"<<','
-        <<"Qstrm"<<','
-        <<"Hlev"<<','
-		<<"FlwVlc"<<','
-		// SKYnGM2008LU
-		<<"CanStorParam"<<',' /*45*/
-        <<"IntercepCoeff"<<','
-        <<"ThroughFall"<<','
-        <<"CanFieldCap"<<','
-		<<"DrainCoeff"<<','
-        <<"DrainExpPar"<<',' /*50*/
-        <<"LandUseAlb"<<','
-        <<"VegHeight"<<','
-		<<"OptTransmCoeff "<<','
-        <<"StomRes"<<','
-        <<"VegFraction "<<',' /*55*/
-        <<"LeafAI";
 
-		if ( time == 0 )
-			arcofs<<','<<"SoilID"<<','<<"LUseID"<<endl<<flush;
-		else
-			arcofs<<"\n";    
-	}
+    if (simCtrl->Header_label == 'Y') {
+        arcofs
+                << "ID" << ',' // 1
+                << "Nwt" << ',' // 2
+                << "Mu" << ',' // 3
+                << "Mi" << ',' // 4
+                << "Nf" << ',' // 5
+                << "Nt" << ',' // 6
+                << "Qpout" << ',' // 7
+                << "Qpin" << ',' // 8
+                << "Srf" << ',' // 9
+                << "Rain" << ',' // 10
+                << "ST" << ',' // 11
+                << "IWE" << ',' // 12
+                << "LWE" << ',' // 13
+                << "SnSub" << ',' // 14 note snow states and fluxes are in cm
+                << "SnEvap" << ',' // 15
+                << "SnMelt" << ',' // 16
+                << "Upack" << ',' // 17
+                << "sLHF" << ',' // 18
+                << "sSHF" << ',' // 19
+                << "sGHF" << ',' // 20
+                << "sPHF" << ',' // 21
+                << "sRLo" << ',' // 22
+                << "sRLi" << ',' // 23
+                << "sRSi" << ',' // 24
+                << "Uerr" << ',' // 25
+                << "IntSWE" << ',' // 26
+                << "IntSub" << ',' // 27
+                << "IntUnl" << ',' // 28
+                << "SoilMoist" << ',' // 29
+                << "RootMoist" << ',' // 30
+                << "CanStorage" << ',' // 31
+                << "ActEvp" << ',' // 32
+                << "EvpSoil" << ',' // 33 //
+                << "ET" << ',' // 34 //
+                << "GFlux" << ',' // 35
+                << "HFlux" << ',' // 36
+                << "LFlux" << ',' // 37
+                << "Qstrm" << ',' // 38
+                << "Hlev" << ',' // 39
+                << "FlwVlc" << ',' // 40
+                << "CanStorParam" << ',' // 41
+                << "IntercepCoeff" << ',' // 42
+                << "ThroughFall" << ',' // 43
+                << "CanFieldCap" << ',' // 44
+                << "DrainCoeff" << ',' // 45
+                << "DrainExpPar" << ',' // 46
+                << "LandUseAlb" << ',' // 47
+                << "VegHeight" << ',' // 48
+                << "OptTransmCoeff" << ',' // 49
+                << "StomRes" << ',' // 50
+                << "VegFraction" << ',' // 51
+                << "LeafAI"; // 52
+
+        if (time == 0)
+            arcofs << ',' << "SoilID" << ',' << "LUseID" << endl << flush;
+        else
+            arcofs << "\n";
+    }
+
 	
 	cn = ni.FirstP();
-	while (ni.IsActive()) {
+    while (ni.IsActive()) {
+        arcofs << cn->getID() << ',' // 1
+               << setprecision(5) << cn->getNwtNew() << ',' // 2
+               << setprecision(5) << cn->getMuNew() << ',' // 3
+               << setprecision(5) << cn->getMiNew() << ',' // 4
+               << setprecision(5) << cn->getNfNew() << ',' // 5
+               << setprecision(5) << cn->getNtNew() << ',' // 6
+               << setprecision(5) << cn->getQpout() * 1.E-6 / cn->getVArea() << ',' // 7
+               << cn->getQpin() * 1.E-6 / cn->getVArea() << ',' // 8
+               << setprecision(4) << cn->getSrf_Hr()  << ',' // 9 in mm (mm of runoff reset to 0 every hour)
+               << setprecision(3) << cn->getRain() << ',' // 10
+               << setprecision(3) << cn->getSnTempC() << ',' // 11
+               << setprecision(5) << cn->getIceWE() << ',' // 12 SWE = this column + next
+               << setprecision(5) << cn->getLiqWE() << ',' // 13
+               << setprecision(7) << cn->getSnSub()  << ',' // 14
+               << setprecision(7) << cn->getSnEvap() << ',' // 15
+               << setprecision(7) << cn->getLiqRouted() << ',' // 16
+               << setprecision(5) << cn->getUnode() << ',' // 17
+               << setprecision(5) << cn->getSnLHF() << ',' // 18
+               << setprecision(5) << cn->getSnSHF() << ',' // 19
+               << setprecision(5) << cn->getSnGHF() << ',' // 20
+               << setprecision(5) << cn->getSnPHF() << ',' // 21
+               << setprecision(5) << cn->getSnRLout() << ',' // 22
+               << setprecision(5) << cn->getSnRLin() << ',' // 23
+               << setprecision(5) << cn->getSnRSin() << ',' // 24
+               << setprecision(5) << cn->getUerror() << ',' // 25
+               << setprecision(5) << cn->getIntSWE() << ',' // 26
+               << setprecision(5) << cn->getIntSub() << ',' // 27
+               << setprecision(5) << cn->getIntSnUnload() << ',' // 28
+               << setprecision(3) << cn->getSoilMoistureSC() << ',' // 29
+               << setprecision(3) << cn->getRootMoistureSC() << ',' // 30
+               << setprecision(3) << cn->getCanStorage() << ',' // 31
+               << setprecision(3) << cn->getActEvap() << ',' // 32
+               << setprecision(5) << cn->getEvapSoil() << ',' // 33
+               << setprecision(5) << cn->getEvapoTrans() << ',' // 34
+               << setprecision(3) << cn->getGFlux() << ',' // 35
+               << setprecision(3) << cn->getHFlux() << ',' // 36
+               << setprecision(3) << cn->getLFlux() << ',' // 37
+               << setprecision(3) << cn->getQstrm() << ',' //  38
+               << setprecision(3) << cn->getHlevel() << ',' // 39
+               << setprecision(3) << cn->getFlowVelocity() << ',' // 40
+               << setprecision(5) << cn->getCanStorParam() << ',' // 41
+               << setprecision(5) << cn->getIntercepCoeff() << ',' // 42 , meaning of life?
+               << setprecision(5) << cn->getThroughFall() << ',' // 43
+               << setprecision(5) << cn->getCanFieldCap() << ',' // 44
+               << setprecision(5) << cn->getDrainCoeff() << ',' // 45
+               << setprecision(5) << cn->getDrainExpPar() << ',' // 46
+               << setprecision(5) << cn->getLandUseAlb() << ',' // 47
+               << setprecision(5) << cn->getVegHeight() << ',' // 48
+               << setprecision(5) << cn->getOptTransmCoeff() << ',' // 49
+               << setprecision(5) << cn->getStomRes() << ',' // 50
+               << setprecision(5) << cn->getVegFraction() << ',' // 51
+               << setprecision(5) << cn->getLeafAI(); // 52
 
-		//cout << cn->getHlevel() << "\n";
-		arcofs<<cn->getID()<<','/*1*/
-		<<setprecision(4)<<cn->getZ()<<','
-		<<setprecision(5)<<fabs(atan(cn->getFlowEdg()->getSlope()))<<','
-		<<setprecision(5)<<cn->getContrArea()<<','
-		<<setprecision(5)<<cn->getNwtNew()<<',' /*5*/
-		<<setprecision(5)<<cn->getMuNew()<<','
-		<<setprecision(5)<<cn->getMiNew()<<','
-		<<setprecision(5)<<cn->getNfNew()<<','
-		<<setprecision(5)<<cn->getNtNew()<<','
-		<<setprecision(5)
-		<<cn->getQpout()*1.E-6/cn->getVArea()<<',' /*10*/
-		<<cn->getQpin()*1.E-6/cn->getVArea()<<','
-		<<setprecision(4)<<cn->getCumSrf()<<',' // in mm
-		<<setprecision(3)<<cn->getRain()<<','
+        if (time == 0)
+            arcofs << ',' << setprecision(0) << cn->getSoilID() << ','
+                   << setprecision(0) << cn->getLandUse() << endl;
+        else
+            arcofs << "\n";
 
-		// SKY2008Snow from AJR2007
-		<<setprecision(3)<<cn->getIceWE()+cn->getLiqWE()<<','//added by AJR 2007 @ NMT
-		<<setprecision(3)<<cn->getSnTempC()<<','//added by AJR 2007 @ NMT /*15*/
-		<<setprecision(5)<<cn->getIceWE()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getLiqWE()<<','//added by AJR 2007 @ NMT
-		<<setprecision(7)<<cn->getCumSnSub()<<','//added by CJC2020
-		<<setprecision(7)<<cn->getCumSnEvap()<<','//added by CJC2020
-		<<setprecision(7)<<cn->getCumMelt()<<','//changed to cumulative melt CJC2021 <<setprecision(5)<<cn->getDU()<<','//added by AJR 2007 @ NMT /*20*/
-		<<setprecision(7)<<cn->getCumHrsSnow()<<','//changed to cumulative hours snow CJC2021	<<setprecision(5)<<cn->getUnode()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getSnLHF()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getSnSHF()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getSnGHF()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getSnPHF()<<','//added by AJR 2007 @ NMT /*25*/
-		<<setprecision(5)<<cn->getSnRLout()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getSnRLin()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getSnRSin()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getUerror()<<','//added by AJR 2007 @ NMT
-		<<setprecision(5)<<cn->getIntSWE()<<','//added by AJR 2007 @ NMT /*30*/
-		<<setprecision(5)<<cn->getCumIntSub()<<','//added by AJR 2007 @ NMT			
-		<<setprecision(7)<<cn->getCumIntUnl()<<','//changed to cumulative unload CJC2021	<<setprecision(5)<<cn->getIntSnUnload()<<','//added by AJR 2007 @ NMT
+        cn = ni.NextP();
+    }
+    arcofs.close();
 
-		<<setprecision(3)<<cn->getSoilMoistureSC()<<','
-		<<setprecision(3)<<cn->getRootMoistureSC()<<','
-		<<setprecision(3)<<cn->getCanStorage()<<',' /*35*/
-		<<setprecision(3)<<cn->getActEvap()<<','
-		<<setprecision(5)<<cn->getCumBarEvap()<<',' // change to cumulative outputs CJC2020 TODO review cumulative output added by josh
-		<<setprecision(5)<<cn->getCumTotEvap()<<',' // change to cumulative outputs CJC2020 /38
-		<<setprecision(3)<<cn->getGFlux()<<','
-		<<setprecision(3)<<cn->getHFlux()<<',' /*40*/
-		<<setprecision(3)<<cn->getLFlux()<<','
-		<<setprecision(3)<<cn->getQstrm()<<','
-		<<setprecision(3)<<cn->getHlevel()<<','
-		//<<setprecision(3)<<cn->getFlowVelocity();
-		<<setprecision(3)<<cn->getFlowVelocity()<<','// SKYnGM2008LU
 
-		// SKYnGM2008LU
-		<<setprecision(5)<<cn->getCanStorParam()<<',' /*45*/
-		<<setprecision(5)<<cn->getIntercepCoeff()<<','
-		<<setprecision(5)<<cn->getThroughFall()<<','
-		<<setprecision(5)<<cn->getCanFieldCap()<<','
-		<<setprecision(5)<<cn->getDrainCoeff()<<','
-		<<setprecision(5)<<cn->getDrainExpPar()<<',' /*50*/
-		<<setprecision(5)<<cn->getLandUseAlb()<<','
-		<<setprecision(5)<<cn->getVegHeight()<<','
-		<<setprecision(5)<<cn->getOptTransmCoeff()<<','
-		<<setprecision(5)<<cn->getStomRes()<<','
-		<<setprecision(5)<<cn->getVegFraction()<<',' /*55*/
-		<<setprecision(5)<<cn->getLeafAI();
-
-		if ( time == 0 )
-			arcofs<<','<<setprecision(0)<<cn->getSoilID()<<','
-				<<setprecision(0)<<cn->getLandUse()<<endl;
-		else 
-			arcofs<<"\n";
-		cn = ni.NextP();
-	}
-	arcofs.close();
 	
 	// Call another output function only at the beginning
 	// and end of simulation
@@ -1755,99 +1699,108 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 	
 	snprintf(extension, sizeof(extension), ".%04d_%02di", hour, minute);
 	this->CreateAndOpenFile(&intofs, extension);
-	
-	if (simCtrl->Header_label=='Y') {
-		intofs<<"ID"<<','
-        <<"BndCd"<<','
-        <<"Z"<<','
-        <<"VAr"<<','
-        <<"CAr"<<','
-        <<"Curv"<<','
-        <<"EdgL"<<','
-        <<"Slp"<<','
-        <<"FWidth"<<','
-        <<"Aspect"<<','
 
-		// SKY2008Snow from AJR2007
-		<<"SV"<<','
-        <<"LV"<<','//added by AJR 2007 @ NMT
-
-		<<"AvSM"<<','
-        <<"AvRtM"<<','
-        <<"HOccr"<<','
-        <<"HRt"<<','
-        <<"SbOccr"<<','
-        <<"SbRt"<<','
-        <<"POccr"<<','
-        <<"PRt"<<','
-        <<"SatOccr"<<','
-        <<"SatRt"<<','
-        <<"SoiSatOccr"<<','
-        <<"RchDsch"<<','
-        <<"AvET"<<','
-        <<"EvpFrct"<<','
-
-		// SKY2008Snow from AJR2007
-		<<"cLHF"<<','<<"cMelt"//added by AJR 2007 @ NMT
-		<<','<<"cSHF"<<','<<"cPHF"//added by AJR 2007 @ NMT
-		<<','<<"cRLIn"<<','<<"cRLo"//added by AJR 2007 @ NMT
-		<<','<<"cRSIn"<<','<<"cGHF"//added by AJR 2007 @ NMT
-		<<','<<"cUErr"<<','<<"cHrsSun"<<','<<"cHrsSnow"//added by AJR 2007 @ NMT
-		<<','<<"persTime"<<','<<"peakWE"<<','<<"initTime"<<','<<"peakTime"
-		<<','<<"cIntSub"<<','<<"cSnSub"<<','<<"cSnEvap"<<','<<"cIntUnl"//added by AJR 2007 @ NMT 
-
-		// SKYnGM2008LU
-		<<','<<"AvCanStorParam"<<','<<"AvIntercCoeff"
-		<<','<<"AvTF"<<','<<"AvCanFieldCap"
-		<<','<<"AvDrainCoeff"<<','<<"AvDrainExpPar"
-		<<','<<"AvLUAlb"<<','<<"AvVegHeight"
-		<<','<<"AvOTCoeff"<<','<<"AvStomRes"
-		<<','<<"AvVegFract"<<','<<"AvLeafAI"
-        
-        // WR 01252023: Needed to add in indiviudal cell soil properties and bedrock depth for easier water balance calcs.
-        //<< "Area_m_sq "<<','<< //2
-        <<','<< "Bedrock_Depth_mm" //3
-        <<','<< "Ks" //double getKs(); TODO: Add units
-        <<','<< "ThetaS" //double getThetaS();
-        <<','<< "ThetaR"//double g
-        <<','<< "PoreSize"//double
-        <<','<<"AirEBubPress"//double get
-        <<','<<"DecayF"//double g
-        <<','<<"SatAnRatio"//double ge
-        <<','<<"UnsatAnRatio"//double getUo
-        <<','<<"Porosity"//double
-        <<','<<"VolHeatCond"//double get
-        <<','<<"SoilHeatCap"//double get
-        <<','<<"SoilID"//5
-        <<','<<"LandUseID" //4
-
-
-		<<"\n";
-	}
+    if (simCtrl->Header_label == 'Y') {
+        intofs << "ID" << ','    // 1
+               << "BndCd" << ','    // 2
+               << "Z" << ','    // 3
+               << "VAr" << ','    // 4
+               << "CAr" << ','    // 5
+               << "Curv" << ','    // 6
+               << "EdgL" << ','    // 7
+               << "Slp" << ','    // 8
+               << "FWidth" << ','    // 9
+               << "Aspect" << ','    // 10
+               << "SV" << ','    // 11
+               << "LV" << ','    // 12
+               << "AvSM" << ','    // 13
+               << "AvRtM" << ','    // 14
+               << "HOccr" << ','    // 15
+               << "HRt" << ','    // 16
+               << "SbOccr" << ','    // 17
+               << "SbRt" << ','    // 18
+               << "POccr" << ','    // 19
+               << "PRt" << ','    // 20
+               << "SatOccr" << ','    // 21
+               << "SatRt" << ','    // 22
+               << "SoiSatOccr" << ','    // 23
+               << "RchDsch" << ','    // 24
+               << "AvET" << ','    // 25
+               << "EvpFrct" << ','    // 26
+               << "cET" << ','  // 27
+               << "cEsoil" << ',' // 28
+               << "cLHF" << ','    // 29
+               << "cMelt" << ','    // 30
+               << "cSHF" << ','    // 31
+               << "cPHF" << ','    // 32
+               << "cRLIn" << ','    // 33
+               << "cRLo" << ','    // 34
+               << "cRSIn" << ','    // 35
+               << "cGHF" << ','    // 36
+               << "cUErr" << ','    // 37
+               << "cHrsSun" << ','    // 38
+               << "cHrsSnow" << ','    // 39
+               << "persTime" << ','    // 40
+               << "peakWE" << ','    // 41
+               << "initTime" << ','    // 42
+               << "peakTime" << ','    // 43
+               << "cIntSub" << ','    // 44
+               << "cSnSub" << ','    // 45
+               << "cSnEvap" << ','    // 46
+               << "cIntUnl" << ','    // 47
+               << "AvCanStorParam" << ','    // 48
+               << "AvIntercCoeff" << ','    // 49
+               << "AvTF" << ','    // 50
+               << "AvCanFieldCap" << ','    // 51
+               << "AvDrainCoeff" << ','    // 52
+               << "AvDrainExpPar" << ','    // 53
+               << "AvLUAlb" << ','    // 54
+               << "AvVegHeight" << ','    // 55
+               << "AvOTCoeff" << ','    // 56
+               << "AvStomRes" << ','    // 57
+               << "AvVegFract" << ','    // 58
+               << "AvLeafAI"    // 59
+               << ',' << "Bedrock_Depth_mm"    // 60
+               << ',' << "Ks"    // 61
+               << ',' << "ThetaS"    // 62
+               << ',' << "ThetaR"    // 63
+               << ',' << "PoreSize"    // 64
+               << ',' << "AirEBubPress"    // 65
+               << ',' << "DecayF"    // 66
+               << ',' << "SatAnRatio"    // 67
+               << ',' << "UnsatAnRatio"    // 68
+               << ',' << "Porosity"    // 69
+               << ',' << "VolHeatCond"    // 70
+               << ',' << "SoilHeatCap"    // 71
+               << ',' << "SoilID"    // 72
+               << ',' << "LandUseID"    // 73
+               << "\n";
+    }
 	
 	cn = ni.FirstP();
 	while (ni.IsActive()) {
 		
-		intofs<<cn->getID()<<','<<cn->getBoundaryFlag()<<','
-		<<setprecision(4)<<cn->getZ()<<','
-		<<setprecision(7)<<cn->getVArea()<<','
-		<<setprecision(7)<<cn->getContrArea()*1.E-6<<','
-		<<setprecision(6)<<cn->getCurvature()<<','
-		<<cn->getFlowEdg()->getLength()<<','
-		<<cn->getFlowEdg()->getSlope()<<','
-		<<cn->getFlowEdg()->getVEdgLen()<<','
-		<<setprecision(4)<<cn->getAspect()<<','
+		intofs<<cn->getID()<<','// 1
+        <<cn->getBoundaryFlag()<<',' // 2
+		<<setprecision(4)<<cn->getZ()<<',' // 3
+		<<setprecision(7)<<cn->getVArea()<<',' // 4
+		<<setprecision(7)<<cn->getContrArea()*1.E-6<<',' //5
+		<<setprecision(6)<<cn->getCurvature()<<',' //6
+		<<cn->getFlowEdg()->getLength()<<',' //7
+		<<cn->getFlowEdg()->getSlope()<<',' // 8
+		<<cn->getFlowEdg()->getVEdgLen()<<',' //9
+		<<setprecision(4)<<cn->getAspect()<<',' // 10
+		<<setprecision(7)<<cn->getSheltFact()<<',' // 11
+		<<cn->getLandFact()<<','<<setprecision(4); // 12
 
-		// SKY2008Snow from AJR2007
-		<<setprecision(7)<<cn->getSheltFact()<<','//added by AJR 2007 @ NMT
-		<<cn->getLandFact()<<','//added by AJR 2007 @ NMT
-		<<setprecision(4);
-		
+
+
 		tmp1 = floor(cn->getAvSoilMoisture())*1.E-4; 
 		tmp2 = (cn->getAvSoilMoisture()-floor(cn->getAvSoilMoisture()))*1.E+1;
-		intofs<<tmp1<<','<<tmp2<<',';
+		intofs<<tmp1<<','<< // 13
+        tmp2<<','; //14
 		
-		// -----------
+		// -----------  seperate runoff mechanism occurrence and rate
 		Occur = (int)((cn->hsrfOccur-floor(cn->hsrfOccur))*1.E+6);
 		if (Occur > 0) {
 			avRate = floor(cn->hsrfOccur)/1000.0/Occur;
@@ -1859,7 +1812,8 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			avRate = 0.0;
 			prec = 0;
 		}
-		intofs<<setprecision(6)<<Occur<<setprecision(prec)<<','<<avRate<<',';
+		intofs<<setprecision(6)<<Occur<< // 15
+        setprecision(prec)<<','<<avRate<<','; //16
 		
 		// -----------
 		Occur = (int)((cn->sbsrfOccur-floor(cn->sbsrfOccur))*1.E+6);
@@ -1873,7 +1827,8 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			avRate = 0.0;
 			prec = 0;
 		}
-		intofs<<setprecision(6)<<Occur<<setprecision(prec)<<','<<avRate<<',';
+		intofs<<setprecision(6)<<Occur<< //17
+        setprecision(prec)<<','<<avRate<<','; // 18
 		
 		// -----------
 		Occur = (int)((cn->psrfOccur-floor(cn->psrfOccur))*1.E+6);
@@ -1887,7 +1842,8 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			avRate = 0.0;
 			prec = 0;
 		}
-		intofs<<setprecision(6)<<Occur<<setprecision(prec)<<','<<avRate<<',';
+		intofs<<setprecision(6)<<Occur<< //19
+        setprecision(prec)<<','<<avRate<<','; //20
 		
 		// -----------
 		Occur = (int)((cn->satsrfOccur-floor(cn->satsrfOccur))*1.E+6);
@@ -1901,63 +1857,59 @@ void tCOutput<tSubNode>::WriteIntegrVars( double time )
 			avRate = 0.0;
 			prec = 0;
 		}
-		intofs<<setprecision(6)<<Occur<<','
-			<<setprecision(prec)<<avRate<<','
-			<<setprecision(6)<<cn->satOccur<<','
-			<<setprecision(3)<<cn->RechDisch<<','
-			<<setprecision(4)<<cn->getAvET()<<','
-
-			// SKY2008Snow from AJR2007
-			//<<setprecision(4)<<cn->getAvEvapFract();
-			<<setprecision(4)<<cn->getAvEvapFract()<<','
-			<<setprecision(7)<<cn->getCumLHF()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumMelt()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumSHF()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumPHF()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumRLin()<<','//added by AJR 2007 @ NMT -- corrected from getCumRLout call, SKY2008Snow 
-			<<setprecision(7)<<cn->getCumRLout()<<','//added by AJR 2007 @ NMT -- corrected from getCumRLin call, SKY2008Snow
-			<<setprecision(7)<<cn->getCumRSin()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumGHF()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumUerror()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumHrsSun()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumHrsSnow()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getPersTimeMax()<<',' //added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getPeakSWE()<<',' //added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getInitPackTime()<<',' //added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getPeakPackTime()<<',' //added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumIntSub()<<','//added by AJR 2007 @ NMT
-			<<setprecision(7)<<cn->getCumSnSub()<<','//added by CJC2020
-			<<setprecision(7)<<cn->getCumSnEvap()<<','//added by CJC2020			
-			<<setprecision(7)<<cn->getCumIntUnl()<<','//added by AJR 2007 @ NMT
-
-			// SKYnGM2008LU
-			<<setprecision(7)<<cn->getAvCanStorParam()<<','
-			<<setprecision(7)<<cn->getAvIntercepCoeff()<<','
-			<<setprecision(7)<<cn->getAvThroughFall()<<','
-			<<setprecision(7)<<cn->getAvCanFieldCap()<<','
-			<<setprecision(7)<<cn->getAvDrainCoeff()<<','
-			<<setprecision(7)<<cn->getAvDrainExpPar()<<','
-			<<setprecision(7)<<cn->getAvLandUseAlb()<<',' 
-			<<setprecision(7)<<cn->getAvVegHeight()<<',' 
-			<<setprecision(7)<<cn->getAvOptTransmCoeff()<<',' 
-			<<setprecision(7)<<cn->getAvStomRes()<<',' 
-			<<setprecision(7)<<cn->getAvVegFraction()<<','
-			<<setprecision(7)<<cn->getAvLeafAI()<<','
-            
-            <<setprecision(7)<<cn->getBedrockDepth()<<','   /* *** bedrock depth mm */
-           << setprecision(7) << cn->getKs() << ','
-           << setprecision(7) << cn->getThetaS() << ','
-           << setprecision(7) << cn->getThetaR() << ','
-           << setprecision(7) << cn->getPoreSize() << ','
-           << setprecision(7) << cn->getAirEBubPres() << ','
-           << setprecision(7) << cn->getDecayF() << ','
-           << setprecision(7) << cn->getSatAnRatio() << ','
-           << setprecision(7) << cn->getUnsatAnRatio() << ','
-           << setprecision(7) << cn->getPorosity() << ','
-           << setprecision(7) << cn->getVolHeatCond() << ','
-           << setprecision(7) << cn->getSoilHeatCap() << ','
-           << setprecision(7) << cn->getSoilID() << ',' /* 4 Soil ID */
-           << setprecision(7) << cn->getLandUse(); /* 5 Land Use ID */
+		intofs<<setprecision(6)<<Occur<<',' //21
+			<<setprecision(prec)<<avRate<<',' //22
+			<<setprecision(6)<<cn->satOccur<<',' //23
+			<<setprecision(3)<<cn->RechDisch<<',' //24
+			<<setprecision(4)<<cn->getAvET()<<',' //25
+			<<setprecision(4)<<cn->getAvEvapFract()<<',' //26
+            <<setprecision(4)<<cn->getCumTotEvap() <<',' //27
+            <<setprecision(4)<<cn->getCumBarEvap()<<',' //28
+            <<setprecision(7)<<cn->getCumLHF()<<','//29
+			<<setprecision(7)<<cn->getCumMelt()<<','//30
+			<<setprecision(7)<<cn->getCumSHF()<<','//31
+			<<setprecision(7)<<cn->getCumPHF()<<','//32
+			<<setprecision(7)<<cn->getCumRLin()<<','//33
+			<<setprecision(7)<<cn->getCumRLout()<<','//34
+			<<setprecision(7)<<cn->getCumRSin()<<','//35
+			<<setprecision(7)<<cn->getCumGHF()<<','//36
+			<<setprecision(7)<<cn->getCumUerror()<<','//37
+			<<setprecision(7)<<cn->getCumHrsSun()<<','//38
+			<<setprecision(7)<<cn->getCumHrsSnow()<<','//39
+			<<setprecision(7)<<cn->getPersTimeMax()<<',' //40
+			<<setprecision(7)<<cn->getPeakSWE()<<',' //41
+			<<setprecision(7)<<cn->getInitPackTime()<<',' //42
+			<<setprecision(7)<<cn->getPeakPackTime()<<',' //43
+			<<setprecision(7)<<cn->getCumIntSub()<<','//44
+			<<setprecision(7)<<cn->getCumSnSub()<<','//45
+			<<setprecision(7)<<cn->getCumSnEvap()<<','//46
+			<<setprecision(7)<<cn->getCumIntUnl()<<','//47
+			<<setprecision(7)<<cn->getAvCanStorParam()<<',' //48
+			<<setprecision(7)<<cn->getAvIntercepCoeff()<<',' //49
+			<<setprecision(7)<<cn->getAvThroughFall()<<',' //50
+			<<setprecision(7)<<cn->getAvCanFieldCap()<<',' //51
+			<<setprecision(7)<<cn->getAvDrainCoeff()<<',' //52
+			<<setprecision(7)<<cn->getAvDrainExpPar()<<',' //53
+			<<setprecision(7)<<cn->getAvLandUseAlb()<<',' //54
+			<<setprecision(7)<<cn->getAvVegHeight()<<','  //55
+			<<setprecision(7)<<cn->getAvOptTransmCoeff()<<',' //56
+			<<setprecision(7)<<cn->getAvStomRes()<<',' // 57
+			<<setprecision(7)<<cn->getAvVegFraction()<<',' //58
+			<<setprecision(7)<<cn->getAvLeafAI()<<',' //59
+            <<setprecision(7)<<cn->getBedrockDepth()<<',' //60 bedrock depth mm
+           << setprecision(7) << cn->getKs() << ',' // 61
+           << setprecision(7) << cn->getThetaS() << ',' // 62
+           << setprecision(7) << cn->getThetaR() << ',' // 63
+           << setprecision(7) << cn->getPoreSize() << ',' // 64
+           << setprecision(7) << cn->getAirEBubPres() << ',' // 65
+           << setprecision(7) << cn->getDecayF() << ',' // 66
+           << setprecision(7) << cn->getSatAnRatio() << ',' // 67
+           << setprecision(7) << cn->getUnsatAnRatio() << ',' // 68
+           << setprecision(7) << cn->getPorosity() << ',' // 69
+           << setprecision(7) << cn->getVolHeatCond() << ',' // 70
+           << setprecision(7) << cn->getSoilHeatCap() << ',' // 71
+           << setprecision(7) << cn->getSoilID() << ',' //72
+           << setprecision(7) << cn->getLandUse(); // 73
 
         intofs<<"\n";
 		

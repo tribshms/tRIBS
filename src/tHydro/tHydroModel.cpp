@@ -832,7 +832,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 			routeWE = cn->getLiqRouted();
 			if ((snWE > 1e-3) || (routeWE > 0.)) {
                 //WR 12182023 removed EvapVeg from route water following above approach and because transpiration can still occur w/snow
-				Ractual = 10*routeWE-EvapVeg; //have to convert to mm // Changed from R to Ractual CJC2020
+				Ractual = 10.0*routeWE-EvapVeg; //have to convert to mm // Changed from R to Ractual CJC2020
 			}
 		}
 

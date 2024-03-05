@@ -1524,15 +1524,30 @@ void tFlowNet::WeightedShortestPath()
 			flag = FindConfluenceDisjoints(NodesLst);
 		}
 	}
-	
+
+    // setup conditional to check number of stream nodes
+    int num_stream_nodes = 0;
+    for ( cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP() ) {
+        if (cn->getBoundaryFlag() == kStream) {
+            num_stream_nodes++;
+        }
+    }
+
 	// Find STREAM nodes that have not been passed by during the  
 	// preceding operations and make them 'HILLSLOPE' nodes 
-	
+    int count = 0;
 	for ( cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP() ) {
 		if (cn->getBoundaryFlag() == kStream && cn->getTracer() < INSTACK ) {
-			cn->setBoundaryFlag( kNonBoundary );
+			count++;
+            cn->setBoundaryFlag( kNonBoundary );
 		}
 	}
+
+    // Print warning if no stream nodes exist after above for loop.
+    if(count == num_stream_nodes){
+        cerr<<"Warning!!!\nAll stream nodes were converted to interior nodes.\n "
+              "If this is unintentional, increase density of stream nodes"<<endl;
+    }
 	
 	// Due to some peculiarities, we need to re-check stream heads again
 	for (cn=HeadsIter.FirstP(); !(HeadsIter.AtEnd()); cn=HeadsIter.NextP()) {
