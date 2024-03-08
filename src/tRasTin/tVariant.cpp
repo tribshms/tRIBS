@@ -378,7 +378,7 @@ void tVariant::noData(char *param)
 		else if (strcmp(param,"TD")==0)
 			cn->setDewTemp( 9999.99 );
 		else if (strcmp(param,"XC")==0)  //E.R.V. 3/26/2012
-			cn->setSkyCover( 0.0 );
+			cn->setSkyCover( 9999.99 );
 		else if (strcmp(param,"US")==0)
 			cn->setWindSpeed( 9999.99 );
 		else if (strcmp(param,"TA")==0)

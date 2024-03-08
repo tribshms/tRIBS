@@ -1590,6 +1590,7 @@ void tEvapoTrans::SetSunVariables()
 	// Compute an angle
 	alphaR = asin(sinAlpha);
 	alphaD = alphaR*180.0/pi;
+
 	
 	// Compute sun's azimuth using the "hour angle method" [rad from North]
 	sunaz = atan(-sin(tau)/(tan(del)*cos(phi)-sin(phi)*cos(tau)));
@@ -1714,7 +1715,7 @@ double tEvapoTrans::ComputeHourAngle(double TT, double delta)
 ***************************************************************************/
 double tEvapoTrans::inShortWave(tCNode *cNode)
 {
-	double  N, Iv, Isw, Ir; //WR IS is a shadow, to be consistent reoved from decleration Is,
+	double  N, Iv, Isw, Ir; //
 	double v, cosi, scover;
 	double RadGlobClr;
 
@@ -1740,6 +1741,7 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 		}
 		else
 			scover = skyCover;
+        skyCoverC = scover;
 		N = scover/10.0;
 
 		// If observations (for a horizontal surface) exist -
@@ -1992,17 +1994,17 @@ double tEvapoTrans::compSkyCover() {
   double sc;
 
   if (rain > 0) {
-    sc = 10; // if raining out, then assume very cloudy
+    sc = 10.0; // if raining out, then assume very cloudy
   }
   else {
-    sc = round( 10*(3.2*rHumidityC/100 - 2.4)/0.8 );
+    sc = round( 10.0*(3.2*rHumidityC/100.0 - 2.4)/0.8 );
   }
   
   //force sc to be within limits 
   if (sc < 0) 
     sc = 0;
   else if (sc > 10)
-    sc = 10;
+    sc = 10.0;
 
   return sc;
 }
@@ -2225,13 +2227,11 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	int cnt;
 	double f, df;
 	double Tg, eps;
-
 	double cosi,v;
 	double Isw; // Following were removed as shadows WR: Ic,Ics,Id,Ids,Is
 	SunHour=0;
 	Ic=Ics=Id=Ids=Is=Isw=0.0;
-	
-        elevation = cNode->getZ(); //SMM 10172008
+    elevation = cNode->getZ(); //SMM 10172008
 	HeatTransferProperties( cNode ); 
 	
 	// Compute INcoming longwave radiation from the atmosphere
