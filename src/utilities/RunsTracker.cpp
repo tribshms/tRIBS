@@ -16,7 +16,7 @@
 **
 **  Program compiled separately from tRIBS as:
 **     UNIX% CC -o <executable> RunsTracker.cpp
-**     Example: CC -o ../tracker RunsTracker.cpp (inside Utilities dir)
+**     Example: CC -o ../tracker RunsTracker.cpp (inside utilities dir)
 **
 **  To compile the program on Tru64 (Alpha DEC Station):
 **     parana:~ cxx -o <executable> RunsTracker.cpp -model ansi
