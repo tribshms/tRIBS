@@ -346,18 +346,24 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
                 thisStation = assignedStation[count];
                 newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
             } else if (metdataOption == 2) {
-                //resampleGrids(timerET); // read in met grid data -- inherited function
                 newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
             }
 
             // Set the observed values to the node:
             // they will be required by other function calls
             vPress = vaporPress(); //-- ADDED IN ORDER TO SET RH... CORRECTLY FOR SNOW
+
+            // Check/modify cloud cover values
+            if (fabs(skyCover-9999.99)<1.0E-3) {
+                skyCover = compSkyCover();//added by RINEHART 2007 @ NMT
+            }
+            skyCoverC = skyCover;
+
             cNode->setAirTemp(airTemp); // celsius
             cNode->setDewTemp(dewTemp);
             cNode->setRelHumid(rHumidity);
             cNode->setVapPressure(vPress);
-            cNode->setSkyCover(skyCover);
+            cNode->setSkyCover(skyCover); //maybe skycover should be set next?
             cNode->setWindSpeed(windSpeed);
             cNode->setAirPressure(atmPress);
             cNode->setShortRadIn(RadGlbObs);
@@ -692,8 +698,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             // ET variables are set to zero for canopy when snow in canopy, see tSnowIntercept
             cNode->setEvapSoil(0.0);
             cNode->setActEvap(0.0);
-            cNode->setEvapoTrans(
-                    cNode->getEvapWetCanopy() + cNode->getEvapDryCanopy()); //should be set to zero in most cases when snow is present, as its set to zero in callSnowIntercept except for rain on snow events.
+            cNode->setEvapoTrans(cNode->getEvapWetCanopy() + cNode->getEvapDryCanopy()); //should be set to zero in most cases when snow is present, as its set to zero in callSnowIntercept except for rain on snow events.
 
             setToNodeSnP(cNode);
             //setToNode(cNode); // WR 01032024this also being set in callSnowIntercept, may be source of variation in AtmPress?
@@ -1511,6 +1516,8 @@ double tSnowPack::inShortWaveSn(tCNode *cNode) {
             //else            scover = 1.0;
         } else
             scover = skyCover;
+
+        skyCoverC = scover; //Set to node
         N = scover / 10.0;
 
         // If observations (for a horizontal surface) exist -
@@ -1690,6 +1697,8 @@ double tSnowPack::inShortWaveCan() {
             //else            scover = 1.0;
         } else
             scover = skyCover;
+
+        skyCoverC = scover;
         N = scover / 10.0;
 
         // If observations (for a horizontal surface) exist -
@@ -1878,7 +1887,7 @@ void tSnowPack::snowEB(int nodeID, tCNode *node) {
     node->setHFlux(0.0);
     node->setLFlux(0.0);
     node->setLongRadIn(0.0);
-    node->setLongRadOut(outLongR);
+    node->setLongRadOut(0.0);
     node->setShortAbsbVeg(0.0);
     node->setShortAbsbSoi(0.0);
 

@@ -86,7 +86,6 @@ tOutput<tSubNode>::tOutput(SimulationControl *simCtrPtr,
 
 	ReadNodeOutputList(); 
 	CreateAndOpenPixel();
-    CreateAndOpenPixelInvariant();
 	dynvars = nullptr;
 }
 
@@ -146,7 +145,6 @@ tOutput<tSubNode>::tOutput( SimulationControl *simCtrPtr,
 
 	ReadNodeOutputList(); 
 	CreateAndOpenPixel();
-    CreateAndOpenPixelInvariant();
 	dynvars = nullptr;
 }
 
@@ -163,9 +161,6 @@ tOutput<tSubNode>::~tOutput()
 		delete [] pixinfo;
 	if (dynvars)
 		delete [] dynvars;
-    if (ivr_pixinfo)
-        delete [] ivr_pixinfo;
-	
 	Cout<<"tOutput Object has been destroyed..."<<endl<<flush;
 }
 
@@ -275,8 +270,7 @@ void tOutput<tSubNode>::ReadNodeOutputList() {
 	nodeList = new int[numNodes];
 	uzel = new tSubNode*[numNodes];
 	pixinfo = new ofstream[numNodes];
-    ivr_pixinfo = new ofstream[numNodes];
-	
+
 #ifdef PARALLEL_TRIBS
   // Initialize to NULL
   for (int i = 0; i < numNodes; i++)
@@ -413,64 +407,6 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 		}
 	}
 	return;
-}
-/*************************************************************************
-**
-**  tOutput::CreateAndOpenPixelInvariant()
-**
-**  Write the header for the *.ivpixel output file. A file that provides
-**  information about time invariant information about the given voronoi
- *  polygon
-**
-*************************************************************************/
-template< class tSubNode >
-void tOutput<tSubNode>::CreateAndOpenPixelInvariant()
-{
-    if ( nodeList ) {
-        char pixelext[10] = ".ivpixel";
-        char nodeNum[10], pixelnode[100];
-
-        //SMM - Set interior nodes, added 08132008
-        SetInteriorNode();
-
-        for (int i = 0; i < numNodes; i++) {
-#ifdef PARALLEL_TRIBS
-            // Check if node is on this processor
-            if ((uzel[i] != nullptr) && (nodeList[i] >= 0)) {
-#else
-                if (nodeList[i] >= 0) {
-#endif
-                    snprintf(nodeNum, sizeof(nodeNum), "%d", nodeList[i]);
-                    strcpy(pixelnode, nodeNum);
-                    strcat(pixelnode, pixelext);
-
-                    CreateAndOpenFile(&ivr_pixinfo[i], pixelnode);
-                    if (simCtrl->Header_label == 'Y') {
-                        // first row name
-                        ivr_pixinfo[i] << "NodeID "//1
-                                    << "Area_m_sq " //2
-                                    << "Bedrock_Depth_mm " //3
-                                    << "Ks " //double getKs(); TODO: Add units
-                                    << "ThetaS " //double getThetaS();
-                                    << "ThetaR "//double g
-                                    << "PoreSize "//double
-                                    << "AirEBubPress "//double get
-                                    << "DecayF "//double g
-                                    << "SatAnRatio "//double ge
-                                    << "UnsatAnRatio "//double getUo
-                                    << "Porosity "//double
-                                    << "VolHeatCond "//double get
-                                    << "SoilHeatCap "//double get
-                                    << "SoilID "//5
-                                    << "LandUseID" //4
-                                    << "\n";
-                    }
-                    ivr_pixinfo[i].setf(ios::right, ios::adjustfield);
-                    ivr_pixinfo[i].setf(ios::fixed, ios::floatfield);
-
-            }
-        }
-    }
 }
 
 /*************************************************************************

@@ -60,7 +60,6 @@ public:
   void CreateAndOpenVizFile(ofstream*, char*);
   void ReadNodeOutputList();
   void CreateAndOpenPixel();
-  void CreateAndOpenPixelInvariant();
   void CreateAndOpenDynVar();
   void end_simulation();
   void SetInteriorNode();
@@ -94,7 +93,6 @@ protected:
   ofstream triofs;
   ofstream zofs;
   ofstream *pixinfo;
-  ofstream *ivr_pixinfo;
   ofstream *dynvars;              
 };
 
