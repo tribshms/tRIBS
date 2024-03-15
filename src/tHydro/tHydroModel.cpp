@@ -235,38 +235,22 @@ void tHydroModel::InitSet(tResample *resamp)
 		tmp = resamp->doIt(gwatfile, 1); // resamples input GW ASCII grid
 	}
 	else if (GWoption == 1) {
-        //WR 10232023: updated so that it just reads in the gwatfile, versus needing an input from the shell.
-//		Cout<<endl<<endl;
-//		Cout<<"  tHydroModel: Please input groundwater initialization\n"
-//			<<"  file in Voronoi polygon format. (the file must contain water table\n"
-//			<<"  depth values arranged in the order to correspond to Voronoi IDs\n"
-//			<<endl
-//			<<"  Format (no headers assumed in the file):\n"
-//			<<"         ID        Water_table_depth [mm]\n\n"<<flush;
-//
-//		// Resample Voronoi GW table file
-//		Cout<<"\tEnter input data filename: ";
-//		cin>>filein;
+
 
 		ifstream source( gwatfile );
-        source.open(gwatfile);
-        
-//		while ( !source.good() ) {
-//			cout<<"\n   File does NOT exist: Check pathame and spelling...?\n"
-//			<<"\tEnter input data filename: ";
-//			cin >> filein;
-//			source.open( filein );
-//		}
+        if (!source.is_open()) {
+            cerr << "Failed to open file: " << gwatfile << std::endl;
+            exit(EXIT_FAILURE);
+        }
 
 		int Vcnt = (gridPtr->getNodeList()->getActiveSize());
 		tmp = new double[Vcnt];
 		assert(tmp != nullptr);
 		for (int i=0; i < Vcnt; i++) {
-			source>>R>>NwtNew;
+			source>>ID>>NwtNew;
 			tmp[i] = NwtNew;
-			//cerr<<"R = "<<R<<";   Nwt = "<<NwtNew<<endl;
 		}
-		//cerr<<"\tThe file '"<<filein<<"' has been successfully read..."<<endl; //WR Uninitialzied filein
+
 		source.close();
 	}
 	else {
@@ -278,12 +262,6 @@ void tHydroModel::InitSet(tResample *resamp)
 		tmp = resamp->doIt(gwatfile, 1); // resamples input GW
 	}
 
-	// Loop through nodes to determine min elev (BY RICARDO MANTILLA)
-	//double minElev=999999999.0;
-	//for (cn=nodIter.FirstP(); nodIter.IsActive(); cn=nodIter.NextP())
-	//{
-	//	if(cn->getZ() < minElev) minElev=cn->getZ();
-	//}
 
 	//Assign Water Table to tCNode
 	int id2 = 0;
@@ -313,8 +291,6 @@ void tHydroModel::InitSet(tResample *resamp)
 	id = 0;
 	for (cn=nodIter.FirstP(); nodIter.IsActive(); cn=nodIter.NextP())
 	{
-
-
         // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
         //soilPtr->setSoilPtr( cn->getSoilID() );
         //        Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity

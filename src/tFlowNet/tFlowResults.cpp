@@ -108,7 +108,7 @@ void tFlowResults::SetFlowResVariables(tInputFile &infile, double add_time)
 	Cout<<"Hydrograph Outlet Name: \t\t "<<outlet<<endl;
 	Cout<<"Hydrograph File Extension: \t"<<Extension<<endl;
 	
-	limit = (int)add_time;
+	limit = (int)add_time; //TODO: this limit should really just be the length of runtime, rigth?
 	
 	if ((phydro = (double*)calloc(limit,sizeof(double)))==NULL)
 		cout<<"\ntFlowResults: phydro failed..."<<endl;
