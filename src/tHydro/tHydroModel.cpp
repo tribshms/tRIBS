@@ -313,6 +313,8 @@ void tHydroModel::InitSet(tResample *resamp)
 	id = 0;
 	for (cn=nodIter.FirstP(); nodIter.IsActive(); cn=nodIter.NextP())
 	{
+
+
         // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
         //soilPtr->setSoilPtr( cn->getSoilID() );
         //        Ksat    = soilPtr->getSoilProp(1);  // Surface hydraulic conductivity
@@ -329,6 +331,12 @@ void tHydroModel::InitSet(tResample *resamp)
         Thr = cn->getThetaR(); // Residual moisture content
         PoreInd = cn->getPoreSize(); // Pore-size distribution index
         Psib = cn->getAirEBubPres(); // Air entry bubbling pressure
+
+        if (Psib >= 0) {
+            std::cerr << "Error: Psib is zero or positive!" << std::endl;
+            exit(1);
+        }
+
         F = cn->getDecayF(); // Decay parameter in the exp
         Ar = cn->getSatAnRatio(); // Anisotropy ratio (saturated)
         UAr = cn->getUnsatAnRatio(); // Anisotropy ratio (unsaturated)
