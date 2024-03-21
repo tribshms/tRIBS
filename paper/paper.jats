@@ -74,7 +74,7 @@ tributary hydrology in forest applications</article-title>
 </contrib>
 <contrib contrib-type="author">
 <name>
-<surname>Cazares-Rodriguez</surname>
+<surname>Cázares-Rodriguez</surname>
 <given-names>J. E.</given-names>
 </name>
 <xref ref-type="aff" rid="aff-1"/>
@@ -144,53 +144,51 @@ a Creative Commons Attribution 4.0 International License (CC BY
   et al., 2002</xref>;
   <xref alt="Keller et al., 2023" rid="ref-keller2023" ref-type="bibr">Keller
   et al., 2023</xref>). The Triangulated Irregular Network (TIN)-based
-  Real-Time Integrated Basin Simulator [tRIBS; Ivanov et al.
-  (<xref alt="2004a" rid="ref-ivanov2004a" ref-type="bibr">2004a</xref>),
-  Ivanov et al.
-  (<xref alt="2004b" rid="ref-ivanov2004b" ref-type="bibr">2004b</xref>)],
-  an example of such a process-based distributed model, has been used to
-  address a wide range of problems from hillslope scale processes in
-  ecohydrology (e.g. Mahmood &amp; Vivoni
-  (<xref alt="2011" rid="ref-mahmood2011" ref-type="bibr">2011</xref>))
-  to flood management of large watersheds (e.g. Cázares-Rodríguez et al.
-  (<xref alt="2017" rid="ref-cazares-rodriguez2017" ref-type="bibr">2017</xref>)).
-  Yet, in spite of the extensive use and application of tRIBS to current
-  topics in hydrology, engineering, and the earth sciences, the code has
-  been essentially maintained as a proprietary software. Here, we
-  document the release of tRIBS v5.2, an updated open source code base
-  and its application for forested watersheds that serve as tributaries
-  to larger river systems. This release includes improvements in
-  hydrologic processes (i.e. channel transmission losses and reservoir
-  routing; Schreiner-McGraw &amp; Vivoni
-  (<xref alt="2018" rid="ref-schreiner-mcgraw2018" ref-type="bibr">2018</xref>);
-  Cázares-Rodríguez et al.
-  (<xref alt="2017" rid="ref-cazares-rodriguez2017" ref-type="bibr">2017</xref>))
-  as well as an updated documentation, improved infrastructure for
-  sustainable code development and employment, and improved
-  computational efficiency. These additions provide a robust and
-  sustainable code base that will enhance access and applications of the
-  model.</p>
+  Real-Time Integrated Basin Simulator denoted as tRIBS
+  (<xref alt="Ivanov et al., 2004a" rid="ref-ivanov2004a" ref-type="bibr">Ivanov
+  et al., 2004a</xref>,
+  <xref alt="2004b" rid="ref-ivanov2004b" ref-type="bibr">2004b</xref>),
+  is an example of such a process-based distributed model and has been
+  used to address a wide range of problems from hillslope scale
+  processes in ecohydrology (e.g., 
+  <xref alt="Mahmood &amp; Vivoni, 2011" rid="ref-mahmood2011" ref-type="bibr">Mahmood
+  &amp; Vivoni, 2011</xref>) to flood management of large watersheds
+  (e.g., 
+  <xref alt="Cázares-Rodríguez et al., 2017" rid="ref-cazares-rodriguez2017" ref-type="bibr">Cázares-Rodríguez
+  et al., 2017</xref>). Yet, in spite of the extensive use and
+  application of tRIBS to current topics in hydrology, engineering, and
+  the earth sciences, the code has been essentially maintained as a
+  proprietary software. Here, we document the release of tRIBS v5.2, an
+  updated open source code base and its application for forested
+  watersheds that serve as tributaries to larger river systems. This
+  release includes improvements in hydrologic processes with new
+  functionality for simulating channel transmission losses
+  (<xref alt="Schreiner-McGraw &amp; Vivoni, 2018" rid="ref-schreiner-mcgraw2018" ref-type="bibr">Schreiner-McGraw
+  &amp; Vivoni, 2018</xref>) and reservoir routing
+  (<xref alt="Cázares-Rodríguez et al., 2017" rid="ref-cazares-rodriguez2017" ref-type="bibr">Cázares-Rodríguez
+  et al., 2017</xref>). Additionally, it features updated documentation,
+  improved infrastructure for sustainable code development and
+  employment, and improved computational efficiency. These additions
+  provide a robust and sustainable code base, enhancing access and
+  applications of the model.</p>
 </sec>
 <sec id="statement-of-needs">
   <title>Statement of Needs</title>
   <sec id="model-description">
     <title>Model Description</title>
     <p>tRIBS is written in C++ and uses an object oriented design
-    founded on a hydrologically conditioned triangulated irregular
-    network (TIN) mesh [see
-    <xref alt="[fig:Fig_1]" rid="figU003AFig_1">[fig:Fig_1]</xref> ;
-    Tucker et al.
-    (<xref alt="2001" rid="ref-tucker2001" ref-type="bibr">2001</xref>);
-    Enrique R. Vivoni et al.
-    (<xref alt="2004" rid="ref-vivoni2004" ref-type="bibr">2004</xref>)].
-    Building on the work of Garrote &amp; Bras
+    founded on a hydrologically conditioned TIN mesh (see 
+    <xref alt="Tucker et al., 2001" rid="ref-tucker2001" ref-type="bibr">Tucker
+    et al., 2001</xref> and;
+    <xref alt="Vivoni et al., 2004" rid="ref-vivoni2004" ref-type="bibr">Vivoni
+    et al., 2004</xref>). Building on the work of Garrote &amp; Bras
     (<xref alt="1995" rid="ref-garrote1995" ref-type="bibr">1995</xref>),
     tRIBS is a continuous hydrologic model simulating the coupled
     dynamics between the vadose and saturated zones
-    (<xref alt="E. R. Vivoni et al., 2007" rid="ref-vivoni2007" ref-type="bibr">E.
-    R. Vivoni et al., 2007</xref>). Accounting for these key hydrologic
-    processes while using computationally efficient methods
-    <xref alt="[fig:Fig_1]" rid="figU003AFig_1">[fig:Fig_1]</xref>),
+    (<xref alt="Vivoni et al., 2007" rid="ref-vivoni2007" ref-type="bibr">Vivoni
+    et al., 2007</xref>). Accounting for these key hydrologic processes
+    while using computationally efficient methods
+    (<xref alt="[fig:Fig_1]" rid="figU003AFig_1">[fig:Fig_1]</xref>),
     tRIBS actively tracks both the evolution of wetting fronts and
     moisture losses, allowing for continuous simulation throughout wet
     and dry periods
@@ -200,26 +198,25 @@ a Creative Commons Attribution 4.0 International License (CC BY
     (<xref alt="Rinehart et al., 2008" rid="ref-rinehart2008" ref-type="bibr">Rinehart
     et al., 2008</xref>), tRIBS can also be applied in cold and
     mountainous forest environments
-    (<xref alt="[fig:Fig_2]" rid="figU003AFig_2">[fig:Fig_2]</xref>).
-    Furthermore, the unstructured TIN mesh in tRIBS provides a
+    (<xref alt="[fig:Fig_2]" rid="figU003AFig_2">[fig:Fig_2]</xref>).</p>
+    <p>Furthermore, the unstructured TIN mesh in tRIBS provides a
     multiresolution approach to distributed hydrologic modeling
-    (<xref alt="[fig:Fig_1]" rid="figU003AFig_1">[fig:Fig_1]</xref>&amp;
+    (<xref alt="[fig:Fig_1]" rid="figU003AFig_1">[fig:Fig_1]</xref> and
     <xref alt="[fig:Fig_3]" rid="figU003AFig_3">[fig:Fig_3]</xref>). As
     a consequence, tRIBS allows for detailed control in resolving
     hydrologic dynamics across multiple scales
-    (<xref alt="Enrique R. Vivoni et al., 2004" rid="ref-vivoni2004" ref-type="bibr">Enrique
-    R. Vivoni et al., 2004</xref>), maximizing model fidelity to
-    physical processes, while minimizing computational expenses. This
+    (<xref alt="Vivoni et al., 2004" rid="ref-vivoni2004" ref-type="bibr">Vivoni
+    et al., 2004</xref>), maximizing model fidelity to physical
+    processes, while minimizing computational expenses. This
     multi-scaling behavior when paired with parallelization
-    (<xref alt="Enrique R. Vivoni et al., 2011" rid="ref-vivoni2011" ref-type="bibr">Enrique
-    R. Vivoni et al., 2011</xref>) allows for hyper-resolution modeling
+    (<xref alt="Vivoni et al., 2011" rid="ref-vivoni2011" ref-type="bibr">Vivoni
+    et al., 2011</xref>) allows for hyper-resolution modeling
     (<xref alt="Wood et al., 2011" rid="ref-wood2011" ref-type="bibr">Wood
     et al., 2011</xref>) of hydrologic dynamics at unprecedented scales,
-    from simulations rendered at a point (Enrique R. Vivoni et al.
-    (<xref alt="2010" rid="ref-vivoni2010" ref-type="bibr">2010</xref>),
-    <xref alt="[fig:Fig_2]" rid="figU003AFig_2">[fig:Fig_2]</xref>) to
-    21,000 km2 watersheds simulated for a period of 10 years at a
-    nominal cell resolution of ~88 m
+    from simulations rendered at a point
+    (<xref alt="Vivoni et al., 2010" rid="ref-vivoni2010" ref-type="bibr">Vivoni
+    et al., 2010</xref>) to 21,000 km<sup>2</sup> watersheds simulated
+    for a period of 10 years at a nominal cell resolution of ~88 m
     (<xref alt="Ko et al., 2019" rid="ref-ko2019" ref-type="bibr">Ko et
     al., 2019</xref>).</p>
     <fig>
@@ -239,7 +236,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
     (<xref alt="2004a" rid="ref-ivanov2004a" ref-type="bibr">2004a</xref>),
     Rinehart et al.
     (<xref alt="2008" rid="ref-rinehart2008" ref-type="bibr">2008</xref>),
-    and Enrique R. Vivoni et al.
+    and Vivoni et al.
     (<xref alt="2011" rid="ref-vivoni2011" ref-type="bibr">2011</xref>),
     tRIBS v5.2 provides two new process additions: (1) reservoir routing
     using the level-pool method
@@ -251,7 +248,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
     robustness, performance, and integration. This includes updates for
     code compatibility with newer compilers (Clang and GCC), the
     introduction of a CMake build system providing flexibility for
-    compiling serial and parallel versions, and the modernization of the
+    compiling serial and parallel versions, and modernization of the
     model version control system and documentation. Additionally, we
     refactored the snow module
     (<xref alt="Rinehart et al., 2008" rid="ref-rinehart2008" ref-type="bibr">Rinehart
@@ -261,22 +258,22 @@ a Creative Commons Attribution 4.0 International License (CC BY
     we included Docker images for both tRIBS v5.2 and the auxiliary
     program MeshBuilder. The Docker image for MeshBuilder facilitates an
     end-to-end workflow that utilizes METIS
-    (<xref alt="Karypis1998?" rid="ref-Karypis1998" ref-type="bibr"><bold>Karypis1998?</bold></xref>),
-    enabling rapid and easy partitioning of a watershed domain for
-    parallel simulations
-    (<xref alt="Enrique R. Vivoni et al., 2011" rid="ref-vivoni2011" ref-type="bibr">Enrique
-    R. Vivoni et al., 2011</xref>).</p>
+    (<xref alt="Karypis &amp; Kumar, 1998" rid="ref-karypis1998" ref-type="bibr">Karypis
+    &amp; Kumar, 1998</xref>), enabling rapid and easy partitioning of a
+    watershed domain for parallel simulations
+    (<xref alt="Vivoni et al., 2011" rid="ref-vivoni2011" ref-type="bibr">Vivoni
+    et al., 2011</xref>).</p>
     <p>These and other features of tRIBS v5.2 can be explored using two
     newly updated benchmark scenarios. This first benchmark is a
     point-scale simulation of the Happy Jack SNOTEL site in northern
     Arizona, USA
-    ((<xref alt="[fig:Fig_2]" rid="figU003AFig_2">[fig:Fig_2]</xref>).
+    (<xref alt="[fig:Fig_2]" rid="figU003AFig_2">[fig:Fig_2]</xref>).
     The second is a basin-scale simulation of the Big Spring watershed
     located in the headwaters of Sycamore Creek in northern Arizona
     (<xref alt="[fig:Fig_3]" rid="figU003AFig_3">[fig:Fig_3]</xref>).
     Both benchmarks are hosted on Zenodo, see
-    (<xref alt="[fig:Fig_2]" rid="figU003AFig_2">[fig:Fig_2]</xref> and
-    (<xref alt="[fig:Fig_3]" rid="figU003AFig_3">[fig:Fig_3]</xref> for
+    <xref alt="[fig:Fig_2]" rid="figU003AFig_2">[fig:Fig_2]</xref> and
+    <xref alt="[fig:Fig_3]" rid="figU003AFig_3">[fig:Fig_3]</xref> for
     more details.</p>
     <fig>
       <caption><p>A point-scale (i.e. a single Voronoi cell) tRIBS
@@ -294,20 +291,20 @@ a Creative Commons Attribution 4.0 International License (CC BY
   </sec>
   <sec id="conclusion">
     <title>Conclusion</title>
-    <p>Embracing the FAIR principles [Findability, Accessibility,
+    <p>Embracing the FAIR principles (Findability, Accessibility,
     Interoperability, and Reusability;
-    (<xref alt="Wilkinson et al., 2016" rid="ref-wilkinson2016" ref-type="bibr">Wilkinson
-    et al., 2016</xref>)] and recognizing the importance of free and
-    open source software in hydrology
+    <xref alt="Wilkinson et al., 2016" rid="ref-wilkinson2016" ref-type="bibr">Wilkinson
+    et al., 2016</xref>) and recognizing the importance of free and open
+    source software in hydrology
     (<xref alt="Kabo-bah et al., 2012" rid="ref-kabo-bah2012" ref-type="bibr">Kabo-bah
     et al., 2012</xref>), here we document the release of tRIBS v5.2.
     This version represents years of cumulative efforts with major code
     improvements related to maintainability, robustness, performance,
     and integration as well as new process based functionality. The
-    model applications included as benchmark cases serve as examples of
-    forest applications in tributary watersheds to larger river systems.
-    We anticipate that tRIBS v5.2 will be a valuable asset in addressing
-    a wide range of problems for the broader hydrology community.</p>
+    benchmarks provided exemplify tRIBS v5.2 applications in forested
+    tributary watersheds of larger river systems. We anticipate that
+    tRIBS v5.2 will be a valuable asset in addressing a wide range of
+    problems for the broader hydrology community.</p>
     <fig>
       <caption><p>An example of a basin-scale tRIBS simulation showing a
       spatial map of mean hourly evapotranspiration rates averaged over
@@ -345,7 +342,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
         <name><surname>Mahmood</surname><given-names>Taufique H.</given-names></name>
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
       </person-group>
       <article-title>A climate-induced threshold in hydrologic response in a semiarid ponderosa pine hillslope</article-title>
       <source>Water Resources Research</source>
@@ -361,9 +358,9 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-rinehart2008">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Rinehart</surname><given-names>Alex J.</given-names></name>
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
-        <name><surname>Brooks</surname><given-names>Paul D.</given-names></name>
+        <name><surname>Rinehart</surname><given-names>A. J.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
+        <name><surname>Brooks</surname><given-names>P. D.</given-names></name>
       </person-group>
       <article-title>Effects of vegetation, albedo, and solar radiation sheltering on the distribution of snow in the Valles Caldera, New Mexico</article-title>
       <source>Ecohydrology</source>
@@ -381,10 +378,10 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-ivanov2004b">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Ivanov</surname><given-names>Valeriy Y.</given-names></name>
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
-        <name><surname>Bras</surname><given-names>Rafael L.</given-names></name>
-        <name><surname>Entekhabi</surname><given-names>Dara</given-names></name>
+        <name><surname>Ivanov</surname><given-names>V. Y.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
+        <name><surname>Bras</surname><given-names>R. L.</given-names></name>
+        <name><surname>Entekhabi</surname><given-names>D.</given-names></name>
       </person-group>
       <article-title>Preserving high-resolution surface and rainfall data in operational-scale basin hydrology: A fully-distributed physically-based approach</article-title>
       <source>Journal of Hydrology</source>
@@ -402,8 +399,8 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-garrote1995">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Garrote</surname><given-names>Luis</given-names></name>
-        <name><surname>Bras</surname><given-names>Rafael L.</given-names></name>
+        <name><surname>Garrote</surname><given-names>L.</given-names></name>
+        <name><surname>Bras</surname><given-names>R. L.</given-names></name>
       </person-group>
       <article-title>A distributed model for real-time flood forecasting using digital elevation models</article-title>
       <source>Journal of Hydrology</source>
@@ -421,11 +418,11 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-tucker2001">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Tucker</surname><given-names>Gregory E.</given-names></name>
-        <name><surname>Lancaster</surname><given-names>Stephen T.</given-names></name>
-        <name><surname>Gasparini</surname><given-names>Nicole M.</given-names></name>
-        <name><surname>Bras</surname><given-names>Rafael L.</given-names></name>
-        <name><surname>Rybarczyk</surname><given-names>Scott M.</given-names></name>
+        <name><surname>Tucker</surname><given-names>G.</given-names></name>
+        <name><surname>Lancaster</surname><given-names>S. T.</given-names></name>
+        <name><surname>Gasparini</surname><given-names>N. M.</given-names></name>
+        <name><surname>Bras</surname><given-names>R. L.</given-names></name>
+        <name><surname>Rybarczyk</surname><given-names>S. M.</given-names></name>
       </person-group>
       <article-title>An object-oriented framework for distributed hydrologic and geomorphic modeling using triangulated irregular networks</article-title>
       <source>Computers &amp; Geosciences</source>
@@ -443,10 +440,10 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-ivanov2004a">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Ivanov</surname><given-names>Valeriy Y.</given-names></name>
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
-        <name><surname>Bras</surname><given-names>Rafael L.</given-names></name>
-        <name><surname>Entekhabi</surname><given-names>Dara</given-names></name>
+        <name><surname>Ivanov</surname><given-names>V. Y.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
+        <name><surname>Bras</surname><given-names>R. L.</given-names></name>
+        <name><surname>Entekhabi</surname><given-names>D.</given-names></name>
       </person-group>
       <article-title>Catchment hydrologic response with a fully distributed triangulated irregular network model</article-title>
       <source>Water Resources Research</source>
@@ -462,25 +459,25 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-fatichi2016">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Fatichi</surname><given-names>Simone</given-names></name>
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
+        <name><surname>Fatichi</surname><given-names>S.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
         <name><surname>Ogden</surname><given-names>Fred L.</given-names></name>
-        <name><surname>Ivanov</surname><given-names>Valeriy Y.</given-names></name>
-        <name><surname>Mirus</surname><given-names>Benjamin</given-names></name>
-        <name><surname>Gochis</surname><given-names>David</given-names></name>
-        <name><surname>Downer</surname><given-names>Charles W.</given-names></name>
-        <name><surname>Camporese</surname><given-names>Matteo</given-names></name>
-        <name><surname>Davison</surname><given-names>Jason H.</given-names></name>
-        <name><surname>Ebel</surname><given-names>Brian</given-names></name>
-        <name><surname>Jones</surname><given-names>Norm</given-names></name>
-        <name><surname>Kim</surname><given-names>Jongho</given-names></name>
-        <name><surname>Mascaro</surname><given-names>Giuseppe</given-names></name>
-        <name><surname>Niswonger</surname><given-names>Richard</given-names></name>
-        <name><surname>Restrepo</surname><given-names>Pedro</given-names></name>
-        <name><surname>Rigon</surname><given-names>Riccardo</given-names></name>
-        <name><surname>Shen</surname><given-names>Chaopeng</given-names></name>
-        <name><surname>Sulis</surname><given-names>Mauro</given-names></name>
-        <name><surname>Tarboton</surname><given-names>David</given-names></name>
+        <name><surname>Ivanov</surname><given-names>V. Y.</given-names></name>
+        <name><surname>Mirus</surname><given-names>B.</given-names></name>
+        <name><surname>Gochis</surname><given-names>D.</given-names></name>
+        <name><surname>Downer</surname><given-names>C. W.</given-names></name>
+        <name><surname>Camporese</surname><given-names>M.</given-names></name>
+        <name><surname>Davison</surname><given-names>J. H.</given-names></name>
+        <name><surname>Ebel</surname><given-names>B.</given-names></name>
+        <name><surname>Jones</surname><given-names>N.</given-names></name>
+        <name><surname>Kim</surname><given-names>J.</given-names></name>
+        <name><surname>Mascaro</surname><given-names>G.</given-names></name>
+        <name><surname>Niswonger</surname><given-names>R.</given-names></name>
+        <name><surname>Restrepo</surname><given-names>P.</given-names></name>
+        <name><surname>Rigon</surname><given-names>R.</given-names></name>
+        <name><surname>Shen</surname><given-names>C.</given-names></name>
+        <name><surname>Sulis</surname><given-names>M.</given-names></name>
+        <name><surname>Tarboton</surname><given-names>D.</given-names></name>
       </person-group>
       <article-title>An overview of current applications, challenges, and future trends in distributed process-based models in hydrology</article-title>
       <source>Journal of Hydrology</source>
@@ -497,9 +494,9 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-ko2019">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Ko</surname><given-names>Ara</given-names></name>
-        <name><surname>Mascaro</surname><given-names>Giuseppe</given-names></name>
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
+        <name><surname>Ko</surname><given-names>A.</given-names></name>
+        <name><surname>Mascaro</surname><given-names>G.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
       </person-group>
       <article-title>Strategies to Improve and Evaluate Physics-Based Hyperresolution Hydrologic Simulations at Regional Basin Scales</article-title>
       <source>Water Resources Research</source>
@@ -517,9 +514,9 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-cazares-rodriguez2017">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Cázares-Rodríguez</surname><given-names>Jorge E.</given-names></name>
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
-        <name><surname>Mascaro</surname><given-names>Giuseppe</given-names></name>
+        <name><surname>Cázares-Rodríguez</surname><given-names>J. E.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
+        <name><surname>Mascaro</surname><given-names>G.</given-names></name>
       </person-group>
       <article-title>Comparison of Two Watershed Models for Addressing Stakeholder Flood Mitigation Strategies: Case Study of Hurricane Alex in Monterrey, México</article-title>
       <source>Journal of Hydrologic Engineering</source>
@@ -537,10 +534,10 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-grayson2002">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Grayson</surname><given-names>Rodger B</given-names></name>
-        <name><surname>Blöschl</surname><given-names>Günter</given-names></name>
-        <name><surname>Western</surname><given-names>Andrew W</given-names></name>
-        <name><surname>McMahon</surname><given-names>Thomas A</given-names></name>
+        <name><surname>Grayson</surname><given-names>R. B.</given-names></name>
+        <name><surname>Blöschl</surname><given-names>G.</given-names></name>
+        <name><surname>Western</surname><given-names>A. W.</given-names></name>
+        <name><surname>McMahon</surname><given-names>T. A.</given-names></name>
       </person-group>
       <article-title>Advances in the use of observed spatial patterns of catchment hydrological response</article-title>
       <source>Advances in Water Resources</source>
@@ -558,8 +555,8 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-schreiner-mcgraw2018">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Schreiner-McGraw</surname><given-names>Adam P.</given-names></name>
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
+        <name><surname>Schreiner-McGraw</surname><given-names>A. P.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
       </person-group>
       <article-title>On the Sensitivity of Hillslope Runoff and Channel Transmission Losses in Arid Piedmont Slopes</article-title>
       <source>Water Resources Research</source>
@@ -587,19 +584,38 @@ a Creative Commons Attribution 4.0 International License (CC BY
       <date-in-citation content-type="access-date"><year iso-8601-date="2024-02-14">2024</year><month>02</month><day>14</day></date-in-citation>
       <volume>3</volume>
       <issue>136</issue>
-      <uri>https://www.researchgate.net/profile/Amos-Tiereyangn-Kabo-Bah/publication/235707973_The_Future_of_Free_and_Open_Source_Software_FOSS_for_Hydrology_and_Water_Resources_Management/links/5547f7a00cf2b0cf7ace97a5/The-Future-of-Free-and-Open-Source-Software-FOSS-for-Hydrology-and-Water-Resources-Management.pdf</uri>
+      <pub-id pub-id-type="doi">10.4172/2157-7587.1000136</pub-id>
       <fpage>2</fpage>
       <lpage></lpage>
+    </element-citation>
+  </ref>
+  <ref id="ref-karypis1998">
+    <element-citation publication-type="article-journal">
+      <person-group person-group-type="author">
+        <name><surname>Karypis</surname><given-names>G.</given-names></name>
+        <name><surname>Kumar</surname><given-names>V.</given-names></name>
+      </person-group>
+      <article-title>A Fast and High Quality Multilevel Scheme for Partitioning Irregular Graphs</article-title>
+      <source>SIAM Journal on Scientific Computing</source>
+      <year iso-8601-date="1998-01">1998</year><month>01</month>
+      <date-in-citation content-type="access-date"><year iso-8601-date="2024-03-08">2024</year><month>03</month><day>08</day></date-in-citation>
+      <volume>20</volume>
+      <issue>1</issue>
+      <issn>1064-8275</issn>
+      <uri>https://epubs.siam.org/doi/abs/10.1137/S1064827595287997</uri>
+      <pub-id pub-id-type="doi">10.1137/S1064827595287997</pub-id>
+      <fpage>359</fpage>
+      <lpage>392</lpage>
     </element-citation>
   </ref>
   <ref id="ref-keller2023">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Keller</surname><given-names>Arturo A.</given-names></name>
-        <name><surname>Garner</surname><given-names>Kendra</given-names></name>
-        <name><surname>Rao</surname><given-names>Nalini</given-names></name>
-        <name><surname>Knipping</surname><given-names>Eladio</given-names></name>
-        <name><surname>Thomas</surname><given-names>Jeffrey</given-names></name>
+        <name><surname>Keller</surname><given-names>A. A.</given-names></name>
+        <name><surname>Garner</surname><given-names>K.</given-names></name>
+        <name><surname>Rao</surname><given-names>N.</given-names></name>
+        <name><surname>Knipping</surname><given-names>E.</given-names></name>
+        <name><surname>Thomas</surname><given-names>J.</given-names></name>
       </person-group>
       <article-title>Hydrological models for climate-based assessments at the watershed scale: A critical review of existing hydrologic and water quality models</article-title>
       <source>Science of The Total Environment</source>
@@ -616,13 +632,13 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-vivoni2011">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
-        <name><surname>Mascaro</surname><given-names>Giuseppe</given-names></name>
-        <name><surname>Mniszewski</surname><given-names>Susan</given-names></name>
-        <name><surname>Fasel</surname><given-names>Patricia</given-names></name>
-        <name><surname>Springer</surname><given-names>Everett P.</given-names></name>
-        <name><surname>Ivanov</surname><given-names>Valeriy Y.</given-names></name>
-        <name><surname>Bras</surname><given-names>Rafael L.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
+        <name><surname>Mascaro</surname><given-names>G.</given-names></name>
+        <name><surname>Mniszewski</surname><given-names>S.</given-names></name>
+        <name><surname>Fasel</surname><given-names>P.</given-names></name>
+        <name><surname>Springer</surname><given-names>E. P.</given-names></name>
+        <name><surname>Ivanov</surname><given-names>V. Y.</given-names></name>
+        <name><surname>Bras</surname><given-names>R. L.</given-names></name>
       </person-group>
       <article-title>Real-world hydrologic assessment of a fully-distributed hydrological model in a parallel computing environment</article-title>
       <source>Journal of Hydrology</source>
@@ -640,10 +656,10 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-vivoni2004">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
-        <name><surname>Ivanov</surname><given-names>Valeri Y.</given-names></name>
-        <name><surname>Bras</surname><given-names>Rafael L.</given-names></name>
-        <name><surname>Entekhabi</surname><given-names>Dara</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
+        <name><surname>Ivanov</surname><given-names>V. Y.</given-names></name>
+        <name><surname>Bras</surname><given-names>R.l L.</given-names></name>
+        <name><surname>Entekhabi</surname><given-names>D.</given-names></name>
       </person-group>
       <article-title>Generation of Triangulated Irregular Networks Based on Hydrological Similarity</article-title>
       <source>Journal of Hydrologic Engineering</source>
@@ -698,9 +714,9 @@ a Creative Commons Attribution 4.0 International License (CC BY
   <ref id="ref-vivoni2010">
     <element-citation publication-type="article-journal">
       <person-group person-group-type="author">
-        <name><surname>Vivoni</surname><given-names>Enrique R.</given-names></name>
-        <name><surname>Rodríguez</surname><given-names>Julio C.</given-names></name>
-        <name><surname>Watts</surname><given-names>Christopher J.</given-names></name>
+        <name><surname>Vivoni</surname><given-names>E. R.</given-names></name>
+        <name><surname>Rodríguez</surname><given-names>J. C.</given-names></name>
+        <name><surname>Watts</surname><given-names>C. J.</given-names></name>
       </person-group>
       <article-title>On the spatiotemporal variability of soil moisture and evapotranspiration in a mountainous basin within the North American monsoon region</article-title>
       <source>Water Resources Research</source>
