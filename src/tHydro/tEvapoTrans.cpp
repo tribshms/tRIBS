@@ -4007,7 +4007,7 @@ void tEvapoTrans::newHydroMetGridData(tCNode * cNode) {
 		windSpeed = cNode->getWindSpeed();
 		skyCover = cNode->getSkyCover();
 		netRad = cNode->getNetRad();
-		inShortR = cNode->getShortRadIn(); //E.R.V 3/6/2012
+        inShortR = cNode->getShortRadIn(); //E.R.V 3/6/2012
 		vPress = cNode->getVapPressure();
 		nodeHour = timer->hour;
 

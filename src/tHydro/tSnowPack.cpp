@@ -339,7 +339,6 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             newLUGridData(cNode);
         }
 
-
         //updates meteorological variables if not in stochastic mode
         if (!rainPtr->getoptStorm()) {
             if (metdataOption == 1) {
@@ -363,10 +362,9 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             cNode->setDewTemp(dewTemp);
             cNode->setRelHumid(rHumidity);
             cNode->setVapPressure(vPress);
-            cNode->setSkyCover(skyCover); //maybe skycover should be set next?
             cNode->setWindSpeed(windSpeed);
             cNode->setAirPressure(atmPress);
-            cNode->setShortRadIn(RadGlbObs);
+            cNode->setShortRadIn(RadGlbObs); // this needs to be updated to reflect grid inputs
 
             //Set Soil/Surface Temperature
             if (hourlyTimeStep == 0) {
