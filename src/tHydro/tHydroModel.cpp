@@ -228,6 +228,7 @@ void tHydroModel::InitSet(tResample *resamp)
 	Cout<<"Ground Heat Flux Option: \t"<< gFluxOption<<endl;
 	Cout<<"Bedrock Depth Option: \t\t" << BRoption<<endl;
 
+
 	// Groundwater initial file option for g
 	if (!GWoption) {
 		// Resample ASCII grid
@@ -235,6 +236,7 @@ void tHydroModel::InitSet(tResample *resamp)
 		tmp = resamp->doIt(gwatfile, 1); // resamples input GW ASCII grid
 	}
 	else if (GWoption == 1) {
+
 
 
 		ifstream source( gwatfile );
@@ -250,6 +252,7 @@ void tHydroModel::InitSet(tResample *resamp)
 			source>>ID>>NwtNew;
 			tmp[i] = NwtNew;
 		}
+
 
 		source.close();
 	}
@@ -267,9 +270,6 @@ void tHydroModel::InitSet(tResample *resamp)
 	int id2 = 0;
 	for( cn=nodIter.FirstP(); nodIter.IsActive(); cn=nodIter.NextP() ){
 		NwtNew = tmp[id2];              //Initial GW in mm
-
-		//Temporary Line added by Ricardo Mantilla
-		//NwtNew=0.0*(cn->getZ()-minElev)*1000;
 
 		cn->setNwtOld(NwtNew);
 		cn->setNwtNew(NwtNew);
