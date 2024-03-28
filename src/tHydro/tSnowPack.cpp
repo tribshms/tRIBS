@@ -340,19 +340,30 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             if (metdataOption == 1) {
                 thisStation = assignedStation[count];
                 newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
+
+                if (fabs(skyCover-9999.99)<1.0E-3){ // assumed if first value is 9999.99 the rest are
+                    skycover_flag =1;
+                }
+
             } else if (metdataOption == 2) {
                 newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
+
+                if (fabs(skyCover-9999.99)<1.0E-3){ // work around since nodata from grids only set to 9999.99 once in tvariannt
+                    skycover_flag =1;
+                }
             }
 
             // Set the observed values to the node:
             // they will be required by other function calls
             vPress = vaporPress();
 
+
             // Check/modify cloud cover values
-            if (fabs(skyCover-9999.99)<1.0E-3) {
+            if (skycover_flag == 1) {
                 skyCover = compSkyCover();
             }
-            skyCoverC = skyCover;
+
+
 
             cNode->setAirTemp(airTemp); // celsius
             cNode->setDewTemp(dewTemp);
@@ -360,7 +371,8 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             cNode->setVapPressure(vPress);
             cNode->setWindSpeed(windSpeed);
             cNode->setAirPressure(atmPress);
-            cNode->setShortRadIn(inShortR); // this needs to be updated to reflect grid inputs
+            cNode->setSkyCover(skyCover);
+            cNode->setShortRadIn(inShortR);
 
             //Set Soil/Surface Temperature
             if (hourlyTimeStep == 0) {
@@ -836,22 +848,6 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         //snowing with or without snow in canopy
     else {
 
-        // This is hear for consitency, i.e. so skycover is calculated at all time steps.
-        // Normally this is called in inlongwave(), and set there, but currently that function
-        // is not called in the snowpack routine when its snowing. -WR
-
-        if (fabs(skyCover-9999.99)<1.0E-3) {
-
-            // SKY2008Snow from AJR2007
-            skyCover = compSkyCover();//added by RINEHART 2007 @ NMT
-            //  uses relative humidity and rainfall to compute
-            //  sky cover.
-            scover = skyCover;
-
-        }
-        else
-            scover = skyCover;
-        skyCoverC = scover;
 
         //albedo = 0.8; WR debug this is set elsewhere and should be double checked
 

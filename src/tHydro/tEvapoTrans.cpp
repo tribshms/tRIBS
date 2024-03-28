@@ -694,9 +694,18 @@ void tEvapoTrans::callEvapoPotential()
           if (metdataOption == 1) {
               thisStation = assignedStation[count];
               newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
+
+              if (fabs(skyCover-9999.99)<1.0E-3){ // work around since nodata from grids only set to 9999.99 once in tvariannt
+                  skycover_flag =1;
+              }
+
           } else if (metdataOption == 2) {
               //resampleGrids(timerET); // read in met grid data -- inherited function
               newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
+
+              if (fabs(skyCover-9999.99)<1.0E-3){ // work around since nodata from grids only set to 9999.99 once in tvariannt
+                  skycover_flag =1;
+              }
           }
 
           // Set the observed values to the node:
@@ -706,6 +715,12 @@ void tEvapoTrans::callEvapoPotential()
           cNode->setDewTemp(dewTemp);
           cNode->setRelHumid(rHumidity);
           cNode->setVapPressure(vPress);
+
+          // Check/modify cloud cover values
+          if (skycover_flag == 1) {
+              skyCover = compSkyCover();
+          }
+
           cNode->setSkyCover(skyCover);
           cNode->setWindSpeed(windSpeed);
           cNode->setAirPressure(atmPress);
@@ -1960,7 +1975,7 @@ double tEvapoTrans::inLongWave(tCNode *cNode)
 		v0 = 1;
 
 	// Check/modify cloud cover values
-	if (fabs(skyCover-9999.99)<1.0E-3) {
+	if (skycover_flag == 1) {
 
 		// SKY2008Snow from AJR2007
 		skyCover = compSkyCover();//added by RINEHART 2007 @ NMT
@@ -2004,7 +2019,7 @@ double tEvapoTrans::compSkyCover() {
     sc = round( 10.0*(3.2*rHumidityC/100.0 - 2.4)/0.8 );
   }
   
-  //force sc to be within limits 
+  //esnure sc to be within limits
   if (sc < 0) 
     sc = 0;
   else if (sc > 10)
@@ -3704,6 +3719,7 @@ void tEvapoTrans::readLUGrid(char *gridFile)
 ***************************************************************************/
 void tEvapoTrans::createVariant() 
 {
+
 	if (evapotransOption != 4) {
 		for (int ct=0;ct<nParm;ct++) { 
 			if (strcmp(gridParamNames[ct],"PA")==0) {

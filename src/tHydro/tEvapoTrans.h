@@ -235,6 +235,7 @@ class tEvapoTrans
   char **DCgridFileNames, **DEgridFileNames, **OTgridFileNames, **LAgridFileNames;
   int AtFirstTimeStepLUFlag{};
 
+  int skycover_flag; // intended for when nodata is set for XC gridded data so that skycover is estimated.
 
 };
 
