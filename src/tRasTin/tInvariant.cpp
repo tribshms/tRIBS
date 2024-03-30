@@ -152,7 +152,7 @@ GenericSoilData::GenericSoilData(tMesh<tCNode> *mesh,
             readFile >> temp;
             SCgridParamNames[ct] = make_unique<char[]>(temp.length() + 1);
             strcpy(SCgridParamNames[ct].get(), temp.c_str());
-            
+
             if ( (strcmp(SCgridParamNames[ct].get(),"KS")!=0) &&
                 (strcmp(SCgridParamNames[ct].get(),"TS")!=0) &&
                 (strcmp(SCgridParamNames[ct].get(),"TR")!=0) &&
@@ -259,6 +259,7 @@ GenericSoilData::GenericSoilData(tMesh<tCNode> *mesh,
                 //tMeshListIter <tCNode> niter ( mesh->getNodeList() );
                 id = 0;
                 for (cn=niter.FirstP(); niter.IsActive(); cn=niter.NextP()) {
+
                     cn->setAirEBubPres(tmp[id]);  //sets soil ID to tCNode
                     id++;
                 }

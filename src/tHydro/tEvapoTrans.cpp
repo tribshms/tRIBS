@@ -385,7 +385,7 @@ void tEvapoTrans::initializeVariables()
 	inLongR = 0.0; outLongR = 0.0; inShortR = 0.0;  
 	dewTempC = 0.0; surfTempC = 0.0; atmPressC = 0.0;
 	rHumidityC = 0.0; skyCoverC = 0.0; netRadC = 0.0;
-	RadGlbObs = 0.0;
+
 	Is = Ic = Ics = Id = Ids = 0.0;
 	gFlux = 0.0; hFlux = 0.0; lFlux = 0.0;
 	potEvap = 0.0; actEvap = 0.0;
@@ -694,9 +694,18 @@ void tEvapoTrans::callEvapoPotential()
           if (metdataOption == 1) {
               thisStation = assignedStation[count];
               newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
+
+              if (fabs(skyCover-9999.99)<1.0E-3){ // work around since nodata from grids only set to 9999.99 once in tvariannt
+                  skycover_flag =1;
+              }
+
           } else if (metdataOption == 2) {
               //resampleGrids(timerET); // read in met grid data -- inherited function
               newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
+
+              if (fabs(skyCover-9999.99)<1.0E-3){ // work around since nodata from grids only set to 9999.99 once in tvariannt
+                  skycover_flag =1;
+              }
           }
 
           // Set the observed values to the node:
@@ -706,10 +715,16 @@ void tEvapoTrans::callEvapoPotential()
           cNode->setDewTemp(dewTemp);
           cNode->setRelHumid(rHumidity);
           cNode->setVapPressure(vPress);
+
+          // Check/modify cloud cover values
+          if (skycover_flag == 1) {
+              skyCover = compSkyCover();
+          }
+
           cNode->setSkyCover(skyCover);
           cNode->setWindSpeed(windSpeed);
           cNode->setAirPressure(atmPress);
-          cNode->setShortRadIn(RadGlbObs);
+          cNode->setShortRadIn(inShortR);
 
           //Set Soil/Surface Temperature
           if (hourlyTimeStep == 0) {
@@ -1734,20 +1749,24 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 		// Raditaion fluxes 'Ic' and 'Id' will be estimated
 		DirectDiffuse(elevation);
 
-		// Cloud cover information
-		if (fabs(skyCover-9999.99) < 1.0E-3) {
-			skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
-			scover = skyCover;
-		}
-		else
-			scover = skyCover;
-        skyCoverC = scover;
-		N = scover/10.0;
+        // because inShortR is incoming solar radiation--sky cover is already factored in--WR
+
+        //		// Cloud cover information
+        //		if (fabs(skyCover-9999.99) < 1.0E-3) {
+        //			skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
+        //			scover = skyCover;
+        //		}
+        //		else
+        //			scover = skyCover;
+        //        skyCoverC = scover;
+
+
+        N = 0; //10.0;
 
 		// If observations (for a horizontal surface) exist -
 		// use them, at least in an approximate manner
 		if (tsOption > 1 && !rainPtr->getoptStorm()) {
-			RadGlobClr = (RadGlbObs/(1.0-0.65*pow(N,2.0)));
+			RadGlobClr = (inShortR / (1.0 - 0.65 * pow(N, 2.0)));
 			Ic = Ic/(Ic*sinAlpha + Id)*RadGlobClr;
 			Id = RadGlobClr - Ic*sinAlpha;
 		}
@@ -1862,7 +1881,7 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 
 	// Set shortwave variables to the node (partition is approximate)
 	if (tsOption > 1 && !rainPtr->getoptStorm()) {
-        cNode->setShortRadIn(RadGlbObs); //or set(Is), they must be equal
+        cNode->setShortRadIn(inShortR); //or set(Is), they must be equal
     }
 	else {
         cNode->setShortRadIn(Isw);
@@ -1956,7 +1975,7 @@ double tEvapoTrans::inLongWave(tCNode *cNode)
 		v0 = 1;
 
 	// Check/modify cloud cover values
-	if (fabs(skyCover-9999.99)<1.0E-3) {
+	if (skycover_flag == 1) {
 
 		// SKY2008Snow from AJR2007
 		skyCover = compSkyCover();//added by RINEHART 2007 @ NMT
@@ -2000,7 +2019,7 @@ double tEvapoTrans::compSkyCover() {
     sc = round( 10.0*(3.2*rHumidityC/100.0 - 2.4)/0.8 );
   }
   
-  //force sc to be within limits 
+  //esnure sc to be within limits
   if (sc < 0) 
     sc = 0;
   else if (sc > 10)
@@ -2405,7 +2424,7 @@ double tEvapoTrans::rtsafe_mod_energy(tCNode* cNode, double x1, double x2,
 		//cerr<<"tEvapotrans: Root must be bracketed by negative "
 		//    <<"and positive f_n values!"<<endl;
 		//cerr<<"\tfl = "<<fl<<"; fh = "<<fh<<"; xguess = "<<xguess<<endl<<flush;
-		//cerr<<"\tID = "<<ID<<"; wind = "<<windSpeed<<"; RadGlbObs = "<<RadGlbObs
+		//cerr<<"\tID = "<<ID<<"; wind = "<<windSpeed<<"; inShortR = "<<inShortR
 		//	 <<"; airTemp = "<<airTemp<<endl<<endl<<flush;
 		//double tt = 1.0;
 		//cout<<1./(tt-1.0)<<endl;
@@ -3700,6 +3719,7 @@ void tEvapoTrans::readLUGrid(char *gridFile)
 ***************************************************************************/
 void tEvapoTrans::createVariant() 
 {
+
 	if (evapotransOption != 4) {
 		for (int ct=0;ct<nParm;ct++) { 
 			if (strcmp(gridParamNames[ct],"PA")==0) {
@@ -3949,7 +3969,7 @@ void tEvapoTrans::newHydroMetData(int time)
 				windSpeed = weatherStations[i].getWindSpeed(time);
 				skyCover = weatherStations[i].getSkyCover(time);
 				nodeHour = weatherStations[i].getHour(time);
-				RadGlbObs = weatherStations[i].getRadGlobal(time);
+                inShortR = weatherStations[i].getRadGlobal(time);
 
 				// For run-time checks of input data
 				if (false) {
@@ -4007,7 +4027,7 @@ void tEvapoTrans::newHydroMetGridData(tCNode * cNode) {
 		windSpeed = cNode->getWindSpeed();
 		skyCover = cNode->getSkyCover();
 		netRad = cNode->getNetRad();
-		inShortR = cNode->getShortRadIn(); //E.R.V 3/6/2012
+        inShortR = cNode->getShortRadIn(); //E.R.V 3/6/2012
 		vPress = cNode->getVapPressure();
 		nodeHour = timer->hour;
 
@@ -5265,7 +5285,6 @@ void tEvapoTrans::writeRestart(fstream & rStr) const
   BinaryWrite(rStr, SunSetHrLoc);
   BinaryWrite(rStr, DayLength);
   BinaryWrite(rStr, deltaT);
-  BinaryWrite(rStr, RadGlbObs);
   BinaryWrite(rStr, RadDirObs);
   BinaryWrite(rStr, RadDifObs);
 
@@ -5438,7 +5457,6 @@ void tEvapoTrans::readRestart(fstream & rStr)
   BinaryRead(rStr, SunSetHrLoc);
   BinaryRead(rStr, DayLength);
   BinaryRead(rStr, deltaT);
-  BinaryRead(rStr, RadGlbObs);
   BinaryRead(rStr, RadDirObs);
   BinaryRead(rStr, RadDifObs);
 

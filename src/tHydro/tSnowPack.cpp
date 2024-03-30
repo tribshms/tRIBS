@@ -325,48 +325,54 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
         slope = fabs(atan(cNode->getFlowEdg()->getSlope()));
         aspect = cNode->getAspect();
         elevation = cNode->getZ();
-
         snOnOff = 0.0;
 
-
         checkShelter(cNode);
-
-        // this sets coeffs from land classification table
-        setCoeffs(cNode);
+        setCoeffs(cNode);// this sets coeffs from land classification table
 
         // this overwrites a given parameter if the landuse option is selected and the gridded data exists
         if (luOption == 1) {
             newLUGridData(cNode);
         }
 
-
         //updates meteorological variables if not in stochastic mode
         if (!rainPtr->getoptStorm()) {
             if (metdataOption == 1) {
                 thisStation = assignedStation[count];
                 newHydroMetData(hourlyTimeStep); //read in met data from station file -- inherited function
+
+                if (fabs(skyCover-9999.99)<1.0E-3){ // assumed if first value is 9999.99 the rest are
+                    skycover_flag =1;
+                }
+
             } else if (metdataOption == 2) {
                 newHydroMetGridData(cNode); // set up and get appropriate data -- inherited function
+
+                if (fabs(skyCover-9999.99)<1.0E-3){ // work around since nodata from grids only set to 9999.99 once in tvariannt
+                    skycover_flag =1;
+                }
             }
 
             // Set the observed values to the node:
             // they will be required by other function calls
-            vPress = vaporPress(); //-- ADDED IN ORDER TO SET RH... CORRECTLY FOR SNOW
+            vPress = vaporPress();
+
 
             // Check/modify cloud cover values
-            if (fabs(skyCover-9999.99)<1.0E-3) {
-                skyCover = compSkyCover();//added by RINEHART 2007 @ NMT
+            if (skycover_flag == 1) {
+                skyCover = compSkyCover();
             }
-            skyCoverC = skyCover;
+
+
 
             cNode->setAirTemp(airTemp); // celsius
             cNode->setDewTemp(dewTemp);
             cNode->setRelHumid(rHumidity);
             cNode->setVapPressure(vPress);
-            cNode->setSkyCover(skyCover); //maybe skycover should be set next?
             cNode->setWindSpeed(windSpeed);
             cNode->setAirPressure(atmPress);
-            cNode->setShortRadIn(RadGlbObs);
+            cNode->setSkyCover(skyCover);
+            cNode->setShortRadIn(inShortR);
 
             //Set Soil/Surface Temperature
             if (hourlyTimeStep == 0) {
@@ -758,7 +764,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
 
 void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int count) {
     double CanStorage;
-    double subFrac, unlFrac, precip, Isnow, throughfall;// SKY2008Snow, AJR2008
+    double subFrac, unlFrac, precip, Isnow, throughfall, scover;// SKY2008Snow, AJR2008
     int flag;
     flag = 1;
     CanStorage = node->getCanStorage();
@@ -767,10 +773,9 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
     rHumidity = node->getRelHumid();
     vPress = node->getVapPressure();
     dewTemp = node->getDewTemp();
-    skyCover = node->getSkyCover();
     windSpeed = node->getWindSpeed();
     atmPress = node->getAirPressure();
-    RadGlbObs = node->getShortRadIn();
+    inShortR = node->getShortRadIn();
     airTemp = node->getAirTemp();
     airTempK = CtoK(airTemp);
 
@@ -842,6 +847,7 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
 
         //snowing with or without snow in canopy
     else {
+
 
         //albedo = 0.8; WR debug this is set elsewhere and should be double checked
 
@@ -1504,26 +1510,24 @@ double tSnowPack::inShortWaveSn(tCNode *cNode) {
         elevation = cNode->getZ(); //SMM 10142008
         DirectDiffuse(elevation);  // SKY2008Snow, AJR2007
 
-        // Cloud cover information
-        if (fabs(skyCover - 9999.99) < 1.0E-3) {
+        // because inShortR is incoming solar radiation--sky cover is already factored in--WR
 
-            skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
-            // computes sky cover from relative
-            // humidity and rain.
-            scover = skyCover;
+        //		// Cloud cover information
+        //		if (fabs(skyCover-9999.99) < 1.0E-3) {
+        //			skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
+        //			scover = skyCover;
+        //		}
+        //		else
+        //			scover = skyCover;
+        //        skyCoverC = scover;
 
-            //if (rain > 0.0) scover = 10.0;
-            //else            scover = 1.0;
-        } else
-            scover = skyCover;
 
-        skyCoverC = scover; //Set to node
-        N = scover / 10.0;
+        N = 0; //10.0;
 
         // If observations (for a horizontal surface) exist -
         // use them, at least in an approximate manner
         if (tsOption > 1 && !rainPtr->getoptStorm()) {
-            RadGlobClr = (RadGlbObs / (1.0 - 0.65 * pow(N, 2.0)));
+            RadGlobClr = (inShortR / (1.0 - 0.65 * pow(N, 2.0)));
             Ic = Ic / (Ic * sinAlpha + Id) * RadGlobClr;
             Id = RadGlobClr - Ic * sinAlpha;
         }
@@ -1656,7 +1660,7 @@ double tSnowPack::inShortWaveSn(tCNode *cNode) {
 
     // Set shortwave variables to the node (partition is approximate)
     if (tsOption > 1 && !rainPtr->getoptStorm()) {
-        cNode->setShortRadIn(RadGlbObs); //or set(Is), they must be equal
+        cNode->setShortRadIn(inShortR); //or set(Is), they must be equal
     } else {
         cNode->setShortRadIn(Isw);
     }
@@ -1685,26 +1689,24 @@ double tSnowPack::inShortWaveCan() {
 
         DirectDiffuse(elevation);  // SKY2008Snow, AJR2007
 
-        // Cloud cover information
-        if (fabs(skyCover - 9999.99) < 1.0E-3) {
+        // because inShortR is incoming solar radiation--sky cover is already factored in--WR
 
-            skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
-            // computes sky cover from relative
-            // humidity and rain.
-            scover = skyCover;
+        //		// Cloud cover information
+        //		if (fabs(skyCover-9999.99) < 1.0E-3) {
+        //			skyCover = compSkyCover();//ADDED BY RINEHART 2007 @ NMT
+        //			scover = skyCover;
+        //		}
+        //		else
+        //			scover = skyCover;
+        //        skyCoverC = scover;
 
-            //if (rain > 0.0) scover = 10.0;
-            //else            scover = 1.0;
-        } else
-            scover = skyCover;
 
-        skyCoverC = scover;
-        N = scover / 10.0;
+        N = 0; //10.0;
 
         // If observations (for a horizontal surface) exist -
         // use them, at least in an approximate manner
         if (tsOption > 1 && !rainPtr->getoptStorm()) {
-            RadGlobClr = (RadGlbObs / (1.0 - 0.65 * pow(N, 2.0)));
+            RadGlobClr = (inShortR / (1.0 - 0.65 * pow(N, 2.0)));
             Ic = Ic / (Ic * sinAlpha + Id) * RadGlobClr;
             Id = RadGlobClr - Ic * sinAlpha;
         }

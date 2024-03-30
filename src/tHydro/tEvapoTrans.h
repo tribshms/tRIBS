@@ -183,7 +183,7 @@ class tEvapoTrans
   double windSpeedC{}, netRadC{}, vPressC{}, gFlux{}, hFlux{}, lFlux{}, Epot{}, rain{}, Gso{};
   double Io{}, alphaD{}, sinAlpha{}, del{}, phi{}, tau{}, circ{}, sunaz{};
   double SunRisHrLoc{}, SunSetHrLoc{}, DayLength{}, deltaT{};
-  double RadGlbObs{}, RadDirObs{}, RadDifObs{};
+  double RadDirObs{}, RadDifObs{};
   // SKY2008Snow from AJR2007
   //new for sheltering algorithm
   //	RMK: THE HA* VARIABLES SHOULD ACTUALLY BE HANDLED IN AN ARRAY
@@ -235,6 +235,7 @@ class tEvapoTrans
   char **DCgridFileNames, **DEgridFileNames, **OTgridFileNames, **LAgridFileNames;
   int AtFirstTimeStepLUFlag{};
 
+  int skycover_flag; // intended for when nodata is set for XC gridded data so that skycover is estimated.
 
 };
 

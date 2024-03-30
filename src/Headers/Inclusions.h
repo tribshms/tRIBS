@@ -31,6 +31,7 @@
 #include <string.h>
 #include <assert.h>
 #include <memory.h>
+#include <unistd.h>
 
 #elif defined LINUX_32
 #include <cstdlib>
@@ -43,6 +44,7 @@
 #include <cassert>
 #include <memory>
 #include <vector>
+#include <unistd.h>
 
 #elif defined MAC
 #include <cstdlib>
@@ -55,6 +57,7 @@
 #include <cassert>
 #include <memory>
 #include <vector>
+#include <unistd.h>
 
 #elif defined WIN
 #include <stdlib.h>
