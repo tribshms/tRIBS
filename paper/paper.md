@@ -30,9 +30,6 @@ authors:
     affiliation: 1
     orcid: 0000-0003-3424-9202
 
-  - name: Cázares-Rodriguez, J.E.
-    affiliation: 1
-
   - name: Lizarraga-Celaya, C.
     affiliation: 1
     orcid: 0000-0002-0893-4268
@@ -64,12 +61,12 @@ Building on core tRIBS functionality, as described by @ivanov2004a, @rinehart200
 
 These and other features of tRIBS v5.2 can be explored using two newly updated benchmark scenarios. This first benchmark is a point-scale simulation of the Happy Jack SNOTEL site in northern Arizona, USA (\autoref{fig:Fig_2}). The second is a basin-scale simulation of the Big Spring watershed located in the headwaters of Sycamore Creek in northern Arizona (\autoref{fig:Fig_3}). Both benchmarks are hosted on Zenodo, see \autoref{fig:Fig_2} and \autoref{fig:Fig_3} for more details.
 
-![A point-scale (i.e. a single Voronoi cell) tRIBS simulation of snow water equivalent (SWE) at the Happy Jack SNOTEL site in northern Arizona, USA. Top panel shows the time series of observed (black) and simulated SWE (blue). Bottom panel compares the observed and simulated peak SWE from 2002 to 2017. Dashed black line is a one-to-one relation. The color bar indicates the time difference in the occurrence of the peak SWE for each water year. Zenodo repository for this simulation with additional details can be found at: NEED TO UPDATE.\label{fig:Fig_2}](figures/Fig_2.png)
+![A point-scale (i.e. a single Voronoi cell) tRIBS simulation of snow water equivalent (SWE) at the Happy Jack SNOTEL site in northern Arizona, USA. Top panel shows the time series of observed (black) and simulated SWE (blue). Bottom panel compares the observed and simulated peak SWE from 2002 to 2017. Dashed black line is a one-to-one relation. The color bar indicates the time difference in the occurrence of the peak SWE for each water year. Zenodo repository for this simulation with additional details can be found at: [https://zenodo.org/records/10909507](https://zenodo.org/records/10909507).\label{fig:Fig_2}](figures/Fig_2.png)
 
 ## Conclusion
 Embracing the FAIR principles [Findability, Accessibility, Interoperability, and Reusability\; @wilkinson2016] and recognizing the importance of free and open source software in hydrology [@kabo-bah2012], here we document the release of tRIBS v5.2. This version represents years of cumulative efforts with major code improvements related to maintainability, robustness, performance, and integration as well as new process based functionality. The benchmarks provided exemplify tRIBS v5.2 applications in forested tributary watersheds of larger river systems. We anticipate that tRIBS v5.2 will be a valuable asset in addressing a wide range of problems for the broader hydrology community.
 
-![An example of a basin-scale tRIBS simulation showing a spatial map of mean hourly evapotranspiration rates averaged over the course of a 4-year simulation period. Big Spring basin is a tributary to Sycamore Creek in northern Arizona, USA. Zenodo repository for this simulation with additional details can be found at: NEED TO UPDATE.\label{fig:Fig_3}](figures/Fig_3.png)
+![An example of a basin-scale tRIBS simulation showing a spatial map of mean hourly evapotranspiration rates averaged over the course of a 4-year simulation period. Big Spring basin is a tributary to Sycamore Creek in northern Arizona, USA. Zenodo repository for this simulation with additional details can be found at: [https://zenodo.org/records/10909729](https://zenodo.org/records/10951574). \label{fig:Fig_3}](figures/Fig_3.png)
 
 
 # Acknowledgements

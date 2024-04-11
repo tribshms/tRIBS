@@ -17,7 +17,7 @@ The following steps will create a fork of the tRIBS repository under
 your GitHub account.
 
 1. Sign in to your GitHub account.
-2. Go to the tRIBS [home page](https://github.com/landlab/landlab)
+2. Go to the tRIBS [home page]()
    on GitHub.
 3. Click the fork button in the upper-right corner of the page.
 
