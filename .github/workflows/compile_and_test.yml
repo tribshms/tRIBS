@@ -14,32 +14,27 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest]
-        compiler: [ g++-11 ]
+        os: [ubuntu-latest]
+        compiler: [g++-11]
         include:
-        
           - os: ubuntu-latest
             compiler: g++-11
             target: Linux
 
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: download-openmpi
-        run: wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.2.tar.gz
-      - name: extract-openmpi
-        run: tar -xvf ./openmpi-4.0.2.tar.gz
-      - name: configure-openmpi
-        run: ./openmpi-4.0.2/configure --prefix="/home/${USER}/.openmpi"
-      - name: install-openmpi
-        run: |
-              make -j
-              sudo make install
 
-      - name: "Create build directory and run CMake"
-        run: cmake -S . -B build  -DCMAKE_BUILD_TYPE=Debug # TODO update to release
+      # Install MPI Development Files
+      - name: Install MPI Development Files
+        run: sudo apt-get install -y libopenmpi-dev
 
-      - name: "Build Project" 
-        run: cmake --build build --target all 
- 
+      # Set CMAKE_PREFIX_PATH
+      - name: Set CMAKE_PREFIX_PATH
+        run: export CMAKE_PREFIX_PATH=/usr/lib/openmpi:$CMAKE_PREFIX_PATH
+
+      - name: Create build directory and run CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build Project
+        run: cmake --build build --target all
