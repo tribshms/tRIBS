@@ -1,4 +1,4 @@
-name: compile_and_test
+name: compile_and_test_macos
 run-name: ${{github.actor}} is conducting a tRIBS build test for MacOS.
 
 on:
