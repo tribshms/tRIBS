@@ -1,11 +1,8 @@
 | Operating System | Status Badge |
 |------------------|--------------|
-| Linux            | [![Linux Build](https://github.com/your-username/your-repository/workflows/Linux%20Build/badge.svg)](https://github.com/your-username/your-repository/actions) |
-| macOS            | [![macOS Build](https://github.com/your-username/your-repository/workflows/macOS%20Build/badge.svg)](https://github.com/your-username/your-repository/actions) |
+| Linux            | [![Linux Build](https://img.shields.io/github/actions/workflow/status/tribshms/tRIBS/compile_and_test_linux.yml) |
+| macOS            | [![macOS Build](https://img.shields.io/github/actions/workflow/status/tribshms/tRIBS/compile_and_test_macos.yml)]|
 | Windows          | *Not Supported* |
-
-
-![](https://img.shields.io/github/actions/workflow/status/tribshms/tRIBS/compile_and_test.yml)
 ![](https://img.shields.io/readthedocs/tribshms)
 
 # TIN-based Real-time Integrated Basin Simulator: Version 5.2
