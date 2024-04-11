@@ -73,13 +73,6 @@ tributary hydrology in forest applications</article-title>
 <xref ref-type="aff" rid="aff-1"/>
 </contrib>
 <contrib contrib-type="author">
-<name>
-<surname>Cázares-Rodriguez</surname>
-<given-names>J. E.</given-names>
-</name>
-<xref ref-type="aff" rid="aff-1"/>
-</contrib>
-<contrib contrib-type="author">
 <contrib-id contrib-id-type="orcid">https://orcid.org/0000-0002-0893-4268</contrib-id>
 <name>
 <surname>Lizarraga-Celaya</surname>
@@ -312,7 +305,7 @@ a Creative Commons Attribution 4.0 International License (CC BY
       tributary to Sycamore Creek in northern Arizona, USA. Zenodo
       repository for this simulation with additional details can be
       found at:
-      <ext-link ext-link-type="uri" xlink:href="https://zenodo.org/records/10909729">https://zenodo.org/records/10909729</ext-link>.
+      <ext-link ext-link-type="uri" xlink:href="https://zenodo.org/records/10951574">https://zenodo.org/records/10909729</ext-link>.
       <styled-content id="figU003AFig_3"></styled-content></p></caption>
       <graphic mimetype="image" mime-subtype="png" xlink:href="media/figures/Fig_3.png" />
     </fig>

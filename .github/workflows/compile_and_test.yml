@@ -14,13 +14,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [ubuntu-latest]
         compiler: [ g++-11 ]
         include:
-        
-          - os: macos-latest
-            compiler: clang
-            target: Macos
             
           - os: ubuntu-latest
             compiler: g++-11
@@ -31,11 +27,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: download-openmpi
-        run: wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.2.tar.gz
+        run: wget https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.3.tar.gz
       - name: extract-openmpi
-        run: tar -xvf ./openmpi-4.0.2.tar.gz
+        run: tar -xvf ./openmpi-5.0.3.tar.gz
       - name: configure-openmpi
-        run: ./openmpi-4.0.2/configure --prefix="/home/${USER}/.openmpi"
+        run: ./openmpi-5.0.3/configure --prefix="/home/${USER}/.openmpi"
       - name: install-openmpi
         run: |
               make -j
@@ -45,5 +41,5 @@ jobs:
         run: cmake -S . -B build  -DCMAKE_BUILD_TYPE=Debug # TODO update to release
 
       - name: "Build Project" 
-        run: cmake --build build --target all 
+        run: cmake --build build --target all
  

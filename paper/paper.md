@@ -30,9 +30,6 @@ authors:
     affiliation: 1
     orcid: 0000-0003-3424-9202
 
-  - name: Cázares-Rodriguez, J.E.
-    affiliation: 1
-
   - name: Lizarraga-Celaya, C.
     affiliation: 1
     orcid: 0000-0002-0893-4268
@@ -69,7 +66,7 @@ These and other features of tRIBS v5.2 can be explored using two newly updated b
 ## Conclusion
 Embracing the FAIR principles [Findability, Accessibility, Interoperability, and Reusability\; @wilkinson2016] and recognizing the importance of free and open source software in hydrology [@kabo-bah2012], here we document the release of tRIBS v5.2. This version represents years of cumulative efforts with major code improvements related to maintainability, robustness, performance, and integration as well as new process based functionality. The benchmarks provided exemplify tRIBS v5.2 applications in forested tributary watersheds of larger river systems. We anticipate that tRIBS v5.2 will be a valuable asset in addressing a wide range of problems for the broader hydrology community.
 
-![An example of a basin-scale tRIBS simulation showing a spatial map of mean hourly evapotranspiration rates averaged over the course of a 4-year simulation period. Big Spring basin is a tributary to Sycamore Creek in northern Arizona, USA. Zenodo repository for this simulation with additional details can be found at: [https://zenodo.org/records/10909729](https://zenodo.org/records/10909729). \label{fig:Fig_3}](figures/Fig_3.png)
+![An example of a basin-scale tRIBS simulation showing a spatial map of mean hourly evapotranspiration rates averaged over the course of a 4-year simulation period. Big Spring basin is a tributary to Sycamore Creek in northern Arizona, USA. Zenodo repository for this simulation with additional details can be found at: [https://zenodo.org/records/10909729](https://zenodo.org/records/10951574). \label{fig:Fig_3}](figures/Fig_3.png)
 
 
 # Acknowledgements
