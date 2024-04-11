@@ -1,0 +1,31 @@
+name: compile_and_test_macos
+run-name: ${{github.actor}} is conducting a tRIBS build test for MacOS.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "**.cpp"
+      - "**.h"
+      - "**/CMakeLists.txt"
+
+jobs:
+  build_and_test:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Install MPI Development Files
+      - name: Install MPI Development Files
+        run: brew install open-mpi
+
+      # Set CMAKE_PREFIX_PATH
+      - name: Set CMAKE_PREFIX_PATH
+        run: export CMAKE_PREFIX_PATH=/usr/local/opt/open-mpi:$CMAKE_PREFIX_PATH
+
+      - name: Create build directory and run CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build Project
+        run: cmake --build build --target all

@@ -1,0 +1,40 @@
+name: compile_and_test_linux
+run-name: ${{github.actor}} is conducting a tRIBS build test for Linux systems.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "**.cpp"
+      - "**.h"
+      - "**/CMakeLists.txt"
+
+jobs:
+  build_and_test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        compiler: [g++-11]
+        include:
+          - os: ubuntu-latest
+            compiler: g++-11
+            target: Linux
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Install MPI Development Files
+      - name: Install MPI Development Files
+        run: sudo apt-get install -y libopenmpi-dev
+
+      # Set CMAKE_PREFIX_PATH
+      - name: Set CMAKE_PREFIX_PATH
+        run: export CMAKE_PREFIX_PATH=/usr/lib/openmpi:$CMAKE_PREFIX_PATH
+
+      - name: Create build directory and run CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build Project
+        run: cmake --build build --target all
