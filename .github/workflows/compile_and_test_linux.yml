@@ -1,5 +1,5 @@
 name: compile_and_test
-run-name: ${{github.actor}} is conducting a tRIBS build test
+run-name: ${{github.actor}} is conducting a tRIBS build test for Linux systems.
 
 on:
   workflow_dispatch:
