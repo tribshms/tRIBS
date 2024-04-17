@@ -71,7 +71,7 @@
 #include <assert.h>
 #include <memory.h>
 
-#else 
+#else
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
