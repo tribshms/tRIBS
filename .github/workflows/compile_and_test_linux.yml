@@ -26,17 +26,17 @@ jobs:
 
       # Build Parallel Version of tRIBS
       - name: Create build directory and run CMake for parallel version
-        run: cmake -S . -B cmake-build_parallel -DCMAKE_BUILD_TYPE=Release -Dparallel=ON -Dpackaging=ON -Dos=Linux
+        run: cmake -S . -B cmake-build-parallel -DCMAKE_BUILD_TYPE=Release -Dparallel=ON -Dpackaging=ON -Dos=Linux
 
       - name: Build Project Parallel
-        run: cmake --build cmake-build_parallel --target all
+        run: cmake --build cmake-build-parallel --target all
 
       # Build Serial Version of tRIBS
       - name: Create build directory and run CMake for serial version
-        run: cmake -S . -B cmake-build_serial -DCMAKE_BUILD_TYPE=Release -Dparallel=OFF -Dpackaging=ON -Dos=Linux
+        run: cmake -S . -B cmake-build-serial -DCMAKE_BUILD_TYPE=Release -Dparallel=OFF -Dpackaging=ON -Dos=Linux
 
       - name: Build Project Serial
-        run: cmake --build cmake-build_serial --target all
+        run: cmake --build cmake-build-serial --target all
 
       # Run CPack
       - name: Package tRIBS
