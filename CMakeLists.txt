@@ -270,7 +270,9 @@ endif()
 
 if (packaging)
 
-    set(os "macOS/Silicon") # options: macOS/Silicon, macOS/Intel, or Linux
+    if (NOT DEFINED os)
+        set(os "macOS/Silicon") # options: macOS/Silicon, macOS/Intel, or Linux
+    endif ()
 
     install(
         TARGETS ${PROJECT_NAME}
