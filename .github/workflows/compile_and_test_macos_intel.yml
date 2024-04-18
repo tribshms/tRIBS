@@ -1,4 +1,4 @@
-name: compile_and_test_macos
+name: compile_and_test_macos_intel
 run-name: ${{github.actor}} is conducting a tRIBS build test for MacOS.
 
 on:
@@ -14,7 +14,7 @@ jobs:
     runs-on: macos-13 #Intel Chip
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Install MPI Development Files
       - name: Install MPI Development Files
@@ -44,7 +44,7 @@ jobs:
 
       # Upload STGZ package
       - name: Package artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: tRIBS-STGZ-macos-Intel
           path: "packaging/macOS/Intel/TIN-based Real-time Integrated Basin Simulator-5.2.0.sh"
