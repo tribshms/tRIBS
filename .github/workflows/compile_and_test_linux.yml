@@ -21,8 +21,8 @@ jobs:
         run: sudo apt-get install -y libopenmpi-dev
 
       # Set CMAKE_PREFIX_PATH
-      - name: Set CMAKE_PREFIX_PATH
-        run: export CMAKE_PREFIX_PATH=/usr/lib/openmpi:$CMAKE_PREFIX_PATH
+      #- name: Set CMAKE_PREFIX_PATH
+      #  run: export CMAKE_PREFIX_PATH=/usr/lib/openmpi:$CMAKE_PREFIX_PATH
 
       # Build Parallel Version of tRIBS
       - name: Create build directory and run CMake for parallel version
