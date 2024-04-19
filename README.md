@@ -9,7 +9,7 @@
 # TIN-based Real-time Integrated Basin Simulator: Version 5.2
 This repository contains source code for the fully distributed hydrological model: TIN-based Real-time Integrated Basin Simulator (tRIBS). We provide extensive documention of the model with additional resources [here](https://tribshms.readthedocs.io/en/latest/).
 
-The licensing information can be found in [LICENSE.txt](./LICENSE.txt)
+Licensing information can be found in [LICENSE.txt](./LICENSE.txt).git 
 
 ## Installation 
 We provide three options for accessing the tRIBS model:
