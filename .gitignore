@@ -2,5 +2,7 @@
 .idea
 .run
 cmake-build-debug*
-cmake-build-release
+cmake-build-parallel
+cmake-build-serial
 build
+_CPack_Packages

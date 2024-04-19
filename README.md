@@ -7,16 +7,13 @@
 ![](https://img.shields.io/readthedocs/tribshms)
 
 # TIN-based Real-time Integrated Basin Simulator: Version 5.2
-This repository contains source code for the fully distributed hydrological model: TIN-based Real-time Integrated Basin Simulator (tRIBS). Details on running the model and its applications can be found [here](https://tribshms.readthedocs.io/en/latest/).
+This repository contains source code for the fully distributed hydrological model: TIN-based Real-time Integrated Basin Simulator (tRIBS). We provide extensive documention of the model with additional resources [here](https://tribshms.readthedocs.io/en/latest/).
 
-Licensing information can be found in [LICENSE.txt](./LICENSE.txt).
+Licensing information can be found in [LICENSE.txt](./LICENSE.txt).git 
 
-## Installation and Compilation
-tRIBS is an object-oriented based code written in c++. In order to run tRIBS you must download and compile the source code from this GitHub repository.
-Instructions for using CMake to compile tRIBS can be found [here.](./doc/md/CMake.md)
+## Installation 
+We provide three options for accessing the tRIBS model:
 
-Alternatively, a Docker image of tRIBS is maintained on [Docker Hub](https://hub.docker.com/repositories/tribs). 
-Further information can be found [here](doc/md/DOCKER.md).
-
-
-**For additional details in working with source code, including pertinent git commands, see the following instructions [here](./doc/md/DEV_INST.md). Additional information about debugging tRIBS can be found [here](./doc/md/DEBUG.md)**
+1) Compiled executables for latest [macOS]() and [Ubuntu]() systems
+2) [Docker](https://tribshms.readthedocs.io/en/latest/man/Docker.html)
+3) [CMake build system](https://tribshms.readthedocs.io/en/latest/man/Model_Execution.html#cmake)

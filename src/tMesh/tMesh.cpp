@@ -5399,6 +5399,7 @@ void tMesh<tSubNode>::TellAboutNode(tSubNode *cn){
 	return;
 }
 
+#endif
 /***************************************************************************
 **
 ** tMesh::writeRestart() Function
@@ -5435,7 +5436,6 @@ void tMesh<tSubNode>::readRestart(fstream & rStr)
     cn->readRestart(rStr);
 }
 
-#endif
 
 //=========================================================================
 //

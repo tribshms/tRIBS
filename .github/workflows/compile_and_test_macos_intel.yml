@@ -1,4 +1,4 @@
-name: compile_and_test_macos
+name: compile_and_test_macos_intel
 run-name: ${{github.actor}} is conducting a tRIBS build test for MacOS.
 
 on:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   build_and_test:
-    runs-on: macos-14
+    runs-on: macos-13 #Intel Chip
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -26,14 +26,14 @@ jobs:
 
       # Build Parallel Version of tRIBS
       - name: Create build directory and run CMake for parallel version
-        run: cmake -S . -B cmake-build-parallel -DCMAKE_BUILD_TYPE=Release -Dparallel=ON -Dpackaging=ON -Dos=macOS/Silicon
+        run: cmake -S . -B cmake-build-parallel -DCMAKE_BUILD_TYPE=Release -Dparallel=ON -Dpackaging=ON -Dos=macOS/Intel
 
       - name: Build Project Parallel
         run: cmake --build cmake-build-parallel --target all
 
       # Build Serial Version of tRIBS
       - name: Create build directory and run CMake for serial version
-        run: cmake -S . -B cmake-build-serial -DCMAKE_BUILD_TYPE=Release -Dparallel=OFF -Dpackaging=ON -Dos=macOS/Silicon
+        run: cmake -S . -B cmake-build-serial -DCMAKE_BUILD_TYPE=Release -Dparallel=OFF -Dpackaging=ON -Dos=macOS/Intel
 
       - name: Build Project Serial
         run: cmake --build cmake-build-serial --target all
@@ -46,5 +46,5 @@ jobs:
       - name: Package artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: tRIBS-STGZ-macos-Silicon
-          path: "packaging/macOS/Silicon/TIN-based Real-time Integrated Basin Simulator-5.2.0.sh"
+          name: tRIBS-STGZ-macos-Intel
+          path: "packaging/macOS/Intel/TIN-based Real-time Integrated Basin Simulator-5.2.0.sh"

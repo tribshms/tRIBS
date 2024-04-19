@@ -4,13 +4,12 @@ cmake_minimum_required(VERSION 3.20)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross compilation see: https://stackoverflow.com/questions/53633705/cmake-the-c-compiler-is-not-able-to-compile-a-simple-test-program
 
-#variables that can be specified using tP4
-set(exe "tRIBS")
-
-set(parallel ON)
-set(cxx_flags "-O2")
+#set(parallel ON) # currently set through -Dparallel, but can be manually set by uncommenting
+set(cxx_flags "-O2") #release mode overwrites with "-O3"
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #set compiler if necessary, this has to be done before project()
 #set (CMAKE_CXX_COMPILER <specify compiler here>)
@@ -19,24 +18,15 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 #    message(STATUS "${CMAKE_CXX_COMPILER_VERSION}}")
 #endif()
 
-project(${exe})
-add_executable(${exe} src/main.cpp)
-
-# project files
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-# used while testing and developing
-#set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
-
-### sanitizer finds leaks in parallel version--open mpi is known to have leaks
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fsanitize-address-use-after-scope -g") # different options available for using Sanitizer
-
 #################### BELOW SPECIFIES COMPILATION FOR SERIAL OR PARALLEL VERSION OF TRIBS ###############################
-
-# set to ON to compile parallel version, set to OFF to compile serial version
 if(parallel)
+    set(exe "tRIBSpar")
+    project(${exe}
+            DESCRIPTION "Parallel Distribution of the TIN-based Real-time Integrated Basin Simulator Distributed Hydrological Model"
+            VERSION 5.2.0
+    )
+    add_executable(${exe} src/main.cpp)
+
     message(WARNING "Compiling parallel version of tRIBS")
 
     target_compile_definitions(${exe}
@@ -46,7 +36,7 @@ if(parallel)
             GRAPH_TRIBS
             PRIVATE
             LINUX_32
-            )
+    )
 
     find_package(MPI REQUIRED) #Note: changes to MPI path etc may require reset of CMakeCache.txt
     if (MPI_FOUND) #Note:this should find whichever implementation of MPI is installed (i.e. Open MPI, Intel, mpich)
@@ -159,19 +149,23 @@ if(parallel)
     )
 
 else()
-    # currently only tested on new macs (M1 and M2 chips)
+    set(exe "tRIBS")
+    project(${exe}
+            DESCRIPTION "Serial Distribution of the TIN-based Real-time Integrated Basin Simulator Distributed Hydrological Model"
+            VERSION 5.2.0)
+    add_executable(${exe} src/main.cpp)
     message(WARNING "Compiling serial version of tRIBS")
 
     if(APPLE) # not sure though if loading libraries are any different for linux--windows don't know
         target_compile_definitions(${exe}
                 PRIVATE
                 MAC
-                )
+        )
     else()
         target_compile_definitions(${exe}
                 PRIVATE
                 LINUX_32
-                )
+        )
     endif()
 
     target_sources(
@@ -270,3 +264,35 @@ else()
     )
 
 endif()
+
+# can be passed via the command line with -Dpackaging=ON
+#set(packaging ON)
+
+if (packaging)
+
+    if (NOT DEFINED os)
+        set(os "macOS/Silicon") # options: macOS/Silicon, macOS/Intel, or Linux
+    endif ()
+
+    install(
+        TARGETS ${PROJECT_NAME}
+    )
+
+    set(CPACK_VERBOSE ON)
+    set(CPACK_PACKAGE_NAME "TIN-based Real-time Integrated Basin Simulator")
+    set(CPACK_PACKAGE_FILE_NAME "TIN-based Real-time Integrated Basin Simulator-5.2.0")
+    set(CPACK_PACKAGE_VENDOR "tRIBS developers")
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt")
+    # Set the custom script for the STGZ generator
+    #list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/packaging/utilities/CPack.STGZ_Header.sh.in")
+    #set(CPACK_STGZ_HEADER_FILE "${CMAKE_SOURCE_DIR}/packaging/utilities/CPack.STGZ_Header.sh.in")
+
+    set(CPACK_GENERATOR "STGZ")
+    set(CPACK_PACKAGE_DIRECTORY "${CMAKE_SOURCE_DIR}/packaging/${os}")
+    set(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_SOURCE_DIR}/packaging/${os}")
+
+    include(CPack)
+    cpack_add_component(CPACK_COMPONENTS_ALL)
+
+endif ()
+
