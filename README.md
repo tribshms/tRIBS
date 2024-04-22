@@ -16,6 +16,6 @@ Release notes are provided [here](https://tribshms.readthedocs.io/en/latest/man/
 ## Installation 
 We provide three options for accessing the tRIBS model:
 
-1) Compiled executables for latest [macOS and Ubuntu]() systems
+1) Compiled executables for latest [macOS and Ubuntu](https://tribshms.readthedocs.io/en/latest/man/Executables.html#executables) systems
 2) [Docker](https://tribshms.readthedocs.io/en/latest/man/Docker.html)
 3) [CMake build system](https://tribshms.readthedocs.io/en/latest/man/Model_Execution.html#cmake)
