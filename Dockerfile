@@ -6,8 +6,9 @@ ARG CMAKE_VERSION=3.27.8-r0
 ARG BASH_VERSION=5.2.21-r0
 ARG ZSH_VERSION=5.9-r2
 ARG PERL_VERSION=5.38.2-r0
-ARG PYTHON_VERSION=3.11.8-r0
+ARG PYTHON_VERSION=3.11.9-r0
 ARG OPENMPI_VERSION=5.0.2
+ARG SHADOW_VERSION=4.14.2-r0
 
 # Update and install dependencies
 RUN apk update && \
@@ -18,6 +19,9 @@ RUN apk update && \
         zsh=${ZSH_VERSION} \
         perl=${PERL_VERSION} \
         python3=${PYTHON_VERSION} \
+        shadow=${SHADOW_VERSION}\
+        openssh\
+        zlib-dev\
     && rm -rf /var/cache/apk/*
 
 # Download and install OpenMPI
@@ -41,24 +45,25 @@ WORKDIR /tribs
 COPY src/ ./src/
 
 # Copy CMakeLists.txt for parallel build
-COPY /src/utilities/docker_build/parallel/CMakeLists.txt ./
+COPY CMakeLists.txt ./
 
 # Build parallel
-WORKDIR /tribs/build
-RUN cmake -B . -S .. && \
-    cmake --build . --target all
-
-# Copy CMakeLists.txt for serial build
-COPY /src/utilities/docker_build/serial/CMakeLists.txt ../
+WORKDIR /tribs
+RUN cmake -B cmake-build-parallel -S . -Dparallel=ON -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build cmake-build-parallel --target all
 
 # Build serial
-RUN cmake -B . -S .. && \
-    cmake --build . --target all
+RUN cmake -B cmake-build-serial -S . -Dparallel=OFF -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build cmake-build-serial --target all
 
 # Create a data directory
 WORKDIR /tribs/
-RUN mkdir "/tribs/data"&& mkdir "/tribs/bin" &&\
-    cp /tribs/build/tRIBS /tribs/bin/ \
-    && cp /tribs/build/tRIBS_par /tribs/bin/ \
-    && rm -rf /tribs/build/ && mv /tribs/CMakeLists.txt /tribs/src/
+RUN mkdir "/tribs/shared"&& mkdir "/tribs/bin" &&\
+    cp /tribs/cmake-build-serial/tRIBS /tribs/bin/ \
+    && cp /tribs/cmake-build-parallel/tRIBSpar /tribs/bin/ \
+    && rm -rf /tribs/cmake-build-parallel/ && rm -rf /tribs/cmake-build-serial/ && rm -rf /tribs/CMakeLists.txt && rm -rf /tribs/src/
 
+# Switch to the non-root user
+# add user for non-root access of openmpi
+RUN useradd -ms /bin/bash tRIBSuser
+USER tRIBSuser
