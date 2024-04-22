@@ -92,13 +92,13 @@ void tParallel::inputArgs(int& argc, char** argv) {
   if (myProc == MASTER_PROC) {
     // Number of args
     targc = argc;
-    MPI_Bcast(&targc, 1, MPI_INTEGER, MASTER_PROC, MPI_COMM_WORLD);
+    MPI_Bcast(&targc, 1, MPI_INT, MASTER_PROC, MPI_COMM_WORLD);
 
 
     // Input file name
     size_t olen = strlen(argv[1]);
 
-    MPI_Bcast(&olen, 1, MPI_INTEGER, MASTER_PROC, MPI_COMM_WORLD);
+    MPI_Bcast(&olen, 1, MPI_INT, MASTER_PROC, MPI_COMM_WORLD);
 
     // Allocate a buffer that is large enough to store the input file name
     obuf = new char[olen];
@@ -127,11 +127,11 @@ void tParallel::inputArgs(int& argc, char** argv) {
     delete [] obuf;
   } else {
     // Number of args
-    MPI_Bcast(&targc, 1, MPI_INTEGER, MASTER_PROC, MPI_COMM_WORLD);
+    MPI_Bcast(&targc, 1, MPI_INT, MASTER_PROC, MPI_COMM_WORLD);
     argc = targc;
     //cout << "Non-Master argc = " << argc << endl;
     // Input file name
-    MPI_Bcast(&olen, 1, MPI_INTEGER, MASTER_PROC, MPI_COMM_WORLD);
+    MPI_Bcast(&olen, 1, MPI_INT, MASTER_PROC, MPI_COMM_WORLD);
     obuf = new char[olen+1];
     MPI_Bcast(obuf, olen, MPI_CHAR, MASTER_PROC, MPI_COMM_WORLD);
     obuf[olen] = '\0';
@@ -257,7 +257,7 @@ int tParallel::sum(int value) {
 
    int valueSum = 0;
    int localValue = value;
-   MPI_Reduce(&localValue, &valueSum, 1, MPI_INTEGER, MPI_SUM, MASTER_PROC,
+   MPI_Reduce(&localValue, &valueSum, 1, MPI_INT, MPI_SUM, MASTER_PROC,
       MPI_COMM_WORLD);
 
    return valueSum;
@@ -275,9 +275,9 @@ int tParallel::sumBroadcast(int value) {
 
    int valueSum = 0;
    int localValue = value;
-   MPI_Reduce(&localValue, &valueSum, 1, MPI_INTEGER, MPI_SUM, MASTER_PROC,
+   MPI_Reduce(&localValue, &valueSum, 1, MPI_INT, MPI_SUM, MASTER_PROC,
       MPI_COMM_WORLD);
-   MPI_Bcast(&valueSum, 1, MPI_INTEGER, MASTER_PROC, MPI_COMM_WORLD);
+   MPI_Bcast(&valueSum, 1, MPI_INT, MASTER_PROC, MPI_COMM_WORLD);
 
    return valueSum;
 }
@@ -406,9 +406,9 @@ int* tParallel::collect(int value) {
       return collectValue;
    }
 
-   MPI_Gather(&localValue, 1, MPI_INTEGER, collectValue, 1, MPI_INTEGER, 
+   MPI_Gather(&localValue, 1, MPI_INT, collectValue, 1, MPI_INT, 
       MASTER_PROC, MPI_COMM_WORLD);
-   MPI_Bcast(collectValue, numProcs, MPI_INTEGER, MASTER_PROC, MPI_COMM_WORLD);
+   MPI_Bcast(collectValue, numProcs, MPI_INT, MASTER_PROC, MPI_COMM_WORLD);
                                                                                 
    return collectValue;
 }
