@@ -902,7 +902,6 @@ double tEvapoTrans::ApproximateEP()
 void tEvapoTrans::setCoeffs(tCNode* cNode) 
 { 
 	landPtr->setLandPtr(cNode->getLandUse());
-	//soilPtr->setSoilPtr(cNode->getSoilID()); // Giuseppe 2016 - Changes to allow reading soil properties from grids
 
 	if (snowOption == 1)
 		coeffLAI = landPtr->getLandProp(12);
@@ -920,14 +919,13 @@ void tEvapoTrans::setCoeffs(tCNode* cNode)
 	}
 	else if (evapotransOption == 4)
 		coeffV  = landPtr->getLandProp(11);
-    
+
+    if (coeffV == 1.0) //prevents loss of snow when unloaded from canopy WR 05/12/2024
+        coeffV = 0.99;
+
 	if (gFluxOption == 1 || gFluxOption == 2) {
-		// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-        //		coeffKs = soilPtr->getSoilProp(10);
-        //		coeffCs = soilPtr->getSoilProp(11);
         coeffKs = cNode->getVolHeatCond();
         coeffCs = cNode->getSoilHeatCap();
-		// Giuseppe 2016 - End changes to allow reading soil properties from grids
 	}
 	
 	}
@@ -4058,7 +4056,7 @@ void tEvapoTrans::newHydroMetGridData(tCNode * cNode) {
 **
 ** Assigns values of current land use parameters to nodes based on results of 
 ** tResample grid input from updateLUVarOfBothGrids &/or updateLUVarOfPrevGrid.
-**
+** TODO check that same landcover parameters are being updated as provided from a table
 ***************************************************************************/
 void tEvapoTrans::newLUGridData(tCNode * cNode) 
 { 
@@ -4090,7 +4088,10 @@ void tEvapoTrans::newLUGridData(tCNode * cNode)
 					(evapotransOption == 2) ||
 					(evapotransOption == 3) ||
 					(evapotransOption == 4) ){
-				coeffV = cNode->getVegFraction();	
+				coeffV = cNode->getVegFraction();
+
+                if (coeffV == 1.0) //prevents loss of snow when unloaded from canopy WR 05/12/2024
+                    coeffV = 0.99;
 			}
 		}
 		if (strcmp(LUgridParamNames[ct],"LA")==0) {			

@@ -1335,18 +1335,24 @@ double tSnowPack::resFactCalc() {
     double vegHeight, vegFrac, vegBare, windSpeedBare;
     double zm, zom, zov, d, rav, ras;
 
-    if (coeffH == 0)
+    if (coeffH <= 0)
         vegHeight = 0.1;
     else
         vegHeight = coeffH; // vegHeight in meters
 
+    vegHeight = coeffH;
+
+    //WR debug 05/12/2024 the below code appears to be modified for a specific project, there is no reason
+    // to reset veg height below 1 or reset coeffV.The latter in particular is important since
+    // coeffV exists outside the scope of resFactCalc and is subsequently used to calculate snow sublimation.
     //THM 2012 added for grassland
-    if (coeffH < 1) {
-        vegHeight = coeffH / 250;
-        coeffV = 0.1;
-    } else {
-        vegHeight = coeffH;
-    }
+    //    if (coeffH < 1) {
+    //        vegHeight = coeffH / 250;
+    //        coeffV = 0.1;
+    //    } else {
+    //        vegHeight = coeffH;
+    //    }
+
     if (vegHeight > snDepthm) {
         vegHeight = vegHeight - snDepthm;
     } else {
