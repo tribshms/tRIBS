@@ -920,7 +920,7 @@ void tEvapoTrans::setCoeffs(tCNode* cNode)
 	else if (evapotransOption == 4)
 		coeffV  = landPtr->getLandProp(11);
 
-    if (coeffV == 1.0) //prevents loss of snow when unloaded from canopy WR 05/12/2024
+    if (coeffV >= 1.0) //prevents loss of snow when unloaded from canopy WR 05/12/2024
         coeffV = 0.99;
 
 	if (gFluxOption == 1 || gFluxOption == 2) {
@@ -4090,7 +4090,7 @@ void tEvapoTrans::newLUGridData(tCNode * cNode)
 					(evapotransOption == 4) ){
 				coeffV = cNode->getVegFraction();
 
-                if (coeffV == 1.0) //prevents loss of snow when unloaded from canopy WR 05/12/2024
+                if (coeffV >= 1.0) //prevents loss of snow when unloaded from canopy WR 05/12/2024
                     coeffV = 0.99;
 			}
 		}
