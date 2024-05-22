@@ -612,7 +612,6 @@ void tCNode::sethsrf(double value)   { hsrf = value; }
 void tCNode::setesrf(double value)   { esrf = value; }
 void tCNode::setpsrf(double value)   { psrf = value; }
 void tCNode::setsatsrf(double value) { satsrf = value; }
-void tCNode::setrsrf(double value)   { rsrf = value; }
 void tCNode::setsbsrf(double value)  { sbsrf = value; }
 void tCNode::setRunOn(double value)  { RunOn = value; }
 void tCNode::setFlowEdg(tEdge * edgs) { flowedge = edgs; }

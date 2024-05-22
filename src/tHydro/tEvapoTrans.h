@@ -203,7 +203,6 @@ class tEvapoTrans
   //  RINEHART 2007 @ NEW MEXICO TECH
   double SunHour{};
 
-  double BasAltitude{};
   char **gridParamNames, **gridBaseNames, **gridExtNames;
   char **LUgridParamNames, **LUgridBaseNames, **LUgridExtNames; // SKYnGM2008LU: added by AJR 2007
 
