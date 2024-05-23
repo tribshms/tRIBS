@@ -4,7 +4,8 @@
 All notable changes to this project are documented in this file.
 
 ## Version 5.2.1 — 5/12/2024 (currently on branch dev)
-* Rsolved issue related to Tso not properly being set.
+* Resolved issue related to Tso not properly being set.
+* Setup proper initialization of skycover_flag
 * Removed CNode::setrsrf(double value), was not being used.
 * Removed unused variable BasAltitude, it was a red herring for debugging purposes, but otherwise useless
 * Fixed bug, where vegetation fraction = 1, so that unloaded snow is not lost from the system. This was accomplished by conditionally checking if VF =1, then setting it to 0.99.

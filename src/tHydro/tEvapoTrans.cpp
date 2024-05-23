@@ -382,6 +382,8 @@ void tEvapoTrans::initializeVariables()
 	dewTempC = 0.0; surfTempC = 0.0; atmPressC = 0.0;
 	rHumidityC = 0.0; skyCoverC = 0.0; netRadC = 0.0;
 
+    skycover_flag = 0;
+
 	Is = Ic = Ics = Id = Ids = 0.0;
 	gFlux = 0.0; hFlux = 0.0; lFlux = 0.0;
 	potEvap = 0.0; actEvap = 0.0;
@@ -2240,11 +2242,11 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	double cosi,v;
 	double Isw; // Following were removed as shadows WR: Ic,Ics,Id,Ids,Is
 
-
     SunHour=0;
 	Ic=Ics=Id=Ids=Is=Isw=0.0;
     elevation = cNode->getZ(); //SMM 10172008
-	HeatTransferProperties( cNode ); 
+	HeatTransferProperties( cNode );
+
 	
 	// Compute INcoming longwave radiation from the atmosphere
 	inLongR = inLongWave( cNode );
