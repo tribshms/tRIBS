@@ -392,8 +392,8 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
         betaFuncT(cNode); // inherited
 
         // Get Soil/Surface Temperature --WR debug 01032024 same setup as callEvapPotential.
-        // Tso = cNode->getSurfTemp() + 273.15;
-        // Tlo = cNode->getSoilTemp() + 273.15;
+         Tso = cNode->getSurfTemp() + 273.15;
+         Tlo = cNode->getSoilTemp() + 273.15;
 
         //get the necessary information from tCNode for snow model
         getFrNodeSnP(cNode);
@@ -454,7 +454,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             setToNodeSnP(cNode);
         }//end no-snow
 
-        else //condtions include some combination of snowpack and snow in canopy, and snowing, raining, or no precip
+        else //condtions include some combination of snowpack and snow in canopy, and snowing, rain on snow, or no precip
         {
 
             // Implement interception schemes for snow, refactored WR 6/21/23
@@ -704,7 +704,12 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
             // ET variables are set to zero for canopy when snow in canopy, see tSnowIntercept
             cNode->setEvapSoil(0.0);
             cNode->setActEvap(0.0);
-            cNode->setEvapoTrans(cNode->getEvapWetCanopy() + cNode->getEvapDryCanopy()); //should be set to zero in most cases when snow is present, as its set to zero in callSnowIntercept except for rain on snow events.
+            // This maybe redundant.This setEvapoTrans is called in ComputeETComponets, which
+            // is only called when no snow is in the system or in CallSnowIntercept, if there is
+            // no snow in the canopy.
+            cNode->setEvapoTrans(cNode->getEvapWetCanopy() + cNode->getEvapDryCanopy());
+
+
 
             setToNodeSnP(cNode);
             //setToNode(cNode); // WR 01032024this also being set in callSnowIntercept, may be source of variation in AtmPress?
@@ -823,8 +828,7 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         node->setHFlux(0.0);
         node->setLFlux(0.0);
         node->setLongRadOut(0.0);
-        node->setSurfTemp(
-                node->getSnTempC()); //assume surface temp == snow temp, note if snWE < 1e-4 snow intercept should not be called
+        node->setSurfTemp(node->getSnTempC()); //assume surface temp == snow temp, note if snWE < 1e-4 snow intercept should not be called
         node->setSoilTemp(node->getSnTempC()); //this should be updated with n-layer snow model
 
         // follows structure of

@@ -224,11 +224,7 @@ void tEvapoTrans::SetEvapTVariables(tInputFile &infile, tHydroModel *hydro)
 		soilPtr = hydro->soilPtr;
 		initializeVariables();
 		SetSunVariables();
-		
-		tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
-		BasAltitude  = (nodeIter.FirstP()->getZ());
-		BasAltitude += (nodeIter.LastP()->getZ());
-		BasAltitude /= 2.0;
+
 		
 		if (gFluxOption != 1 && gFluxOption != 2) {
 			Cout<<"\nGround Heat Flux Option "<< gFluxOption;
@@ -385,6 +381,8 @@ void tEvapoTrans::initializeVariables()
 	inLongR = 0.0; outLongR = 0.0; inShortR = 0.0;  
 	dewTempC = 0.0; surfTempC = 0.0; atmPressC = 0.0;
 	rHumidityC = 0.0; skyCoverC = 0.0; netRadC = 0.0;
+
+    skycover_flag = 0;
 
 	Is = Ic = Ics = Id = Ids = 0.0;
 	gFlux = 0.0; hFlux = 0.0; lFlux = 0.0;
@@ -1039,13 +1037,9 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		// Set Coefficients
 		if (luOption == 1) {
 			newLUGridData(cNode);
-			if (gFluxOption == 1 || gFluxOption == 2) {
-				// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-                //			        coeffKs = soilPtr->getSoilProp(10);
-                //				coeffCs = soilPtr->getSoilProp(11);
+			if (gFluxOption == 1 || gFluxOption == 2) {;
                 coeffKs = cNode->getVolHeatCond();
                 coeffCs = cNode->getSoilHeatCap();
-				// Giuseppe 2016 - End changes to allow reading soil properties from grids
             }
 		}
 		else{
@@ -1552,7 +1546,8 @@ void tEvapoTrans::SetSunVariables()
 	double Wo = 1367.0;
 	double pi = 4.0*atan(1.0);
 	double CIRC[12] = {.07, .10, .12, .14, .16, .19, .23, .20, .16, .12, .08, .07};
-	
+
+
 	dgmt  = gmt;
 	longSM = 15.0*abs(gmt);
 	longM = fabs(longitude);
@@ -2246,10 +2241,12 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	double Tg, eps;
 	double cosi,v;
 	double Isw; // Following were removed as shadows WR: Ic,Ics,Id,Ids,Is
-	SunHour=0;
+
+    SunHour=0;
 	Ic=Ics=Id=Ids=Is=Isw=0.0;
     elevation = cNode->getZ(); //SMM 10172008
-	HeatTransferProperties( cNode ); 
+	HeatTransferProperties( cNode );
+
 	
 	// Compute INcoming longwave radiation from the atmosphere
 	inLongR = inLongWave( cNode );
@@ -2317,7 +2314,7 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	// Compute resistances for turbulent fluxes
 	Rah  = aeroResist();
 	Rstm = stomResist();
-	
+
 	Tg = Tso;  // Surface toK from the previous time step
 	
 	// Iteratively find the ground temperature
@@ -5206,8 +5203,7 @@ void tEvapoTrans::writeRestart(fstream & rStr) const
   BinaryWrite(rStr, Id);
   BinaryWrite(rStr, Ids);
   BinaryWrite(rStr, vPressC);
-  BinaryWrite(rStr, Epot);
-  BinaryWrite(rStr, BasAltitude);
+  BinaryWrite(rStr, Epot);;
 
   BinaryWrite(rStr, numStations);
   BinaryWrite(rStr, arraySize);
@@ -5323,7 +5319,6 @@ void tEvapoTrans::writeRestart(fstream & rStr) const
   BinaryWrite(rStr, ha3375);
   BinaryWrite(rStr, tempLapseRate);
   BinaryWrite(rStr, SunHour);
-  BinaryWrite(rStr, BasAltitude);
   BinaryWrite(rStr, AtFirstTimeStepLUFlag);
     
     // to get right time vegetation parameters after reading restart files. Ara Ko 2017
@@ -5379,7 +5374,6 @@ void tEvapoTrans::readRestart(fstream & rStr)
   BinaryRead(rStr, Ids);
   BinaryRead(rStr, vPressC);
   BinaryRead(rStr, Epot);
-  BinaryRead(rStr, BasAltitude);
 
   BinaryRead(rStr, numStations);
   BinaryRead(rStr, arraySize);
@@ -5495,7 +5489,6 @@ void tEvapoTrans::readRestart(fstream & rStr)
   BinaryRead(rStr, ha3375);
   BinaryRead(rStr, tempLapseRate);
   BinaryRead(rStr, SunHour);
-  BinaryRead(rStr, BasAltitude);
   BinaryRead(rStr, AtFirstTimeStepLUFlag);
   BinaryRead(rStr, NowTillWhichALgrid); // Ara Ko 2017
   BinaryRead(rStr, NowTillWhichTFgrid); // Ara Ko 2017

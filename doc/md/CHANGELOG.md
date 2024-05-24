@@ -4,8 +4,13 @@
 All notable changes to this project are documented in this file.
 
 ## Version 5.2.1 — 5/12/2024 (currently on branch dev)
+* Resolved issue related to Tso not properly being set.
+* Setup proper initialization of skycover_flag
+* Removed CNode::setrsrf(double value), was not being used.
+* Removed unused variable BasAltitude, it was a red herring for debugging purposes, but otherwise useless
 * Fixed bug, where vegetation fraction = 1, so that unloaded snow is not lost from the system. This was accomplished by conditionally checking if VF =1, then setting it to 0.99.
 * Commented out 2012 modification of vegHeight for coeffH < 1 and resetting of coeffV = 0.1 in tSnowPack::resFactCalc. In specific cases (i.e. where coeffH < 1) may have caused some reduction in evaporation and sublimation from the snowpack.
+
 
 ## Version 5.2.0 — Summer/Fall 2023
 The below information records some of the modifications leading to version 5.2.0. This documents the initial efforts to centralize the tRIBS code base with modernized  tools. Note this is not by any mean a complete record of modifications that occurred at this time. Additional information can be found in the Git logs.
