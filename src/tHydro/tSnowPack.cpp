@@ -1687,7 +1687,8 @@ double tSnowPack::inShortWaveCan() {
 
     // WR refactor 8-31-2023, this is a almost the same as inShortWave, but returns Isw before
     // accounting for the effects of optical transmission through the canopy. There is
-    // certainly a cleaner way to do this, but for now this will have to do.
+    // certainly a cleaner way to do this, but for now this will have to do. Note this was originally in tSnowIntercept
+    // which was removed because it was mostly redundant.
 
     Ic = Is = Id = Ir = Ids = Ics = Isw = Iv = 0.0;
 
