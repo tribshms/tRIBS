@@ -6,3 +6,4 @@ cmake-build-parallel
 cmake-build-serial
 build
 _CPack_Packages
+__pycache__
