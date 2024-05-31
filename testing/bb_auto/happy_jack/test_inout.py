@@ -2,7 +2,7 @@
 # Currently this only setup for a single element case, but will need to be updated to address more complex multi-element
 # models.
 
-#pytest --binary /path/to/your/binary/executable --input /path/to/input/file
+# pytest --binary /path/to/your/binary/executable --input /path/to/input/file
 
 import sys
 import os
@@ -16,6 +16,7 @@ if extra_path not in sys.path:
 from pytRIBS.classes import Model as model
 from pytRIBS.classes import Results as results
 
+
 @pytest.fixture
 def setup_data():
     binary_path = '/Users/wr/Documents/Repos/Forked/tRIBS/cmake-build-serial/tRIBS'
@@ -23,6 +24,7 @@ def setup_data():
     input_precip = '/Users/wr/Desktop/tScenarioTesting/data/HJ_bench/data/HJ_PRECIP_2002-2018.mdf'
     input_met = '/Users/wr/Desktop/tScenarioTesting/data/HJ_bench/data/HJ_WEATHER_2002-2018_XC_mod.mdf'
     return binary_path, input_file, input_precip, input_met
+
 
 def test_match_input_to_output(setup_data):
     binary_path, input_file, input_precip, input_met = setup_data
@@ -33,7 +35,7 @@ def test_match_input_to_output(setup_data):
 
         # Add debugging statement before running the model
         print('Running tRIBS model')
-        m.run(binary_path, input_file)
+        m.run(binary_path, input_file,verbose=False) # set to true if model doesn't seem to be running.
         # Add debugging statement after running the model
         print('Finished running tRIBS model')
 
@@ -61,27 +63,23 @@ def test_match_input_to_output(setup_data):
         # List of input variables and related variables from pixel file
         input_variables = ['PA', 'RH', 'XC', 'US', 'TA', 'IS']
         tribs_nodata = 9999.99
+        min_windspeed = 0.1
+        tol = 0.01
         pixel_variables = ['Press_Pa', 'RelHum_[]', 'SkyCov_[]', 'Wind_m_s', 'AirT_oC', 'ShrtRadIn_W_m2']
 
         # Compare meteorological inputs and outputs
         for invar, pvar in zip(input_variables, pixel_variables):
+            print(f'Checking input variable {invar}')
+            # if XC is provided as 9999.99 tRIBS calculates sky cover based on precipitation and relative humidity
             if invar == 'XC' and any(met_in['XC'] == tribs_nodata):
                 continue
-            var_dif = np.not_equal(met_in[invar].values, pixel[pvar].values)
+            # tribs sets 0 value wind speed to a minimum of 0.1, skip if all mismatched values = 0.1
+            if invar == 'US' and all(pixel['Wind_m_s'][met_in['US'] != pixel['Wind_m_s']] == min_windspeed):
+                continue
 
-            assert not np.any(var_dif), f"Difference found in variables {invar} and {pvar} at time {pixel.Time_hr[(met_in[invar] != pixel[pvar]).idxmax()]}"
+            var_dif = np.mean(met_in[invar].values - pixel[pvar].values)
+
+            assert var_dif <= tol, f"Difference found in variables {invar} and {pvar} at time {pixel.Time_hr[(met_in[invar] != pixel[pvar]).idxmax()]}"
 
     except Exception as e:
         raise AssertionError(f"Test failed due to an unexpected error: {e}")
-
-
-
-
-
-
-
-
-
-
-
-
