@@ -1423,7 +1423,11 @@ double tSnowPack::resFactCalc() {
 void tSnowPack::computeSub() {
 
     //compute incoming shortwave radiation
-    inShortR = inShortWaveCan();// W
+    // inShortR = inShortWaveCan();// Currently commented out since inShortWaveCan is non-functional.
+    // InshortR was being set to zero here, because Isw = Iv * (1.0 - albedo), and Iv was zero. Also not clear if InShortR
+    // was properly being reset as it's replaced by Isw which is consists of multiple components that need to be further evaluated.
+    // Lastly it appears that albedo is already called below, making this redundant  Isw = Iv * (1.0 - albedo). This function
+    // needs to be refactored or maybe deprecated.
 
     //compute effective incident shortwave radiation on snow crystal
     Sp = PI * pow(iceRad, 2.0) * (1 - albedo) * inShortR;//check units--check (W)//WR debug change 0.8 to albedo
@@ -1685,10 +1689,11 @@ double tSnowPack::inShortWaveCan() {
     double v, cosi, scover;
     double RadGlobClr;
 
-    // WR refactor 8-31-2023, this is a almost the same as inShortWave, but returns Isw before
+    // WR refactor 8-31-2023 this is a almost the same as inShortWave, but returns Isw before
     // accounting for the effects of optical transmission through the canopy. There is
     // certainly a cleaner way to do this, but for now this will have to do. Note this was originally in tSnowIntercept
-    // which was removed because it was mostly redundant.
+    // which was removed because it was mostly redundant. See original tSnowIntercept code/documentation for information
+    // on the original intent of this function.
 
     Ic = Is = Id = Ir = Ids = Ics = Isw = Iv = 0.0;
 
@@ -1812,6 +1817,8 @@ double tSnowPack::inShortWaveCan() {
             Ir = 0.0;
             Is = Is;
         }
+        Iv = Is; // added 6/3/2024 otherwise function returns zero, but still not fixed since it called in computeSub which
+        // then also factors for albedo. So maybe line below needs to be commented out?
 
         // Account for albedo
         Isw = Iv * (1.0 - albedo);
