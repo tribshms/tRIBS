@@ -1,6 +1,5 @@
 import sys
 import os
-import numpy as np
 import pytest
 import getpass
 from datetime import datetime
@@ -19,6 +18,7 @@ def setup_data():
     input_file = '/Users/wr/Desktop/tScenarioTesting/scenarios/one/scenario_one.in'
     input_precip = '/Users/wr/Desktop/tScenarioTesting/data/HJ_bench/data/HJ_PRECIP_2002-2018.mdf'
     input_met = '/Users/wr/Desktop/tScenarioTesting/data/HJ_bench/data/HJ_WEATHER_2002-2018_XC_mod.mdf'
+    ref_data = '/Users/wr/Desktop/tScenarioTesting/data/HJ_bench/data/Snotel/bcqc_34.75000_-111.41000.txt'
 
     # Get the current username
     username = getpass.getuser()
@@ -38,4 +38,4 @@ def setup_data():
     r.get_element_results()
     pixel = r.element[0]['pixel']
 
-    yield pixel, input_met, input_precip, m, r
+    yield pixel, input_met, input_precip, m, r, ref_data

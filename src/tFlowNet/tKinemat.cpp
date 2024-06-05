@@ -752,7 +752,7 @@ void tKinemat::SurfaceFlow() {
 
     hour = (int) floor(timer->getCurrentTime());
     minute = (int) ((timer->getCurrentTime() - hour) * 100);
-    snprintf(extension,sizeof(extension),"%04d.%02d", hour, minute);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
+    snprintf(extension,sizeof(extension),"%04d.%04d", hour, minute);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
 
 #ifdef PARALLEL_TRIBS
                                                                                                                             // If running in parallel, only partition with last reach writes

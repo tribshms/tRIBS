@@ -4,6 +4,7 @@
 All notable changes to this project are documented in this file.
 
 ## Version 5.2.1 — 5/12/2024 (currently on branch dev)
+* Increased precision of time step in .qout files to two decimal points.
 * Call to inShortWaveCan in tSnowPack::computeSub was commented out and needs to be fixed or removed
 * Resolved issue related to Tso not properly being set.
 * Setup proper initialization of skycover_flag
