@@ -48,9 +48,9 @@ def setup_data():
                 try:
                     mrf_result = future.result()
                     results_dict[task_name] = mrf_result
-                    print(f'{task_name} task result: {mrf_result}')
+                    print(f'{task_name} simulation completed')
                 except Exception as e:
-                    print(f'{task_name} task generated an exception: {e}')
+                    print(f'{task_name} simulation generated an exception: {e}')
 
                 # Access the results
         parallel_result = results_dict.get('parallel')
@@ -68,7 +68,7 @@ def setup_data():
 def run_parallel_task(binary_path, input_file):
     m = model()
     m.read_input_file(input_file)
-    m.run(binary_path, input_file, verbose=False, mpi_command='mpirun -n 3')
+    m.run(binary_path, input_file, mpi_command='mpirun -n 3', verbose=False)
     r = results(input_file)
     r.get_mrf_results()
     return r.mrf['mrf']

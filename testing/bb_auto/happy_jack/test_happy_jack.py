@@ -147,7 +147,7 @@ def test_elem_water_balance(setup_data):
     # assumed unit conversion for rates where each entry is scaled by a 1 hr time step then summed to a get per a area depth
     p_mm = pixel['Rain_mm_h'].sum()
     et_mm = pixel['EvpTtrs_mm_h'].sum() - (
-                pixel['SnSub_cm'].sum() * 10 + pixel['SnEvap_cm'].sum() * 10 + pixel['IntSub_cm'].sum() * 10)
+            pixel['SnSub_cm'].sum() * 10 + pixel['SnEvap_cm'].sum() * 10 + pixel['IntSub_cm'].sum() * 10)
     qsurf_mm = pixel['Srf_Hour_mm'].sum()
     qunsat_mm = np.sum(pixel['QpIn_mm_h'].values - pixel['QpOut_mm_h'].values)
     qsat_mm = pixel['GWflx_m3_h'].sum() / element_area * 1000  # conversion from m^3 to mm
@@ -161,10 +161,10 @@ def test_elem_water_balance(setup_data):
     test = (net_flux - del_s) / years
     print(f"Test metric (P - Loss - delS) = {test} mm/yr")
 
-    assert test < wb_threshold
+    assert abs(test) < wb_threshold
 
 
-def test_model_skills(setup_data):
+def test_model_efficiency(setup_data):
     # setup
     pixel, _, _, _, r, ref_data = setup_data
 
@@ -188,7 +188,7 @@ def test_model_skills(setup_data):
     snotel['precip'] = snotel['precip'] * 25.4  #mm
 
     #crop to same time frame
-    pixel.set_index('Time',inplace=True)
+    pixel.set_index('Time', inplace=True)
     daily_elem = pixel.resample('D').mean()
     dates_to_keep = daily_elem.index
     snotel_trim = snotel[snotel.index.normalize().isin(dates_to_keep)]
