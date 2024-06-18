@@ -5,9 +5,9 @@ import pytest
 import getpass
 from datetime import datetime
 
-extra_path = f"{os.environ['HOME']}/Documents/Repos/Forked/pytRIBS"
-if extra_path not in sys.path:
-    sys.path.append(extra_path)
+# extra_path = f"{os.environ['HOME']}/Documents/Repos/Forked/pytRIBS"
+# if extra_path not in sys.path:
+#     sys.path.append(extra_path)
 
 from pytRIBS.classes import Model as model
 from pytRIBS.classes import Results as results
