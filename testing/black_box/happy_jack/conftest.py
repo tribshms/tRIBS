@@ -21,7 +21,7 @@ def setup_data():
         json_obj = json.load(openfile)
 
     # setup vars for running tRIBS and comparing to observational data
-    binary_path = json_obj['bin_parallel']
+    binary_path = json_obj['bin_serial']
     hj_path = json_obj['hj_path']
     input_file = f'{hj_path}/src/in_files/happy_jack.in'
     input_precip = f'{hj_path}/data/HJ_PRECIP_2002-2018.mdf'
