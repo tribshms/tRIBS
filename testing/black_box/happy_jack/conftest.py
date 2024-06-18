@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 import pytest
 import getpass
 from datetime import datetime
@@ -14,11 +15,18 @@ from pytRIBS.classes import Results as results
 
 @pytest.fixture(scope='module')
 def setup_data():
-    binary_path = '/Users/wr/Documents/Repos/Forked/tRIBS/cmake-build-serial/tRIBS'
-    input_file = '/Users/wr/Desktop/tScenarioTesting/scenarios/one/scenario_one.in'
-    input_precip = '/Users/wr/Desktop/tScenarioTesting/data/HJ_bench/data/HJ_PRECIP_2002-2018.mdf'
-    input_met = '/Users/wr/Desktop/tScenarioTesting/data/HJ_bench/data/HJ_WEATHER_2002-2018_XC_mod.mdf'
-    ref_data = '/Users/wr/Desktop/tScenarioTesting/data/HJ_bench/data/Snotel/bcqc_34.75000_-111.41000.txt'
+
+    # read in config.json
+    with open('../config.json', 'r') as openfile:
+        json_obj = json.load(openfile)
+
+    # setup vars for running tRIBS and comparing to observational data
+    binary_path = json_obj['bin_parallel']
+    hj_path = json_obj['hj_path']
+    input_file = f'{hj_path}/src/in_files/happy_jack.in'
+    input_precip = f'{hj_path}/data/HJ_PRECIP_2002-2018.mdf'
+    input_met = f'{hj_path}/data/HJ_WEATHER_2002-2018_XC_mod.mdf'
+    ref_data = f'{hj_path}/data/Snotel/bcqc_34.75000_-111.41000.txt'
 
     # Get the current username
     username = getpass.getuser()
@@ -31,7 +39,7 @@ def setup_data():
     m = model()
     m.read_input_file(input_file)
 
-    m.run(binary_path, input_file, verbose=False)  # set to true if model doesn't seem to be running.
+    m.run(binary_path, input_file, verbose=False) #set to true if model doesn't seem to be running.
 
     # Create instance of pytRIBS results class & read in results
     r = results(input_file)

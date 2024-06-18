@@ -1,3 +1,4 @@
+import json
 import sys
 import os
 import pytest
@@ -15,17 +16,21 @@ from pytRIBS.classes import Results as results
 
 @pytest.fixture(scope='module')
 def setup_data():
-    # setup conditional for refining or adding tests, for operational testing should always be set to True
+    # Setup conditional for refining or adding tests because running big_springs for a month simulation can take between
+    # 9-20 minutes depending on optimization. For operational testing run_flag should always be set to True
     run_flag = True
 
-    binary_par_path = '/Users/wr/Documents/Repos/Forked/tRIBS/cmake-build-parallel/tRIBSpar'
-    binary_ser_path = '/Users/wr/Documents/Repos/Forked/tRIBS/cmake-build-serial/tRIBS'
-    input_par_file = '/Users/wr/Desktop/big_spring/src/in_files/big_spring_par.in'
-    input_ser_file = '/Users/wr/Desktop/big_spring/src/in_files/big_spring.in'
+    # read in config.json
+    with open('../config.json', 'r') as openfile:
+        json_obj = json.load(openfile)
+
+    bs_path = json_obj['bs_path']
+    binary_par_path = json_obj['bin_parallel']
+    binary_ser_path = json_obj['bin_serial']
+    input_par_file = f'{bs_path}/src/in_files/big_spring_par.in'
+    input_ser_file = f'{bs_path}/src/in_files/big_spring.in'
 
     if run_flag:
-        # for future efficieny test, need to check data first
-        #ref_data = '/Users/wr/Desktop/tScenarioTesting/data/HJ_bench/data/Snotel/bcqc_34.75000_-111.41000.txt'
 
         # Get the current username
         username = getpass.getuser()
@@ -52,7 +57,7 @@ def setup_data():
                 except Exception as e:
                     print(f'{task_name} simulation generated an exception: {e}')
 
-                # Access the results
+        # Access the results
         parallel_result = results_dict.get('parallel')
         serial_result = results_dict.get('serial')
 
@@ -66,6 +71,7 @@ def setup_data():
 
 
 def run_parallel_task(binary_path, input_file):
+    # setup pytribs Model class, read input file, run model, instantiate Results class, return mrf file.
     m = model()
     m.read_input_file(input_file)
     m.run(binary_path, input_file, mpi_command='mpirun -n 3', verbose=False)
@@ -75,6 +81,7 @@ def run_parallel_task(binary_path, input_file):
 
 
 def run_serial_task(binary_path, input_file):
+    # setup pytribs Model class, read input file, run model, instantiate Results class, return mrf file.
     m = model()
     m.read_input_file(input_file)
     m.run(binary_path, input_file, verbose=False)
