@@ -7,3 +7,5 @@ cmake-build-serial
 build
 _CPack_Packages
 __pycache__
+/cmake-build-serial_debug/
+/cmake-build-parallel_debug/
