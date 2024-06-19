@@ -482,6 +482,12 @@ void tHydroModel::InitSet(tResample *resamp)
 		cn->setSoilMoistureSC(cn->getSoilMoisture()/Ths);
 		cn->setRootMoistureSC(cn->getRootMoisture()/Ths);
 
+        // beta debug, set soil and root cutoff// TODO replace 100.0 and 1000.0 w/ variables for root zone and bedrock
+        cn->setSoilCutoff(get_Upper_Moist(100.0,bedRock)/100.0); // volumetric soil moisture content of soil zone if water table reaches bedrock
+        cn->setRootCutoff(get_Upper_Moist(1000.0,bedRock)/1000.0);// volumetric soil moisture content of root zone if water table reaches bedrock
+
+
+
 		if (NwtNew)
 			cn->setSoilMoistureUNSC(cn->getMuNew()/NwtNew/Ths);
 		else
@@ -1090,26 +1096,6 @@ void tHydroModel::UnSaturatedZone(double dt)
                 Mdelt = Ths*NwtOld - (MuOld + R1*dt); // Pixel moisture deficit
 				NwtNew = Newton(Mdelt, NwtOld);
 
-                // account for case where no more moisture is available for evaporation -WR 7/28/23
-                if(NwtNew == DtoBedrock){
-                    double fevap = EvapSoi/(EvapSoi+EvapVeg);
-
-                    EvapSoi = (DtoBedrock-NwtOld)*Ths*fevap; //set remaining moisture in saturated zone to evapsoil proportional to initial estimates of evapsoil
-                    EvapVeg = (DtoBedrock-NwtOld)*Ths*(1-fevap); //same as above but for evap from veg
-
-                    if(EvapSoi!=EvapSoi){
-                        EvapSoi = 0;
-                    }
-
-                    if(EvapVeg!=EvapVeg){
-                        EvapVeg = 0;
-                    }
-
-                    cn->setEvapSoil(EvapSoi);//set remaining moisture in saturated zone to evapsoil proportional to initial estimates of evapsoil
-                    cn->setEvapDryCanopy(EvapVeg);// same as above but for evap from veg
-                    cn->setEvapoTrans(cn->getEvapWetCanopy()+EvapVeg+EvapSoi);
-
-                }
 
 				RiNew = 0.0;
 				RuNew = 0.0;

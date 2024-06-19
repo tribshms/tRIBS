@@ -34,7 +34,7 @@ def test_parallel_waterbalance(setup_data):
 
     drainage_area = r_par.int_spatial_vars['VAr'].sum()
     weights = r_par.int_spatial_vars['VAr'].values / drainage_area
-    porosity = np.sum(r_par.int_spatial_vars['Porosity'].values * weights)
+    porosity = np.sum(r_par.int_spatial_vars['ThetaS'].values * weights)
     years = float(r_par.options['runtime']['value']) / (365.25 * 24)
 
     # calculate changes in stores--note the assumption is that boundaries are closed except for streams

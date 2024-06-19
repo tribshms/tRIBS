@@ -131,7 +131,7 @@ def test_elem_water_balance(setup_data):
 
     # read in results and assign relevant parameters
     pixel, _, _, _, r, _ = setup_data
-    porosity = r.int_spatial_vars.loc[r.int_spatial_vars.ID == 0, 'Porosity'].values[0]
+    porosity = r.int_spatial_vars.loc[r.int_spatial_vars.ID == 0, 'ThetaS'].values[0]
     element_area = r.int_spatial_vars.loc[r.int_spatial_vars.ID == 0, 'VAr'].values[0]
     years = float(r.options['runtime']['value']) / (365.25 * 24)
 
