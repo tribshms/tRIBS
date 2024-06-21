@@ -3,7 +3,13 @@
 
 All notable changes to this project are documented in this file.
 
-## Version 5.2.1 — 5/12/2024 (currently on branch dev)
+## Version 5.2.1 — (currently on branch dev)
+### 6/21/2024
+* Modify how tRIBS accounts for the condition when Nwt = Bedrock depth, through setting conditional cutoffs in the beta functions.
+* Fixed some issues where meteorological variables were not correctly being initalized and set.
+* Added black box testing feature for both Happy Jack and Big Spring benchmarks.
+* Updated CMake with option to set a release or debug flag when building model.
+###  5/12/2024
 * Increased precision of time step in .qout files to two decimal points.
 * Call to inShortWaveCan in tSnowPack::computeSub was commented out and needs to be fixed or removed
 * Resolved issue related to Tso not properly being set.
