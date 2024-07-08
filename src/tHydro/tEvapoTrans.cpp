@@ -2917,18 +2917,14 @@ void tEvapoTrans::EvapPan()
 ***************************************************************************/
 void tEvapoTrans::betaFunc(tCNode* cNode) 
 {
-	double beta, Ths, Thr, Th, ratio, Th_star;
-	
-	// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-	//soilPtr->setSoilPtr( cNode->getSoilID() );
-    //	Ths = soilPtr->getSoilProp(2);
-    //	Thr = soilPtr->getSoilProp(3);
+	double beta, Ths, Thr, Th, ratio, Th_star, soilzone_cutoff;
+
     Ths = cNode->getThetaS(); // Saturation moisture content
     Thr = cNode->getThetaR(); // Residual moisture content
 	// Giuseppe 2016 - End changes to allow reading soil properties from grids
 
-	// Start of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
-	// Objective: read the critical soil moisture as vegetation paramater
+    soilzone_cutoff = cNode->getSoilCutoff();
+
 	Th_star = landPtr->getLandProp(13);
 
 	// Check that Thw <= Th_star <= Ths
@@ -2940,15 +2936,19 @@ void tEvapoTrans::betaFunc(tCNode* cNode)
 		}
 	// End of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
 
-	Th = cNode->getSoilMoisture();
-	ratio = (Th - Thr)/(Th_star - Thr); 
-    
-	if (ratio > 1.0)
+	Th = cNode->getSoilMoisture(); // avg volumetric soil moisture content down to 100 mm
+	ratio = (Th - Thr)/(Th_star - Thr);
+
+    if (ratio > 1.0)
 		beta = 1.0;
 	else if (ratio < 0.0)
 		beta = 0.0;
 	else
 		beta = ratio;
+
+    if(Th<=soilzone_cutoff)
+        beta = 0.0;
+
 	betaS = beta;
 }
 
@@ -2977,18 +2977,15 @@ void tEvapoTrans::betaFunc(tCNode* cNode)
 ***************************************************************************/
 void tEvapoTrans::betaFuncT(tCNode* cNode) 
 {
-	double beta, Ths, Thw, Th, ratio, Th_star;
-	
-    // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-	//	soilPtr->setSoilPtr( cNode->getSoilID() );
-    //	Ths = soilPtr->getSoilProp(2);
-    //	Thw = soilPtr->getSoilProp(3);
+
+	double beta, Ths, Thw, Th, ratio, Th_star, rootzone_cutoff;
+
     Ths = cNode->getThetaS(); // Saturation moisture content
     Thw = cNode->getThetaR(); // Residual moisture content
 	// Giuseppe 2016 - End changes to allow reading soil properties from grids
 
-	// Start of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
-	// Objective: read the critical soil moisture as vegetation paramater
+    rootzone_cutoff = cNode->getRootCutoff();
+
 	Th_star = landPtr->getLandProp(14); 
 	// Check that Thw <= Th_star <= Ths
 	if ((Th_star > Ths) || (Th_star < Thw))
@@ -2999,13 +2996,18 @@ void tEvapoTrans::betaFuncT(tCNode* cNode)
 		}
 	// End of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
 
-	Th = cNode->getRootMoisture();
-	ratio = (Th - Thw)/(Th_star - Thw); 
+
+	Th = cNode->getRootMoisture();// avg volumetric soil moisture content down to 1000 mm
+	ratio = (Th - Thw)/(Th_star - Thw);
     
 	if (ratio < 1.0)
 		beta = ratio;
-	else
+    else
 		beta = 1.0;
+
+    if(Th<=rootzone_cutoff)
+        beta = 0.0;
+
 	betaT = beta;
 }
 

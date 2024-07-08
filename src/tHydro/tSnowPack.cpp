@@ -79,7 +79,7 @@ void tSnowPack::SetSnowPackVariables(tInputFile &infile) {
     densityAge = 0.0;
     ETAge = 0.0;
     compactParam = 0.3;
-    rhoSnFreshkg = 100;
+    rhoSnFreshkg = 100.0;
     snOnOff = 0.0;
 }
 
@@ -91,8 +91,8 @@ void tSnowPack::SetSnowInterceptVariables() {
     kc = 0.010; //-
     iceRad = 500e-6; //m
     Mwater = 18.01; //kg/kmol
-    R = 8313; //J/kmol K
-    RdryAir = 287; //J/kg K
+    R = 8313.0; //J/kmol K
+    RdryAir = 287.0; //J/kg K
     nu = 1.3e-5; //m^2/s
     KtAtm = 0.024; //J/msK WR updated value from Liston and Elder
     esatIce = 0.0;
@@ -106,8 +106,8 @@ void tSnowPack::SetSnowVariables(tInputFile &infile) {
 
     //time steps
     timeStepm = infile.ReadItem(timeStepm, "METSTEP");
-    timeSteph = timeStepm / 60;
-    timeSteps = 60 * timeStepm;
+    timeSteph = timeStepm / 60.0;
+    timeSteps = 60.0 * timeStepm;
     minutelyTimeStep = 0.0;
 
     //state variables
@@ -144,8 +144,8 @@ void tSnowPack::SetSnowVariables(tInputFile &infile) {
     cpicekJ = 2.1;
     cpwaterkJ = 4.190;
     cpairkJ = 1.006;
-    latFreezekJ = 334;
-    latVapkJ = 2470;
+    latFreezekJ = 334.0;
+    latVapkJ = 2470.0;
     latSubkJ = latFreezekJ + latVapkJ;
 
     //output variables
@@ -160,9 +160,9 @@ void tSnowPack::SetSnowVariables(tInputFile &infile) {
     kilotonaught = 1e3;
     cgsRHOtomks = 1e3;
     mksRHOtocgs = 1e-3;
-    naughttocm = 100; // Used convert m to cm
+    naughttocm = 100.0; // Used convert m to cm
     cmtonaught = 0.01; // Used convert cm to m
-    ctom = 10;
+    ctom = 10.0;
     mtoc = 0.1;
 
 }
@@ -584,7 +584,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
 
                 //if there is no snow left at this point, then bail out of
                 //energy balance.
-                if ((snWE <= 5e-6) || (snTempC < -800)) {
+                if ((snWE <= 5e-6) || (snTempC < -800.0)) {
                     liqRoute = 0.0;
                     snWE = 0.0;
                     iceWE = 0.0;
@@ -743,7 +743,7 @@ void tSnowPack::callSnowPack(tIntercept *Intercept, int flag) {
         EP = ApproximateEP();
 
         // Submit values to climate simulator
-        weatherSimul->ComputeDailyEpCld(EP, SkyC / cnt);
+        weatherSimul->ComputeDailyEpCld(EP, SkyC / static_cast<double>(cnt));
 
         // Assign the radiation variables to the 'tHydrometStoch'
         if (!count) {
@@ -1423,7 +1423,11 @@ double tSnowPack::resFactCalc() {
 void tSnowPack::computeSub() {
 
     //compute incoming shortwave radiation
-    inShortR = inShortWaveCan();// W
+    // inShortR = inShortWaveCan();// Currently commented out since inShortWaveCan is non-functional.
+    // InshortR was being set to zero here, because Isw = Iv * (1.0 - albedo), and Iv was zero. Also not clear if InShortR
+    // was properly being reset as it's replaced by Isw which is consists of multiple components that need to be further evaluated.
+    // Lastly it appears that albedo is already called below, making this redundant  Isw = Iv * (1.0 - albedo). This function
+    // needs to be refactored or maybe deprecated.
 
     //compute effective incident shortwave radiation on snow crystal
     Sp = PI * pow(iceRad, 2.0) * (1 - albedo) * inShortR;//check units--check (W)//WR debug change 0.8 to albedo
@@ -1685,9 +1689,11 @@ double tSnowPack::inShortWaveCan() {
     double v, cosi, scover;
     double RadGlobClr;
 
-    // WR refactor 8-31-2023, this is a almost the same as inShortWave, but returns Isw before
+    // WR refactor 8-31-2023 this is a almost the same as inShortWave, but returns Isw before
     // accounting for the effects of optical transmission through the canopy. There is
-    // certainly a cleaner way to do this, but for now this will have to do.
+    // certainly a cleaner way to do this, but for now this will have to do. Note this was originally in tSnowIntercept
+    // which was removed because it was mostly redundant. See original tSnowIntercept code/documentation for information
+    // on the original intent of this function.
 
     Ic = Is = Id = Ir = Ids = Ics = Isw = Iv = 0.0;
 
@@ -1811,6 +1817,8 @@ double tSnowPack::inShortWaveCan() {
             Ir = 0.0;
             Is = Is;
         }
+        Iv = Is; // added 6/3/2024 otherwise function returns zero, but still not fixed since it called in computeSub which
+        // then also factors for albedo. So maybe line below needs to be commented out?
 
         // Account for albedo
         Isw = Iv * (1.0 - albedo);

@@ -1,0 +1,4 @@
+{"bin_parallel": "path/to/parallel_tRIBS_binary",
+  "bin_serial": "path/to/serial_tRIBS_binary",
+  "hj_path": "path/to/happy_jack_benchmark",
+  "bs_path": "path/to/big_spring_benchmark"}

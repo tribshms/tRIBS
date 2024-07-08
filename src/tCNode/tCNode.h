@@ -645,6 +645,14 @@ public:
   double percOccur;		// ASM Channel Percolation Occurence
   double avPerc;		// ASM Channel Percolation Occurence
 
+  // for beta cutoff statements
+  void setSoilCutoff(double);
+  void setRootCutoff(double);
+
+  double getSoilCutoff();
+  double getRootCutoff();
+
+
 protected:
   double ContrArea;             // Surface contributing area for the node 
   double Curvature;             // Topographic curvature of the element 
@@ -872,6 +880,12 @@ protected:
 
   double xC;
   double yC;
+
+
+  // update to beta functions, variable store cutoff of soil and dry canopy evap once Nwt = Bedrock
+  double soil_cutoff;
+  double root_cutoff;
+
 
 };
 
