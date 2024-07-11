@@ -11,6 +11,15 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${cxx_flags}") # -O2 appears to be the fastest option
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
 #set compiler if necessary, this has to be done before project()
 #set (CMAKE_CXX_COMPILER <specify compiler here>)
 #if(CMAKE_CXX_COMPILER_LOADED)
@@ -296,3 +305,6 @@ if (packaging)
 
 endif ()
 
+enable_testing ()
+
+add_subdirectory(tests)
