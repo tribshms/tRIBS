@@ -33,8 +33,8 @@
 #include "src/tInOut/tInputFile.h"
 
 #ifdef ALPHA_64
-  #include <iostream.h>
-  #include <fstream.h>
+  #include <iostream>
+  #include <fstream>
   #include <string.h>
   #include <stdio.h>
   #include <math.h>
@@ -56,15 +56,15 @@
   #include <cassert>
 
 #elif defined WIN
-  #include <iostream.h>
-  #include <fstream.h>
+  #include <iostream>
+  #include <fstream>
   #include <string.h>
   #include <stdio.h>
   #include <math.h>
   #include <assert.h>
 #else 
-  #include <iostream.h>
-  #include <fstream.h>
+  #include <iostream>
+  #include <fstream>
   #include <string.h>
   #include <stdio.h>
   #include <math.h>

@@ -21,8 +21,8 @@
 #define  TINVARIANT_H
 
 #include "src/Headers/Inclusions.h"
+#include <vector>
 
-using namespace std;
 
 class SoilType;
 class LandType;   
@@ -56,7 +56,7 @@ public:
     // WR debug convert read grid flow to use smart pointes
     // Define a typedef for convenience
     using CharArrayPtr = std::unique_ptr<char[]>;
-
+  
     // Create vectors of unique_ptr to manage your character arrays
     vector<CharArrayPtr> SCgridParamNames;
     vector<CharArrayPtr> SCgridBaseNames;

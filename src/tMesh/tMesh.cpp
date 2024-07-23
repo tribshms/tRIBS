@@ -2408,6 +2408,8 @@ MakeRandomPointsFromArcGrid( tInputFile &infile )
 		zinterp;                     // interp'd elev.
 	double mindist;
 	double delx, dely, dist;
+	void srand48();
+	void drand48();
 	
 	tSubNode tempnode( infile ),     // temporary node used in creating new pts
 		*stp1, *stp2, *stp3;         // supertriangle vertices
@@ -2500,14 +2502,14 @@ MakeRandomPointsFromArcGrid( tInputFile &infile )
 	// Read and initialize seed for random number generation
 	
 	seed = infile.ReadItem( seed, "SEED" );
-	srand48( seed );
+	srand( seed );
 	numpts = numcols * numrows;
 	tempnode.setBoundaryFlag( kNonBoundary );
 	
 	mindist = delgrid / 10.0;
 	for( i=0; i<numpts; ++i ){
-		xgen = drand48() * (di - 1.0);
-		ygen = drand48() * (dj - 1.0);
+		xgen = std::rand() * (di - 1.0);
+		ygen = std::rand() * (dj - 1.0);
 		
 		zinterp = InterpSquareGrid( xgen, ygen, elev, nodata );
 		

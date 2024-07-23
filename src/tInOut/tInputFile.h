@@ -32,8 +32,8 @@
 #include "src/Headers/Classes.h"
 
 #ifdef ALPHA_64
-  #include <iostream.h>
-  #include <fstream.h>
+  #include <iostream>
+  #include <fstream>
   #include <assert.h>
   #include <string.h>
   #include <stdlib.h>
@@ -50,14 +50,14 @@
   #include <string>
   #include <cstdlib>
 #elif defined WIN
-  #include <iostream.h>
-  #include <fstream.h>
+  #include <iostream>
+  #include <fstream>
   #include <assert.h>
   #include <string.h>
   #include <stdlib.h>
 #else 
-  #include <iostream.h>
-  #include <fstream.h>
+  #include <iostream>
+  #include <fstream>
   #include <assert.h>
   #include <string.h>
   #include <stdlib.h>

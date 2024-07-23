@@ -38,7 +38,7 @@
   #include <math.h>
   #include <stdlib.h>
   #include <string.h>
-  #include <iostream.h>
+  #include <iostream>
   #include <stdio.h>
 #elif defined LINUX_32
   #include <cmath>
@@ -58,13 +58,13 @@
   #include <math.h>
   #include <stdlib.h>
   #include <string.h>
-  #include <iostream.h>
+  #include <iostream>
   #include <stdio.h>
 #else 
   #include <math.h>
   #include <stdlib.h>
   #include <string.h>
-  #include <iostream.h>
+  #include <iostream>
   #include <stdio.h>
 #endif
 

@@ -37,9 +37,9 @@
 //
 //=========================================================================
 
-#include<iostream.h>
-#include<iomanip.h>
-#include<fstream.h>
+#include<iostream>
+#include<iomanip>
+#include<fstream>
 #include<stdlib.h>
 #include<string.h>
 #include<stdio.h>

@@ -31,7 +31,7 @@
 
 
 #ifdef ALPHA_64
-  #include <iostream.h>
+  #include <iostream>
   #include <stdio.h>
   #include <stdlib.h>
 #elif defined LINUX_32
@@ -45,11 +45,11 @@
   #include <cstdlib>
 
 #elif defined WIN
-  #include <iostream.h>
+  #include <iostream>
   #include <stdio.h>
   #include <stdlib.h>
 #else 
-  #include <iostream.h>
+  #include <iostream>
   #include <stdio.h>
   #include <stdlib.h>
 #endif

@@ -36,8 +36,8 @@
 #include <list> //SMM - added 09232008
 
 #ifdef ALPHA_64
-  #include <iostream.h>
-  #include <fstream.h>
+  #include <iostream>
+  #include <fstream>
   #include <assert.h>
   #include <math.h>
 #elif defined LINUX_32
@@ -53,13 +53,13 @@
   #include <cmath>
 
 #elif defined WIN
-  #include <iostream.h>
-  #include <fstream.h>
+  #include <iostream>
+  #include <fstream>
   #include <assert.h>
   #include <math.h>
 #else 
-  #include <iostream.h>
-  #include <fstream.h>
+  #include <iostream>
+  #include <fstream>
   #include <assert.h>
   #include <math.h>
 #endif

@@ -57,7 +57,7 @@
 #include "src/Headers/globalFns.h"
 
 #ifdef ALPHA_64
-  #include <iostream.h>
+  #include <iostream>
   #include <math.h> 
 #elif defined LINUX_32
   #include <iostream>
@@ -66,10 +66,10 @@
   #include <iostream>
   #include <cmath>
 #elif defined WIN
-  #include <iostream.h>
+  #include <iostream>
   #include <math.h> 
 #else 
-  #include <iostream.h>
+  #include <iostream>
   #include <math.h> 
 #endif
 

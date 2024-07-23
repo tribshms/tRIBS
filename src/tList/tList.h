@@ -35,7 +35,7 @@
 #include "src/Headers/Classes.h"
 
 #ifdef ALPHA_64
-  #include <iostream.h>
+  #include <iostream>
   #include <assert.h>
 #elif defined LINUX_32
   #include <iostream>
@@ -44,10 +44,10 @@
   #include <iostream>
   #include <cassert>
 #elif defined WIN
-  #include <iostream.h>
+  #include <iostream>
   #include <assert.h>
 #else 
-  #include <iostream.h>
+  #include <iostream>
   #include <assert.h>
 #endif
 

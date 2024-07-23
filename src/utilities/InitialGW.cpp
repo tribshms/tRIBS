@@ -42,9 +42,9 @@
 **                        -------------                 ----------------- 
 ***************************************************************************/
 
-#include<iostream.h>
-#include<iomanip.h>
-#include<fstream.h>
+#include<iostream>
+#include<iomanip>
+#include<fstream>
 #include<stdlib.h>
 #include<string.h>
 #include<stdio.h>
@@ -106,57 +106,57 @@ int main(int argc, char *argv[]){
 	double cellsize, nodata;
 	char *names[5];
 	
-	cout<<"\n-----------------------------------------------------------------"
+	std::cout<<"\n-----------------------------------------------------------------"
 		<<"-------";
-	cout<<"\n\n\t\t tRIBS -- Version 1.0";
-	cout<<"\n\t\t tRIBS Model: InitialGW Utility";
-	cout<<"\n\t\t Ralph M. Parsons Laboratory";
-	cout<<"\n\t\t Massachusetts Institute of Technology";
-	cout<<"\n\n\t\t Release, 9/2001 \n\n";
-	cout<<"-----------------------------------------------------------------"
-		<<"-------"<<endl;
+	std::cout<<"\n\n\t\t tRIBS -- Version 1.0";
+	std::cout<<"\n\t\t tRIBS Model: InitialGW Utility";
+	std::cout<<"\n\t\t Ralph M. Parsons Laboratory";
+	std::cout<<"\n\t\t Massachusetts Institute of Technology";
+	std::cout<<"\n\n\t\t Release, 9/2001 \n\n";
+	std::cout<<"-----------------------------------------------------------------"
+		<<"-------"<<std::endl;
 	
-	cout<<"\nThis program implements a TOPMODEL approach of defining a steady-state GW\n"
+	std::cout<<"\nThis program implements a TOPMODEL approach of defining a steady-state GW\n"
 		<<"surface based on the contributing area distribution in the basin and the\n"
-		<<"local slope of the terrain surface."<<endl;
+		<<"local slope of the terrain surface."<<std::endl;
 	
 	// Command line arguments
 	if(argc != 2) {
-		cout<<"\nUsage: "<< argv[0] << "  *.gw\n" << endl;
-		cout<<"Order of names in the file: " << endl;
-		cout<<"\t 1. DEM file (*.asc)\n";
-		cout<<"\t 2. Flow Accumulations file (*.asc)\n";
-		cout<<"\t 3. Flow Directions file (*.asc)\n";
-		cout<<"\t 4. Soil reclassification table (*.sdtt)\n";
-		cout<<"\t 5. Basin area (km^2)\n";
-		cout<<"\t 6. Baseflow of Reference Q(0) at outlet (m^3/sec)\n";
-		cout<<"\t 7. Zero Baseflow Q_0 from recession analysis (m^3/sec)\n";
-		cout<<"\t 8. Threshold value for stream network (# of pixels)\n";
-		cout<<"\t 9. Size of MA smoothing window (3 or 5 pixels)\n";
-		cout<<"\t 10. Number of smoothing iterations (2 or greater)\n";
-		cout<<"\t 11. Average basin GWT depth (~ -ln(Q(0)/Q_0)/f)\n\n";
+		std::cout<<"\nUsage: "<< argv[0] << "  *.gw\n" << std::endl;
+		std::cout<<"Order of names in the file: " << std::endl;
+		std::cout<<"\t 1. DEM file (*.asc)\n";
+		std::cout<<"\t 2. Flow Accumulations file (*.asc)\n";
+		std::cout<<"\t 3. Flow Directions file (*.asc)\n";
+		std::cout<<"\t 4. Soil reclassification table (*.sdtt)\n";
+		std::cout<<"\t 5. Basin area (km^2)\n";
+		std::cout<<"\t 6. Baseflow of Reference Q(0) at outlet (m^3/sec)\n";
+		std::cout<<"\t 7. Zero Baseflow Q_0 from recession analysis (m^3/sec)\n";
+		std::cout<<"\t 8. Threshold value for stream network (# of pixels)\n";
+		std::cout<<"\t 9. Size of MA smoothing window (3 or 5 pixels)\n";
+		std::cout<<"\t 10. Number of smoothing iterations (2 or greater)\n";
+		std::cout<<"\t 11. Average basin GWT depth (~ -ln(Q(0)/Q_0)/f)\n\n";
 		exit(1);
 	}
 	
-	ifstream Inp0(argv[1]);
+	std::ifstream Inp0(argv[1]);
 	if (!Inp0) {
-		cout<< "File "<<argv[1]<<" not found!"<<endl;
+		std::cout<< "File "<<argv[1]<<" not found!"<<std::endl;
 		exit(2);
 	}
 	
-	cout<<"Input Parameters: \n"<<endl;
+	std::cout<<"Input Parameters: \n"<<std::endl;
 	for (i = 0; i < 4; i++) {
 		Inp0 >> namos;
 		names[i] = new char [strlen(namos) + 1];
 		strcpy(names[i], namos);
 		if(i == 0)
-			cout<<"DEM Grid: \t\t\t"<<names[i]<<endl;
+			std::cout<<"DEM Grid: \t\t\t"<<names[i]<<std::endl;
 		else if(i==1)
-			cout<<"Flow Accumulations Grid: \t"<<names[i]<<endl;
+			std::cout<<"Flow Accumulations Grid: \t"<<names[i]<<std::endl;
 		else if(i==2)
-			cout<<"Flow Directions Grid: \t\t"<<names[i]<<endl;
+			std::cout<<"Flow Directions Grid: \t\t"<<names[i]<<std::endl;
 		else if(i==3)
-			cout<<"Soil Reclassification Table: \t"<<names[i]<<endl;
+			std::cout<<"Soil Reclassification Table: \t"<<names[i]<<std::endl;
 	}
 	
 	//Read in parameters
@@ -168,56 +168,56 @@ int main(int argc, char *argv[]){
 	Inp0 >> SMOO;
 	Inp0 >> Zav;
 	
-	cout<<"Basin Area: \t\t\t"<< AREA << endl;
-	cout<<"Baseflow: \t\t\t" << BASEF << endl;
-	cout<<"Baseflow Zero: \t\t\t" << BASEF_0 << endl;
-	cout<<"Threshold pixels: \t\t" << POROG << endl;
-	cout<<"Moving Average Window: \t\t" << MA << endl;
-	cout<<"Average Depth to WT: \t\t"<<Zav<<endl;
+	std::cout<<"Basin Area: \t\t\t"<< AREA << std::endl;
+	std::cout<<"Baseflow: \t\t\t" << BASEF << std::endl;
+	std::cout<<"Baseflow Zero: \t\t\t" << BASEF_0 << std::endl;
+	std::cout<<"Threshold pixels: \t\t" << POROG << std::endl;
+	std::cout<<"Moving Average Window: \t\t" << MA << std::endl;
+	std::cout<<"Average Depth to WT: \t\t"<<Zav<<std::endl;
 	
 	MA = MA * MA;
 	
 	//Read in the file names
-	ifstream Inp1(names[0]);
+	std::ifstream Inp1(names[0]);
 	if (!Inp1) {
-		cout << "\nFile '" << names[0] << "' not found!" << endl;
-		cout << "Exiting Program..."<<endl;
+		std::cout << "\nFile '" << names[0] << "' not found!" << std::endl;
+		std::cout << "Exiting Program..."<<std::endl;
 		exit(2);
 	}
 	
-	ifstream Inp2(names[1]);
+	std::ifstream Inp2(names[1]);
 	if (!Inp2) {
-		cout << "\nFile '" << names[1] << "' not found!" << endl;
-		cout << "Exiting Program..."<<endl;
+		std::cout << "\nFile '" << names[1] << "' not found!" << std::endl;
+		std::cout << "Exiting Program..."<<std::endl;
 		exit(2);
 	}
 	
-	ifstream Inp3(names[2]);
+	std::ifstream Inp3(names[2]);
 	if (!Inp3) {
-		cout << "\nFile '" << names[2] << "' not found!" << endl;
-		cout << "Exiting Program..."<<endl;
+		std::cout << "\nFile '" << names[2] << "' not found!" << std::endl;
+		std::cout << "Exiting Program..."<<std::endl;
 		exit(2);
 	}
 	
-	ifstream Inp4(names[3]);
+	std::ifstream Inp4(names[3]);
 	if (!Inp3) {
-		cout << "\nFile '" << names[3] << "' not found!" << endl;
-		cout << "Exiting Program..."<<endl;
+		std::cout << "\nFile '" << names[3] << "' not found!" << std::endl;
+		std::cout << "Exiting Program..."<<std::endl;
 		exit(2);
 	}
 	
 	//Create Output files
-	ofstream Otp2("_hillslope.hist");
-	ofstream Otp3("_MeanStd.hist");
-	ofstream Otp4("_occurence.asc");
-	ofstream Otp5("_GWTabs.asc");
-	ofstream Otp6("_GWTabs_smooth.asc");
-	ofstream Otp ("_GWTdepth.asc");
-	ofstream Otp7("_GWTdepth_smooth.asc");
-	ofstream Otp8("_depth_instream.asc"); 
+	std::ofstream Otp2("_hillslope.hist");
+	std::ofstream Otp3("_MeanStd.hist");
+	std::ofstream Otp4("_occurence.asc");
+	std::ofstream Otp5("_GWTabs.asc");
+	std::ofstream Otp6("_GWTabs_smooth.asc");
+	std::ofstream Otp ("_GWTdepth.asc");
+	std::ofstream Otp7("_GWTdepth_smooth.asc");
+	std::ofstream Otp8("_depth_instream.asc"); 
 	
 	//Read DEM File
-	cout<<"\nReading DEM file header..."<<endl;
+	std::cout<<"\nReading DEM file header..."<<std::endl;
 	
 	Inp1 >> head >> ncols;
 	Inp1 >> head >> nrows;
@@ -228,47 +228,47 @@ int main(int argc, char *argv[]){
 	DUMM = (int)nodata;
 	
 	//Write header information to each output ASCII grid
-	Otp << "ncols         "<<ncols<<endl;
-	Otp << "nrows         "<<nrows<<endl;
-	Otp << "xllcorner     "<<setiosflags(ios::fixed)<<xllcorner<<endl;
-	Otp << "yllcorner     "<<setiosflags(ios::fixed)<<yllcorner<<endl;
-	Otp << "cellsize      "<<resetiosflags(ios::fixed)<<cellsize<<endl;
-	Otp << "NODATA_value  "<<nodata<<endl;
+	Otp << "ncols         "<<ncols<<std::endl;
+	Otp << "nrows         "<<nrows<<std::endl;
+	Otp << "xllcorner     "<<std::setiosflags(std::ios_base::fixed)<<xllcorner<<std::endl;
+	Otp << "yllcorner     "<<std::setiosflags(std::ios_base::fixed)<<yllcorner<<std::endl;
+	Otp << "cellsize      "<<std::resetiosflags(std::ios_base::fixed)<<cellsize<<std::endl;
+	Otp << "NODATA_value  "<<nodata<<std::endl;
 	
-	Otp4 << "ncols        "<<ncols<<endl;
-	Otp4 << "nrows        "<<nrows<<endl;
-	Otp4 << "xllcorner    "<<setiosflags(ios::fixed)<<xllcorner<<endl;
-	Otp4 << "yllcorner    "<<setiosflags(ios::fixed)<<yllcorner<<endl;
-	Otp4 << "cellsize     "<<resetiosflags(ios::fixed)<<cellsize<<endl;
-	Otp4 << "NODATA_value "<<nodata<<endl;
+	Otp4 << "ncols        "<<ncols<<std::endl;
+	Otp4 << "nrows        "<<nrows<<std::endl;
+	Otp4 << "xllcorner    "<<std::setiosflags(std::ios_base::fixed)<<xllcorner<<std::endl;
+	Otp4 << "yllcorner    "<<std::setiosflags(std::ios_base::fixed)<<yllcorner<<std::endl;
+	Otp4 << "cellsize     "<<std::resetiosflags(std::ios_base::fixed)<<cellsize<<std::endl;
+	Otp4 << "NODATA_value "<<nodata<<std::endl;
 	
-	Otp5 << "ncols        "<<ncols<<endl;
-	Otp5 << "nrows        "<<nrows<<endl;
-	Otp5 << "xllcorner    "<<setiosflags(ios::fixed)<<xllcorner<<endl;
-	Otp5 << "yllcorner    "<<setiosflags(ios::fixed)<<yllcorner<<endl;
-	Otp5 << "cellsize     "<<resetiosflags(ios::fixed)<<cellsize<<endl;
-	Otp5 << "NODATA_value "<<nodata<<endl;
+	Otp5 << "ncols        "<<ncols<<std::endl;
+	Otp5 << "nrows        "<<nrows<<std::endl;
+	Otp5 << "xllcorner    "<<std::setiosflags(std::ios_base::fixed)<<xllcorner<<std::endl;
+	Otp5 << "yllcorner    "<<std::setiosflags(std::ios_base::fixed)<<yllcorner<<std::endl;
+	Otp5 << "cellsize     "<<std::resetiosflags(std::ios_base::fixed)<<cellsize<<std::endl;
+	Otp5 << "NODATA_value "<<nodata<<std::endl;
 	
-	Otp6 << "ncols        "<<ncols<<endl;
-	Otp6 << "nrows        "<<nrows<<endl;
-	Otp6 << "xllcorner    "<<setiosflags(ios::fixed)<<xllcorner<<endl;
-	Otp6 << "yllcorner    "<<setiosflags(ios::fixed)<<yllcorner<<endl;
-	Otp6 << "cellsize     "<<resetiosflags(ios::fixed)<<cellsize<<endl;
-	Otp6 << "NODATA_value "<<nodata<<endl;
+	Otp6 << "ncols        "<<ncols<<std::endl;
+	Otp6 << "nrows        "<<nrows<<std::endl;
+	Otp6 << "xllcorner    "<<std::setiosflags(std::ios_base::fixed)<<xllcorner<<std::endl;
+	Otp6 << "yllcorner    "<<std::setiosflags(std::ios_base::fixed)<<yllcorner<<std::endl;
+	Otp6 << "cellsize     "<<std::resetiosflags(std::ios_base::fixed)<<cellsize<<std::endl;
+	Otp6 << "NODATA_value "<<nodata<<std::endl;
 	
-	Otp7 << "ncols        "<<ncols<<endl;
-	Otp7 << "nrows        "<<nrows<<endl;
-	Otp7 << "xllcorner    "<<setiosflags(ios::fixed)<<xllcorner<<endl;
-	Otp7 << "yllcorner    "<<setiosflags(ios::fixed)<<yllcorner<<endl;
-	Otp7 << "cellsize     "<<resetiosflags(ios::fixed)<<cellsize<<endl;
-	Otp7 << "NODATA_value "<<nodata<<endl;
+	Otp7 << "ncols        "<<ncols<<std::endl;
+	Otp7 << "nrows        "<<nrows<<std::endl;
+	Otp7 << "xllcorner    "<<std::setiosflags(std::ios_base::fixed)<<xllcorner<<std::endl;
+	Otp7 << "yllcorner    "<<std::setiosflags(std::ios_base::fixed)<<yllcorner<<std::endl;
+	Otp7 << "cellsize     "<<std::resetiosflags(std::ios_base::fixed)<<cellsize<<std::endl;
+	Otp7 << "NODATA_value "<<nodata<<std::endl;
 	
-	Otp8 << "ncols        "<<ncols<<endl;
-	Otp8 << "nrows        "<<nrows<<endl;
-	Otp8 << "xllcorner    "<<setiosflags(ios::fixed)<<xllcorner<<endl;
-	Otp8 << "yllcorner    "<<setiosflags(ios::fixed)<<yllcorner<<endl;
-	Otp8 << "cellsize     "<<resetiosflags(ios::fixed)<<cellsize<<endl;
-	Otp8 << "NODATA_value "<<nodata<<endl;
+	Otp8 << "ncols        "<<ncols<<std::endl;
+	Otp8 << "nrows        "<<nrows<<std::endl;
+	Otp8 << "xllcorner    "<<std::setiosflags(std::ios_base::fixed)<<xllcorner<<std::endl;
+	Otp8 << "yllcorner    "<<std::setiosflags(std::ios_base::fixed)<<yllcorner<<std::endl;
+	Otp8 << "cellsize     "<<std::resetiosflags(std::ios_base::fixed)<<cellsize<<std::endl;
+	Otp8 << "NODATA_value "<<nodata<<std::endl;
 	
 	N = nrows;
 	M = ncols;
@@ -276,7 +276,7 @@ int main(int argc, char *argv[]){
 	dy = cellsize;
 	
 	//Read Flow Accumulations file
-	cout<<"Reading Flow Accumulations file header..."<<endl;
+	std::cout<<"Reading Flow Accumulations file header..."<<std::endl;
 	
 	Inp2 >> head >> ncols;
 	Inp2 >> head >> nrows;
@@ -286,7 +286,7 @@ int main(int argc, char *argv[]){
 	Inp2 >> head >> nodata;
 	
 	//Read Flow Directions file
-	cout<<"Reading Flow Directions file header..."<<endl;
+	std::cout<<"Reading Flow Directions file header..."<<std::endl;
 	
 	Inp3 >> head >> ncols;
 	Inp3 >> head >> nrows;
@@ -296,18 +296,18 @@ int main(int argc, char *argv[]){
 	Inp3 >> head >> nodata;
 	
 	//Read in soil parameters and output to screen
-	cout<<"Reading Basin Averaged Soil Properties..."<<endl;
+	std::cout<<"Reading Basin Averaged Soil Properties..."<<std::endl;
 	int NS, NM, ID;
 	
 	Inp4 >> NS >> NM;
 	Inp4 >> ID >> K0z >> SAT >> RESID >> POREIND >> PSIB;
 	Inp4 >> F >> AR >> UAR >> POROS >> KS >> CS;
 	
-	cout <<"\nSoil types: \t\t"<<NS<<"\nSoil properties: \t"<<NM<<"\nID: \t\t\t"<<ID;
-	cout <<"\nKOz: \t\t\t"<<K0z<<"\nSAT: \t\t\t"<<SAT<<"\nRESID: \t\t\t"<<RESID;
-	cout <<"\nPOREIND: \t\t"<<POREIND<<"\nPSIB: \t\t\t"<<PSIB<<"\nF: \t\t\t"<<F;
-	cout <<"\nAR: \t\t\t"<<AR<<"\nUAR: \t\t\t"<<UAR<<"\nPOROS: \t\t\t"<<POROS;
-	cout <<"\nKS: \t\t\t"<<KS<<"\nCS: \t\t\t"<<CS;
+	std::cout <<"\nSoil types: \t\t"<<NS<<"\nSoil properties: \t"<<NM<<"\nID: \t\t\t"<<ID;
+	std::cout <<"\nKOz: \t\t\t"<<K0z<<"\nSAT: \t\t\t"<<SAT<<"\nRESID: \t\t\t"<<RESID;
+	std::cout <<"\nPOREIND: \t\t"<<POREIND<<"\nPSIB: \t\t\t"<<PSIB<<"\nF: \t\t\t"<<F;
+	std::cout <<"\nAR: \t\t\t"<<AR<<"\nUAR: \t\t\t"<<UAR<<"\nPOROS: \t\t\t"<<POROS;
+	std::cout <<"\nKS: \t\t\t"<<KS<<"\nCS: \t\t\t"<<CS;
 	
 	//Basin information
 	AREA = AREA * 1.0e+6/(dx*dy);   // Total area (pixels)
@@ -401,7 +401,7 @@ int main(int argc, char *argv[]){
 	//  -------- DATA CHECK AND INITIAL SUMMATION --------
 	
 	//Data Input from ASCII grids
-	cout<<"\n\nReading in grid data..."<<endl;
+	std::cout<<"\n\nReading in grid data..."<<std::endl;
 	for (i=0; i < N; i++) {
 		for(j=0; j < M; j++) {
 			Inp1 >> dem[i][j];
@@ -455,28 +455,28 @@ int main(int argc, char *argv[]){
 			// --- Cross-checking validity of input files ---
 			// --- DEM and Flow Accumulations have equal valid pixels ---
 			if((area[i][j]!=DUMM && dem[i][j]==DUMM) || (area[i][j]==DUMM && dem[i][j]!=DUMM)){
-				cout<<"\nWarning: In row " << i <<" the Flow Accum mismatched with DEM"<<endl;
-				cout<<"DEM value= "<<dem[i][j]<<"\tACCM value = "<<area[i][j]<<"\n";
-				cout<<"ROW: "<< i <<"\tCOLUMN: "<<j<<"\n";
-				cout<<"\nExiting Program..."<<endl<<endl;
+				std::cout<<"\nWarning: In row " << i <<" the Flow Accum mismatched with DEM"<<std::endl;
+				std::cout<<"DEM value= "<<dem[i][j]<<"\tACCM value = "<<area[i][j]<<"\n";
+				std::cout<<"ROW: "<< i <<"\tCOLUMN: "<<j<<"\n";
+				std::cout<<"\nExiting Program..."<<std::endl<<std::endl;
 				exit(2);
 			}
 			
 			// --- DEM and Flow Directions have equal valid pixels --- 
 			if((dem[i][j]==DUMM  && ptr[i][j]!=DUMM) || (dem[i][j]!=DUMM  && ptr[i][j]==DUMM)){
-				cout<<"\nWarning: In row " << i <<" the Flow Dir mismatched with DEM"<<endl;
-				cout<<"DEM value = "<<dem[i][j]<<"\tDIR value = "<<ptr[i][j]<<"\n";
-				cout<<"ROW: "<< i <<"\tCOLUMN: "<<j<<"\n";
-				cout<<"\nExiting Program..."<<endl<<endl;
+				std::cout<<"\nWarning: In row " << i <<" the Flow Dir mismatched with DEM"<<std::endl;
+				std::cout<<"DEM value = "<<dem[i][j]<<"\tDIR value = "<<ptr[i][j]<<"\n";
+				std::cout<<"ROW: "<< i <<"\tCOLUMN: "<<j<<"\n";
+				std::cout<<"\nExiting Program..."<<std::endl<<std::endl;
 				exit(2);
 			}
 			
 			// --- Flow Directions have values in the range 1 to 8 --- 
 			if((ptr[i][j]>8 || ptr[i][j]<1) && dem[i][j]!=DUMM){
-				cout<<"\nWarning: In row " << i <<" the Flow Dir contains incorrect values"<<endl;
-				cout<<"DEM value = "<<dem[i][j]<<"\tDIR value = "<<ptr[i][j]<<"\n";
-				cout<<"ROW: "<< i <<"\tCOLUMN: "<<j<<"\n";
-				cout<<"\nExiting Program..."<<endl<<endl;
+				std::cout<<"\nWarning: In row " << i <<" the Flow Dir contains incorrect values"<<std::endl;
+				std::cout<<"DEM value = "<<dem[i][j]<<"\tDIR value = "<<ptr[i][j]<<"\n";
+				std::cout<<"ROW: "<< i <<"\tCOLUMN: "<<j<<"\n";
+				std::cout<<"\nExiting Program..."<<std::endl<<std::endl;
 				exit(2);
 			}
 		}
@@ -488,12 +488,12 @@ int main(int argc, char *argv[]){
 	Inp3.close();
 	Inp4.close();
 	
-	cout <<"\n\n\t*************************************\n";
-	cout << "\n\tTOTAL NUMBER OF FOUND NON-VOID pixels : "<<cnt<< endl;
-	cout << "\n\tMINIMUM ELEVATION FOUND: "<< MIN << endl;
-	cout << "\tROW = " << io << "  COLUMN = "<< jo << endl;
-	cout << "\n#######  THIS IS CONSIDERED TO BE THE OUTLET #######";
-	cout <<"\n\n\t*************************************\n\n";
+	std::cout <<"\n\n\t*************************************\n";
+	std::cout << "\n\tTOTAL NUMBER OF FOUND NON-VOID pixels : "<<cnt<< std::endl;
+	std::cout << "\n\tMINIMUM ELEVATION FOUND: "<< MIN << std::endl;
+	std::cout << "\tROW = " << io << "  COLUMN = "<< jo << std::endl;
+	std::cout << "\n#######  THIS IS CONSIDERED TO BE THE OUTLET #######";
+	std::cout <<"\n\n\t*************************************\n\n";
 	
 	//  ------------------- HISTOGRAMM COMPUTATION -------------------
 	
@@ -502,16 +502,16 @@ int main(int argc, char *argv[]){
 		topoi[i] = new double[count[i]];
 		assert(topoi[i] != 0);
 		cnt11 += count[i];
-		Otp2 << count[i] << endl;
+		Otp2 << count[i] << std::endl;
 	}
-	Otp2<<"THE TOTAL # OF HILLSLOPE PIXELS = "<<cnt11<<endl;
+	Otp2<<"THE TOTAL # OF HILLSLOPE PIXELS = "<<cnt11<<std::endl;
 	
 	
 	// --- Calculating TOPMOODEL statistics (mean and std) ---
 	// --- for pixels with contributing area < POROG  --- 
 	// --- (for each of contributing area value) ---
 	
-	cout<<"\nCalculating TOPMODEL statistics..."<<endl;
+	std::cout<<"\nCalculating TOPMODEL statistics..."<<std::endl;
 	double tempo;
 	int k, l;
 	for (i=0; i < N; i++) {
@@ -562,7 +562,7 @@ int main(int argc, char *argv[]){
 	// ***************************************************************
 	//Calculating the parameters of normal distribution: mean and std.
 	
-	cout<<"\nCalculating parameters of normal distribution..."<<endl;
+	std::cout<<"\nCalculating parameters of normal distribution..."<<std::endl;
 	
 	for (i=0; i < POROG; i++) {
 		if (ci[i] > 0)
@@ -584,13 +584,13 @@ int main(int argc, char *argv[]){
 			stds[i] = -1;
 		
 		// --- Print out mean and std histograms --- 
-		Otp3<<means[i]<<"   "<<stds[i]<<endl;
+		Otp3<<means[i]<<"   "<<stds[i]<<std::endl;
 	}
 	
 	// ***************************************************
 	// --- Define where problematic pixels are located --- 
 	// --- Print to Opt4 grid called "occurences.asc"  --- 
-	cout<<"Defining problematic pixels..."<<endl;
+	std::cout<<"Defining problematic pixels..."<<std::endl;
 	double gran1, gran2;
 	double minn = 9999, maxx = 0;
 	double lmaxx = 0;
@@ -701,19 +701,19 @@ int main(int argc, char *argv[]){
 				Nwt = DUMM;
 			}  
 		} 
-		Otp4 << endl;
+		Otp4 << std::endl;
 	}
 	
 	// ***************************************************
 	// --- Calculation of Topographic Index - Lambda --- 
-	cout<<"\nCalculating the mean topographic index..."<<endl;
+	std::cout<<"\nCalculating the mean topographic index..."<<std::endl;
 	Lambda /= cnt;
-	cout <<"\n\n\t**************************************************\n";
-	cout<<"\n\toooo AREAL INTEGRAL TOPOGRAPHIC INDEX: "<<Lambda<<" oooo"<<endl;
+	std::cout <<"\n\n\t**************************************************\n";
+	std::cout<<"\n\toooo AREAL INTEGRAL TOPOGRAPHIC INDEX: "<<Lambda<<" oooo"<<std::endl;
 	
 	Gamma = log(K0z*AR/F);
-	cout<<"\n\toooo AREAL INTEGRAL VALUE OF Gamma: "<<Gamma<<" oooo\n"<<endl;
-	cout <<"\t**************************************************\n\n";
+	std::cout<<"\n\toooo AREAL INTEGRAL VALUE OF Gamma: "<<Gamma<<" oooo\n"<<std::endl;
+	std::cout <<"\t**************************************************\n\n";
 	
 	// ***************************************************
 	// --- Call the getWTmapSiva function  --- 
@@ -722,7 +722,7 @@ int main(int argc, char *argv[]){
 	
 	// ***************************************************
 	// --- Calculate average depth to WT BEFORE smoothing --- 
-	cout<<"Calculating the average depth before smoothing..."<<endl;
+	std::cout<<"Calculating the average depth before smoothing..."<<std::endl;
 	Zav = 0.; 
 	for (i=0; i < N; i++) {
 		for (j=0; j < M; j++) {
@@ -733,14 +733,14 @@ int main(int argc, char *argv[]){
 				Zav += GWT[i][j];
 			}
 		}
-		Otp  << endl;
+		Otp  << std::endl;
 	}
 	Zav /= cnt;
 	Zavb = Zav;
 	
 	// ***************************************************
 	// --- Calculating the GW map in Absolute values --- 
-	cout<<"Calculating the GW map in absolute values..."<<endl;
+	std::cout<<"Calculating the GW map in absolute values..."<<std::endl;
 	for (i=0; i < N; i++) {
 		for (j=0; j < M; j++) {
 			if (dem[i][j] > DUMM) { 
@@ -752,21 +752,21 @@ int main(int argc, char *argv[]){
 				Otp5<<DUMM <<" ";
 			}
 		}
-		Otp5 << endl;
+		Otp5 << std::endl;
 	}
 	
 	
 	// ***************************************************
-	cout <<"\n\n\t*************************************\n";
-	cout <<"\t--------- BEFORE SMOOTHING: ---------\n";
-	cout <<"\n\tMIN value of GW defined:\t " << minn <<" (or '0')"<< endl;
-	cout <<"\tMAX value of GW defined:\t "<< maxx << endl;
-	cout <<"\n\tMAX value of ln(a/slope) found:\t "<< lmaxx << endl;
-	cout <<"\n\tSum of pixels (area < POROG):           "<<cnt11;
-	cout <<"\n\tSum of pixels (area > POROG & Nwt < 0): "<<cnt22;
-	cout <<"\n\tTotal: "<<cnt22+cnt11<<" ---> left "<<AREA-cnt22-cnt11
-		<<" DRY stream pixels"<<endl;
-	cout <<"\n\t*************************************\n";
+	std::cout <<"\n\n\t*************************************\n";
+	std::cout <<"\t--------- BEFORE SMOOTHING: ---------\n";
+	std::cout <<"\n\tMIN value of GW defined:\t " << minn <<" (or '0')"<< std::endl;
+	std::cout <<"\tMAX value of GW defined:\t "<< maxx << std::endl;
+	std::cout <<"\n\tMAX value of ln(a/slope) found:\t "<< lmaxx << std::endl;
+	std::cout <<"\n\tSum of pixels (area < POROG):           "<<cnt11;
+	std::cout <<"\n\tSum of pixels (area > POROG & Nwt < 0): "<<cnt22;
+	std::cout <<"\n\tTotal: "<<cnt22+cnt11<<" ---> left "<<AREA-cnt22-cnt11
+		<<" DRY stream pixels"<<std::endl;
+	std::cout <<"\n\t*************************************\n";
 	
 	// ***************************************************
 	// --- Smooting the GW Table topography --- 
@@ -782,12 +782,12 @@ int main(int argc, char *argv[]){
 			else
 				Otp8 << DUMM <<" ";
 		}
-		Otp8 << endl;
+		Otp8 << std::endl;
 	}
 	
 	// ***************************************************
 	// ---  Calculate average depth to WT AFTER smoothing --- 
-	cout<<"\nCalculating the average depth after smoothing..."<<endl;
+	std::cout<<"\nCalculating the average depth after smoothing..."<<std::endl;
 	Zav = 0.; 
 	for (i=0; i < N; i++) {
 		for(j=0; j < M; j++) {
@@ -795,7 +795,7 @@ int main(int argc, char *argv[]){
 				if (GWT[i][j] >= 32000.) {
 					GWTabs[i][j] += GWT[i][j]/1000. - 32.; // Meters
 					GWT[i][j] = 32000.;
-					cout <<"\nWarning: Pixel with Nwt > 32000mm\tNwt assigned to 32000 mm";
+					std::cout <<"\nWarning: Pixel with Nwt > 32000mm\tNwt assigned to 32000 mm";
 				}
 				Otp6 << GWTabs[i][j] <<" ";
 				Otp7 << GWT[i][j]/FACTOR <<" ";	  
@@ -806,40 +806,40 @@ int main(int argc, char *argv[]){
 				Otp6 << GWTabs[i][j] <<" ";
 			}  
 		}
-		Otp6 << endl;
-		Otp7 << endl;
+		Otp6 << std::endl;
+		Otp7 << std::endl;
 	}
 	Zav /= cnt;
 	Zava = Zav;
 	
 	// --- Printing summary results to screen --- 
-	cout<<"\n\nSummary results:"<<endl;
-	cout<<"----------------"<<endl;
-	cout<<"Total Number of watershed pixels:              "<<cnt<<endl;
-	cout<<"Areal Integral of Topographic Index:           "<<Lambda<<endl;
-	cout<<"Areal Integral of Gamma:                       "<<Gamma<<endl;
-	cout<<"Average Depth to Water Table before smoothing: "<<Zavb<<" mm"<<endl;
-	cout<<"Average Depth to Water Table after smoothing:  "<<Zava<<" mm"<<endl;
-	cout<<"\nMinimum value of GW defined (zero):            "<<minn<<" mm"<<endl;
-	cout<<"Maximum value of GW defined:                   "<<maxx<<" mm"<<endl;
-	cout<<"Maximum value of ln(a/slope):                  "<<lmaxx << endl;
-	cout<<"\nSum of hillslope pixels (area < POROG):        "<<cnt11<< endl;
-	cout<<"Sum of pixels (area > POROG & Nwt < 0):        "<<cnt22<< endl;
-	cout<<"GW depth was divided by factor:                "<<FACTOR<<endl; 
+	std::cout<<"\n\nSummary results:"<<std::endl;
+	std::cout<<"----------------"<<std::endl;
+	std::cout<<"Total Number of watershed pixels:              "<<cnt<<std::endl;
+	std::cout<<"Areal Integral of Topographic Index:           "<<Lambda<<std::endl;
+	std::cout<<"Areal Integral of Gamma:                       "<<Gamma<<std::endl;
+	std::cout<<"Average Depth to Water Table before smoothing: "<<Zavb<<" mm"<<std::endl;
+	std::cout<<"Average Depth to Water Table after smoothing:  "<<Zava<<" mm"<<std::endl;
+	std::cout<<"\nMinimum value of GW defined (zero):            "<<minn<<" mm"<<std::endl;
+	std::cout<<"Maximum value of GW defined:                   "<<maxx<<" mm"<<std::endl;
+	std::cout<<"Maximum value of ln(a/slope):                  "<<lmaxx << std::endl;
+	std::cout<<"\nSum of hillslope pixels (area < POROG):        "<<cnt11<< std::endl;
+	std::cout<<"Sum of pixels (area > POROG & Nwt < 0):        "<<cnt22<< std::endl;
+	std::cout<<"GW depth was divided by factor:                "<<FACTOR<<std::endl; 
 	
 	
 	// --- Summarize file output --- 
-	cout<<"\n\nFile output located in Input/waterTable/: "<<endl;
-	cout<<"-----------------------------------------"<<endl;
-	cout<<"Hillslope histogram:      _hillslope.hist"<<endl;
-	cout<<"Mean and Std histogram:   _MeanStd.hist"<<endl;
-	cout<<"Occurences Grid:          _occurence.asc"<<endl;
-	cout<<"Absolute GWT Grid:        _GWTabs.asc"<<endl;
-	cout<<"Smoothed Abs GWT Grid:    _GWTabs_smooth.asc"<<endl;
-	cout<<"Depth GWT Grid:           _GWTdepth.asc" <<endl;
-	cout<<"Smoothed Depth GWT Grid:  _GWTdepth_smooth.asc"<<endl;
-	cout<<"GWT Depth in Stream Grid: _depth_instream.asc"<<endl; 
-	cout<<"-----------------------------------------"<<endl<<endl;
+	std::cout<<"\n\nFile output located in Input/waterTable/: "<<std::endl;
+	std::cout<<"-----------------------------------------"<<std::endl;
+	std::cout<<"Hillslope histogram:      _hillslope.hist"<<std::endl;
+	std::cout<<"Mean and Std histogram:   _MeanStd.hist"<<std::endl;
+	std::cout<<"Occurences Grid:          _occurence.asc"<<std::endl;
+	std::cout<<"Absolute GWT Grid:        _GWTabs.asc"<<std::endl;
+	std::cout<<"Smoothed Abs GWT Grid:    _GWTabs_smooth.asc"<<std::endl;
+	std::cout<<"Depth GWT Grid:           _GWTdepth.asc" <<std::endl;
+	std::cout<<"Smoothed Depth GWT Grid:  _GWTdepth_smooth.asc"<<std::endl;
+	std::cout<<"GWT Depth in Stream Grid: _depth_instream.asc"<<std::endl; 
+	std::cout<<"-----------------------------------------"<<std::endl<<std::endl;
 	
 	//Delete arrays
 	delete [] count, ci, means, stds; 
@@ -872,7 +872,7 @@ void smoothWTrelief(double **dem, double **GWT, double **GWTabs, double *dist5){
 	double minn = 9999, maxx = 0;
 	int cnt = 0;
 	
-	cout <<"\n...Smoothing the GWT topography...";
+	std::cout <<"\n...Smoothing the GWT topography...";
 	
 	double **gwta;     //   Temporary array to store smoothed GW values
 	gwta = new double* [N];
@@ -930,8 +930,8 @@ void smoothWTrelief(double **dem, double **GWT, double **GWTabs, double *dist5){
 	
 	delete gwta;
 	
-	cout <<"\nIn total "<<cnt<<" pixels have been found with Nwt < 0";
-	cout <<"\nMAX value of GW defined after smoothing: "<< maxx << endl;
+	std::cout <<"\nIn total "<<cnt<<" pixels have been found with Nwt < 0";
+	std::cout <<"\nMAX value of GW defined after smoothing: "<< maxx << std::endl;
 	
 	return;
 }
@@ -1065,13 +1065,13 @@ void getWTmapSiva(double **dem, int **area, double **GWT, double **aIndex,
 				
 				// CHECK FOR VALUE OF WATER TABLE POSITION
 				if (Nwt < 0) {
-					//cout <<"Nwt < 0: ln(a/slope) = " <<aIndex[i][j]
-					//     <<";  Cont.AREA: "<<area[i][j]<<endl;
+					//std::cout <<"Nwt < 0: ln(a/slope) = " <<aIndex[i][j]
+					//     <<";  Cont.AREA: "<<area[i][j]<<std::endl;
 					Nwt = 0.;  // tempo in this case gets of the order 1e+6 - 1e+9
 					
 					if (area[i][j] < POROG) {
-						//cout <<"\tNwt is negative for hillslope: I = "<<i<<" J = "<<j;
-						//cout <<"\tCONTR. AREA = " << area[i][j] << endl;
+						//std::cout <<"\tNwt is negative for hillslope: I = "<<i<<" J = "<<j;
+						//std::cout <<"\tCONTR. AREA = " << area[i][j] << std::endl;
 					}
 					else 
 						*cnt22 = *cnt22+1;
@@ -1102,7 +1102,7 @@ void AdjustNegativeSlope(double **dem, int **ptr, double *dist,
 	ii = i + pi[k];
 	jj = j + pj[k];
 	
-	cout<<"\nNegative slope:  Row "<<i<<" Col "<<j
+	std::cout<<"\nNegative slope:  Row "<<i<<" Col "<<j
 		<<"; dem0 = "<<dem[i][j]<<"; dem1 = "<<dem[ii][jj];
 	
 	for (int drainDir=1; drainDir < 9; drainDir++) {
@@ -1125,10 +1125,10 @@ void AdjustNegativeSlope(double **dem, int **ptr, double *dist,
 		k  = ptr[i][j];
 		ii = i + pi[k];
 		jj = j + pj[k];
-		cout<<"... adjusted to positive; dem1 = "<<dem[ii][jj];
+		std::cout<<"... adjusted to positive; dem1 = "<<dem[ii][jj];
 	}
 	else  {
-		cout<<"... positive not found, assigned to 0";
+		std::cout<<"... positive not found, assigned to 0";
 		*slope = 0.; // <- this will be taken care of
 	}
 	

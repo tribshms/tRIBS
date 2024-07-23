@@ -23,8 +23,8 @@
 
 #ifdef ALPHA_64
   #include <math.h>
-  #include<iostream.h>
-  #include<iomanip.h>
+  #include<iostream>
+  #include<iomanip>
   #include<assert.h>
 #elif defined LINUX_32
   #include <cmath>
@@ -42,13 +42,13 @@
   #include <cstdio>
 #elif defined WIN
   #include <math.h>
-  #include<iostream.h>
-  #include<iomanip.h>
+  #include<iostream>
+  #include<iomanip>
   #include<assert.h>
 #else 
   #include <math.h>
-  #include<iostream.h>
-  #include<iomanip.h>
+  #include<iostream>
+  #include<iomanip>
   #include<assert.h>
 #endif
 

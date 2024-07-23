@@ -25,11 +25,11 @@
 
 #ifdef ALPHA_64
   #include <math.h>
-  #include <fstream.h>
+  #include <fstream>
   #include <stdlib.h>
   #include <time.h>
   #include <assert.h>
-  #include <iostream.h>
+  #include <iostream>
 #elif defined LINUX_32
   #include <cmath>
   #include <fstream>
@@ -48,18 +48,18 @@
 
 #elif defined WIN
   #include <math.h>
-  #include <fstream.h>
+  #include <fstream>
   #include <stdlib.h>
   #include <time.h>
   #include <assert.h>
-  #include <iostream.h>
+  #include <iostream>
 #else 
   #include <math.h>
-  #include <fstream.h>
+  #include <fstream>
   #include <stdlib.h>
   #include <time.h>
   #include <assert.h>
-  #include <iostream.h>
+  #include <iostream>
 #endif
 
 using namespace std;

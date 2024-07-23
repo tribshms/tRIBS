@@ -155,6 +155,7 @@ if(parallel)
             src/tSimulator/tSimul.h
             src/tStorm/tStorm.cpp
             src/tStorm/tStorm.h
+            ${exe} PUBLIC tests/tHydroTests/ThydroModelTests.cpp
     )
 
 else()
@@ -270,6 +271,7 @@ else()
             src/tSimulator/tSimul.h
             src/tStorm/tStorm.cpp
             src/tStorm/tStorm.h
+            tests/tHydroTests/ThydroModelTests.cpp
     )
 
 endif()
@@ -306,5 +308,17 @@ if (packaging)
 endif ()
 
 enable_testing ()
+
+add_executable(
+  tHydroTests
+  ${PROJECT_SOURCE_DIR}/tests/tHydrotests/THydroModelTests.cpp
+)
+target_link_libraries(
+  tHydroTests
+  GTest::gtest_main
+)
+
+include(GoogleTest)
+gtest_discover_tests(tHydroTests)
 
 add_subdirectory(tests)
