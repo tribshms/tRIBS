@@ -21,6 +21,7 @@ authors:
     affiliation: "1, 2"
 
   - name: Cederstrom, C.J.
+    orcid: 0009-0000-5387-1262
     affiliation: 1
 
   - name: Ko, A.
@@ -46,7 +47,7 @@ bibliography: paper.bib
 
 
 # Summary
-Distributed hydrologic models provide earth scientists and engineers with tools to test and explore hypotheses related to the movement and storage of water within a landscape [@fatichi2016; @grayson2002; @keller2023]. The Triangulated Irregular Network (TIN)-based Real-Time Integrated Basin Simulator denoted as tRIBS [@ivanov2004a; @ivanov2004b], is an example of such a process-based distributed model and has been used to address a wide range of problems from hillslope scale processes in ecohydrology [e.g.,\ @mahmood2011] to flood management of large watersheds [e.g.,\ @cazares-rodriguez2017]. Yet, in spite of the extensive use and application of tRIBS to current topics in hydrology, engineering, and the earth sciences, the code has been essentially maintained as a proprietary software. Here, we document the release of tRIBS v5.2, an updated open source code base and its application for forested watersheds that serve as tributaries to larger river systems. This release includes improvements in hydrologic processes with new functionality for simulating channel transmission losses [@schreiner-mcgraw2018] and reservoir routing [@cazares-rodriguez2017]. Additionally, it features updated documentation, improved infrastructure for sustainable code development and employment, and improved computational efficiency. These additions provide a robust and sustainable code base, enhancing access and applications of the model.
+Distributed hydrologic models provide earth scientists and engineers with tools to test and explore hypotheses related to the movement and storage of water within a landscape [@fatichi2016; @grayson2002; @keller2023]. The Triangulated Irregular Network (TIN)-based Real-Time Integrated Basin Simulator denoted as tRIBS [@ivanov2004a; @ivanov2004b], is an example of such a process-based distributed model and has been used to address a wide range of problems from hillslope scale processes in ecohydrology [e.g.,\ @mahmood2011] to flood management of large watersheds [e.g.,\ @cazares-rodriguez2017]. Yet, in spite of the extensive use and application of tRIBS to current topics in hydrology, engineering, and the earth sciences, the code has been essentially maintained as a proprietary software package. Here, we document the release of tRIBS v5.2, an updated open source code base and its application for forested watersheds that serve as tributaries to larger river systems. This release includes improvements in hydrologic processes with new functionality for simulating channel transmission losses [@schreiner-mcgraw2018] and reservoir routing [@cazares-rodriguez2017]. Additionally, it features updated documentation, improved infrastructure for sustainable code development and employment, and improved computational efficiency. These additions provide a robust and sustainable code base, enhancing access and applications of the model.
 
 # Statement of Needs
 ## Model Description
