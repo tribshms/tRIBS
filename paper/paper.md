@@ -20,14 +20,14 @@ authors:
     orcid: 0000-0003-4516-1206
     affiliation: "1, 2"
 
-  - name: Cederstrom, C.J.
+  - name: Cederstrom, C. J.
     orcid: 0009-0000-5387-1262
     affiliation: 1
 
   - name: Ko, A.
     affiliation: 1
 
-  - name: Schreiner-McGraw, A.P
+  - name: Schreiner-McGraw, A. P.
     affiliation: 1
     orcid: 0000-0003-3424-9202
 
