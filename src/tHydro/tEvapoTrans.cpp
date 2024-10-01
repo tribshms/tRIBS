@@ -224,11 +224,7 @@ void tEvapoTrans::SetEvapTVariables(tInputFile &infile, tHydroModel *hydro)
 		soilPtr = hydro->soilPtr;
 		initializeVariables();
 		SetSunVariables();
-		
-		tMeshListIter<tCNode> nodeIter(gridPtr->getNodeList());
-		BasAltitude  = (nodeIter.FirstP()->getZ());
-		BasAltitude += (nodeIter.LastP()->getZ());
-		BasAltitude /= 2.0;
+
 		
 		if (gFluxOption != 1 && gFluxOption != 2) {
 			Cout<<"\nGround Heat Flux Option "<< gFluxOption;
@@ -385,6 +381,8 @@ void tEvapoTrans::initializeVariables()
 	inLongR = 0.0; outLongR = 0.0; inShortR = 0.0;  
 	dewTempC = 0.0; surfTempC = 0.0; atmPressC = 0.0;
 	rHumidityC = 0.0; skyCoverC = 0.0; netRadC = 0.0;
+
+    skycover_flag = 0;
 
 	Is = Ic = Ics = Id = Ids = 0.0;
 	gFlux = 0.0; hFlux = 0.0; lFlux = 0.0;
@@ -902,7 +900,6 @@ double tEvapoTrans::ApproximateEP()
 void tEvapoTrans::setCoeffs(tCNode* cNode) 
 { 
 	landPtr->setLandPtr(cNode->getLandUse());
-	//soilPtr->setSoilPtr(cNode->getSoilID()); // Giuseppe 2016 - Changes to allow reading soil properties from grids
 
 	if (snowOption == 1)
 		coeffLAI = landPtr->getLandProp(12);
@@ -920,14 +917,13 @@ void tEvapoTrans::setCoeffs(tCNode* cNode)
 	}
 	else if (evapotransOption == 4)
 		coeffV  = landPtr->getLandProp(11);
-    
+
+    if (coeffV >= 1.0) //prevents loss of snow when unloaded from canopy WR 05/12/2024
+        coeffV = 0.99;
+
 	if (gFluxOption == 1 || gFluxOption == 2) {
-		// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-        //		coeffKs = soilPtr->getSoilProp(10);
-        //		coeffCs = soilPtr->getSoilProp(11);
         coeffKs = cNode->getVolHeatCond();
         coeffCs = cNode->getSoilHeatCap();
-		// Giuseppe 2016 - End changes to allow reading soil properties from grids
 	}
 	
 	}
@@ -1041,13 +1037,9 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		// Set Coefficients
 		if (luOption == 1) {
 			newLUGridData(cNode);
-			if (gFluxOption == 1 || gFluxOption == 2) {
-				// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-                //			        coeffKs = soilPtr->getSoilProp(10);
-                //				coeffCs = soilPtr->getSoilProp(11);
+			if (gFluxOption == 1 || gFluxOption == 2) {;
                 coeffKs = cNode->getVolHeatCond();
                 coeffCs = cNode->getSoilHeatCap();
-				// Giuseppe 2016 - End changes to allow reading soil properties from grids
             }
 		}
 		else{
@@ -1554,7 +1546,8 @@ void tEvapoTrans::SetSunVariables()
 	double Wo = 1367.0;
 	double pi = 4.0*atan(1.0);
 	double CIRC[12] = {.07, .10, .12, .14, .16, .19, .23, .20, .16, .12, .08, .07};
-	
+
+
 	dgmt  = gmt;
 	longSM = 15.0*abs(gmt);
 	longM = fabs(longitude);
@@ -2248,10 +2241,12 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	double Tg, eps;
 	double cosi,v;
 	double Isw; // Following were removed as shadows WR: Ic,Ics,Id,Ids,Is
-	SunHour=0;
+
+    SunHour=0;
 	Ic=Ics=Id=Ids=Is=Isw=0.0;
     elevation = cNode->getZ(); //SMM 10172008
-	HeatTransferProperties( cNode ); 
+	HeatTransferProperties( cNode );
+
 	
 	// Compute INcoming longwave radiation from the atmosphere
 	inLongR = inLongWave( cNode );
@@ -2319,7 +2314,7 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	// Compute resistances for turbulent fluxes
 	Rah  = aeroResist();
 	Rstm = stomResist();
-	
+
 	Tg = Tso;  // Surface toK from the previous time step
 	
 	// Iteratively find the ground temperature
@@ -2922,18 +2917,14 @@ void tEvapoTrans::EvapPan()
 ***************************************************************************/
 void tEvapoTrans::betaFunc(tCNode* cNode) 
 {
-	double beta, Ths, Thr, Th, ratio, Th_star;
-	
-	// Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-	//soilPtr->setSoilPtr( cNode->getSoilID() );
-    //	Ths = soilPtr->getSoilProp(2);
-    //	Thr = soilPtr->getSoilProp(3);
+	double beta, Ths, Thr, Th, ratio, Th_star, soilzone_cutoff;
+
     Ths = cNode->getThetaS(); // Saturation moisture content
     Thr = cNode->getThetaR(); // Residual moisture content
 	// Giuseppe 2016 - End changes to allow reading soil properties from grids
 
-	// Start of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
-	// Objective: read the critical soil moisture as vegetation paramater
+    soilzone_cutoff = cNode->getSoilCutoff();
+
 	Th_star = landPtr->getLandProp(13);
 
 	// Check that Thw <= Th_star <= Ths
@@ -2945,15 +2936,19 @@ void tEvapoTrans::betaFunc(tCNode* cNode)
 		}
 	// End of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
 
-	Th = cNode->getSoilMoisture();
-	ratio = (Th - Thr)/(Th_star - Thr); 
-    
-	if (ratio > 1.0)
+	Th = cNode->getSoilMoisture(); // avg volumetric soil moisture content down to 100 mm
+	ratio = (Th - Thr)/(Th_star - Thr);
+
+    if (ratio > 1.0)
 		beta = 1.0;
 	else if (ratio < 0.0)
 		beta = 0.0;
 	else
 		beta = ratio;
+
+    if(Th<=soilzone_cutoff)
+        beta = 0.0;
+
 	betaS = beta;
 }
 
@@ -2982,18 +2977,15 @@ void tEvapoTrans::betaFunc(tCNode* cNode)
 ***************************************************************************/
 void tEvapoTrans::betaFuncT(tCNode* cNode) 
 {
-	double beta, Ths, Thw, Th, ratio, Th_star;
-	
-    // Giuseppe 2016 - Begin changes to allow reading soil properties from grids
-	//	soilPtr->setSoilPtr( cNode->getSoilID() );
-    //	Ths = soilPtr->getSoilProp(2);
-    //	Thw = soilPtr->getSoilProp(3);
+
+	double beta, Ths, Thw, Th, ratio, Th_star, rootzone_cutoff;
+
     Ths = cNode->getThetaS(); // Saturation moisture content
     Thw = cNode->getThetaR(); // Residual moisture content
 	// Giuseppe 2016 - End changes to allow reading soil properties from grids
 
-	// Start of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
-	// Objective: read the critical soil moisture as vegetation paramater
+    rootzone_cutoff = cNode->getRootCutoff();
+
 	Th_star = landPtr->getLandProp(14); 
 	// Check that Thw <= Th_star <= Ths
 	if ((Th_star > Ths) || (Th_star < Thw))
@@ -3004,13 +2996,18 @@ void tEvapoTrans::betaFuncT(tCNode* cNode)
 		}
 	// End of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
 
-	Th = cNode->getRootMoisture();
-	ratio = (Th - Thw)/(Th_star - Thw); 
+
+	Th = cNode->getRootMoisture();// avg volumetric soil moisture content down to 1000 mm
+	ratio = (Th - Thw)/(Th_star - Thw);
     
 	if (ratio < 1.0)
 		beta = ratio;
-	else
+    else
 		beta = 1.0;
+
+    if(Th<=rootzone_cutoff)
+        beta = 0.0;
+
 	betaT = beta;
 }
 
@@ -4058,7 +4055,7 @@ void tEvapoTrans::newHydroMetGridData(tCNode * cNode) {
 **
 ** Assigns values of current land use parameters to nodes based on results of 
 ** tResample grid input from updateLUVarOfBothGrids &/or updateLUVarOfPrevGrid.
-**
+** TODO check that same landcover parameters are being updated as provided from a table
 ***************************************************************************/
 void tEvapoTrans::newLUGridData(tCNode * cNode) 
 { 
@@ -4090,7 +4087,10 @@ void tEvapoTrans::newLUGridData(tCNode * cNode)
 					(evapotransOption == 2) ||
 					(evapotransOption == 3) ||
 					(evapotransOption == 4) ){
-				coeffV = cNode->getVegFraction();	
+				coeffV = cNode->getVegFraction();
+
+                if (coeffV >= 1.0) //prevents loss of snow when unloaded from canopy WR 05/12/2024
+                    coeffV = 0.99;
 			}
 		}
 		if (strcmp(LUgridParamNames[ct],"LA")==0) {			
@@ -5205,8 +5205,7 @@ void tEvapoTrans::writeRestart(fstream & rStr) const
   BinaryWrite(rStr, Id);
   BinaryWrite(rStr, Ids);
   BinaryWrite(rStr, vPressC);
-  BinaryWrite(rStr, Epot);
-  BinaryWrite(rStr, BasAltitude);
+  BinaryWrite(rStr, Epot);;
 
   BinaryWrite(rStr, numStations);
   BinaryWrite(rStr, arraySize);
@@ -5322,7 +5321,6 @@ void tEvapoTrans::writeRestart(fstream & rStr) const
   BinaryWrite(rStr, ha3375);
   BinaryWrite(rStr, tempLapseRate);
   BinaryWrite(rStr, SunHour);
-  BinaryWrite(rStr, BasAltitude);
   BinaryWrite(rStr, AtFirstTimeStepLUFlag);
     
     // to get right time vegetation parameters after reading restart files. Ara Ko 2017
@@ -5378,7 +5376,6 @@ void tEvapoTrans::readRestart(fstream & rStr)
   BinaryRead(rStr, Ids);
   BinaryRead(rStr, vPressC);
   BinaryRead(rStr, Epot);
-  BinaryRead(rStr, BasAltitude);
 
   BinaryRead(rStr, numStations);
   BinaryRead(rStr, arraySize);
@@ -5494,7 +5491,6 @@ void tEvapoTrans::readRestart(fstream & rStr)
   BinaryRead(rStr, ha3375);
   BinaryRead(rStr, tempLapseRate);
   BinaryRead(rStr, SunHour);
-  BinaryRead(rStr, BasAltitude);
   BinaryRead(rStr, AtFirstTimeStepLUFlag);
   BinaryRead(rStr, NowTillWhichALgrid); // Ara Ko 2017
   BinaryRead(rStr, NowTillWhichTFgrid); // Ara Ko 2017
