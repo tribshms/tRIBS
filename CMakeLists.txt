@@ -320,9 +320,104 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(
-  tHydroTests
-  ${PROJECT_SOURCE_DIR}/tests/tHydrotests/THydroModelTests.cpp
-  ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroModel.h
+        tHydroTests
+        ${PROJECT_SOURCE_DIR}/tests/tHydrotests/THydroModelTests.cpp
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroModel.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/Classes.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/Inclusions.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/Definitions.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/TemplDefinitions.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/Classes.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/Definitions.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/Inclusions.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/TemplDefinitions.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/globalFns.cpp
+        ${PROJECT_SOURCE_DIR}/src/Headers/globalFns.h
+        ${PROJECT_SOURCE_DIR}/src/Headers/globalIO.h
+        ${PROJECT_SOURCE_DIR}/src/Mathutil/geometry.h
+        ${PROJECT_SOURCE_DIR}/src/Mathutil/mathutil.cpp
+        ${PROJECT_SOURCE_DIR}/src/Mathutil/mathutil.h
+        ${PROJECT_SOURCE_DIR}/src/Mathutil/predicates.cpp
+        ${PROJECT_SOURCE_DIR}/src/Mathutil/predicates.h
+        ${PROJECT_SOURCE_DIR}/src/tArray/tArray.h
+        ${PROJECT_SOURCE_DIR}/src/tArray/tMatrix.cpp
+        ${PROJECT_SOURCE_DIR}/src/tArray/tMatrix.h
+        ${PROJECT_SOURCE_DIR}/src/tCNode/tCNode.cpp
+        ${PROJECT_SOURCE_DIR}/src/tCNode/tCNode.h
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tFlowNet.cpp
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tFlowNet.h
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tFlowResults.cpp
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tFlowResults.h
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tKinemat.cpp
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tKinemat.h
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tResData.cpp
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tResData.h
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tReservoir.cpp
+        ${PROJECT_SOURCE_DIR}/src/tFlowNet/tReservoir.h
+        ${PROJECT_SOURCE_DIR}/src/tGraph/tGraph.cpp
+        ${PROJECT_SOURCE_DIR}/src/tGraph/tGraph.h
+        ${PROJECT_SOURCE_DIR}/src/tGraph/tGraphNode.cpp
+        ${PROJECT_SOURCE_DIR}/src/tGraph/tGraphNode.h
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tEvapoTrans.cpp
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tEvapoTrans.h
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroMet.cpp
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroMet.h
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroMetConvert.cpp
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroMetConvert.h
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroMetStoch.cpp
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroMetStoch.h
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroModel.cpp
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tHydroModel.h
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tIntercept.cpp
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tIntercept.h
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tSnowPack.cpp
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tSnowPack.h
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tWaterBalance.cpp
+        ${PROJECT_SOURCE_DIR}/src/tHydro/tWaterBalance.h
+        ${PROJECT_SOURCE_DIR}/src/tInOut/tInputFile.cpp
+        ${PROJECT_SOURCE_DIR}/src/tInOut/tInputFile.h
+        ${PROJECT_SOURCE_DIR}/src/tInOut/tOstream.cpp
+        ${PROJECT_SOURCE_DIR}/src/tInOut/tOstream.h
+        ${PROJECT_SOURCE_DIR}/src/tInOut/tOutput.cpp
+        ${PROJECT_SOURCE_DIR}/src/tInOut/tOutput.h
+        ${PROJECT_SOURCE_DIR}/src/tList/tList.cpp
+        ${PROJECT_SOURCE_DIR}/src/tList/tList.h
+        ${PROJECT_SOURCE_DIR}/src/tListInputData/tListInputData.cpp
+        ${PROJECT_SOURCE_DIR}/src/tListInputData/tListInputData.h
+        ${PROJECT_SOURCE_DIR}/src/tMesh/heapsort.h
+        ${PROJECT_SOURCE_DIR}/src/tMesh/tMesh.cpp
+        ${PROJECT_SOURCE_DIR}/src/tMesh/tMesh.h
+        ${PROJECT_SOURCE_DIR}/src/tMesh/tTriangulator.cpp
+        ${PROJECT_SOURCE_DIR}/src/tMesh/tTriangulator.h
+        ${PROJECT_SOURCE_DIR}/src/tMeshElements/meshElements.cpp
+        ${PROJECT_SOURCE_DIR}/src/tMeshElements/meshElements.h
+        ${PROJECT_SOURCE_DIR}/src/tMeshList/tMeshList.h
+        ${PROJECT_SOURCE_DIR}/src/tPtrList/tPtrList.cpp
+        ${PROJECT_SOURCE_DIR}/src/tPtrList/tPtrList.h
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tInvariant.cpp
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tInvariant.h
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tRainGauge.cpp
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tRainGauge.h
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tRainfall.cpp
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tRainfall.h
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tResample.cpp
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tResample.h
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tShelter.cpp
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tShelter.h
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tVariant.cpp
+        ${PROJECT_SOURCE_DIR}/src/tRasTin/tVariant.h
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tControl.cpp
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tControl.h
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tPreProcess.cpp
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tPreProcess.h
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tRestart.cpp
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tRestart.h
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tRunTimer.cpp
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tRunTimer.h
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tSimul.cpp
+        ${PROJECT_SOURCE_DIR}/src/tSimulator/tSimul.h
+        ${PROJECT_SOURCE_DIR}/src/tStorm/tStorm.cpp
+        ${PROJECT_SOURCE_DIR}/src/tStorm/tStorm.h
 )
 target_link_libraries(
   tHydroTests
@@ -330,6 +425,6 @@ target_link_libraries(
 )
 
 include(GoogleTest)
-gtest_discover_tests(tHydroTests)
+gtest_add_tests(TARGET tHydroTests)
 
 add_subdirectory(tests)

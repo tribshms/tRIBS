@@ -17,6 +17,7 @@
 
 #include "src/tMesh/tMesh.h"
 #include "src/Headers/globalIO.h"
+#include <iostream>
 
 #ifdef PARALLEL_TRIBS
 #include "src/tParallel/tParallel.h"
@@ -207,7 +208,7 @@ tMesh<tSubNode>::tMesh( tMesh *originalMesh )
 	seed = originalMesh->seed;
 	// layerflag = originalMesh->layerflag; (Layering off in tRIBS)
 	miNextNodeID = originalMesh->miNextNodeID;
-	miNextEdgID = originalMesh->miEdgNodeID;
+	miNextEdgID = originalMesh->miNextEdgID;
 	miNextTriID = originalMesh->miNextTriID;   
 	mSearchOriginTriPtr=0;
 }
