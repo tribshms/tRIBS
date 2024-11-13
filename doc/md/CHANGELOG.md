@@ -1,6 +1,5 @@
 <!--- CHANGELOG.md --->
 # Changelog 
-
 All notable changes to this project are documented in this file.
 
 ## Version 5.2.1

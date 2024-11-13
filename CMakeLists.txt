@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.20)
 #set standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross compilation see: https://stackoverflow.com/questions/53633705/cmake-the-c-compiler-is-not-able-to-compile-a-simple-test-program
+#set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY") #needed for testing cross compilation see: https://stackoverflow.com/questions/53633705/cmake-the-c-compiler-is-not-able-to-compile-a-simple-test-program
 
 #set(parallel ON) # currently set through -Dparallel, but can be manually set by uncommenting
 set(CMAKE_CXX_EXTENSIONS OFF)

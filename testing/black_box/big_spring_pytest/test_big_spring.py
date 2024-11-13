@@ -75,7 +75,7 @@ def test_parallel_waterbalance(setup_data):
 #     qout_hour = qout.resample('h').mean()
 #
 #     # need to be updated so it's more portable
-#     obs_data = '/Users/wr/Desktop/big_spring/data/obs/Discharge_MS-1.csv'
+#     obs_data = '/Users/wr/Desktop/big_spring_pytest/data/obs/Discharge_MS-1.csv'
 #
 #     q_obs = pd.read_csv(obs_data, skiprows=24)
 #
