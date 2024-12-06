@@ -26,14 +26,14 @@ Predicates predicate;
 tOstream Cout(cout);
 tOstream Cerr(cerr);
 
-int serialSimulation(int, char**);
-int parallelSimulation(int, char**);
-int argc;
-char **argv;
+
+int argc = 1;
+const char* input = "tests/TestInput/happy_jack/src/in_files/happy_jack.in";
+char **argv = (char**)input;
 
 // Check command-line arguments
 	SimulationControl SimCtrl(argc, argv);
-	
+
 	
 	tInputFile InputFile( SimCtrl.infile );
 	
