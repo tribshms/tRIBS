@@ -14,6 +14,8 @@ Licensing information can be found in [LICENSE.txt](./LICENSE.txt).
 
 Release notes are provided [here](https://tribshms.readthedocs.io/en/latest/man/Release%20Notes.html#).
 
+Model reference list, number of citations and H-index can be found [here](https://csdms.colorado.edu/wiki/Model:TIN-based_Real-time_Integrated_Basin_Simulator_(tRIBS)).
+
 ## Installation 
 We provide three options for accessing the tRIBS model:
 
