@@ -1617,7 +1617,7 @@ void tCOutput<tSubNode>::WriteDynamicVar( double time )
 **  WriteIntegrVars( double time )
 **
 **  Writes a file containing variables that contain integrated variables
-**  The option is turned on with the '-R' option in the command line
+**  The option is turned on with OPTSPATIAL = 1
 **  
 *************************************************************************/
 template< class tSubNode >

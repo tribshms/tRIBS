@@ -151,6 +151,10 @@ tCNode::tCNode() :tNode()
 	sfact = 0.0;
 	lfact = 0.0;
 
+    // updates to beta_func
+    soil_cutoff = 0.0;
+    root_cutoff = 0.0;
+
 }
 
 // Input File Constructor 
@@ -587,7 +591,11 @@ double tCNode::getPorosity() {return Porosity;}
 double tCNode::getVolHeatCond() {return VolHeatCond;}
 double tCNode::getSoilHeatCap() {return SoilHeatCap;}
 
-// Set Functions 
+//beta update
+double tCNode::getSoilCutoff() {return soil_cutoff;}
+double tCNode::getRootCutoff() {return root_cutoff;}
+
+// Set Functions
 
 void tCNode::setMuOld(double value)  { MuOld = value; }
 void tCNode::setMuNew(double value)  { MuNew = value; }
@@ -612,7 +620,6 @@ void tCNode::sethsrf(double value)   { hsrf = value; }
 void tCNode::setesrf(double value)   { esrf = value; }
 void tCNode::setpsrf(double value)   { psrf = value; }
 void tCNode::setsatsrf(double value) { satsrf = value; }
-void tCNode::setrsrf(double value)   { rsrf = value; }
 void tCNode::setsbsrf(double value)  { sbsrf = value; }
 void tCNode::setRunOn(double value)  { RunOn = value; }
 void tCNode::setFlowEdg(tEdge * edgs) { flowedge = edgs; }
@@ -839,6 +846,14 @@ void tCNode::setUnsatAnRatio(double value) { UnsatAnRatio = value;}
 void tCNode::setPorosity(double value) { Porosity = value;}
 void tCNode::setVolHeatCond(double value) { VolHeatCond = value;}
 void tCNode::setSoilHeatCap(double value) { SoilHeatCap = value;}
+
+
+
+//beta update
+void tCNode::setSoilCutoff(double value) {soil_cutoff = value;}
+void tCNode::setRootCutoff(double value) {root_cutoff = value;}
+
+
 
 // Add Functions
 

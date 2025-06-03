@@ -42,10 +42,10 @@
   #include <stdio.h> 
   #include <math.h> 
   #include <sys/time.h> 
-#else 
-  #include <stdio.h> 
-  #include <math.h> 
-  #include <sys/time.h> 
+#else
+    #include <cstdio>    // Replaces <stdio.h>
+    #include <cmath>     // Replaces <math.h>
+    #include <ctime>
 #endif
  
 #define INEXACT                         
