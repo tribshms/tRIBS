@@ -1508,20 +1508,19 @@ int tEvapoTrans::julianDay()
 	cmonth = currentTime[1];
 	cday   = currentTime[2];
 	
-	if (cmonth==1)  
-		JDay = cday;
-	else if (cmonth==2)
-		JDay = cday+31;
-	else if (cmonth>2) {
-		JDay += cday;
-		for (int count=0;count<cmonth-1;count++) {
-			JDay += dayInMonth[count];
-		}
-		if ((cyear%4) == 0) {
-			JDay += 1;
-		}
-	}
-	return JDay;
+    // JB2025 @ ASU, adjust for leap year using Gregorian rules
+    bool isLeap = (cyear % 4 == 0 && cyear % 100 != 0) || (cyear % 400 == 0);
+    if (isLeap) {
+        dayInMonth[1] = 29; // February
+    }
+
+    for (int i = 0; i < cmonth - 1; ++i) {
+        JDay += dayInMonth[i];
+    }
+
+    JDay += cday;
+
+    return JDay;
 }
 
 /***************************************************************************
