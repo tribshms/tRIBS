@@ -473,12 +473,18 @@ void tEvapoTrans::setTime(int time)
 		currentTime[1] = weatherStations[0].getMonth(time);
 		currentTime[2] = weatherStations[0].getDay(time);
 		currentTime[3] = weatherStations[0].getHour(time);
+		
+		// Obtain current hour
+		nodeHour = timer->hour;
 	}
 	else if (metdataOption == 2){
 		currentTime[0] = timer->year;
 		currentTime[1] = timer->month;
 		currentTime[2] = timer->day;
 		currentTime[3] = timer->hour;
+		
+		// Obtain current hour
+		nodeHour = timer->hour;
 	}
 	}
 
@@ -3965,7 +3971,6 @@ void tEvapoTrans::newHydroMetData(int time)
 				atmPress = weatherStations[i].getAtmPress(time);
 				windSpeed = weatherStations[i].getWindSpeed(time);
 				skyCover = weatherStations[i].getSkyCover(time);
-				nodeHour = weatherStations[i].getHour(time);
                 inShortR = weatherStations[i].getRadGlobal(time);
 
 				// For run-time checks of input data
