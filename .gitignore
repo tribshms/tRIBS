@@ -12,3 +12,4 @@ __pycache__
 /testing/black_box/happy_jack_pytest/logs/
 /testing/black_box/benchmarks/
 /testing/black_box/happy_jack_pytest/happy_jack/
+.vscode
