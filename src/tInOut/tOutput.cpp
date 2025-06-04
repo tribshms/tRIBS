@@ -342,63 +342,64 @@ void tOutput<tSubNode>::CreateAndOpenPixel()
 					<<"Wind_m_s " //23
 					<<"NetRad_W_m2 " //24
 					<<"ShrtRadIn_W_m2 " //25
-					<<"ShrtRadIn_dir_W_m2 " //26
-					<<"ShrtRadIn_dif_W_m2 " //27
-					<<"ShortAbsbVeg_W_m2 " //28
-					<<"ShortAbsbSoi_W_m2 " //29
-					<<"LngRadIn_W_m2 " //30
-					<<"LngRadOut_W_m2A " //31
-					<<"PotEvp_mm_h " //32
-					<<"ActEvp_mm_h " //33
-					<<"EvpTtrs_mm_h " //34
-					<<"EvpWetCan_mm_h " //35
-					<<"EvpDryCan_mm_h " //36
-					<<"EvpSoil_mm_h " //37
-					<<"Gflux_W_m2 " //38
-					<<"HFlux_W_m2 " //39
-					<<"Lflux_W_m2 " //40
-					<<"NetPrecip_mm_hr " //41
-					<<"LiqWE_cm " //42
-					<<"IceWE_cm "	//43
-					<<"SnWE_cm "	//44
-					<<"SnSub_cm "	//45
-					<<"SnEvap_cm "	//46
-					<<"U_kJ_m2 "  //47
-					<<"RouteWE_cm " //48
-					<<"SnTemp_C "	//49
-					<<"SurfAge_h "	//50
-					<<"DU_kJ_m2_etistep " //51
-					<<"snLHF_kJ_m2_etistep " //52
-					<<"snSHF_kJ_m2_etistep " //53
-					<<"snGHF_kJ_m2_etistep " //54
-					<<"snPHF_kJ_m2_etistep " //55
-					<<"snRLout_kJ_m2_etistep " //56
-					<<"snRLin_kJ_m2_etistep " //57
-					<<"snRSin_kJ_m2_etistep " //58
-					<<"Uerror_kJ_m2_etistep " //59
-					<<"IntSWEq_cm "		 //60
-					<<"IntSub_cm "		 //61
-					<<"IntSnUnload_cm "	 //62
-					<<"CanStorage_mm " //63
-					<<"CumIntercept_mm " //64
-					<<"Interception_mm " //65
-					<<"Recharge_mm/hr " //66
-					<<"RunOn_mm " //67
-					<<"Srf_Hour_mm " //68
-					<<"Qstrm_m3_s " //69
-					<<"Hlevel_m " //70
-					<<"CanStorParam_mm " //71
-					<<"IntercepCoeff_[] " //72
-					<<"ThroughFall_[] " //73
-					<<"CanFieldCap_mm " //74
-					<<"DrainCoeff_mm_hr " //75
-					<<"DrainExpPar_1_mm " //76
-					<<"LandUseAlb_[] " //77
-					<<"VegHeight_m " //78
-					<<"OptTransmCoeff_[] " //79
-					<<"StomRes_s_m " //80
-					<<"VegFraction[] " //81
-					<<"LeafAI_[] " //82
+                    <<"ShortRadInSlope_W_m2 "    //25.5  JB2025 @ ASU
+					<<"ShrtRadIn_dir_W_m2 " //27
+					<<"ShrtRadIn_dif_W_m2 " //28
+					<<"ShortAbsbVeg_W_m2 " //29
+					<<"ShortAbsbSoi_W_m2 " //30
+					<<"LngRadIn_W_m2 " //31
+					<<"LngRadOut_W_m2A " //32
+					<<"PotEvp_mm_h " //33
+					<<"ActEvp_mm_h " //34
+					<<"EvpTtrs_mm_h " //35
+					<<"EvpWetCan_mm_h " //36
+					<<"EvpDryCan_mm_h " //37
+					<<"EvpSoil_mm_h " //38
+					<<"Gflux_W_m2 " //39
+					<<"HFlux_W_m2 " //40
+					<<"Lflux_W_m2 " //41
+					<<"NetPrecip_mm_hr " //42
+					<<"LiqWE_cm " //43
+					<<"IceWE_cm "	//44
+					<<"SnWE_cm "	//45
+					<<"SnSub_cm "	//46
+					<<"SnEvap_cm "	//47
+					<<"U_kJ_m2 "  //48
+					<<"RouteWE_cm " //49
+					<<"SnTemp_C "	//50
+					<<"SurfAge_h "	//51
+					<<"DU_kJ_m2_etistep " //52
+					<<"snLHF_kJ_m2_etistep " //53
+					<<"snSHF_kJ_m2_etistep " //54
+					<<"snGHF_kJ_m2_etistep " //55
+					<<"snPHF_kJ_m2_etistep " //56
+					<<"snRLout_kJ_m2_etistep " //57
+					<<"snRLin_kJ_m2_etistep " //58
+					<<"snRSin_kJ_m2_etistep " //59
+					<<"Uerror_kJ_m2_etistep " //60
+					<<"IntSWEq_cm "		 //61
+					<<"IntSub_cm "		 //62
+					<<"IntSnUnload_cm "	 //63
+					<<"CanStorage_mm " //64
+					<<"CumIntercept_mm " //65
+					<<"Interception_mm " //66
+					<<"Recharge_mm/hr " //67
+					<<"RunOn_mm " //68
+					<<"Srf_Hour_mm " //69
+					<<"Qstrm_m3_s " //70
+					<<"Hlevel_m " //71
+					<<"CanStorParam_mm " //72
+					<<"IntercepCoeff_[] " //73
+					<<"ThroughFall_[] " //74
+					<<"CanFieldCap_mm " //75
+					<<"DrainCoeff_mm_hr " //76
+					<<"DrainExpPar_1_mm " //77
+					<<"LandUseAlb_[] " //78
+					<<"VegHeight_m " //79
+					<<"OptTransmCoeff_[] " //80
+					<<"StomRes_s_m " //81
+					<<"VegFraction[] " //82
+					<<"LeafAI_[] " //83
 					<<"\n";
 				}
 				pixinfo[i].setf( ios::right, ios::adjustfield );
@@ -1133,6 +1134,7 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 				<<this->uzel[i]->getNetRad()<<" "
 				
 				/* 25 */  <<this->uzel[i]->getShortRadIn()<< " "
+                << this->uzel[i]->getShortRadSlope() << " "  // JB2025 @ ASU
 				<<this->uzel[i]->getShortRadIn_dir()<< " "
 				<<this->uzel[i]->getShortRadIn_dif()<< " "
 				<<this->uzel[i]->getShortAbsbVeg()<< " "
