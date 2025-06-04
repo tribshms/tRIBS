@@ -66,7 +66,7 @@ tCNode::tCNode() :tNode()
 	VapPress = RelHumid = WindSpeed = SkyCover = AirPressure = 0.0;
 	GridET = LongRadIn = LongRadOut = 0.0;
 	ShortRadIn = ShortRadIn_dir = ShortRadIn_dif = 0.0;
-	ShortAbsbVeg = ShortAbsbSoi = 0.0;
+	ShortAbsbVeg = ShortAbsbSoi = ShortRadSlope = 0.0;
 	gFlux = hFlux = lFlux = Gnod = 0.0;
 	QgwIn = QgwOut = 0.0;
 	Hlevel = Qstrm = Width = Roughness = RunOn = 0.0;
@@ -198,7 +198,7 @@ tCNode::tCNode(tInputFile &infile) :tNode() {
 	VapPress = RelHumid = WindSpeed = SkyCover = AirPressure = 0.0;
 	GridET = ShortRadIn = LongRadIn = LongRadOut = 0.0;
 	ShortRadIn = ShortRadIn_dir = ShortRadIn_dif = 0.0;
-	ShortAbsbVeg = ShortAbsbSoi = 0.0;
+	ShortAbsbVeg = ShortAbsbSoi = ShortRadSlope = 0.0;
 	gFlux = hFlux = lFlux = Gnod = 0.0;
 	QgwIn = QgwOut = 0.0;
 	Hlevel = Qstrm = Width = Roughness = RunOn = 0.0;
@@ -401,6 +401,7 @@ double tCNode::getShortRadIn_dir() { return ShortRadIn_dir; }
 double tCNode::getShortRadIn_dif() { return ShortRadIn_dif; }
 double tCNode::getShortAbsbVeg()   { return ShortAbsbVeg; }
 double tCNode::getShortAbsbSoi()   { return ShortAbsbSoi; }
+double tCNode::getShortRadSlope()  { return ShortRadSlope; }
 double tCNode::getLongRadIn()      { return LongRadIn;  }
 double tCNode::getLongRadOut()     { return LongRadOut; }
 
@@ -682,8 +683,9 @@ void tCNode::setGridET(double gridet)       { GridET = gridet; }
 void tCNode::setShortRadIn(double val)     { ShortRadIn = val; }
 void tCNode::setShortRadIn_dir(double val) { ShortRadIn_dir = val; }
 void tCNode::setShortRadIn_dif(double val) { ShortRadIn_dif = val; }
-void tCNode::setShortAbsbVeg(double val)   { ShortAbsbVeg = val; }
+void tCNode::setShortAbsbVeg(double val)   { ShortAbsbVeg = val; } 
 void tCNode::setShortAbsbSoi(double val)   { ShortAbsbSoi = val; }
+void tCNode::setShortRadSlope(double val)  { ShortRadSlope = val; }
 void tCNode::setLongRadIn(double longin)   { LongRadIn = longin; }
 void tCNode::setLongRadOut(double longout) { LongRadOut = longout; }
 

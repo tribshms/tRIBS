@@ -147,6 +147,7 @@ public:
   double getShortRadIn_dif();
   double getShortAbsbVeg();
   double getShortAbsbSoi();
+  double getShortRadSlope();    /// Get back the raw slope‐corrected irradiance, JB2025
 
   double getLongRadIn();
   double getLongRadOut();
@@ -428,6 +429,7 @@ public:
   void setShortRadIn_dif(double);
   void setShortAbsbVeg(double);
   void setShortAbsbSoi(double);
+  void setShortRadSlope(double); /// Set the slope‐corrected incoming shortwave (before canopy/albedo), JB2025
 
   void setLongRadIn(double);
   void setLongRadOut(double);
@@ -714,6 +716,7 @@ protected:
   double BedrockDepth;
   double ShortRadIn, ShortRadIn_dir, ShortRadIn_dif;
   double ShortAbsbVeg, ShortAbsbSoi;
+  double ShortRadSlope;   // raw incoming shortwave on the slope (pre‐canopy/albedo), JB2025 @ ASU
   double LongRadIn;
   double LongRadOut;
   double gFlux;

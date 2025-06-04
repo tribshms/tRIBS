@@ -1729,10 +1729,20 @@ double tEvapoTrans::ComputeHourAngle(double TT, double delta)
 double tEvapoTrans::inShortWave(tCNode *cNode)
 {
 	double  N, Iv, Isw, Ir; //
-	double v, cosi, scover;
-	double RadGlobClr;
+	double v, cosi;
 
 	Ic=Is=Id=Ir=Ids=Ics=Isw=Iv=0.0;
+
+	// Declare veg and soil abs JB 2025
+	double vegAbs = 0.0;
+	double soilAbs = 0.0;
+
+	// Set values initally on the node to zero for redundancy JB 2025
+	cNode->setShortRadIn_dir  (0.0);
+	cNode->setShortRadIn_dif  (0.0);
+	cNode->setShortRadSlope   (0.0);
+	cNode->setShortAbsbVeg    (0.0);
+	cNode->setShortAbsbSoi    (0.0);
 
 	// Elevation, slope and aspect have been set before
 
@@ -1764,7 +1774,8 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 		// If observations (for a horizontal surface) exist -
 		// use them, at least in an approximate manner
 		if (tsOption > 1 && !rainPtr->getoptStorm()) {
-			RadGlobClr = (inShortR / (1.0 - 0.65 * pow(N, 2.0)));
+			// Moved RadGlobClr declaration inside this block since it's only used here JB 2025
+			double RadGlobClr = (inShortR / (1.0 - 0.65 * pow(N, 2.0))); 
 			Ic = Ic/(Ic*sinAlpha + Id)*RadGlobClr;
 			Id = RadGlobClr - Ic*sinAlpha;
 		}
@@ -1820,7 +1831,7 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 		}
 		else if ( (shelterOption == 0) || (shelterOption == 3) ) {//CHANGED IN 2008
 
-		v = 0.5*(1.0 + cos(slope)); //only local
+			v = 0.5*(1.0 + cos(slope)); //only local
 
 		// SKY2008Snow from AJR2007
 		}
@@ -1853,14 +1864,20 @@ double tEvapoTrans::inShortWave(tCNode *cNode)
 			Ir = 0.0;//AJR2008, SKY2008Snow
 		}
 
-		// 5) Account for vegetation
-		if (evapotransOption == 1)
-			Iv = Is*coeffKt*coeffV + Is*(1.0-coeffV);
+		// 5) Account for vegetation--Refactored to directly account for how partioning occurs JB 2025
+		if (evapotransOption == 1) {
+			cNode->setShortRadSlope(Is);
+			soilAbs = (Is*coeffKt*coeffV + Is*(1.0-coeffV))*(1.0 - coeffAl);
+			vegAbs = Is*coeffV*(1.0 - coeffKt)*(1.0 - coeffAl);
+			cNode->setShortAbsbSoi(soilAbs);
+			cNode->setShortAbsbVeg(vegAbs);
+			Iv = soilAbs;
+		}
 		else
-			Iv = Is;
+			Iv = Is*(1.0-coeffAl);
 
 		// Account for albedo
-		Isw = Iv*(1.0-coeffAl);
+		Isw = Iv;
   }
 	else
 		Ic=Is=N=Iv=Isw=Id=Ids=Ics=Ir=0.0;
@@ -2246,6 +2263,7 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	double Tg, eps;
 	double cosi,v;
 	double Isw; // Following were removed as shadows WR: Ic,Ics,Id,Ids,Is
+	double soilAbs = 0.0;
 
     SunHour=0;
 	Ic=Ics=Id=Ids=Is=Isw=0.0;
@@ -2256,65 +2274,13 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	// Compute INcoming longwave radiation from the atmosphere
 	inLongR = inLongWave( cNode );
 	cNode->setLongRadIn(inLongR);
-	
-	// Compute the amount of absorbed shortwave radation
-	// and retrieve the computed values (it is assumed that
-	// Sun variables have been set for the current hour)
-	
-	//E.R.V. 3/6/2012 Note: This works for gridded IS input, need to test robustly with other options.
-	if(metdataOption == 2){
-	  if(fabs(inShortR-0.0) < 1.0E-3){
-	    inShortR = inShortWave( cNode );
-	    cNode->setShortAbsbSoi(inShortR);
-	  }
-	  else {
-	    //tiantian 05/15/2012: incorporate adjustments for sloping  surface, vegetation and albedo
-		if(alphaD > 0.0)
-		{
-			DirectDiffuse(elevation);//estimate direct and diffuse radiation
-			Ic=inShortR;//replace direct radiation with grid NLDAS input
 
-		//  Only do this computation if sheltering is turned on.
-			if (shelterOption < 4) { //CHANGED IN 2008
-		
-				cosi = cos(slope)*sinAlpha + sin(slope)*cos(asin(sinAlpha))*cos(sunaz-aspect);
+	// Compute the shortwave radiation from inShortWave() JB2025 @ ASU
+	// Uses observed incoming shortwave radiation
+	// soilAbs = shortWave absorbed by soil, used to get ground temperature
 
-				// SKY2008Snow, AJR2008
-				//if (cosi >= 0.0)
-			if (cosi >= 0) {
-				Ics = Ic*cosi;
-				SunHour = 1.0; //YES SUN
-			}
-			else {
-				Ics = 0.0;
-				SunHour = 0.0; //NO SUN
-			}	
-
-		}
-		else {
-			Ics = Ic;
-			SunHour = 1.0;
-		}
-		if ( (shelterOption == 2) || (shelterOption == 1) ) { //CHANGED IN 2008
-			//RINEHART 2007 @ NMT
-			//  Finds out whether sun is visible or not.
-			Ics *= aboveHorizon(ID);
-			SunHour *= aboveHorizon(ID);
-		}
-		v=0.5*(1.0 + cos(slope));
-		Ids=Id*v;
-		Is=(Ics+Ids)+(Ics+Ids)*coeffAl*0.5*(1.0-cos(slope)); //plus reflection radiation component-> total incoming solar on sloping surface
-		if (evapotransOption == 1)
-			Isw=(Is*coeffKt*coeffV + Is*(1.0-coeffV))*(1-coeffAl); //acount for vegetation and albedo
-		inShortR=Isw;
-		cNode->setShortAbsbSoi(inShortR);
-		}
-	  	}
-	}
-	else{
-	    inShortR = inShortWave( cNode );
-	    cNode->setShortAbsbSoi(inShortR);
-	}
+	inShortWave( cNode );
+	soilAbs = cNode->getShortAbsbSoi();
 
 	// Compute resistances for turbulent fluxes
 	Rah  = aeroResist();
@@ -2324,14 +2290,14 @@ double tEvapoTrans::energyBalance(tCNode* cNode)
 	
 	// Iteratively find the ground temperature
 	Tg = rtsafe_mod_energy(cNode, 223.15, 373.15, 
-						   TOLF, Tg, inShortR, &eps, &cnt);
+						   TOLF, Tg, soilAbs, &eps, &cnt);
 	
 	// To make sure the fluxes correspond to the obtained Tg
-	FunctionAndDerivative(cNode, Tg, f, df, inShortR);
+	FunctionAndDerivative(cNode, Tg, f, df, soilAbs);
 	
 	if (simCtrl->Verbose_label == 'Y' && ID == VerbID) {
 		cout<<"\n\t******** GROUND ENERGY BALANCE: ********"<<endl;
-		cout<<"\tRabsb_soi = "<<inShortR<<";   NetLongRad = "<<(outLongR-inLongR)<<endl;
+		cout<<"\tRabsb_soi = "<<soilAbs<<";   NetLongRad = "<<(outLongR-inLongR)<<endl;
 		cout<<"\t    lEsoi = "<<lFlux
 			<<";\t Hsoi = "<<hFlux<<";\t G = "<<gFlux<<endl<<flush;
 		cout<<"\n\t---> Tg = "<<Tg-273.15
