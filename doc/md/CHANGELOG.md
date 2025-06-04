@@ -2,6 +2,18 @@
 # Changelog 
 All notable changes to this project are documented in this file.
 
+## Version 5.2.2
+### 6/5/2025
+* Refactored solar radiation handling for clarity and consistency:
+* Centralized all slope, albedo, and vegetation corrections into inShortWave(), reducing redundancy in energyBalance().
+* Reorganized computation of direct and diffuse radiation components using observed and computed values where applicable.
+* Introduced new node variable shortRadSlope to store terrain-corrected incoming shortwave radiation:
+* Added setShortRadSlope() and getShortRadSlope() to the tCNode class.
+* Corrected nodeHour misalignment issues in tEvapoTrans.cpp.
+* Updated julianDay() and SetSunVariables() to use consistent time source from tRunTimer.
+* Fixed declaration scope of RadGlobClr to clarify its limited usage within conditional blocks.
+
+
 ## Version 5.2.1
 ### 6/21/2024
 * Modified how tRIBS accounts for the condition when Nwt = Bedrock depth, through setting conditional cutoffs in the beta functions.
