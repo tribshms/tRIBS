@@ -13,3 +13,4 @@ __pycache__
 /testing/black_box/benchmarks/
 /testing/black_box/happy_jack_pytest/happy_jack/
 .vscode
+CMakePresets.json

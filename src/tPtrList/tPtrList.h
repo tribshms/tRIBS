@@ -291,7 +291,7 @@ tPtrList( const tPtrList< NodeType > * origptr ):
 
   if( curNode != 0 ){
     insertAtBack( curNode->Ptr );
-    for( curNode=curNode->next; curNode!=this->orig.first; curNode=curNode->next )
+    for( curNode=curNode->next; curNode!=origptr->first; curNode=curNode->next )
       insertAtBack( curNode->Ptr );
     if( origptr->last->next == origptr->first ) last->next = first;
   }
@@ -967,10 +967,10 @@ template< class NodeType >
 inline int tPtrListIter< NodeType >::
 Get( NodeType *desiredItemPtr ){
    tPtrListNode<NodeType> *cln = 0;
-   int listSize = this->ptrListPtr->getSize();
+   int listSize = this->ptrlistPtr->getSize();
    int ctr;
 
-   for( cln=this->ptrListPtr->first, ctr=0; ctr<listSize; cln=cln->next, ctr++ )
+   for( cln=this->ptrlistPtr->first, ctr=0; ctr<listSize; cln=cln->next, ctr++ )
        if( cln->Ptr == desiredItemPtr ){
      curptrnode = cln;
      return 1;

@@ -207,7 +207,7 @@ tMesh<tSubNode>::tMesh( tMesh *originalMesh )
 	seed = originalMesh->seed;
 	// layerflag = originalMesh->layerflag; (Layering off in tRIBS)
 	miNextNodeID = originalMesh->miNextNodeID;
-	miNextEdgID = originalMesh->miEdgNodeID;
+	miNextEdgID = originalMesh->miNextEdgID;
 	miNextTriID = originalMesh->miNextTriID;   
 	mSearchOriginTriPtr=0;
 }
