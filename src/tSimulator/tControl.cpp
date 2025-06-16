@@ -39,7 +39,7 @@ SimulationControl::SimulationControl(int argc, char **argv)
 	Cout<<"-----------------------------------------------------------------"
 		<<"-------"<<endl;
 	
-	char VERSION[50] = "5.2, Winter 2024";
+	char VERSION[50] = "5.2.2, Summer 2025";
 	
 	Cout <<"\n\ntRIBS Version "<< VERSION <<endl<<endl;
 	
