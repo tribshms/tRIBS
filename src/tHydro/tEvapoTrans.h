@@ -168,6 +168,8 @@ class tEvapoTrans
   double coeffKs{}, coeffCs{}, coeffPan{};
   // SKY2008Snow from AJR2007
   double coeffLAI{};
+  // CJC DEBUG 2025
+  double Epot_noResist{}; // Potential evapotranspiration without resistances
 
   double Rah{}, Rstm{};
   double SoilHeatCondTh{}, SoilHeatCpctTh{}, SoilHeatDiffTh{};

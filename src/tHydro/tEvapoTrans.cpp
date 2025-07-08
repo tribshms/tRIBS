@@ -381,6 +381,7 @@ void tEvapoTrans::initializeVariables()
 	inLongR = 0.0; outLongR = 0.0; inShortR = 0.0;  
 	dewTempC = 0.0; surfTempC = 0.0; atmPressC = 0.0;
 	rHumidityC = 0.0; skyCoverC = 0.0; netRadC = 0.0;
+	Epot_noResist = 0.0; // CJC 2025 DEBUG
 
     skycover_flag = 0;
 
@@ -1071,6 +1072,19 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		// The computed Latent Heat LE -
 		// - "pseudo-resistance" evaporation: transFactor*Ep
 		potEvaporation = cNode->getPotEvap();
+		double potEvaporation_wet_canopy = cNode->getPotEvap_noResist(); // CJC 2025 DEBUG
+
+        // ================= START OF DEBUG BLOCK 2 =================
+        if (ID == 0 && cNode->getRain() > 0.0) {
+            double currentCanopyStorage = 0.0;
+            if (Ioption == 1) currentCanopyStorage = cNode->getCumIntercept();
+            else if (Ioption == 2) currentCanopyStorage = cNode->getCanStorage();
+
+            cout << "\n--- DEBUG (ComputeETComponents) | Node: " << ID << " | Time: " << timer->getCurrentTime() << " ---" << endl;
+            cout << "\tINPUTS: Canopy Storage = " << currentCanopyStorage << " mm" << endl;
+            cout << "\t  'potEvaporation' retrieved from node = " << potEvaporation << " mm/hr (THIS IS THE FLAWED VALUE)" << endl;
+        }
+        // ================== END OF DEBUG BLOCK 2 ===================
 		
 		// The soil-moisture controlled evaporation: beta*transFactor*Ep
 		actEvaporation = cNode->getActEvap();
@@ -2587,6 +2601,7 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 	netRadC = Rn;
 	gFlux   = G;
 	potEvap = Ep;
+	Epot_noResist = Eps; // CJC 2025 DEBUG
 	surfTempC = surfTemp = Tg - 273.15;
 	
 	if (simCtrl->Verbose_label == 'Y' && ID == VerbID && false) {
@@ -2769,6 +2784,25 @@ void tEvapoTrans::EvapPenmanMonteith(tCNode* cNode)
 {
 	potEvap = 3600.0*energyBalance(cNode);   // Actual rate, including resistances
 	actEvap = 3600.0*(lFlux/(latentHeat()));  
+
+    // Add this line to store the correct potential rate CJC 2025 DEBUG
+	double potEvapNoResist_mmhr = 3600.0 * Epot_noResist; 
+	cNode->setPotEvap_noResist(potEvapNoResist_mmhr);
+
+
+    // ================= START OF NEW DEBUG BLOCK =================
+    // This will now print only ONCE per timestep, after the solver has finished.
+    if (ID == 0 && rain > 0.0) {
+        cout << "\n--- DEBUG (EvapPenmanMonteith - FINAL) | Node: " << ID << " | Time: " << timer->getCurrentTime() << " ---" << endl;
+        cout << "\tSolver has converged. Final values:" << endl;
+        cout << "\tINPUTS: Rain = " << rain << " mm/hr, Rstm = " << Rstm << " s/m, Rah = " << Rah << " s/m" << endl;
+        cout << "\tFLUXES (mm/hr):" << endl;
+        cout << "\t  Correct Potential Evap (rs=0) -> potEvap_noResist = " << potEvapNoResist_mmhr << endl;
+        cout << "\t  Flawed Potential Evap (rs>0)  -> potEvap          = " << potEvap << endl;
+        cout << "\t  Total Actual Evap             -> actEvap          = " << actEvap << endl;
+        cout << "\t  (raw LE = " << lFlux << " W/m2)" << endl;
+    }
+    // ================== END OF NEW DEBUG BLOCK ===================
 }
 
 /***************************************************************************

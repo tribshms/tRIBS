@@ -207,6 +207,9 @@ public:
   double getInitPackTime();//integratedoutput
   double getInitPackTimeTemp();
   double getPeakPackTime();//integratedoutput
+// DEBUG CJC 2025
+  double getPotEvap_noResist();//integratedoutput
+
   //snowintercept
   double getIntSWE();//state
   double getIntPrec();//flux
@@ -391,6 +394,8 @@ public:
   void setPorosity(double);
   void setVolHeatCond(double);
   void setSoilHeatCap(double);
+// DEBUG CJC 2025
+  void setPotEvap_noResist(double);//integratedoutput
 
   void setTTime(double);               //Routing Members
   void setHillPath(double);   
@@ -724,6 +729,8 @@ protected:
   double lFlux;
   double Gnod;
   double Aspect;
+// DEBUG CJC 2025
+  double PotEvap_noResist;
 
   //ASM 2/10/2017
   double ChannelPerc;
