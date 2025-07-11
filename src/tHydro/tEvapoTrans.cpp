@@ -381,7 +381,6 @@ void tEvapoTrans::initializeVariables()
 	inLongR = 0.0; outLongR = 0.0; inShortR = 0.0;  
 	dewTempC = 0.0; surfTempC = 0.0; atmPressC = 0.0;
 	rHumidityC = 0.0; skyCoverC = 0.0; netRadC = 0.0;
-	Epot_noResist = 0.0; // CJC 2025 DEBUG
 
     skycover_flag = 0;
 
@@ -1034,8 +1033,8 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 {
 	double potEvaporation, evapoTranspiration;
 	double evapWetCanopy, evapDryCanopy, evapSoil, CanStorage;
-	double cc, ra, rs, psy, transFactor, actEvaporation, ctos;
-	evapWetCanopy = evapDryCanopy = evapSoil = CanStorage = ctos = 0.0;
+	double cc, ra, rs, psy, transFactor, actEvaporation;
+	evapWetCanopy = evapDryCanopy = evapSoil = CanStorage = 0.0;
         potEvaporation = evapoTranspiration = 0.0; 
         cc = ra = rs = psy = transFactor = actEvaporation = 0.0;
 
@@ -1055,6 +1054,7 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		
 		// Call Beta function for transpiration
 		betaFuncT(cNode);
+		betaFunc(cNode);
 	
 		// Assign hydromet vars only if real rainfall data are used
 		// Assign (as spatially uniform) otherwise
@@ -1072,19 +1072,6 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		// The computed Latent Heat LE -
 		// - "pseudo-resistance" evaporation: transFactor*Ep
 		potEvaporation = cNode->getPotEvap();
-		double potEvaporation_wet_canopy = cNode->getPotEvap_noResist(); // CJC 2025 DEBUG
-
-        // ================= START OF DEBUG BLOCK 2 =================
-        if (ID == 0 && cNode->getRain() > 0.0) {
-            double currentCanopyStorage = 0.0;
-            if (Ioption == 1) currentCanopyStorage = cNode->getCumIntercept();
-            else if (Ioption == 2) currentCanopyStorage = cNode->getCanStorage();
-
-            cout << "\n--- DEBUG (ComputeETComponents) | Node: " << ID << " | Time: " << timer->getCurrentTime() << " ---" << endl;
-            cout << "\tINPUTS: Canopy Storage = " << currentCanopyStorage << " mm" << endl;
-            cout << "\t  'potEvaporation' retrieved from node = " << potEvaporation << " mm/hr (THIS IS THE FLAWED VALUE)" << endl;
-        }
-        // ================== END OF DEBUG BLOCK 2 ===================
 		
 		// The soil-moisture controlled evaporation: beta*transFactor*Ep
 		actEvaporation = cNode->getActEvap();
@@ -1110,32 +1097,33 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 			// Get quantities and make checks depending on Interception model
 			if (Ioption == 1) {
 				CanStorage = cNode->getCumIntercept();
-				ctos = 1.0;
+				// Evaporation from Wet Canopy
+				if (CanStorage >= potEvaporation*timer->getEtIStep())
+					evapWetCanopy = potEvaporation;
+				else {
+					evapWetCanopy = CanStorage/timer->getEtIStep(); 
+				}
+
+				// Sanity Check
+				if (evapWetCanopy > potEvaporation) {
+					evapWetCanopy = potEvaporation;
+				}
+
+				// Call to Interception  Model
+				Intercept->callInterception(cNode, potEvaporation);
 			}
 			else if (Ioption == 2) {
-				CanStorage = cNode->getCanStorage();
-				ctos = Intercept->getCtoS( cNode ); // To scale Ep
-				if (ctos > 1)
-					ctos = 1.0;
+				// Call to Interception  Model
+				Intercept->callInterception(cNode, potEvaporation);
+				// Retrieve wet can evap rate calculated by the rutter interception model.
+				evapWetCanopy = cNode->getEvapWetCanopy(); // sanity check done in tIntercept.cpp
 			}
-			
-			// Evaporation from Wet Canopy
-			// 'ctos' is C/S - that gives the term in the Rutter equation
-			if (CanStorage >= ctos*potEvaporation*timer->getEtIStep())
-				evapWetCanopy = potEvaporation;
-			else {
-				evapWetCanopy = CanStorage/timer->getEtIStep(); 
-				ctos = 1;
-			}
-			// Call to Interception  Model
-			Intercept->callInterception(cNode, potEvaporation);
 		}
 		else {
 			cNode->setNetPrecipitation(cNode->getRain());
+			// And wet canopy evaporation is zero
+			evapWetCanopy = 0.0;
 		}
-		
-		// The actual amount extracted from the canopy storage
-		evapWetCanopy *= ctos;
 		
 		// Evaporation from Dry Canopy:
 		//  If canopy is wet (C>=S) - transpiration does not occur
@@ -1155,7 +1143,14 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 
         }
         else{
-		evapSoil = (1-coeffV)*(actEvaporation);
+			// Orignal calculation but is likely not corrrect
+			// actEvaporation is the total that includes plants and trees
+			// It might've been like this to account for the fact that
+			// we don't have an understory model so this is "psuede-resitance"
+			//evapSoil = (1-coeffV)*(actEvaporation);
+
+			// Method listed in Ivanov et al. (2004) for bare soil evaporation
+			evapSoil = (1-coeffV)*potEvaporation*betaS;
         }
 
 		// Total Evapotranspiration
@@ -2601,7 +2596,6 @@ void tEvapoTrans::FunctionAndDerivative(tCNode* cNode,
 	netRadC = Rn;
 	gFlux   = G;
 	potEvap = Ep;
-	Epot_noResist = Eps; // CJC 2025 DEBUG
 	surfTempC = surfTemp = Tg - 273.15;
 	
 	if (simCtrl->Verbose_label == 'Y' && ID == VerbID && false) {
@@ -2784,25 +2778,6 @@ void tEvapoTrans::EvapPenmanMonteith(tCNode* cNode)
 {
 	potEvap = 3600.0*energyBalance(cNode);   // Actual rate, including resistances
 	actEvap = 3600.0*(lFlux/(latentHeat()));  
-
-    // Add this line to store the correct potential rate CJC 2025 DEBUG
-	double potEvapNoResist_mmhr = 3600.0 * Epot_noResist; 
-	cNode->setPotEvap_noResist(potEvapNoResist_mmhr);
-
-
-    // ================= START OF NEW DEBUG BLOCK =================
-    // This will now print only ONCE per timestep, after the solver has finished.
-    if (ID == 0 && rain > 0.0) {
-        cout << "\n--- DEBUG (EvapPenmanMonteith - FINAL) | Node: " << ID << " | Time: " << timer->getCurrentTime() << " ---" << endl;
-        cout << "\tSolver has converged. Final values:" << endl;
-        cout << "\tINPUTS: Rain = " << rain << " mm/hr, Rstm = " << Rstm << " s/m, Rah = " << Rah << " s/m" << endl;
-        cout << "\tFLUXES (mm/hr):" << endl;
-        cout << "\t  Correct Potential Evap (rs=0) -> potEvap_noResist = " << potEvapNoResist_mmhr << endl;
-        cout << "\t  Flawed Potential Evap (rs>0)  -> potEvap          = " << potEvap << endl;
-        cout << "\t  Total Actual Evap             -> actEvap          = " << actEvap << endl;
-        cout << "\t  (raw LE = " << lFlux << " W/m2)" << endl;
-    }
-    // ================== END OF NEW DEBUG BLOCK ===================
 }
 
 /***************************************************************************
@@ -5529,4 +5504,3 @@ void tEvapoTrans::readRestart(fstream & rStr)
 //
 //
 //=========================================================================
-
