@@ -784,7 +784,8 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
     airTemp = node->getAirTemp();
     airTempK = CtoK(airTemp);
 
-    precip = node->getRain() * coeffV; //precip scaled by veg fraction
+    precip = node->getRain(); // precip should not be scaled by vegfrac CJC 2025
+    // VF scaling here does not match tIntercept logic
     LAI = coeffLAI;
 
     //reinitialize snow interception model
@@ -907,16 +908,19 @@ void tSnowPack::callSnowIntercept(tCNode *node, tIntercept *interceptModel, int 
         Iold = I; //WR debug moved to below catch for I<0
 
         // SKY2008Snow based on AJR2008's recommendation ends here
-        //set adjusted fluxes and states to node
-        // because precip is now scaled by coeffV these values now only reflect fluxes and stores in the canopy
+
+        // Set adjusted fluxes and states to node
+        // Flux variables represent the flux averaged over the entire voronoi cell (scaled by veg fraction)
+        // State variables represent teh state of the canopy itself (un-scaled by veg fraction)
         node->setIntSWE(naughttocm * (1 / rholiqkg) * I); //length units in cm
-        node->setIntSnUnload(naughttocm * (1 / rholiqkg) * Lm);
-        node->setIntSub(naughttocm * (1 / rholiqkg) * Qcs);
-        node->addIntSub(naughttocm * (1 / rholiqkg) * Qcs);
-        node->addIntUnl(naughttocm * (1 / rholiqkg) * Lm);
+        node->setIntSnUnload(naughttocm * (1 / rholiqkg) * Lm * coeffV);
+        node->setIntSub(naughttocm * (1 / rholiqkg) * Qcs * coeffV);
+        node->addIntSub(naughttocm * (1 / rholiqkg) * Qcs * coeffV);
+        node->addIntUnl(naughttocm * (1 / rholiqkg) * Lm * coeffV);
         node->setIntPrec(Isnow * (1 / rholiqkg) * naughttocm);
-        // Rate for the _ENTIRE_ cell:
-        node->setNetPrecipitation(throughfall + (1 - coeffV) * node->getRain());
+        // Rain rate for the _ENTIRE_ cell:
+        double total_net_precip = (throughfall * coeffV) + (node->getRain() * (1 - coeffV));
+        node->setNetPrecipitation(total_net_precip);
         // note mm and kg/m^2 requires no conversion
 
         //set wet and dry evap to 0 when snow in canopy
