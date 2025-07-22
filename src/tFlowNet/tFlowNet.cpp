@@ -789,7 +789,14 @@ void tFlowNet::SurfaceFlow()
 				res->store_volume_Type( ttime, vRunoff, 4 ); 
 			}
 		}
-		
+		 // Fix for converting MDGW sloped depth to vertical depth CJC2025
+		// Get the slope correction factor for the current node.
+		tEdge *flowEdge = cn->getFlowEdg();
+		double cos_slope = cos(atan(flowEdge->getSlope()));
+		if (cos_slope < 1E-9) cos_slope = 1.E-9;
+		// Convert Nwt to a vertical depth.
+		double nwt_vertical = cn->getNwtNew() / cos_slope;
+
 		// Rainfall and Saturation Storage in tFlowResults
 		res->store_rain(0.0, AreaF*cn->getRain());
 		
@@ -806,7 +813,7 @@ void tFlowNet::SurfaceFlow()
 		if (cn->getSoilMoistureSC() >= 1)
 			res->store_saturation(0.0, AreaF, 3);
 		// Mean groundwater level
-		res->store_saturation(0.0, AreaF*cn->getNwtNew(), 4);
+		res->store_saturation(0.0, AreaF*nwt_vertical, 4);
 		//Mean Evapotranspiration
 		res->store_saturation(0.0, AreaF*cn->getEvapoTrans(), 5);
 

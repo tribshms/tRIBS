@@ -1091,6 +1091,17 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 		// Writing to a file dynamic variables of node of interest  
 		// The output format should be readable by ArcInfo & Matlab 
 		for (int i = 0; i < this->numNodes; i++) {
+
+			// --- START FIX ---
+			// Get the cosine of the slope for the current node to convert
+			// sloped depths to vertical depths for output.
+			tEdge *flowEdge = this->uzel[i]->getFlowEdg();
+			double slope_rad = atan(flowEdge->getSlope());
+			double cos_slope = cos(slope_rad);
+			// Add a check to prevent division by zero on perfectly vertical slopes, just in case.
+			if (cos_slope < 1E-9) cos_slope = 1.E-9; 
+			// --- END FIX ---
+
 #ifdef PARALLEL_TRIBS
   // Doesn't need to be less than active size
       if ( (this->uzel[i] != NULL) && (this->nodeList[i] >= 0) ) {
@@ -1099,15 +1110,15 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 #endif
 				this->pixinfo[i]<<setw(8)<<this->nodeList[i]
 				<<setw(13)<<extension<<" "
-				/* 3 */   <<setw(10)<<(this->uzel[i]->getNwtNew())<<" "
+				/* 3 */   <<setw(10)<<(this->uzel[i]->getNwtNew() / cos_slope)<<" "
 				
 				<<setprecision(7)
-				<<setw(6)<<this->uzel[i]->getNfNew()<<" "
-				/* 5 */	  <<setw(6)<<this->uzel[i]->getNtNew()<<" "
+				<<setw(6)<<this->uzel[i]->getNfNew() / cos_slope<<" "
+				/* 5 */	  <<setw(6)<<this->uzel[i]->getNtNew() / cos_slope<<" "
 				
 				<<setprecision(7)
-				<<setw(7)<<this->uzel[i]->getMuNew()<<" "
-				<<setw(7)<<this->uzel[i]->getMiNew()<<"   "
+				<<setw(7)<<this->uzel[i]->getMuNew() / cos_slope<<" "
+				<<setw(7)<<this->uzel[i]->getMiNew() / cos_slope<<"   "
 				
 				<<setprecision(7)
 				<<setw(10)<<this->uzel[i]->getQpout()*1.E-6/this->uzel[i]->getVArea()<<"  "
@@ -1314,12 +1325,19 @@ void tCOutput<tSubNode>::WriteDynamicVars( double time )
 	
 	cn = ni.FirstP();
     while (ni.IsActive()) {
+
+    // --- START FIX ---
+    tEdge *flowEdge = cn->getFlowEdg();
+    double slope_rad = atan(flowEdge->getSlope());
+    double cos_slope = cos(slope_rad);
+    if (cos_slope < 1E-9) cos_slope = 1.E-9;
+    // --- END FIX ---
         arcofs << cn->getID() << ',' // 1
-               << setprecision(5) << cn->getNwtNew() << ',' // 2
-               << setprecision(5) << cn->getMuNew() << ',' // 3
-               << setprecision(5) << cn->getMiNew() << ',' // 4
-               << setprecision(5) << cn->getNfNew() << ',' // 5
-               << setprecision(5) << cn->getNtNew() << ',' // 6
+               << setprecision(5) << cn->getNwtNew() / cos_slope << ',' // 2
+               << setprecision(5) << cn->getMuNew() / cos_slope << ',' // 3
+               << setprecision(5) << cn->getMiNew() / cos_slope << ',' // 4
+               << setprecision(5) << cn->getNfNew() / cos_slope << ',' // 5
+               << setprecision(5) << cn->getNtNew() / cos_slope << ',' // 6
                << setprecision(5) << cn->getQpout() * 1.E-6 / cn->getVArea() << ',' // 7
                << cn->getQpin() * 1.E-6 / cn->getVArea() << ',' // 8
                << setprecision(4) << cn->getSrf_Hr()  << ',' // 9 in mm (mm of runoff reset to 0 every hour)
@@ -1397,6 +1415,29 @@ void tCOutput<tSubNode>::WriteDynamicVarsBinary( double time )
 	tSubNode* cn;
 	tMeshListIter<tCNode> niter(this->g->getNodeList());
 	int hour = (int)floor(time);
+    int nActiveNodes = this->g->getNodeList()->getActiveSize(); // Get number of nodes for array sizing
+
+    // Create temporary arrays to hold the corrected vertical depths for all nodes.
+    float* nwt_vert = new float[nActiveNodes];
+    float* nf_vert = new float[nActiveNodes];
+    float* nt_vert = new float[nActiveNodes];
+    float* mu_vert = new float[nActiveNodes];
+
+    // Loop through the nodes once to populate all temporary arrays.
+    int i = 0;
+    for (cn = niter.FirstP(); niter.IsActive(); cn = niter.NextP(), i++) {
+        // Calculate cos_slope just once per node in this single loop.
+        tEdge *flowEdge = cn->getFlowEdg();
+        double slope_rad = atan(flowEdge->getSlope());
+        double cos_slope = cos(slope_rad);
+        if (cos_slope < 1E-9) cos_slope = 1.E-9;
+
+        // Apply correction and store in the corresponding temporary array.
+        nwt_vert[i] = (float)(cn->getNwtNew() / cos_slope);
+        nf_vert[i]  = (float)(cn->getNfNew()  / cos_slope);
+        nt_vert[i]  = (float)(cn->getNtNew()  / cos_slope);
+        mu_vert[i]  = (float)(cn->getMuNew()  / cos_slope);
+    }
 
 	char extension[20];
 	snprintf(extension,sizeof(extension), "_dyn.%04d", hour);
@@ -1405,13 +1446,20 @@ void tCOutput<tSubNode>::WriteDynamicVarsBinary( double time )
 	this->CreateAndOpenVizFile(&ostr, extension);
 
 	for (cn = niter.FirstP(); niter.IsActive(); cn = niter.NextP())
-		BinaryWrite(ostr, (float) cn->getNwtNew());
+		BinaryWrite(ostr, (float) nwt_vert[i]);
 	for (cn = niter.FirstP(); niter.IsActive(); cn = niter.NextP())
-		BinaryWrite(ostr, (float) cn->getNfNew());
+		BinaryWrite(ostr, (float) nf_vert[i]);
 	for (cn = niter.FirstP(); niter.IsActive(); cn = niter.NextP())
-		BinaryWrite(ostr, (float) cn->getNtNew());
+		BinaryWrite(ostr, (float) nt_vert[i]);
 	for (cn = niter.FirstP(); niter.IsActive(); cn = niter.NextP())
-		BinaryWrite(ostr, (float) cn->getMuNew());
+		BinaryWrite(ostr, (float) mu_vert[i]);
+
+    // 4. Clean up the memory allocated for the temporary arrays.
+    delete[] nwt_vert;
+    delete[] nf_vert;
+    delete[] nt_vert;
+    delete[] mu_vert;
+
 	for (cn = niter.FirstP(); niter.IsActive(); cn = niter.NextP())
 		BinaryWrite(ostr, (float) cn->getQpout());
 	for (cn = niter.FirstP(); niter.IsActive(); cn = niter.NextP())
@@ -1496,21 +1544,49 @@ void tCOutput<tSubNode>::WriteDynamicVar( double time )
 		//for (int i = 0; i < 19; i++) {
 		for (int i = 0; i < 36; i++) {  // SKY2008Snow from AJR2007
 			this->dynvars[i]<<extension<<" ";
-			if (i == 0)
-				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() )
-					this->dynvars[i]<<setprecision(5)<<cn->getNwtNew()<<" ";
-			else if (i == 1)
-				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() )
-					this->dynvars[i]<<setprecision(5)<<cn->getNfNew()<<" ";
-			else if (i == 2)
-				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() )
-					this->dynvars[i]<<setprecision(5)<<cn->getNtNew()<<" ";
-			else if (i == 3)
-				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() )
-					this->dynvars[i]<<setprecision(5)<<cn->getMuNew()<<" ";
-			else if (i == 4)
-				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() )
-					this->dynvars[i]<<setprecision(5)<<cn->getMiNew()<<" ";
+
+			// Begin fix converting soil state variables into vertical depths CJC 2025
+			// Code is very inefcient, grabbing slope for each variable but this function is for debugging only
+			if (i == 0) { // _Nwt
+				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() ) {
+                    tEdge *flowEdge = cn->getFlowEdg();
+                    double cos_slope = cos(atan(flowEdge->getSlope()));
+                    if (cos_slope < 1E-9) cos_slope = 1.E-9;
+					this->dynvars[i]<<setprecision(5)<<(cn->getNwtNew() / cos_slope)<<" ";
+                }
+            }
+			else if (i == 1) { // _Nf
+				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() ) {
+                    tEdge *flowEdge = cn->getFlowEdg();
+                    double cos_slope = cos(atan(flowEdge->getSlope()));
+                    if (cos_slope < 1E-9) cos_slope = 1.E-9;
+					this->dynvars[i]<<setprecision(5)<<(cn->getNfNew() / cos_slope)<<" ";
+                }
+            }
+			else if (i == 2) { // _Nt
+				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() ) {
+                    tEdge *flowEdge = cn->getFlowEdg();
+                    double cos_slope = cos(atan(flowEdge->getSlope()));
+                    if (cos_slope < 1E-9) cos_slope = 1.E-9;
+					this->dynvars[i]<<setprecision(5)<<(cn->getNtNew() / cos_slope)<<" ";
+                }
+            }
+			else if (i == 3) { // _Mu
+				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() ) {
+                    tEdge *flowEdge = cn->getFlowEdg();
+                    double cos_slope = cos(atan(flowEdge->getSlope()));
+                    if (cos_slope < 1E-9) cos_slope = 1.E-9;
+					this->dynvars[i]<<setprecision(5)<<(cn->getMuNew() / cos_slope)<<" ";
+                }
+            }
+			else if (i == 4) { // _Mi
+				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() ) {
+                    tEdge *flowEdge = cn->getFlowEdg();
+                    double cos_slope = cos(atan(flowEdge->getSlope()));
+                    if (cos_slope < 1E-9) cos_slope = 1.E-9;
+					this->dynvars[i]<<setprecision(5)<<(cn->getMiNew() / cos_slope)<<" ";
+                }
+            }
 			else if (i == 5)
 				for ( cn=ni.FirstP(); ni.IsActive(); cn=ni.NextP() )
 					this->dynvars[i]<<setprecision(8)<<cn->getQpout()*1.E-6/cn->getVArea()<<" ";
