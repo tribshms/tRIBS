@@ -105,8 +105,6 @@ tCNode::tCNode() :tNode()
 	IntercepCoeffInPrevGrid = IntercepCoeffInUntilGrid = CanFieldCapInPrevGrid = CanFieldCapInUntilGrid = 0.0;
 	DrainCoeffInPrevGrid = DrainCoeffInUntilGrid = DrainExpParInPrevGrid = DrainExpParInUntilGrid = 0.0;
 	OptTransmCoeffInPrevGrid = OptTransmCoeffInUntilGrid = LeafAIInPrevGrid = LeafAIInUntilGrid = 0.0;
-// DEBUG CJC 2025
-  PotEvap_noResist = 0.0;
 
 	// SKYnGM2008LU
 	AvCanStorParam = AvIntercepCoeff = AvThroughFall = AvCanFieldCap = 0.0;
@@ -239,8 +237,6 @@ tCNode::tCNode(tInputFile &infile) :tNode() {
 	IntercepCoeffInPrevGrid = IntercepCoeffInUntilGrid = CanFieldCapInPrevGrid = CanFieldCapInUntilGrid = 0.0;
 	DrainCoeffInPrevGrid = DrainCoeffInUntilGrid = DrainExpParInPrevGrid = DrainExpParInUntilGrid = 0.0;
 	OptTransmCoeffInPrevGrid = OptTransmCoeffInUntilGrid = LeafAIInPrevGrid = LeafAIInUntilGrid = 0.0;
-// DEBUG CJC 2025
-  PotEvap_noResist = 0.0;
 
 	// SKYnGM2008LU
 	AvCanStorParam = AvIntercepCoeff = AvThroughFall = AvCanFieldCap = 0.0;
@@ -556,8 +552,6 @@ double tCNode::getPeakSWETemp() {return peakSWEtemp;}
 double tCNode::getInitPackTime() {return initPackTime;}
 double tCNode::getInitPackTimeTemp() {return initPackTimeTemp;}
 double tCNode::getPeakPackTime() {return peakPackTime;}
-// DEBUG CJC 2025
-double tCNode::getPotEvap_noResist() {return PotEvap_noResist;}
 // snowintercept -- RINEHART 2007 @ NMT
 double tCNode::getIntSWE() {return intSWEq;}//state
 double tCNode::getIntPrec() {return intPrec;}//flux 
@@ -827,8 +821,6 @@ void tCNode::setOptTransmCoeffInPrevGrid(double value) { OptTransmCoeffInPrevGri
 void tCNode::setOptTransmCoeffInUntilGrid(double value) { OptTransmCoeffInUntilGrid = value; }
 void tCNode::setLeafAIInPrevGrid(double value) { LeafAIInPrevGrid = value; }
 void tCNode::setLeafAIInUntilGrid(double value) { LeafAIInUntilGrid = value; }
-// DEBUG CJC 2025
-void tCNode::setPotEvap_noResist(double value) { PotEvap_noResist = value; }
 
 // SKYnGM2008LU
 void tCNode::setAvCanStorParam(double value) { AvCanStorParam = value; }

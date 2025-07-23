@@ -1092,6 +1092,7 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		rs = stomResist();
 		transFactor = (cc + psy)/(cc + psy*(1+rs/ra));
 		
+		// Code block modified to accoutn for changes to evapWetCanopy calculation in tIntercept:InterceptRutter CJC2025
 		// Check if the interception scheme is turned on
 		if ( flag && (coeffV > 0) && Intercept->IsThereCanopy( cNode )) {
 			// Get quantities and make checks depending on Interception model
