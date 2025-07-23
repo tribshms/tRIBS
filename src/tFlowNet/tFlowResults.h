@@ -133,6 +133,7 @@ public:
   double *intunl;		// Mean int unloading in space
   double *sca;			// Fraction snow covered area
   double *Perc; 	// Percolation from the channel bottom ASM percolation option
+  double *qunsat;		// Mean net flow froom unsaturated zone CJC2025
 
   int *fState;                  // Forecast state
 

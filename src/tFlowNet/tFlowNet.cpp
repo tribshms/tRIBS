@@ -856,6 +856,8 @@ void tFlowNet::SurfaceFlow()
 		res->store_saturation(0.0, AreaF*cn->getSnSub(),21);// Calculated mean snowpack sublimation CJC2020 
 			//Mean SnSub
 		res->store_saturation(0.0, AreaF*cn->getSnEvap(),22);// Calculated mean snowpack sublimation CJC2020
+		//Mean Qunsat
+		res->store_saturation(0.0, AreaF*(cn->getQpout() - cn->getQpin()) * 1.E-6 / cn->getVArea(),24); // CJC 2025
 
         //ASM Percolation option
         if (percolationOption != 0)
