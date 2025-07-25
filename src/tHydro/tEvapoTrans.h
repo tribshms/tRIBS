@@ -168,7 +168,6 @@ class tEvapoTrans
   double coeffKs{}, coeffCs{}, coeffPan{};
   // SKY2008Snow from AJR2007
   double coeffLAI{};
-
   double Rah{}, Rstm{};
   double SoilHeatCondTh{}, SoilHeatCpctTh{}, SoilHeatDiffTh{};
   double potEvap{}, actEvap{}, panEvap{}, betaS{}, betaT{};

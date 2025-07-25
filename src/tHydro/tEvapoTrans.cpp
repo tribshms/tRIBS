@@ -1033,8 +1033,8 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 {
 	double potEvaporation, evapoTranspiration;
 	double evapWetCanopy, evapDryCanopy, evapSoil, CanStorage;
-	double cc, ra, rs, psy, transFactor, actEvaporation, ctos;
-	evapWetCanopy = evapDryCanopy = evapSoil = CanStorage = ctos = 0.0;
+	double cc, ra, rs, psy, transFactor, actEvaporation;
+	evapWetCanopy = evapDryCanopy = evapSoil = CanStorage = 0.0;
         potEvaporation = evapoTranspiration = 0.0; 
         cc = ra = rs = psy = transFactor = actEvaporation = 0.0;
 
@@ -1054,6 +1054,7 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		
 		// Call Beta function for transpiration
 		betaFuncT(cNode);
+		betaFunc(cNode);
 	
 		// Assign hydromet vars only if real rainfall data are used
 		// Assign (as spatially uniform) otherwise
@@ -1091,37 +1092,39 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		rs = stomResist();
 		transFactor = (cc + psy)/(cc + psy*(1+rs/ra));
 		
+		// Code block modified to accoutn for changes to evapWetCanopy calculation in tIntercept:InterceptRutter CJC2025
 		// Check if the interception scheme is turned on
 		if ( flag && (coeffV > 0) && Intercept->IsThereCanopy( cNode )) {
 			// Get quantities and make checks depending on Interception model
 			if (Ioption == 1) {
 				CanStorage = cNode->getCumIntercept();
-				ctos = 1.0;
+				// Evaporation from Wet Canopy
+				if (CanStorage >= potEvaporation*timer->getEtIStep())
+					evapWetCanopy = potEvaporation;
+				else {
+					evapWetCanopy = CanStorage/timer->getEtIStep(); 
+				}
+
+				// Sanity Check
+				if (evapWetCanopy > potEvaporation) {
+					evapWetCanopy = potEvaporation;
+				}
+
+				// Call to Interception  Model
+				Intercept->callInterception(cNode, potEvaporation);
 			}
 			else if (Ioption == 2) {
-				CanStorage = cNode->getCanStorage();
-				ctos = Intercept->getCtoS( cNode ); // To scale Ep
-				if (ctos > 1)
-					ctos = 1.0;
+				// Call to Interception  Model
+				Intercept->callInterception(cNode, potEvaporation);
+				// Retrieve wet can evap rate calculated by the rutter interception model.
+				evapWetCanopy = cNode->getEvapWetCanopy(); // sanity check done in tIntercept.cpp
 			}
-			
-			// Evaporation from Wet Canopy
-			// 'ctos' is C/S - that gives the term in the Rutter equation
-			if (CanStorage >= ctos*potEvaporation*timer->getEtIStep())
-				evapWetCanopy = potEvaporation;
-			else {
-				evapWetCanopy = CanStorage/timer->getEtIStep(); 
-				ctos = 1;
-			}
-			// Call to Interception  Model
-			Intercept->callInterception(cNode, potEvaporation);
 		}
 		else {
 			cNode->setNetPrecipitation(cNode->getRain());
+			// And wet canopy evaporation is zero
+			evapWetCanopy = 0.0;
 		}
-		
-		// The actual amount extracted from the canopy storage
-		evapWetCanopy *= ctos;
 		
 		// Evaporation from Dry Canopy:
 		//  If canopy is wet (C>=S) - transpiration does not occur
@@ -1141,7 +1144,14 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 
         }
         else{
-		evapSoil = (1-coeffV)*(actEvaporation);
+			// Orignal calculation but is likely not corrrect
+			// actEvaporation is the total that includes plants and trees
+			// It might've been like this to account for the fact that
+			// we don't have an understory model so this is "psuede-resitance"
+			//evapSoil = (1-coeffV)*(actEvaporation);
+
+			// Method listed in Ivanov et al. (2004) for bare soil evaporation
+			evapSoil = (1-coeffV)*potEvaporation*betaS;
         }
 
 		// Total Evapotranspiration
@@ -5495,4 +5505,3 @@ void tEvapoTrans::readRestart(fstream & rStr)
 //
 //
 //=========================================================================
-

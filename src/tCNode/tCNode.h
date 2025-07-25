@@ -207,6 +207,7 @@ public:
   double getInitPackTime();//integratedoutput
   double getInitPackTimeTemp();
   double getPeakPackTime();//integratedoutput
+
   //snowintercept
   double getIntSWE();//state
   double getIntPrec();//flux
@@ -391,7 +392,6 @@ public:
   void setPorosity(double);
   void setVolHeatCond(double);
   void setSoilHeatCap(double);
-
   void setTTime(double);               //Routing Members
   void setHillPath(double);   
   void setStreamPath(double); 
