@@ -1144,14 +1144,11 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 
         }
         else{
-			// Orignal calculation but is likely not corrrect
-			// actEvaporation is the total that includes plants and trees
-			// It might've been like this to account for the fact that
-			// we don't have an understory model so this is "psuede-resitance"
-			//evapSoil = (1-coeffV)*(actEvaporation);
+			// Original method for bare soil evaporation
+			evapSoil = (1-coeffV)*(actEvaporation);
 
 			// Method listed in Ivanov et al. (2004) for bare soil evaporation
-			evapSoil = (1-coeffV)*potEvaporation*betaS;
+			//evapSoil = (1-coeffV)*potEvaporation*betaS;
         }
 
 		// Total Evapotranspiration
@@ -1426,39 +1423,38 @@ double tEvapoTrans::densityMoist()
 ** input to the model as coeffV.
 **
 ***************************************************************************/
-double tEvapoTrans::aeroResist() 
-{
+double tEvapoTrans::aeroResist() {
 	double vonKarm = 0.41;
 	double ra, vegHeight, vegFrac, vegBare;
 	double zm, zom, zov, d, rav, ras;
-	
+
 	if (coeffH == 0)
 		vegHeight = 0.1;
-	else 
+	else
 		vegHeight = coeffH;
-	
+
 	vegBare = 1.0;   //ERV 04/2009 used to be 0.1
 	vegFrac = coeffV;
-	
+
 	if (windSpeed == 0.0 || fabs(windSpeed-9999.99)<1.0E-3)
 		windSpeedC = 0.1;    //Minimum wind speed (m/s)
 	else
 		windSpeedC = windSpeed;
-	
+
 	zm = 2.0 + vegHeight;
 	zom = 0.123*vegHeight;
 	zov = 0.0123*vegHeight;
 	d = 0.67*vegHeight;
 	rav = log((zm-d)/zom)*log((zm-d)/zov)/(windSpeedC*pow(vonKarm,2.0));
-	
+
 	zm = 2.0 + vegBare;
 	zom = 0.123*vegBare;
 	zov = 0.0123*vegBare;
 	d = 0.67*vegBare;
 	ras = log((zm-d)/zom)*log((zm-d)/zov)/(windSpeedC*pow(vonKarm,2.0));
-	
+
 	ra = (1-vegFrac)*ras + vegFrac*rav;
-	
+
 	return ra;
 }
 
