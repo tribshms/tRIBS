@@ -1178,11 +1178,25 @@ double tSnowPack::densityFromAge() {
 double tSnowPack::latentHFCalc(double Kaero) {
 
     double lhf;
-    if (snTempC == 0.0)
+    double snTemp_corr = snTempC;
+
+    // If snowpack has liquid then make sure temp isn't below 0C
+    if (liqWE > 1e-5) {
+        snTemp_corr = 0.0;
+    }
+
+    // If the snow surface is at or above the melting point, the process is evaporation.
+    if (snTemp_corr == 0.0) {
+        // Use latent heat of vaporization.
         lhf = (latVapkJ * 0.622 * rhoAir * Kaero * (vPress - 6.111) / atmPress); //evaporation by THM 2012
-    else
-        lhf = (latSubkJ * 0.622 * rhoAir * Kaero * (vPress - 6.112 * exp((17.67 * snTempC) / (snTempC + 243.5))) /
+    // If the snow surface is frozen, the process is sublimation.
+    } else {
+        // Use latent heat of sublimation.
+        // Should we be using Clausius-Clapeyron here for the vapor pressure (liquid water) or should it be for ice?
+        // Could use Magnus-Tetens formula for ice vapor pressure.
+        lhf = (latSubkJ * 0.622 * rhoAir * Kaero * (vPress - 6.112 * exp((17.67 * snTemp_corr) / (snTemp_corr + 243.5))) /
                atmPress); //sublimation by THM 2012
+    }
     return lhf;
 }
 
@@ -1203,8 +1217,14 @@ double tSnowPack::latentHFCalc(double Kaero) {
 double tSnowPack::sensibleHFCalc(double Kaero) {
 
     double shf;
+    double snTemp_corr = snTempC;
 
-    shf = (rhoAir * cpairkJ * Kaero * ((airTemp + 273.15) - (snTempC + 273.15)));
+    // If snowpack has liquid then make sure temp isn't below 0C
+    if (liqWE > 1e-5) {
+        snTemp_corr = 0.0;
+    }
+
+    shf = (rhoAir * cpairkJ * Kaero * ((airTemp + 273.15) - (snTemp_corr + 273.15)));
     return shf;
 }
 
@@ -1317,10 +1337,25 @@ double tSnowPack::precipitationHFCalc() {
 double tSnowPack::agingAlbedo() {
     double alb;
 
-    if (liqWE < 1e-5)
-        alb = 0.85 * pow(0.94, pow(crustAge / 24, 0.58)); // dry snow
-    else
-        alb = 0.85 * pow(0.82, pow(crustAge / 24, 0.46)); // wet snow
+    // Albedo Parameters for Central Arizona
+    // Based on Sun et al. (2019) and general values for dusty, ephemeral snowpacks.
+    const double snInitialAlbedo = 0.85; // Albedo of fresh, new snow.
+    const double snLambdaDry     = 0.96; // Decay factor for dry snow aging.
+    const double snLambdaWet     = 0.87; // Faster decay factor for wet/melting snow.
+    const double snMinAlbedo     = 0.45; // Minimum albedo for old, "dirty" snow.
+
+    if (liqWE < 1.0E-5) {
+        // Dry snow aging
+        alb = snInitialAlbedo * pow(snLambdaDry, pow(crustAge / 24.0, 0.58));
+    } else {
+        // Wet snow aging
+        alb = snInitialAlbedo * pow(snLambdaWet, pow(crustAge / 24.0, 0.46));
+    }
+
+    // Enforce the minimum albedo floor
+    if (alb < snMinAlbedo) {
+        alb = snMinAlbedo;
+    }
 
     return alb;
 }
@@ -1337,68 +1372,99 @@ double tSnowPack::agingAlbedo() {
 //-----------------------------------------------------------------------------------
 
 double tSnowPack::resFactCalc() {
-
+    const double vonKarm = 0.41;
+    const double g = 9.81;
+    double windSpeedC, windSpeedS; // windspeed 2 meters above canopy & snow/surface JB2025 @ASU
     double rf, ra;
-    double vonKarm = 0.41;
-    double vegHeight, vegFrac, vegBare, windSpeedBare;
+    double vegHeight, vegFrac, vegBare;
     double zm, zom, zov, d, rav, ras;
+	double Ri_cr = 0.1;  // Critical Richardson number, 0.2 is the most aggresive
 
-    if (coeffH <= 0)
-        vegHeight = 0.1;
-    else
-        vegHeight = coeffH; // vegHeight in meters
+    windSpeedC = (windSpeed == 0.0 || fabs(windSpeed - 9999.99) < 1e-3) ? 0.01 : windSpeed;
 
-    vegHeight = coeffH;
+    // Vegetation height adjusted for snow
+    vegHeight = (coeffH <= 0) ? 0.1 : coeffH;
+    vegHeight = (vegHeight > snDepthm) ? vegHeight - snDepthm : 0.1;
 
-    //WR debug 05/12/2024 the below code appears to be modified for a specific project, there is no reason
-    // to reset veg height below 1 or reset coeffV.The latter in particular is important since
-    // coeffV exists outside the scope of resFactCalc and is subsequently used to calculate snow sublimation.
-    //THM 2012 added for grassland
-    //    if (coeffH < 1) {
-    //        vegHeight = coeffH / 250;
-    //        coeffV = 0.1;
-    //    } else {
-    //        vegHeight = coeffH;
-    //    }
-
-    if (vegHeight > snDepthm) {
-        vegHeight = vegHeight - snDepthm;
-    } else {
-        vegHeight = 0.1; // aka height of snow
-    }
-
-    vegBare = 0.1; // height of bare soilc
-
+    vegBare = 0.1;
     vegFrac = coeffV;
-
-    if (windSpeed == 0.0 || fabs(windSpeed - 9999.99) < 1e-3) {
-        windSpeedC = 0.01;    //Minimum wind speed (m/s)
-    } else {
-        windSpeedC = windSpeed;
-    }
 
     // Compute below canopy windspeed at snow surface following equation Moreno et al. (2016) CJC 2020
     if (snDepthm < coeffH) {
-        windSpeedC = windSpeedC * exp(-0.5 * coeffLAI * (1 - (snDepthm / coeffH)));
+        windSpeedS = windSpeedC * exp(-0.5 * coeffLAI * (1.0 - (snDepthm / coeffH)));
+    } else {
+        windSpeedS = windSpeedC;  // No canopy attenuation
     }
 
-    // Compute aerodynamic resistance for vegetation
+    // --- Aerodynamic resistance for vegetation ---
     zm = 2.0 + vegHeight;
-    zom = 0.13 * vegHeight;
-    zov = 0.013 * vegHeight;
+    zom = 0.123 * vegHeight;
+    zov = 0.0123 * vegHeight;
     d = 0.67 * vegHeight;
-    rav = log((zm - d) / zom) * log((zm - d) / zov) / (windSpeedC * pow(vonKarm, 2));
 
-    // Compute aerodynamic resistance for bare soil
+    rav = log((zm - d) / zom) * log((zm - d) / zov) / (windSpeedC * pow(vonKarm, 2)); //Uses canopy level wind speed
+
+    // --- Aerodynamic resistance for bare soil ---
     zm = 2.0 + vegBare;
-    zom = 0.13 * vegBare;
-    zov = 0.013 * vegBare;
+    zom = 0.123 * vegBare;
+    zov = 0.0123 * vegBare;
     d = 0.67 * vegBare;
 
-    ras = log((zm - d) / zom) * log((zm - d) / zov) / (windSpeedC * pow(vonKarm, 2));
+    ras = log((zm - d) / zom) * log((zm - d) / zov) / (windSpeedS * pow(vonKarm, 2)); // Uses snow/surface level wind
 
+    // Weighted resistance
     ra = (1 - vegFrac) * ras + vegFrac * rav;
-    rf = 1 / ra; // Otherwise known as kaero
+
+    // If snowpack has liquid then make sure snow temp isn't below 0C
+    double Ts; // Snow temperature in K
+    if (liqWE > 1e-5) {
+        Ts = 273.15;
+    } else {
+        Ts = snTempC + 273.15; 
+    }
+
+    double Ta = airTemp + 273.15;    // Air temp in K
+    double T_avg = 0.5 * (Ta + Ts);  // Mean temp
+    // Effective vertical distance between reference air temperature (2 m AGL) and snow surface.
+    // If snow depth exceeds 2 m, zm_eff becomes negative or zero, which is non-physical.
+    // Clamp to minimum of 0.1 m to preserve numerical stability in RiB calculation.
+    double zm_eff = std::max(0.1, 2.0 - snDepthm);
+    double z0 = 0.123 * vegHeight;    // Roughness length, same as zom above
+
+    // Considering atmospheric stability, Andreadis et al. (2009), JB2025 @ASU
+    // https://doi.org/10.1029/2008WR007042
+
+    // Bulk Richardson Number (Eq. 17)
+    // Use windSpeedS (attenuated wind at snow surface) in RiB calc.
+    // Though Ta is from 2m AGL, we prioritize the snow–air interface.
+    // This matches the aerodynamic resistance formulation and maintains internal consistency.
+    double RiB = (g * zm_eff * (Ta - Ts)) / (T_avg * windSpeedS* windSpeedS);
+
+    // Compute upper limit Ri_u (Eq. 24)
+    double Ri_u = 1.0 / (log(zm_eff / z0) + 5.0);
+
+    // Stability correction factor
+    double C_stab;
+    if (RiB < 0.0) {
+        // Unstable conditions (Eq. 19)
+        C_stab = pow(1.0 - 16.0 * RiB, 0.5);
+    } else if (RiB <= Ri_u) {
+        // Stable but not extreme (Eq. 25)
+        C_stab = 1.0 / pow(1.0 - (RiB / Ri_cr), 2.0);
+    } else {
+        // Very stable, capped (Eq. 26)
+        C_stab = 1.0 / pow(1.0 - (Ri_u / Ri_cr), 2.0);
+    }
+
+	// Clamp the stability correction factor to a reasonable range
+	// As RiB approaches Ri_cr, C_stab approaches infinity, so we limit it
+	if (C_stab > 15.0) { C_stab = 15.0; } // kaero can at most be 15 times the original value
+
+    // Apply correction to aerodynamic resistance
+    ra *= C_stab;
+
+    // Convert resistance to conductance
+    rf = 1.0 / ra; // Otherwise known as kaero
 
     return rf;
 }
