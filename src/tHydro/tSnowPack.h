@@ -200,6 +200,12 @@ protected:
   double compactParam, rhoSnFreshkg;
   double minSnTemp;
   double snliqfrac; // Added by CJC2020
+  double richCrit; //  Richardson number JB2025 @ ASU
+  // Albedo Parameters to infile JB2025 @ ASU
+  double snInitialAlbedo; // Initial albedo
+  double snMinAlbedo;     // Minimum possible albedo
+  double snLambdaDry;     // Albedo decay shape parameter dry
+  double snLambdaWet;     // Albedo decay shape parameter wet
 
   //output variables
   double snDepth,snDepthm; //snow depths (cm,m)

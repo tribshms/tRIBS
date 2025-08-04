@@ -75,6 +75,14 @@ void tSnowPack::SetSnowPackVariables(tInputFile &infile) {
     //parameters
     minSnTemp = infile.ReadItem(minSnTemp, "MINSNTEMP");
     snliqfrac = infile.ReadItem(snliqfrac, "SNLIQFRAC"); // Added by CJC 2020
+    richCrit = infile.ReadItem(richCrit, "RICHCRIT"); // JB2025 @ ASU
+
+    // Read Albedo Parameters JB2025 @ ASU
+    snInitialAlbedo = infile.ReadItem(snInitialAlbedo, "SNINITIALALBEDO");
+    snMinAlbedo = infile.ReadItem(snMinAlbedo, "SNMINALBEDO");
+    snLambdaDry = infile.ReadItem(snLambdaDry, "SNLAMBDADRY");
+    snLambdaWet = infile.ReadItem(snLambdaWet, "SNLAMBDAWET");
+
     hillAlbedoOption = infile.ReadItem(hillAlbedoOption, "HILLALBOPT");
     densityAge = 0.0;
     ETAge = 0.0;
@@ -1317,13 +1325,20 @@ double tSnowPack::precipitationHFCalc() {
     return phf;
 }
 
+    // Albedo Parameters for Central Arizona
+    // Based on Sun et al. (2019) and general values for dusty, ephemeral snowpacks.
+    // const double snInitialAlbedo = 0.85; // Albedo of fresh, new snow.
+    // const double snLambdaDry     = 0.96; // Decay factor for dry snow aging.
+    // const double snLambdaWet     = 0.87; // Faster decay factor for wet/melting snow.
+    // const double snMinAlbedo     = 0.45; // Minimum albedo for old, "dirty" snow.
+
 //-----------------------------------------------------------------------------------
 //
 //				tSnowPack::agingAlbedo()
 //
 //	Returns the effective albedo of the surface for a given age of the snow
 //	surface. This mainly is in response to crystal structure changes but also
-//	heuristically deals with increased amounts of incorporated dust. It has 
+//	heuristically deals with increased amounts of incorporated dust. It has
 //	two sets of curves. The first is during the accumulation period, assumed
 //	to have predominantly dry snow; and the second is for during the melt period,
 //	assumed to have wet snow.
@@ -1333,27 +1348,20 @@ double tSnowPack::precipitationHFCalc() {
 //								  Modification.
 //
 //-----------------------------------------------------------------------------------
-
 double tSnowPack::agingAlbedo() {
     double alb;
 
-    // Albedo Parameters for Central Arizona
-    // Based on Sun et al. (2019) and general values for dusty, ephemeral snowpacks.
-    const double snInitialAlbedo = 0.85; // Albedo of fresh, new snow.
-    const double snLambdaDry     = 0.96; // Decay factor for dry snow aging.
-    const double snLambdaWet     = 0.87; // Faster decay factor for wet/melting snow.
-    const double snMinAlbedo     = 0.45; // Minimum albedo for old, "dirty" snow.
-
-    if (liqWE < 1.0E-5) {
+    // Using Sun et al. (2019) AZ/NM parameters for alpha_initial (0.83), lambda_dry(0.96), (0.87) lambda_wet
+    if (liqWE < 1e-5) {
         // Dry snow aging
-        alb = snInitialAlbedo * pow(snLambdaDry, pow(crustAge / 24.0, 0.58));
+        alb = snInitialAlbedo * pow(snLambdaDry, pow(crustAge / 24, 0.58)); // <-- USE NEW VARS
     } else {
         // Wet snow aging
-        alb = snInitialAlbedo * pow(snLambdaWet, pow(crustAge / 24.0, 0.46));
+        alb = snInitialAlbedo * pow(snLambdaWet, pow(crustAge / 24, 0.46)); // <-- USE NEW VARS
     }
 
-    // Enforce the minimum albedo floor
-    if (alb < snMinAlbedo) {
+    // Enforce the minimum albedo
+    if (alb < snMinAlbedo) { // <-- USE NEW VARS
         alb = snMinAlbedo;
     }
 
@@ -1378,7 +1386,7 @@ double tSnowPack::resFactCalc() {
     double rf, ra;
     double vegHeight, vegFrac, vegBare;
     double zm, zom, zov, d, rav, ras;
-	double Ri_cr = 0.1;  // Critical Richardson number, 0.2 is the most aggresive
+	double Ri_cr = richCrit;  // Critical Richardson number, 0.2 is the most aggressive
 
     windSpeedC = (windSpeed == 0.0 || fabs(windSpeed - 9999.99) < 1e-3) ? 0.01 : windSpeed;
 

@@ -209,6 +209,49 @@ void tEvapoTrans::SetEvapTVariables(tInputFile &infile, tHydroModel *hydro)
 	Tlinke = infile.ReadItem(Tlinke, "TLINKE");
 
 	luOption = infile.ReadItem(luOption, "OPTLANDUSE"); // SKYnGM2008LU: added by SY, TM: 11/19/07
+
+	// JB2025 @ ASU - Read in seasonal/diurnal stomatal resistance if enabled
+	optRsParam = infile.ReadItem(optRsParam, "OPTRSPARAM");
+
+	if (optRsParam == 1) {
+		infile.ReadItem(rsParamFile, "RSPARAMFILE");
+
+		std::ifstream inFile(rsParamFile);
+		if (!inFile.is_open()) {
+			Cout << "\n[ERROR] Cannot open RSPARAMFILE: " << rsParamFile << endl;
+			Cout << "Check that the file exists and path is correct." << endl;
+			Cout << "Exiting program...\n" << endl;
+			exit(1);
+		}
+
+		int numVectors, lenRatio, lenMonthly;
+		inFile >> numVectors >> lenRatio >> lenMonthly;
+
+		if (numVectors != 2 || lenRatio != 24 || lenMonthly != 12) {
+			Cout << "\n[ERROR] Invalid RSPARAMFILE header format." << endl;
+			Cout << "Expected: 2 vectors, with 24 rsRatio values and 12 rsMonthlyFactor values." << endl;
+			Cout << "Exiting program..." << endl << endl;
+			exit(1);
+		}
+
+		// Read first 12 lines: both rsRatio and rsMonthlyFactor
+		for (int i = 0; i < 12; ++i) {
+			inFile >> rsRatio[i] >> rsMonthlyFactor[i];
+			std::string dummy;
+			std::getline(inFile, dummy);  // discard rest of line
+		}
+
+		// Read remaining 12 lines: only rsRatio
+		for (int i = 12; i < 24; ++i) {
+			inFile >> rsRatio[i];
+			std::string dummy;
+			std::getline(inFile, dummy);  // discard rest of line
+		}
+
+		inFile.close();
+	}
+
+
 	if (luOption == 1) {
 		luInterpOption = infile.ReadItem(luInterpOption, "OPTLUINTERP"); // SKYnGM2008LU
 	}
@@ -1462,28 +1505,28 @@ double tEvapoTrans::aeroResist() {
 **
 ** tEvapoTrans::stomResist() Function
 **
-** Estimates the stomatal resistance based on the parameter value for 
+** Estimates the stomatal resistance based on the parameter value for
 ** coeffRs give as a reclassification of landuse parameters. A modification
 ** to account for the diurnal cycle of rs is made by using a time-dependent
 ** coefficient rsRatio. Depends on having set currentTime.
 **
 ***************************************************************************/
-double tEvapoTrans::stomResist() 
+double tEvapoTrans::stomResist()
 {
 	double rs;
 	int currenthour;
-	double rsRatio[24] = {3.837, 3.589, 3.21, 2.43, 1.617, 1.196, 1.067, 1.014, 
+	double rsRatio[24] = {3.837, 3.589, 3.21, 2.43, 1.617, 1.196, 1.067, 1.014,
 		0.995, 0.976, 0.976, 1.0, 1.053, 1.167, 1.354, 1.637,
 		2.043, 2.66, 3.215, 3.507, 3.689, 3.818, 3.923, 4.024};
-	
+
 	currenthour = currentTime[3];
 	rs = coeffRs*rsRatio[currenthour];
-	
-	// A simple way to constrain transpiration during hours 
+
+	// A simple way to constrain transpiration during hours
 	// when there is no incoming solar radiation
 	if (alphaD < 0.0)
 		rs *= 1000.0;
-	
+
 	return rs;
 }
 

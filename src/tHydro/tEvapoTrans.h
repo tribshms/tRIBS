@@ -166,6 +166,13 @@ class tEvapoTrans
 
   double coeffH{}, coeffKt{}, coeffAl{}, coeffRs{}, coeffV{};
   double coeffKs{}, coeffCs{}, coeffPan{};
+
+  // JB2025: Stomatal resistance time-scaling factors
+  int optRsParam{};                  // Option to use external Rs parameters
+  char rsParamFile[256];            // Path to input file with rsRatio and rsMonthlyFactor
+  double rsRatio[24]{};             // Diurnal hourly scale factor for stomatal resistance
+  double rsMonthlyFactor[12]{};     // Monthly scale factor based on vegetation seasonality
+
   // SKY2008Snow from AJR2007
   double coeffLAI{};
   double Rah{}, Rstm{};
