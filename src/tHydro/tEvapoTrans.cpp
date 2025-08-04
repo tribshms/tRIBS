@@ -1131,24 +1131,32 @@ void tEvapoTrans::ComputeETComponents(tIntercept *Intercept, tCNode *cNode,
 		//  If canopy is semi-wet (C<S) - transpiration uses the rest of the energy
 		//  Following Elathir and Bras (1993)    
 		evapDryCanopy = betaT*((potEvaporation - evapWetCanopy)*transFactor);
-		
-		// Account for the vegetation fraction
-		evapWetCanopy *= coeffV;
-		evapDryCanopy *= coeffV;
-		
-		// Evaporation from Bare Soil
 
-		if(cNode->getBedrockDepth() <= 0) //
+        // Remaining potential evaporation is what's available for the bare soil
+        double potEvaporationRemaining = potEvaporation - evapWetCanopy - evapDryCanopy;
+		// Sanity check
+		if (potEvaporationRemaining < 0.0) {
+			potEvaporationRemaining = 0.0;
+		}
+
+        // Account for the vegetation fraction
+        evapWetCanopy *= coeffV;
+        evapDryCanopy *= coeffV;
+        
+        // Evaporation from Bare Soil
+
+        if(cNode->getBedrockDepth() <= 0) //
         {
             evapSoil = 0;
 
         }
         else{
-			// Original method for bare soil evaporation
-			evapSoil = (1-coeffV)*(actEvaporation);
+            // Original method for bare soil evaporation
+            //evapSoil = (1-coeffV)*(actEvaporation);
 
-			// Method listed in Ivanov et al. (2004) for bare soil evaporation
-			//evapSoil = (1-coeffV)*potEvaporation*betaS;
+            // Method listed in Ivanov et al. (2004) for bare soil evaporation
+            // Modified to use the remaining potential evaporation
+            evapSoil = (1-coeffV)*potEvaporationRemaining*betaS;
         }
 
 		// Total Evapotranspiration
