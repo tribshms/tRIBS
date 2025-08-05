@@ -197,6 +197,8 @@ private:
   double TotGWchange{}; 			// Cumulative GW storage change M^3
   double TotMoist{}; 			// Cumulative change in moisture storage
   double DtoBedrock{}; 			// Depth to bedrock
+  double surfaceSoilDepth; // Depth for surface soil moisture [mm]
+  double rootZoneDepth;    // Depth for root zone moisture [mm]
   
   ofstream fctout;
   double fSoi100{}, fTop100{}, fClm100{}, fGW100{}, dM100{}, dMRt{}, mTh100{}, mThRt{};
