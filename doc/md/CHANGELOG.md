@@ -3,6 +3,21 @@
 All notable changes to this project are documented in this file.
 
 ## Version 5.2.2
+### 7/28/2025
+* Updated copyright notices to the current year.
+* Added new optional input file parameters for specifying the depth that defines surface soil and root zone soil moisture. These can be specified with `SURFACESOILDEPTH` and `ROOTZONEDEPTH` in mm. If not specified, these values default to their original hardcoded values of 100mm and 1,000mm, respectively, ensuring backward compatibility.
+* Updated how surface soil mositure is calculated in tEvapoTrans. Now the calculated potential evaporation is partioned first to the wet canopy, then transpiration, and lastly soil evaporation.
+### 7/28/2025
+* Refactored snow albedo decay function in tSnowPack to have descriptive variable names and set a minimum albedo threshold for which albedo cannot go below.
+* Refactor the calculation of latent and sensible heat flux for the ground snowpack in tSnowPack to prevent the snowpack temperture to be less than zero when there is liquid water present.
+* Incorporate a stability correction factor based on the Bulk Richardson Number for the calculation of aerodynamic resistance in tSnowPack.
+### 7/25/2025
+* Refactor the function InterceptRutter to now calculate evaporation from the wet canopy rather than in tEvapoTrans. This change corrects a small error in the canopy water balance.
+* Modify the function ComputeETComponents to handle the changes in tIntercept.cpp
+* Fix vegetation fraction scaling in snow interception scheme. Intercepted SWE now represents the actual state of the canopy rather than scaled by the vegetation fraction.
+* Fix ComputeVoronoiArea function in meshElements.cpp that was setting the incorrect voronoi area value for the node connected to the outlet node in the mesh.
+* Modify writing of soil water state variables to pixel, dynamic, and mrf outputs files to convert from sloped state variables to vertical depths.
+* Add new variable, Qunsat, to the mean response file.
 ### 6/5/2025
 * Refactored solar radiation handling for clarity and consistency:
 * Centralized all slope, albedo, and vegetation corrections into inShortWave(), reducing redundancy in energyBalance().
@@ -12,6 +27,7 @@ All notable changes to this project are documented in this file.
 * Corrected nodeHour misalignment issues in tEvapoTrans.cpp.
 * Updated julianDay() and SetSunVariables() to use consistent time source from tRunTimer.
 * Fixed declaration scope of RadGlobClr to clarify its limited usage within conditional blocks.
+* Fixed multiple small bugs that were not meeting C17 compatability standards.
 
 
 ## Version 5.2.1
