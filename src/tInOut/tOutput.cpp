@@ -1092,22 +1092,25 @@ void tCOutput<tSubNode>::WritePixelInfo( double time )
 		// The output format should be readable by ArcInfo & Matlab 
 		for (int i = 0; i < this->numNodes; i++) {
 
-			// --- START FIX ---
-			// Get the cosine of the slope for the current node to convert
-			// sloped depths to vertical depths for output.
-			tEdge *flowEdge = this->uzel[i]->getFlowEdg();
-			double slope_rad = atan(flowEdge->getSlope());
-			double cos_slope = cos(slope_rad);
-			// Add a check to prevent division by zero on perfectly vertical slopes, just in case.
-			if (cos_slope < 1E-9) cos_slope = 1.E-9; 
-			// --- END FIX ---
-
 #ifdef PARALLEL_TRIBS
   // Doesn't need to be less than active size
       if ( (this->uzel[i] != NULL) && (this->nodeList[i] >= 0) ) {
 #else
 			if ( this->uzel[i] && this->nodeList[i] < this->g->getNodeList()->getActiveSize()) {
 #endif
+				// CJC2025: Correct utputs by dividing by cos_slope
+				// This code only runs for valid, local nodes.
+				tEdge *flowEdge = this->uzel[i]->getFlowEdg();
+
+				// Check if the edge itself is valid.
+				double cos_slope = 1.0; // Default to 1.0 (no slope correction)
+				if (flowEdge) {
+					double slope_rad = atan(flowEdge->getSlope());
+					cos_slope = cos(slope_rad);
+					// Check to prevent division by zero, just in case.
+					if (cos_slope < 1E-9) cos_slope = 1.E-9; 
+				}
+				
 				this->pixinfo[i]<<setw(8)<<this->nodeList[i]
 				<<setw(13)<<extension<<" "
 				/* 3 */   <<setw(10)<<(this->uzel[i]->getNwtNew() / cos_slope)<<" "
