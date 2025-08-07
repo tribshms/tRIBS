@@ -937,6 +937,10 @@ void tEvapoTrans::setCoeffs(tCNode* cNode)
 	}
 	else if (evapotransOption == 4)
 		coeffV  = landPtr->getLandProp(11);
+		
+	// CJC2025: Set the values for the stress thresholds from the table.
+    coeffSE = landPtr->getLandProp(13);
+    coeffST = landPtr->getLandProp(14);
 
     if (coeffV >= 1.0) //prevents loss of snow when unloaded from canopy WR 05/12/2024
         coeffV = 0.99;
@@ -2924,12 +2928,14 @@ void tEvapoTrans::betaFunc(tCNode* cNode)
 
     soilzone_cutoff = cNode->getSoilCutoff();
 
-	Th_star = landPtr->getLandProp(13);
+	//Th_star = landPtr->getLandProp(13);
+	// Th_star can now be read from a table or gridded CJC2025
+	Th_star = coeffSE;
 
 	// Check that Thw <= Th_star <= Ths
 	if ((Th_star > Ths) || (Th_star < Thr))
 		{ 
-		printf("Th_star %f out of the range residual Th_r-Th_s in land cover class %d\n", Th_star, cNode->getLandUse());
+		printf("Stress threshold for evaporation %f out of the range residual Th_r-Th_s in land cover class %d\n", Th_star, cNode->getLandUse());
 		printf("Modify the value of the land cover class\n");
 		exit(1);
 		}
@@ -2985,12 +2991,15 @@ void tEvapoTrans::betaFuncT(tCNode* cNode)
 
     rootzone_cutoff = cNode->getRootCutoff();
 
-	Th_star = landPtr->getLandProp(14); 
+	//Th_star = landPtr->getLandProp(14);
+	// Th_star can now be read from a table or gridded CJC2025
+	Th_star = coeffST;
+
 	// Check that Thw <= Th_star <= Ths
 	if ((Th_star > Ths) || (Th_star < Thw))
 		{ 
-		printf("Th_star out of the range residual Th_r-Th_s in land cover class %d\n", cNode->getLandUse());
-		printf("Modify the value of the land cover class");
+		printf("Stress threshold for transpiration %f out of the range residual Th_r-Th_s in land cover class %d\n", Th_star, cNode->getLandUse());
+		printf("Modify the value of the land cover class\n");
 		exit(1);
 		}
 	// End of modifications by Luis Mendez and Giuseppe Mascaro (April 2013)
@@ -4347,12 +4356,12 @@ void tEvapoTrans::initialLUGridAssignment()
 	}
     // CJC2025: New parameters 
     if (strcmp(LUgridParamNames[ct],"SE")==0) {
-      if ( (timer->getCurrentTime())>(double(STgridhours[NowTillWhichSTgrid])) && numSTfiles > 1 ) {
-	while ( (timer->getCurrentTime())>(double(STgridhours[NowTillWhichSTgrid])) ) {
-	  NowTillWhichSTgrid++;
+      if ( (timer->getCurrentTime())>(double(SEgridhours[NowTillWhichSEgrid])) && numSEfiles > 1 ) {
+	while ( (timer->getCurrentTime())>(double(SEgridhours[NowTillWhichSEgrid])) ) {
+	  NowTillWhichSEgrid++;
 	}
-	EvapThreshGrid->updateLUVarOfBothGrids("SE", SEgridFileNames[NowTillWhichSTgrid]);
-	EvapThreshGrid->updateLUVarOfPrevGrid("TS", SEgridFileNames[NowTillWhichSTgrid-1]);
+	EvapThreshGrid->updateLUVarOfBothGrids("SE", SEgridFileNames[NowTillWhichSEgrid]);
+	EvapThreshGrid->updateLUVarOfPrevGrid("SE", SEgridFileNames[NowTillWhichSEgrid-1]);
       }
       else {
 	EvapThreshGrid->updateLUVarOfBothGrids("SE", SEgridFileNames[1]);
@@ -4387,186 +4396,201 @@ void tEvapoTrans::LUGridAssignment()
 {
   for (int ct=0;ct<nParmLU;ct++) { 
     if (strcmp(LUgridParamNames[ct],"AL")==0) { //if parameter exists
+      // CJC2025: If there's only one file, do nothing. The initial value from initialLUGridAssignment() is correct.
+      if (numALfiles <= 1) continue;
       if (NowTillWhichALgrid <= numALfiles) { // if you have not exceeded the file amount
-	if ((timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid]))) {// the time is greater then the ALgrid hours
-	  NowTillWhichALgrid++;
-	  if ( (NowTillWhichALgrid-1)<numALfiles) {
-	    LandUseAlbGrid->updateLUVarOfBothGrids("AL", ALgridFileNames[NowTillWhichALgrid]);
-	  }					
-	  else {
-	    LandUseAlbGrid->updateLUVarOfPrevGrid("AL", ALgridFileNames[numALfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid]))) {// the time is greater then the ALgrid hours
+	      NowTillWhichALgrid++;
+	      if ( (NowTillWhichALgrid-1)<numALfiles) {
+	        LandUseAlbGrid->updateLUVarOfBothGrids("AL", ALgridFileNames[NowTillWhichALgrid]);
+	      }					
+	      else {
+	        LandUseAlbGrid->updateLUVarOfPrevGrid("AL", ALgridFileNames[numALfiles]);
+	      }
+		}
       }
     }
     if (strcmp(LUgridParamNames[ct],"TF")==0) {
+      if (numTFfiles <= 1) continue;
       if (NowTillWhichTFgrid <= numTFfiles) {
-	if ((timer->getCurrentTime())>(double(TFgridhours[NowTillWhichTFgrid]))) { 
-	  NowTillWhichTFgrid++;
-	  if ((NowTillWhichTFgrid-1)<numTFfiles) {							
-	    ThroughFallGrid->updateLUVarOfBothGrids("TF", TFgridFileNames[NowTillWhichTFgrid]);
-	  }
-	  else {
-	    ThroughFallGrid->updateLUVarOfPrevGrid("TF", TFgridFileNames[numTFfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(TFgridhours[NowTillWhichTFgrid]))) {
+	      NowTillWhichTFgrid++;
+	      if ((NowTillWhichTFgrid-1)<numTFfiles) {
+	        ThroughFallGrid->updateLUVarOfBothGrids("TF", TFgridFileNames[NowTillWhichTFgrid]);
+	      }
+	      else {
+	        ThroughFallGrid->updateLUVarOfPrevGrid("TF", TFgridFileNames[numTFfiles]);
+	      }
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"VH")==0) {
+      if (numVHfiles <= 1) continue;
       if (NowTillWhichVHgrid<=numVHfiles) {		
-	if ((timer->getCurrentTime())>(double(VHgridhours[NowTillWhichVHgrid]))) {
-	  NowTillWhichVHgrid++;
-	  if ((NowTillWhichVHgrid-1)<numVHfiles) {
-	    VegHeightGrid->updateLUVarOfBothGrids("VH", VHgridFileNames[NowTillWhichVHgrid]);
-	  }
-	  else {
-	    VegHeightGrid->updateLUVarOfPrevGrid("VH", VHgridFileNames[numVHfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(VHgridhours[NowTillWhichVHgrid]))) {
+	      NowTillWhichVHgrid++;
+	      if ((NowTillWhichVHgrid-1)<numVHfiles) {
+	        VegHeightGrid->updateLUVarOfBothGrids("VH", VHgridFileNames[NowTillWhichVHgrid]);
+	      }
+	      else {
+	        VegHeightGrid->updateLUVarOfPrevGrid("VH", VHgridFileNames[numVHfiles]);
+	      }
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"SR")==0) {
+      if (numSRfiles <= 1) continue;
       if (NowTillWhichSRgrid<=numSRfiles) {
-	if ((timer->getCurrentTime())>(double(SRgridhours[NowTillWhichSRgrid]))) { 
-	  NowTillWhichSRgrid++;
-	  if ((NowTillWhichSRgrid-1)<numSRfiles) {
-	    StomResGrid->updateLUVarOfBothGrids("SR", SRgridFileNames[NowTillWhichSRgrid]);
-	  }
-	  else {
-	    StomResGrid->updateLUVarOfPrevGrid("SR", SRgridFileNames[numSRfiles]);
-	  }	
-	}
+	    if ((timer->getCurrentTime())>(double(SRgridhours[NowTillWhichSRgrid]))) { 
+	      NowTillWhichSRgrid++;
+	      if ((NowTillWhichSRgrid-1)<numSRfiles) {
+	        StomResGrid->updateLUVarOfBothGrids("SR", SRgridFileNames[NowTillWhichSRgrid]);
+	      }
+	      else {
+	        StomResGrid->updateLUVarOfPrevGrid("SR", SRgridFileNames[numSRfiles]);
+	      }
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"VF")==0) {
+      if (numVFfiles <= 1) continue;
       if (NowTillWhichVFgrid<=numVFfiles) {
-	if ((timer->getCurrentTime())>(double(VFgridhours[NowTillWhichVFgrid]))) { 
-	  NowTillWhichVFgrid++;
-	  if ((NowTillWhichVFgrid-1)<numVFfiles) {
-	    VegFractGrid->updateLUVarOfBothGrids("VF", VFgridFileNames[NowTillWhichVFgrid]);
-	  }
-	  else {
-	    VegFractGrid->updateLUVarOfPrevGrid("VF", VFgridFileNames[numVFfiles]);
-	  }	
-	}
+	    if ((timer->getCurrentTime())>(double(VFgridhours[NowTillWhichVFgrid]))) { 
+	      NowTillWhichVFgrid++;
+	      if ((NowTillWhichVFgrid-1)<numVFfiles) {
+	        VegFractGrid->updateLUVarOfBothGrids("VF", VFgridFileNames[NowTillWhichVFgrid]);
+	      }
+	      else {
+	        VegFractGrid->updateLUVarOfPrevGrid("VF", VFgridFileNames[numVFfiles]);
+	      }	
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"CS")==0) {
+      if (numCSfiles <= 1) continue;
       if (NowTillWhichCSgrid<=numCSfiles) {
-	if ((timer->getCurrentTime())>(double(CSgridhours[NowTillWhichCSgrid]))) { 
-	  NowTillWhichCSgrid++;
-	  if ((NowTillWhichCSgrid-1)<numCSfiles) {
-	    CanStorParamGrid->updateLUVarOfBothGrids("CS", CSgridFileNames[NowTillWhichCSgrid]);
-	  }
-	  else {
-	    CanStorParamGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[numCSfiles]);
-	  }	
-	}
+	    if ((timer->getCurrentTime())>(double(CSgridhours[NowTillWhichCSgrid]))) { 
+	      NowTillWhichCSgrid++;
+	      if ((NowTillWhichCSgrid-1)<numCSfiles) {
+	        CanStorParamGrid->updateLUVarOfBothGrids("CS", CSgridFileNames[NowTillWhichCSgrid]);
+	      }
+	      else {
+	        CanStorParamGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[numCSfiles]);
+	      }	
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"IC")==0) {
+      if (numICfiles <= 1) continue;
       if (NowTillWhichICgrid<=numICfiles) {
-	if ((timer->getCurrentTime())>(double(ICgridhours[NowTillWhichICgrid]))) { 
-	  NowTillWhichICgrid++;
-	  if ((NowTillWhichICgrid-1)<numICfiles) {
-	    IntercepCoeffGrid->updateLUVarOfBothGrids("IC", ICgridFileNames[NowTillWhichICgrid]);
-	  }
-	  else {
-	    IntercepCoeffGrid->updateLUVarOfPrevGrid("IC", ICgridFileNames[numICfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(ICgridhours[NowTillWhichICgrid]))) { 
+	      NowTillWhichICgrid++;
+	      if ((NowTillWhichICgrid-1)<numICfiles) {
+	        IntercepCoeffGrid->updateLUVarOfBothGrids("IC", ICgridFileNames[NowTillWhichICgrid]);
+	      }
+	      else {
+	        IntercepCoeffGrid->updateLUVarOfPrevGrid("IC", ICgridFileNames[numICfiles]);
+	      }
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"CC")==0) {
+      if (numCCfiles <= 1) continue;
       if (NowTillWhichCCgrid<=numCCfiles) {
-	if ((timer->getCurrentTime())>(double(CCgridhours[NowTillWhichCCgrid]))) { 
-	  NowTillWhichCCgrid++;
-	  if ((NowTillWhichCCgrid-1)<numCCfiles) {							
-	    CanFieldCapGrid->updateLUVarOfBothGrids("CC", CCgridFileNames[NowTillWhichCCgrid]);
-	  }
-	  else {
-	    CanFieldCapGrid->updateLUVarOfPrevGrid("CC", CCgridFileNames[numCCfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(CCgridhours[NowTillWhichCCgrid]))) { 
+	      NowTillWhichCCgrid++;
+	      if ((NowTillWhichCCgrid-1)<numCCfiles) {							
+	        CanFieldCapGrid->updateLUVarOfBothGrids("CC", CCgridFileNames[NowTillWhichCCgrid]);
+	      }
+	      else {
+	        CanFieldCapGrid->updateLUVarOfPrevGrid("CC", CCgridFileNames[numCCfiles]);
+	      }
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"DC")==0) {
+      if (numDCfiles <= 1) continue;
       if (NowTillWhichDCgrid<=numDCfiles) {
-	if ((timer->getCurrentTime())>(double(DCgridhours[NowTillWhichDCgrid]))) { 
-	  NowTillWhichDCgrid++;
-	  if ((NowTillWhichDCgrid-1)<numDCfiles) {
-	    DrainCoeffGrid->updateLUVarOfBothGrids("DC", DCgridFileNames[NowTillWhichDCgrid]);
-	  }
-	  else {
-	    DrainCoeffGrid->updateLUVarOfPrevGrid("DC", DCgridFileNames[numDCfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(DCgridhours[NowTillWhichDCgrid]))) { 
+	      NowTillWhichDCgrid++;
+	      if ((NowTillWhichDCgrid-1)<numDCfiles) {
+	        DrainCoeffGrid->updateLUVarOfBothGrids("DC", DCgridFileNames[NowTillWhichDCgrid]);
+	      }
+	      else {
+	        DrainCoeffGrid->updateLUVarOfPrevGrid("DC", DCgridFileNames[numDCfiles]);
+	      }
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"DE")==0) {
+      if (numDEfiles <= 1) continue;
       if (NowTillWhichDEgrid<=numDEfiles) {
-	if ((timer->getCurrentTime())>(double(DEgridhours[NowTillWhichDEgrid]))) {
-	  NowTillWhichDEgrid++;
-	  if ((NowTillWhichDEgrid-1)<numDEfiles) {	
-	    DrainExpParGrid->updateLUVarOfBothGrids("DE", DEgridFileNames[NowTillWhichDEgrid]);
-	  }
-	  else {
-	    DrainExpParGrid->updateLUVarOfPrevGrid("DE", DEgridFileNames[numDEfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(DEgridhours[NowTillWhichDEgrid]))) {
+	      NowTillWhichDEgrid++;
+	      if ((NowTillWhichDEgrid-1)<numDEfiles) {	
+	        DrainExpParGrid->updateLUVarOfBothGrids("DE", DEgridFileNames[NowTillWhichDEgrid]);
+	      }
+	      else {
+	        DrainExpParGrid->updateLUVarOfPrevGrid("DE", DEgridFileNames[numDEfiles]);
+	      }
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"OT")==0) {
+      if (numOTfiles <= 1) continue;
       if (NowTillWhichOTgrid<=numOTfiles) {
-	if ((timer->getCurrentTime())>(double(OTgridhours[NowTillWhichOTgrid]))) {
-	  NowTillWhichOTgrid++;
-	  if ((NowTillWhichOTgrid-1)<numOTfiles) {	
-	    OptTransmCoeffGrid->updateLUVarOfBothGrids("OT", OTgridFileNames[NowTillWhichOTgrid]);
-	  }
-	  else {
-	    OptTransmCoeffGrid->updateLUVarOfPrevGrid("OT", OTgridFileNames[numOTfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(OTgridhours[NowTillWhichOTgrid]))) {
+	      NowTillWhichOTgrid++;
+	      if ((NowTillWhichOTgrid-1)<numOTfiles) {	
+	        OptTransmCoeffGrid->updateLUVarOfBothGrids("OT", OTgridFileNames[NowTillWhichOTgrid]);
+	      }
+	      else {
+	        OptTransmCoeffGrid->updateLUVarOfPrevGrid("OT", OTgridFileNames[numOTfiles]);
+	      }
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"LA")==0) {
+      if (numLAfiles <= 1) continue;
       if (NowTillWhichLAgrid<=numLAfiles) {
-	if ((timer->getCurrentTime())>(double(LAgridhours[NowTillWhichLAgrid]))) { 
-	  NowTillWhichLAgrid++;
-	  if ((NowTillWhichLAgrid-1)<numLAfiles) {
-	    LeafAIGrid->updateLUVarOfBothGrids("LA", LAgridFileNames[NowTillWhichLAgrid]);
-	  }
-	  else {
-	    LeafAIGrid->updateLUVarOfPrevGrid("LA", LAgridFileNames[numLAfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(LAgridhours[NowTillWhichLAgrid]))) { 
+	      NowTillWhichLAgrid++;
+	      if ((NowTillWhichLAgrid-1)<numLAfiles) {
+	        LeafAIGrid->updateLUVarOfBothGrids("LA", LAgridFileNames[NowTillWhichLAgrid]);
+	      }
+	      else {
+	        LeafAIGrid->updateLUVarOfPrevGrid("LA", LAgridFileNames[numLAfiles]);
+	      }
+	    }
       }
     }
     // CJC2025: New parameters
     if (strcmp(LUgridParamNames[ct],"SE")==0) {
+      if (numSEfiles <= 1) continue;
       if (NowTillWhichSEgrid<=numSEfiles) {
-	if ((timer->getCurrentTime())>(double(SEgridhours[NowTillWhichSEgrid]))) {
-	  NowTillWhichSEgrid++;
-	  if ((NowTillWhichSEgrid-1)<numSEfiles) {
-	    EvapThreshGrid->updateLUVarOfBothGrids("SE", SEgridFileNames[NowTillWhichSEgrid]);
-	  }
-	  else {
-	    EvapThreshGrid->updateLUVarOfPrevGrid("SE", SEgridFileNames[numSEfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(SEgridhours[NowTillWhichSEgrid]))) {
+	      NowTillWhichSEgrid++;
+	      if ((NowTillWhichSEgrid-1)<numSEfiles) {
+	        EvapThreshGrid->updateLUVarOfBothGrids("SE", SEgridFileNames[NowTillWhichSEgrid]);
+	      }
+	      else {
+	        EvapThreshGrid->updateLUVarOfPrevGrid("SE", SEgridFileNames[numSEfiles]);
+	      }
+	    }
       }
     }
     if (strcmp(LUgridParamNames[ct],"ST")==0) {
+      if (numSTfiles <= 1) continue;
       if (NowTillWhichSTgrid<=numSTfiles) {
-	if ((timer->getCurrentTime())>(double(STgridhours[NowTillWhichSTgrid]))) {
-	  NowTillWhichSTgrid++;
-	  if ((NowTillWhichSTgrid-1)<numSTfiles) {
-	    TransThreshGrid->updateLUVarOfBothGrids("ST", STgridFileNames[NowTillWhichSTgrid]);
-	  }
-	  else {
-	    TransThreshGrid->updateLUVarOfPrevGrid("ST", STgridFileNames[numSTfiles]);
-	  }
-	}
+	    if ((timer->getCurrentTime())>(double(STgridhours[NowTillWhichSTgrid]))) {
+	      NowTillWhichSTgrid++;
+	      if ((NowTillWhichSTgrid-1)<numSTfiles) {
+	        TransThreshGrid->updateLUVarOfBothGrids("ST", STgridFileNames[NowTillWhichSTgrid]);
+	      }
+	      else {
+	        TransThreshGrid->updateLUVarOfPrevGrid("ST", STgridFileNames[numSTfiles]);
+	      }
+	    }
       }
     }
   }
