@@ -597,17 +597,13 @@ void tEvapoTrans::callEvapoPotential()
 	while (nodeIter.IsActive()) {
 	
 	  if (luOption == 1) { 
-	    if ( luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values
-
-	   //   Cout <<"\nLand Use Grid Interpolation Data Option "<< luOption <<" does not currently work."<<endl;
-	   //   Cout << "\tPlease use :" << endl;
-	   //   Cout << "\t\t(0) for using current/past values till next incoming grid" << endl;
-	   //   Cout << "\nExiting Program..."<<endl<<endl;
-	   //   exit(1);
-
-	      interpolateLUGrids(cNode);
-	    }
-	  }
+		if (luInterpOption == 1) { // LU values linearly interpolated...
+			interpolateLUGrids(cNode);
+		}
+		else { // Use step-wise change by applying the 'previous' grid value on every step
+			constantLUGrids(cNode);
+		}
+		}
 	  
 	  // Elapsed MET steps from the beginning, used for averaging dynamic LU grid values below over time for integ. output
 	  auto te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
@@ -1010,20 +1006,15 @@ void tEvapoTrans::callEvapoTrans(tIntercept *Intercept, int flag)
 	while ( nodeIter.IsActive() ) {
 
 	  if (getEToption() == 0 && Intercept->getIoption() == 1) {
-	    if (luOption == 1) { 
-	      if ( luInterpOption == 1) { // LU values linearly interpolated between 'previous' and 'until' values
-		
-		//Cout <<"\nLand Use Grid Interpolation Data Option "<< luOption <<" not valid."<<endl;
-		//Cout << "\tPlease use :" << endl;
-		//Cout << "\t\t(0) for using current/past values till next incoming grid" << endl;
-		//Cout << "\t\t(1) for interpolating between current/past and next incoming grids"<< endl;  
-		//Cout << "\nExiting Program..."<<endl<<endl;
-		//exit(1);
-
-		interpolateLUGrids(cNode);
-	      }
-	    }
-	  }
+        if (luOption == 1) { 
+          if (luInterpOption == 1) {
+            interpolateLUGrids(cNode);
+          }
+          else {
+            constantLUGrids(cNode);
+          }
+        }
+      }
 		
 	  // Elapsed MET steps from the beginning, used for averaging dynamic LU grid values below over time for integ. output
 	  auto te = (double)timer->getElapsedMETSteps(timer->getCurrentTime());
@@ -4209,9 +4200,17 @@ void tEvapoTrans::initialLUGridAssignment()
 	LandUseAlbGrid->updateLUVarOfPrevGrid("AL", ALgridFileNames[NowTillWhichALgrid-1]);
       }
       else {
-	LandUseAlbGrid->updateLUVarOfBothGrids("AL", ALgridFileNames[1]);
-	LandUseAlbGrid->updateLUVarOfPrevGrid("AL", ALgridFileNames[1]);}
-      
+        // CJC2025: This is the safe way to initialize with the functions available.
+        // It ensures PrevGrid is correctly loaded first, avoiding the garbage copy.
+        LandUseAlbGrid->updateLUVarOfPrevGrid("AL", ALgridFileNames[1]);
+        // CJC2025: For interpolation, the UntilGrid must also be loaded. The only way
+        // is to use updateLUVarOfBothGrids. Since PrevGrid is now valid, the
+        // state-shift inside this function is safe. It will copy the correct
+        // PrevGrid value into itself (redundant) before loading the UntilGrid.
+        if (luInterpOption == 1) {
+            LandUseAlbGrid->updateLUVarOfBothGrids("AL", ALgridFileNames[1]);
+        }
+      }
     }
     if (strcmp(LUgridParamNames[ct],"TF")==0) {
       if ( (timer->getCurrentTime())>(double(TFgridhours[NowTillWhichTFgrid])) && numTFfiles > 1) {
@@ -4221,8 +4220,11 @@ void tEvapoTrans::initialLUGridAssignment()
 	ThroughFallGrid->updateLUVarOfPrevGrid("TF", TFgridFileNames[NowTillWhichTFgrid-1]);
       }
       else {
-	ThroughFallGrid->updateLUVarOfBothGrids("TF", TFgridFileNames[1]);
-	ThroughFallGrid->updateLUVarOfPrevGrid("TF", TFgridFileNames[1]);}
+        ThroughFallGrid->updateLUVarOfPrevGrid("TF", TFgridFileNames[1]);
+        if (luInterpOption == 1) {
+            ThroughFallGrid->updateLUVarOfBothGrids("TF", TFgridFileNames[1]);
+        }
+      }
     }
     if (strcmp(LUgridParamNames[ct],"VH")==0) {
       if ( (timer->getCurrentTime())>(double(VHgridhours[NowTillWhichVHgrid])) && numVHfiles > 1) {
@@ -4233,8 +4235,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	VegHeightGrid->updateLUVarOfPrevGrid("VH", VHgridFileNames[NowTillWhichVHgrid-1]);
       }
       else {
-	VegHeightGrid->updateLUVarOfBothGrids("VH", VHgridFileNames[1]);
-	VegHeightGrid->updateLUVarOfPrevGrid("VH", VHgridFileNames[1]);
+        VegHeightGrid->updateLUVarOfPrevGrid("VH", VHgridFileNames[1]);
+        if (luInterpOption == 1) {
+            VegHeightGrid->updateLUVarOfBothGrids("VH", VHgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"SR")==0) {
@@ -4246,8 +4250,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	StomResGrid->updateLUVarOfPrevGrid("SR", SRgridFileNames[NowTillWhichSRgrid-1]);
       }
       else {
-	StomResGrid->updateLUVarOfBothGrids("SR", SRgridFileNames[1]);
-	StomResGrid->updateLUVarOfPrevGrid("SR", SRgridFileNames[1]);
+        StomResGrid->updateLUVarOfPrevGrid("SR", SRgridFileNames[1]);
+        if (luInterpOption == 1) {
+            StomResGrid->updateLUVarOfBothGrids("SR", SRgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"VF")==0) {
@@ -4259,8 +4265,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	VegFractGrid->updateLUVarOfPrevGrid("VF", VFgridFileNames[NowTillWhichVFgrid-1]);
       }
       else {
-	VegFractGrid->updateLUVarOfBothGrids("VF", VFgridFileNames[1]);
-	VegFractGrid->updateLUVarOfPrevGrid("VF", VFgridFileNames[1]);
+        VegFractGrid->updateLUVarOfPrevGrid("VF", VFgridFileNames[1]);
+        if (luInterpOption == 1) {
+            VegFractGrid->updateLUVarOfBothGrids("VF", VFgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"CS")==0) {
@@ -4272,8 +4280,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	CanStorParamGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[NowTillWhichCSgrid-1]);
       }
       else {
-	CanStorParamGrid->updateLUVarOfBothGrids("CS", CSgridFileNames[1]);
-	CanStorParamGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[1]);
+        VegFractGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[1]);
+        if (luInterpOption == 1) {
+            VegFractGrid->updateLUVarOfBothGrids("CS", CSgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"IC")==0) {
@@ -4285,8 +4295,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	IntercepCoeffGrid->updateLUVarOfPrevGrid("IC", ICgridFileNames[NowTillWhichICgrid-1]);
       }
       else {
-	IntercepCoeffGrid->updateLUVarOfBothGrids("IC", ICgridFileNames[1]);
-	IntercepCoeffGrid->updateLUVarOfPrevGrid("IC", ICgridFileNames[1]);
+        IntercepCoeffGrid->updateLUVarOfPrevGrid("IC", ICgridFileNames[1]);
+        if (luInterpOption == 1) {
+            IntercepCoeffGrid->updateLUVarOfBothGrids("IC", ICgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"CC")==0) {
@@ -4298,8 +4310,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	CanFieldCapGrid->updateLUVarOfPrevGrid("CC", CCgridFileNames[NowTillWhichCCgrid-1]);
       }
       else {
-	CanFieldCapGrid->updateLUVarOfBothGrids("CC", CCgridFileNames[1]);
-	CanFieldCapGrid->updateLUVarOfPrevGrid("CC", CCgridFileNames[1]);
+        CanFieldCapGrid->updateLUVarOfPrevGrid("CC", CCgridFileNames[1]);
+        if (luInterpOption == 1) {
+            CanFieldCapGrid->updateLUVarOfBothGrids("CC", CCgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"DC")==0) {
@@ -4311,8 +4325,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	DrainCoeffGrid->updateLUVarOfPrevGrid("DC", DCgridFileNames[NowTillWhichDCgrid-1]);
       }
       else {
-	DrainCoeffGrid->updateLUVarOfBothGrids("DC", DCgridFileNames[1]);
-	DrainCoeffGrid->updateLUVarOfPrevGrid("DC", DCgridFileNames[1]);
+        DrainCoeffGrid->updateLUVarOfPrevGrid("DC", DCgridFileNames[1]);
+        if (luInterpOption == 1) {
+            DrainCoeffGrid->updateLUVarOfBothGrids("DC", DCgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"DE")==0) {
@@ -4324,8 +4340,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	DrainExpParGrid->updateLUVarOfPrevGrid("DE", DEgridFileNames[NowTillWhichDEgrid-1]);
       }
       else {
-	DrainExpParGrid->updateLUVarOfBothGrids("DE", DEgridFileNames[1]);
-	DrainExpParGrid->updateLUVarOfPrevGrid("DE", DEgridFileNames[1]);
+        DrainExpParGrid->updateLUVarOfPrevGrid("DE", DEgridFileNames[1]);
+        if (luInterpOption == 1) {
+            DrainExpParGrid->updateLUVarOfBothGrids("DE", DEgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"OT")==0) {
@@ -4337,8 +4355,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	OptTransmCoeffGrid->updateLUVarOfPrevGrid("OT", OTgridFileNames[NowTillWhichOTgrid-1]);
       }
       else {
-	OptTransmCoeffGrid->updateLUVarOfBothGrids("OT", OTgridFileNames[1]);
-	OptTransmCoeffGrid->updateLUVarOfPrevGrid("OT", OTgridFileNames[1]);
+        OptTransmCoeffGrid->updateLUVarOfPrevGrid("OT", OTgridFileNames[1]);
+        if (luInterpOption == 1) {
+            OptTransmCoeffGrid->updateLUVarOfBothGrids("OT", OTgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"LA")==0) {
@@ -4350,10 +4370,12 @@ void tEvapoTrans::initialLUGridAssignment()
 	LeafAIGrid->updateLUVarOfPrevGrid("LA", LAgridFileNames[NowTillWhichLAgrid-1]);
       }
       else {
-	LeafAIGrid->updateLUVarOfBothGrids("LA", LAgridFileNames[1]);
-	LeafAIGrid->updateLUVarOfPrevGrid("LA", LAgridFileNames[1]);
+        LeafAIGrid->updateLUVarOfPrevGrid("LA", LAgridFileNames[1]);
+        if (luInterpOption == 1) {
+            LeafAIGrid->updateLUVarOfBothGrids("LA", LAgridFileNames[1]);
+        }
       }
-	}
+    }
     // CJC2025: New parameters 
     if (strcmp(LUgridParamNames[ct],"SE")==0) {
       if ( (timer->getCurrentTime())>(double(SEgridhours[NowTillWhichSEgrid])) && numSEfiles > 1 ) {
@@ -4364,8 +4386,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	EvapThreshGrid->updateLUVarOfPrevGrid("SE", SEgridFileNames[NowTillWhichSEgrid-1]);
       }
       else {
-	EvapThreshGrid->updateLUVarOfBothGrids("SE", SEgridFileNames[1]);
-	EvapThreshGrid->updateLUVarOfPrevGrid("SE", SEgridFileNames[1]);
+        EvapThreshGrid->updateLUVarOfPrevGrid("SE", SEgridFileNames[1]);
+        if (luInterpOption == 1) {
+            EvapThreshGrid->updateLUVarOfBothGrids("SE", SEgridFileNames[1]);
+        }
       }
     }
     if (strcmp(LUgridParamNames[ct],"ST")==0) {
@@ -4377,8 +4401,10 @@ void tEvapoTrans::initialLUGridAssignment()
 	TransThreshGrid->updateLUVarOfPrevGrid("ST", STgridFileNames[NowTillWhichSTgrid-1]);
       }
       else {
-	TransThreshGrid->updateLUVarOfBothGrids("ST", STgridFileNames[1]);
-	TransThreshGrid->updateLUVarOfPrevGrid("ST", STgridFileNames[1]);
+        TransThreshGrid->updateLUVarOfPrevGrid("ST", STgridFileNames[1]);
+        if (luInterpOption == 1) {
+            TransThreshGrid->updateLUVarOfBothGrids("ST", STgridFileNames[1]);
+        }
       }
     }
   } // end for loop
