@@ -231,6 +231,15 @@ void tVariant::updateLUVarOfPrevGrid(const char *param, char *GridFileName)
 			cn->setLeafAIInPrevGrid( resample[id] );
 			cn->setLeafAI( resample[id] );
 		}
+		// CJC2025: New parameters
+		else if (strcmp(param,"SE") == 0) {
+			cn->setEvapThreshInPrevGrid( resample[id] );
+			cn->setEvapThresh( resample[id] );
+		}
+		else if (strcmp(param,"ST") == 0) {
+			cn->setTransThreshInPrevGrid( resample[id] );
+			cn->setTransThresh( resample[id] );
+		}
 
 		cn = nodeIter.NextP();
 		id++; 
@@ -322,6 +331,18 @@ void tVariant::updateLUVarOfBothGrids(const char *param, char *GridFileName)
 			cn->setLeafAI( cn->getLeafAIInUntilGrid() );
 			cn->setLeafAIInUntilGrid( resample[id] );
 		}
+		// CJC2025: New parameters
+		else if (strcmp(param,"SE") == 0) {
+			cn->setEvapThreshInPrevGrid( cn->getEvapThreshInUntilGrid() );
+			cn->setEvapThresh( cn->getEvapThreshInUntilGrid() );
+			cn->setEvapThreshInUntilGrid( resample[id] );
+		}
+		else if (strcmp(param,"ST") == 0) {
+			cn->setTransThreshInPrevGrid( cn->getTransThreshInUntilGrid() );
+			cn->setTransThresh( cn->getTransThreshInUntilGrid() );
+			cn->setTransThreshInUntilGrid( resample[id] );
+		}
+
 
 		cn = nodeIter.NextP();
 		id++; 

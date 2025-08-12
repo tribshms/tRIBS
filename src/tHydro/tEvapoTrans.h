@@ -183,6 +183,8 @@ class tEvapoTrans
   double Io{}, alphaD{}, sinAlpha{}, del{}, phi{}, tau{}, circ{}, sunaz{};
   double SunRisHrLoc{}, SunSetHrLoc{}, DayLength{}, deltaT{};
   double RadDirObs{}, RadDifObs{};
+  // CJC2025: New parameters
+  double coeffSE{}, coeffST{};
   // SKY2008Snow from AJR2007
   //new for sheltering algorithm
   //	RMK: THE HA* VARIABLES SHOULD ACTUALLY BE HANDLED IN AN ARRAY
@@ -217,20 +219,25 @@ class tEvapoTrans
   tVariant *CanStorParamGrid; 
   tVariant *IntercepCoeffGrid, *CanFieldCapGrid, *DrainCoeffGrid;
   tVariant *DrainExpParGrid, *OptTransmCoeffGrid, *LeafAIGrid;
+  tVariant *EvapThreshGrid, *TransThreshGrid; // CJC2025
 
   // SKYnGM2008LU
   int numALfiles{}, numTFfiles{}, numVHfiles{}, numSRfiles{};
   int numVFfiles{}, numCSfiles{}, numICfiles{}, numCCfiles{};
   int numDCfiles{}, numDEfiles{}, numOTfiles{}, numLAfiles{};
+  int numSEfiles{}, numSTfiles{}; // CJC2025 
   int *ALgridhours, *TFgridhours, *VHgridhours, *SRgridhours;
   int *VFgridhours, *CSgridhours, *ICgridhours, *CCgridhours;
   int *DCgridhours, *DEgridhours, *OTgridhours, *LAgridhours;  
+  int *SEgridhours, *STgridhours; // CJC2025
   int NowTillWhichALgrid{}, NowTillWhichTFgrid{}, NowTillWhichVHgrid{}, NowTillWhichSRgrid{};
   int NowTillWhichVFgrid{}, NowTillWhichCSgrid{}, NowTillWhichICgrid{}, NowTillWhichCCgrid{};
   int NowTillWhichDCgrid{}, NowTillWhichDEgrid{}, NowTillWhichOTgrid{}, NowTillWhichLAgrid{};
+  int NowTillWhichSEgrid{}, NowTillWhichSTgrid{}; // CJC2025
   char **ALgridFileNames, **TFgridFileNames, **VHgridFileNames, **SRgridFileNames;
   char **VFgridFileNames, **CSgridFileNames, **ICgridFileNames, **CCgridFileNames;
   char **DCgridFileNames, **DEgridFileNames, **OTgridFileNames, **LAgridFileNames;
+  char **SEgridFileNames, **STgridFileNames; // CJC2025
   int AtFirstTimeStepLUFlag{};
 
   int skycover_flag; // intended for when nodata is set for XC gridded data so that skycover is estimated.

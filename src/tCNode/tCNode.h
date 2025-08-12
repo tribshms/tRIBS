@@ -277,6 +277,9 @@ public:
   double getOptTransmCoeff();
   double getLeafAI();
   double getCanStorParam();
+  // CJC2025: New Parameters
+  double getEvapThresh();
+  double getTransThresh();
 
   // SKYnGM2008LU
   double getLandUseAlbInPrevGrid();
@@ -303,6 +306,13 @@ public:
   double getOptTransmCoeffInUntilGrid();
   double getLeafAIInPrevGrid();
   double getLeafAIInUntilGrid();
+  // CJC2025: New Parameters
+  double getEvapThreshInPrevGrid();
+  double getEvapThreshInUntilGrid();
+  double getTransThreshInPrevGrid();
+  double getTransThreshInUntilGrid();
+
+
 
   // SKYnGM2008LU
   double getAvCanStorParam();
@@ -317,6 +327,9 @@ public:
   double getAvStomRes();
   double getAvVegFraction();
   double getAvLeafAI();
+  // CJC2025: New Parameters
+  double getAvEvapThresh();
+  double getAvTransThresh();
 
   double getAvSoilMoisture();         // Integral characteristics
   double getAvEvapFract();
@@ -465,6 +478,9 @@ public:
   void setOptTransmCoeff(double);
   void setLeafAI(double);
   void setCanStorParam(double);
+  // CJC2025: New Parameters
+  void setEvapThresh(double);
+  void setTransThresh(double);
 
   void setLandUseAlbInPrevGrid(double);
   void setLandUseAlbInUntilGrid(double);
@@ -490,6 +506,11 @@ public:
   void setOptTransmCoeffInUntilGrid(double);
   void setLeafAIInPrevGrid(double);
   void setLeafAIInUntilGrid(double);
+  // CJC2025: New Parameters
+  void setEvapThreshInPrevGrid(double);
+  void setEvapThreshInUntilGrid(double);
+  void setTransThreshInPrevGrid(double);
+  void setTransThreshInUntilGrid(double);
 
   // SKYnGM2008LU
   void setAvCanStorParam(double);
@@ -504,6 +525,9 @@ public:
   void setAvStomRes(double);
   void setAvVegFraction(double);
   void setAvLeafAI(double);
+  // CJC2025: New Parameters
+  void setAvEvapThresh(double);
+  void setAvTransThresh(double);
 
   void setAvSoilMoisture(double);     // Integral characteristics
   void setAvEvapFract(double);
@@ -800,6 +824,9 @@ protected:
   double OptTransmCoeff;
   double LeafAI;
   double CanStorParam;
+  // CJC2025: New Parameters
+  double EvapThresh;
+  double TransThresh;
 
   // SKYnGM2008LU
   double LandUseAlbInPrevGrid, LandUseAlbInUntilGrid, ThroughFallInPrevGrid, ThroughFallInUntilGrid;
@@ -808,11 +835,13 @@ protected:
   double IntercepCoeffInPrevGrid,IntercepCoeffInUntilGrid, CanFieldCapInPrevGrid, CanFieldCapInUntilGrid;
   double DrainCoeffInPrevGrid, DrainCoeffInUntilGrid, DrainExpParInPrevGrid, DrainExpParInUntilGrid;
   double OptTransmCoeffInPrevGrid, OptTransmCoeffInUntilGrid, LeafAIInPrevGrid, LeafAIInUntilGrid;
+  double EvapThreshInPrevGrid, EvapThreshInUntilGrid, TransThreshInPrevGrid, TransThreshInUntilGrid; // CJC2025: New Parameters
 
   // SKYnGM2008LU
   double AvCanStorParam, AvIntercepCoeff, AvThroughFall, AvCanFieldCap;
   double AvDrainCoeff, AvDrainExpPar, AvLandUseAlb, AvVegHeight;
   double AvOptTransmCoeff, AvStomRes, AvVegFraction, AvLeafAI;
+  double AvEvapThresh, AvTransThresh; // CJC2025: New Parameters
 
   double AvSoilMoisture;        // Integral characteristics
   double AvEvapFract;
