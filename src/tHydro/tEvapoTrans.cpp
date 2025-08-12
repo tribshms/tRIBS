@@ -4631,120 +4631,167 @@ void tEvapoTrans::LUGridAssignment()
 void tEvapoTrans::interpolateLUGrids(tCNode* cNode)
 {
   for (int ct=0;ct<nParmLU;ct++) { 
-    if ( (strcmp(LUgridParamNames[ct],"AL")==0) && (NowTillWhichALgrid > 1) &&
-	 ( NowTillWhichALgrid < (numALfiles+1) ) ) 
-      {
-	cNode->setLandUseAlb( cNode->getLandUseAlbInPrevGrid()+
-			      ( cNode->getLandUseAlbInUntilGrid() - cNode->getLandUseAlbInPrevGrid() )*
-			      ( timer->getCurrentTime() - double(ALgridhours[NowTillWhichALgrid-1]) )/
-			       ( double(ALgridhours[NowTillWhichALgrid])-double(ALgridhours[NowTillWhichALgrid-1]) ) ) ;	
-      }
-    if ( (strcmp(LUgridParamNames[ct],"TF")==0) && (NowTillWhichTFgrid > 1) &&
-	 ( NowTillWhichTFgrid < (numTFfiles+1) ) ) 
-      {
-	cNode->setThroughFall( cNode->getThroughFallInPrevGrid()+
-			       ( cNode->getThroughFallInUntilGrid() - cNode->getThroughFallInPrevGrid() )*
-			       ( timer->getCurrentTime() - double(TFgridhours[NowTillWhichTFgrid-1]) )/
-				(double(TFgridhours[NowTillWhichTFgrid])-double(TFgridhours[NowTillWhichTFgrid-1])) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"VH")==0) && (NowTillWhichVHgrid > 1) &&
-	 ( NowTillWhichVHgrid < (numVHfiles+1) ) ) 
-      {
-	cNode->setVegHeight( cNode->getVegHeightInPrevGrid()+
-			     ( cNode->getVegHeightInUntilGrid() - cNode->getVegHeightInPrevGrid() )*
-			     ( timer->getCurrentTime() - double(VHgridhours[NowTillWhichVHgrid-1]) )/
-			      (double(VHgridhours[NowTillWhichVHgrid])-double(VHgridhours[NowTillWhichVHgrid-1])) );
-	
-      }
-    if ( (strcmp(LUgridParamNames[ct],"SR")==0) && (NowTillWhichSRgrid > 1) &&
-	 ( NowTillWhichSRgrid < (numSRfiles+1) ) ) 
-      {
-	cNode->setStomRes( cNode->getStomResInPrevGrid()+
-			   ( cNode->getStomResInUntilGrid() - cNode->getStomResInPrevGrid() )*
-			   ( timer->getCurrentTime() - double(SRgridhours[NowTillWhichSRgrid-1]) )/
-			    (double(SRgridhours[NowTillWhichSRgrid])-double(SRgridhours[NowTillWhichSRgrid-1])) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"VF")==0) && (NowTillWhichVFgrid > 1) &&
-	 ( NowTillWhichVFgrid < (numVFfiles+1) ) ) 
-      {
-	cNode->setVegFraction( cNode->getVegFractionInPrevGrid()+
-			       (cNode->getVegFractionInUntilGrid() - cNode->getVegFractionInPrevGrid() )*
-			       ( timer->getCurrentTime() - double(VFgridhours[NowTillWhichVFgrid-1]) )/
-				( double(VFgridhours[NowTillWhichVFgrid]) - double(VFgridhours[NowTillWhichVFgrid-1]) ) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"CS")==0) && (NowTillWhichCSgrid > 1) &&
-	 ( NowTillWhichCSgrid < (numCSfiles+1) ) ) 
-      {
-	cNode->setCanStorParam( cNode->getCanStorParamInPrevGrid()+
-				( cNode->getCanStorParamInUntilGrid() - cNode->getCanStorParamInPrevGrid() )*
-				( timer->getCurrentTime() - double(CSgridhours[NowTillWhichCSgrid-1]) )/
-				 ( double(CSgridhours[NowTillWhichCSgrid])-double(CSgridhours[NowTillWhichCSgrid-1])) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"IC")==0) && (NowTillWhichICgrid > 1) &&
-	 ( NowTillWhichICgrid < (numICfiles+1) ) ) 
-      {
-	cNode->setIntercepCoeff( cNode->getIntercepCoeffInPrevGrid()+
-				 ( cNode->getIntercepCoeffInUntilGrid() - cNode->getIntercepCoeffInPrevGrid() )*
-				 ( timer->getCurrentTime() - double(ICgridhours[NowTillWhichICgrid-1]) )/
-				  (double(ICgridhours[NowTillWhichICgrid])-double(ICgridhours[NowTillWhichICgrid-1])) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"CC")==0) && (NowTillWhichCCgrid > 1) &&
-	 ( NowTillWhichCCgrid < (numCCfiles+1) ) ) 
-      {
-	cNode->setCanFieldCap( cNode->getCanFieldCapInPrevGrid()+
-			       ( cNode->getCanFieldCapInUntilGrid() - cNode->getCanFieldCapInPrevGrid() )*
-			       ( timer->getCurrentTime() - double(CCgridhours[NowTillWhichCCgrid-1]) )/
-				( double(CCgridhours[NowTillWhichCCgrid])-double(CCgridhours[NowTillWhichCCgrid-1])) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"DC")==0) && (NowTillWhichDCgrid > 1) &&
-	 ( NowTillWhichDCgrid < (numDCfiles+1) ) ) 
-      {
-	cNode->setDrainCoeff( cNode->getDrainCoeffInPrevGrid()+
-			      ( cNode->getDrainCoeffInUntilGrid() - cNode->getDrainCoeffInPrevGrid() )*
-			      ( timer->getCurrentTime() - double(DCgridhours[NowTillWhichDCgrid-1]) )/
-			       ( double(DCgridhours[NowTillWhichDCgrid])-double(DCgridhours[NowTillWhichDCgrid-1]) ) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"DE")==0) && (NowTillWhichDEgrid > 1) &&
-	 ( NowTillWhichDEgrid < (numDEfiles+1) ) ) 
-      {
-	cNode->setDrainExpPar( cNode->getDrainExpParInPrevGrid()+
-			       ( cNode->getDrainExpParInUntilGrid() - cNode->getDrainExpParInPrevGrid() )*
-			       ( timer->getCurrentTime() - double(DEgridhours[NowTillWhichDEgrid-1]) )/
-				(double(DEgridhours[NowTillWhichDEgrid])-double(DEgridhours[NowTillWhichDEgrid-1])) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"OT")==0) && (NowTillWhichOTgrid > 1) &&
-	 ( NowTillWhichOTgrid < (numOTfiles+1) ) ) 
-      {
-	cNode->setOptTransmCoeff( cNode->getOptTransmCoeffInPrevGrid()+
-				  ( cNode->getOptTransmCoeffInUntilGrid() - cNode->getOptTransmCoeffInPrevGrid() )*
-				  ( timer->getCurrentTime() - double(OTgridhours[NowTillWhichOTgrid-1]) )/
-				   (double(OTgridhours[NowTillWhichOTgrid])-double(OTgridhours[NowTillWhichOTgrid-1])) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"LA")==0) && (NowTillWhichLAgrid > 1) &&
-	 ( NowTillWhichLAgrid < (numLAfiles+1) ) ) 
-      {
-	cNode->setLeafAI( cNode->getLeafAIInPrevGrid()+
-			  ( cNode->getLeafAIInUntilGrid() - cNode->getLeafAIInPrevGrid() )*
-			  ( timer->getCurrentTime() - double(LAgridhours[NowTillWhichLAgrid-1]) )/
-			   (double(LAgridhours[NowTillWhichLAgrid])-double(LAgridhours[NowTillWhichLAgrid-1])) );
-      }
+    
+    // --- Albedo ---
+    if (strcmp(LUgridParamNames[ct],"AL")==0) {
+		// CJC2025: Check if the index is valid for an interpolation calculation.
+		// If the index is past the end of the array, do NOT interpolate.
+		// Instead, just hold the last known value from the "previous" grid slot.
+		if (NowTillWhichALgrid > numALfiles) {
+			cNode->setLandUseAlb(cNode->getLandUseAlbInPrevGrid());
+		}
+		// Only if the index is valid should we proceed with the original logic.
+		else if ((NowTillWhichALgrid > 1) && (NowTillWhichALgrid <= numALfiles)) {
+			cNode->setLandUseAlb(cNode->getLandUseAlbInPrevGrid() +
+								(cNode->getLandUseAlbInUntilGrid() - cNode->getLandUseAlbInPrevGrid()) *
+								(timer->getCurrentTime() - double(ALgridhours[NowTillWhichALgrid - 1])) /
+								(double(ALgridhours[NowTillWhichALgrid]) - double(ALgridhours[NowTillWhichALgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "TF") == 0) {
+		if (NowTillWhichTFgrid > numTFfiles) {
+			cNode->setThroughFall(cNode->getThroughFallInPrevGrid());
+		}
+		else if ((NowTillWhichTFgrid > 1) && (NowTillWhichTFgrid <= numTFfiles)) {
+			cNode->setThroughFall(cNode->getThroughFallInPrevGrid() +
+								(cNode->getThroughFallInUntilGrid() - cNode->getThroughFallInPrevGrid()) *
+								(timer->getCurrentTime() - double(TFgridhours[NowTillWhichTFgrid - 1])) /
+								(double(TFgridhours[NowTillWhichTFgrid]) - double(TFgridhours[NowTillWhichTFgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "VH") == 0) {
+		if (NowTillWhichVHgrid > numVHfiles) {
+			cNode->setVegHeight(cNode->getVegHeightInPrevGrid());
+		}
+		else if ((NowTillWhichVHgrid > 1) && (NowTillWhichVHgrid <= numVHfiles)) {
+			cNode->setVegHeight(cNode->getVegHeightInPrevGrid() +
+								(cNode->getVegHeightInUntilGrid() - cNode->getVegHeightInPrevGrid()) *
+								(timer->getCurrentTime() - double(VHgridhours[NowTillWhichVHgrid - 1])) /
+								(double(VHgridhours[NowTillWhichVHgrid]) - double(VHgridhours[NowTillWhichVHgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "SR") == 0) {
+		if (NowTillWhichSRgrid > numSRfiles) {
+			cNode->setStomRes(cNode->getStomResInPrevGrid());
+		}
+		else if ((NowTillWhichSRgrid > 1) && (NowTillWhichSRgrid <= numSRfiles)) {
+			cNode->setStomRes(cNode->getStomResInPrevGrid() +
+								(cNode->getStomResInUntilGrid() - cNode->getStomResInPrevGrid()) *
+								(timer->getCurrentTime() - double(SRgridhours[NowTillWhichSRgrid - 1])) /
+								(double(SRgridhours[NowTillWhichSRgrid]) - double(SRgridhours[NowTillWhichSRgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "VF") == 0) {
+		if (NowTillWhichVFgrid > numVFfiles) {
+			cNode->setVegFraction(cNode->getVegFractionInPrevGrid());
+		}
+		else if ((NowTillWhichVFgrid > 1) && (NowTillWhichVFgrid <= numVFfiles)) {
+			cNode->setVegFraction(cNode->getVegFractionInPrevGrid() +
+								(cNode->getVegFractionInUntilGrid() - cNode->getVegFractionInPrevGrid()) *
+								(timer->getCurrentTime() - double(VFgridhours[NowTillWhichVFgrid - 1])) /
+								(double(VFgridhours[NowTillWhichVFgrid]) - double(VFgridhours[NowTillWhichVFgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "CS") == 0) {
+		if (NowTillWhichCSgrid > numCSfiles) {
+			cNode->setCanStorParam(cNode->getCanStorParamInPrevGrid());
+		}
+		else if ((NowTillWhichCSgrid > 1) && (NowTillWhichCSgrid <= numCSfiles)) {
+			cNode->setCanStorParam(cNode->getCanStorParamInPrevGrid() +
+								(cNode->getCanStorParamInUntilGrid() - cNode->getCanStorParamInPrevGrid()) *
+								(timer->getCurrentTime() - double(CSgridhours[NowTillWhichCSgrid - 1])) /
+								(double(CSgridhours[NowTillWhichCSgrid]) - double(CSgridhours[NowTillWhichCSgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "IC") == 0) {
+		if (NowTillWhichICgrid > numICfiles) {
+			cNode->setIntercepCoeff(cNode->getIntercepCoeffInPrevGrid());
+		}
+		else if ((NowTillWhichICgrid > 1) && (NowTillWhichICgrid <= numICfiles)) {
+			cNode->setIntercepCoeff(cNode->getIntercepCoeffInPrevGrid() +
+								(cNode->getIntercepCoeffInUntilGrid() - cNode->getIntercepCoeffInPrevGrid()) *
+								(timer->getCurrentTime() - double(ICgridhours[NowTillWhichICgrid - 1])) /
+								(double(ICgridhours[NowTillWhichICgrid]) - double(ICgridhours[NowTillWhichICgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "CC") == 0) {
+		if (NowTillWhichCCgrid > numCCfiles) {
+			cNode->setCanFieldCap(cNode->getCanFieldCapInPrevGrid());
+		}
+		else if ((NowTillWhichCCgrid > 1) && (NowTillWhichCCgrid <= numCCfiles)) {
+			cNode->setCanFieldCap(cNode->getCanFieldCapInPrevGrid() +
+								(cNode->getCanFieldCapInUntilGrid() - cNode->getCanFieldCapInPrevGrid()) *
+								(timer->getCurrentTime() - double(CCgridhours[NowTillWhichCCgrid - 1])) /
+								(double(CCgridhours[NowTillWhichCCgrid]) - double(CCgridhours[NowTillWhichCCgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "DC") == 0) {
+		if (NowTillWhichDCgrid > numDCfiles) {
+			cNode->setDrainCoeff(cNode->getDrainCoeffInPrevGrid());
+		}
+		else if ((NowTillWhichDCgrid > 1) && (NowTillWhichDCgrid <= numDCfiles)) {
+			cNode->setDrainCoeff(cNode->getDrainCoeffInPrevGrid() +
+								(cNode->getDrainCoeffInUntilGrid() - cNode->getDrainCoeffInPrevGrid()) *
+								(timer->getCurrentTime() - double(DCgridhours[NowTillWhichDCgrid - 1])) /
+								(double(DCgridhours[NowTillWhichDCgrid]) - double(DCgridhours[NowTillWhichDCgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "DE") == 0) {
+		if (NowTillWhichDEgrid > numDEfiles) {
+			cNode->setDrainExpPar(cNode->getDrainExpParInPrevGrid());
+		}
+		else if ((NowTillWhichDEgrid > 1) && (NowTillWhichDEgrid <= numDEfiles)) {
+			cNode->setDrainExpPar(cNode->getDrainExpParInPrevGrid() +
+								(cNode->getDrainExpParInUntilGrid() - cNode->getDrainExpParInPrevGrid()) *
+								(timer->getCurrentTime() - double(DEgridhours[NowTillWhichDEgrid - 1])) /
+								(double(DEgridhours[NowTillWhichDEgrid]) - double(DEgridhours[NowTillWhichDEgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "OT") == 0) {
+		if (NowTillWhichOTgrid > numOTfiles) {
+			cNode->setOptTransmCoeff(cNode->getOptTransmCoeffInPrevGrid());
+		}
+		else if ((NowTillWhichOTgrid > 1) && (NowTillWhichOTgrid <= numOTfiles)) {
+			cNode->setOptTransmCoeff(cNode->getOptTransmCoeffInPrevGrid() +
+								(cNode->getOptTransmCoeffInUntilGrid() - cNode->getOptTransmCoeffInPrevGrid()) *
+								(timer->getCurrentTime() - double(OTgridhours[NowTillWhichOTgrid - 1])) /
+								(double(OTgridhours[NowTillWhichOTgrid]) - double(OTgridhours[NowTillWhichOTgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "LA") == 0) {
+		if (NowTillWhichLAgrid > numLAfiles) {
+			cNode->setLeafAI(cNode->getLeafAIInPrevGrid());
+		}
+		else if ((NowTillWhichLAgrid > 1) && (NowTillWhichLAgrid <= numLAfiles)) {
+			cNode->setLeafAI(cNode->getLeafAIInPrevGrid() +
+								(cNode->getLeafAIInUntilGrid() - cNode->getLeafAIInPrevGrid()) *
+								(timer->getCurrentTime() - double(LAgridhours[NowTillWhichLAgrid - 1])) /
+								(double(LAgridhours[NowTillWhichLAgrid]) - double(LAgridhours[NowTillWhichLAgrid - 1])));
+		}
+	}
     // CJC2025: New parameters
-    if ( (strcmp(LUgridParamNames[ct],"SE")==0) && (NowTillWhichSEgrid > 1) &&
-	 ( NowTillWhichSEgrid < (numSEfiles+1) ) )
-      {
-	cNode->setEvapThresh( cNode->getEvapThreshInPrevGrid()+
-			  ( cNode->getEvapThreshInUntilGrid() - cNode->getEvapThreshInPrevGrid() )*
-			  ( timer->getCurrentTime() - double(SEgridhours[NowTillWhichSEgrid-1]) )/
-			   (double(SEgridhours[NowTillWhichSEgrid])-double(SEgridhours[NowTillWhichSEgrid-1])) );
-      }
-    if ( (strcmp(LUgridParamNames[ct],"ST")==0) && (NowTillWhichSTgrid > 1) &&
-	 ( NowTillWhichSTgrid < (numSTfiles+1) ) )
-      {
-	cNode->setTransThresh( cNode->getTransThreshInPrevGrid()+
-			  ( cNode->getTransThreshInUntilGrid() - cNode->getTransThreshInPrevGrid() )*
-			  ( timer->getCurrentTime() - double(STgridhours[NowTillWhichSTgrid-1]) )/
-			   (double(STgridhours[NowTillWhichSTgrid])-double(STgridhours[NowTillWhichSTgrid-1])) );
-      }
+	if (strcmp(LUgridParamNames[ct], "SE") == 0) {
+		if (NowTillWhichSEgrid > numSEfiles) {
+			cNode->setEvapThresh(cNode->getEvapThreshInPrevGrid());
+		}
+		else if ((NowTillWhichSEgrid > 1) && (NowTillWhichSEgrid <= numSEfiles)) {
+			cNode->setEvapThresh(cNode->getEvapThreshInPrevGrid() +
+								(cNode->getEvapThreshInUntilGrid() - cNode->getEvapThreshInPrevGrid()) *
+								(timer->getCurrentTime() - double(SEgridhours[NowTillWhichSEgrid - 1])) /
+								(double(SEgridhours[NowTillWhichSEgrid]) - double(SEgridhours[NowTillWhichSEgrid - 1])));
+		}
+	}
+	if (strcmp(LUgridParamNames[ct], "ST") == 0) {
+		if (NowTillWhichSTgrid > numSTfiles) {
+			cNode->setTransThresh(cNode->getTransThreshInPrevGrid());
+		}
+		else if ((NowTillWhichSTgrid > 1) && (NowTillWhichSTgrid <= numSTfiles)) {
+			cNode->setTransThresh(cNode->getTransThreshInPrevGrid() +
+								(cNode->getTransThreshInUntilGrid() - cNode->getTransThreshInPrevGrid()) *
+								(timer->getCurrentTime() - double(STgridhours[NowTillWhichSTgrid - 1])) /
+								(double(STgridhours[NowTillWhichSTgrid]) - double(STgridhours[NowTillWhichSTgrid - 1])));
+		}
+	}
   } // end for loop
   
   return;
@@ -4991,6 +5038,22 @@ void tEvapoTrans::SetGridTimeInfoVariables(tVariant *VariantLU, char *LUgridPara
 
 		currentTimeLU++;
 	}
+
+	// CJC2025: Kick user out and let them know if they are trying to use interpolation
+	// with only one grid file.
+    if (luInterpOption == 1 && numFilesCounter < 2) {
+        cout << "\n\nERROR: Land use interpolation (OPTLUIPerp = 1) is enabled." << endl;
+        cout << "-------------------------------------------------------------------" << endl;
+        cout << "The parameter '" << LUgridParamName << "' was provided with only " 
+             << numFilesCounter << " time-stamped grid." << endl;
+        cout << "To use the interpolation feature, at least two grids must be" << endl;
+        cout << "provided for every land use parameter specified in your grid file." << endl << endl;
+        cout << "ACTION REQUIRED:" << endl;
+        cout << "  - Provide at least two time-stamped grids for '" << LUgridParamName << "', OR" << endl;
+        cout << "  - Turn off interpolation by setting OPTLUINTERP to 0 in your input file." << endl;
+        cout << "Exiting Program..." << endl << endl;
+        exit(1);
+    }
 
 	if (numFilesCounter == 0) {
 		Cout << "\tWhere are the varying Land Use grids"<<endl;
