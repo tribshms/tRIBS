@@ -27,7 +27,7 @@ if(parallel)
     set(exe "tRIBSpar")
     project(${exe}
             DESCRIPTION "Parallel Distribution of the TIN-based Real-time Integrated Basin Simulator Distributed Hydrological Model"
-            VERSION 5.2.2
+            VERSION 5.3.0
     )
     add_executable(${exe} src/main.cpp)
 

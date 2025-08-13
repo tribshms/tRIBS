@@ -1,7 +1,6 @@
 /*******************************************************************************
  * TIN-based Real-time Integrated Basin Simulator (tRIBS)
  * Distributed Hydrologic Model
- * VERSION 5.2
  *
  * Copyright (c) 2025. tRIBS Developers
  *
@@ -39,7 +38,7 @@ SimulationControl::SimulationControl(int argc, char **argv)
 	Cout<<"-----------------------------------------------------------------"
 		<<"-------"<<endl;
 	
-	char VERSION[50] = "5.2.2, Summer 2025";
+	char VERSION[50] = "5.3.0, Summer 2025";
 	
 	Cout <<"\n\ntRIBS Version "<< VERSION <<endl<<endl;
 	

@@ -1,7 +1,6 @@
 /*******************************************************************************
  * TIN-based Real-time Integrated Basin Simulator (tRIBS)
  * Distributed Hydrologic Model
- * VERSION 5.2
  *
  * Copyright (c) 2025. tRIBS Developers
  *
