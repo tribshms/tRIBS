@@ -2,7 +2,12 @@
 # Changelog 
 All notable changes to this project are documented in this file.
 
-## Version 5.2.2
+## Version 5.3.0
+### 8/11/2025
+* Added new optional input for the gridded land use parameters. These parameters are the soil mositure stress thresholds for soil evaporation and plant transpiration, denoted by `SE` and `ST` in the gridded data file (.gdf), respectively.
+* Resolved a bug that could cause incorrect model behavior when using dynamic land use grids with the interpolation option turned off (`luInterpOption = 0`).
+Resolved a bug that would cause gridded land use parameters to revert back to the table values after the final interpolation interval. Now the model will hold the final grid's value until the end of the simulation.
+* Added a fatal error check for when the interpolation option turned off (`luInterpOption = 1`) but the user only supplied a single raster. Previosuly, the model would crash without warning.
 ### 7/28/2025
 * Updated copyright notices to the current year.
 * Added new optional input file parameters for specifying the depth that defines surface soil and root zone soil moisture. These can be specified with `SURFACESOILDEPTH` and `ROOTZONEDEPTH` in mm. If not specified, these values default to their original hardcoded values of 100mm and 1,000mm, respectively, ensuring backward compatibility.
@@ -13,7 +18,7 @@ All notable changes to this project are documented in this file.
 * Incorporate a stability correction factor based on the Bulk Richardson Number for the calculation of aerodynamic resistance in tSnowPack.
 ### 7/25/2025
 * Refactor the function InterceptRutter to now calculate evaporation from the wet canopy rather than in tEvapoTrans. This change corrects a small error in the canopy water balance.
-* Modify the function ComputeETComponents to handle the changes in tIntercept.cpp
+* Modify the function ComputeETComponents to handle the changes in tIntercept.cpp.
 * Fix vegetation fraction scaling in snow interception scheme. Intercepted SWE now represents the actual state of the canopy rather than scaled by the vegetation fraction.
 * Fix ComputeVoronoiArea function in meshElements.cpp that was setting the incorrect voronoi area value for the node connected to the outlet node in the mesh.
 * Modify writing of soil water state variables to pixel, dynamic, and mrf outputs files to convert from sloped state variables to vertical depths.
@@ -22,7 +27,7 @@ All notable changes to this project are documented in this file.
 * Refactored solar radiation handling for clarity and consistency:
 * Centralized all slope, albedo, and vegetation corrections into inShortWave(), reducing redundancy in energyBalance().
 * Reorganized computation of direct and diffuse radiation components using observed and computed values where applicable.
-* Introduced new node variable shortRadSlope to store terrain-corrected incoming shortwave radiation:
+* Introduced new pixel file variable shortRadSlope to store terrain-corrected incoming shortwave radiation.
 * Added setShortRadSlope() and getShortRadSlope() to the tCNode class.
 * Corrected nodeHour misalignment issues in tEvapoTrans.cpp.
 * Updated julianDay() and SetSunVariables() to use consistent time source from tRunTimer.
