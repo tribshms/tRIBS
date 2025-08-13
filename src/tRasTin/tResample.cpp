@@ -1623,7 +1623,7 @@ double vCell::convertToVoronoiFormat(int flag)
 	// GMnSKY2008MLE
 	int i_all, i_deall; // Giuseppe
 	int flag_int; // Giuseppe
-	int Vert_InOrOut[nv-1]; //1 is In, 0 is out	Giuseppe
+	std::vector<int> Vert_InOrOut(nv - 1); //1 is In, 0 is out	Giuseppe
 	
 	double area1, area2, areaT, value = 0.;
 	double xCentroid, yCentroid;
@@ -4170,11 +4170,11 @@ void vCell::Ord_CounterClock(double **points_coord, int *dim)
 
 	double x0, y0;
 	int ind, count_valid;
-	double tempArr[2][*dim];
+	std::vector<std::vector<double>> tempArr(2, std::vector<double>(*dim));
 	double maxX, maxY, minX, minY;
-	double angles[*dim];
+	std::vector<double> angles(*dim);
 	double TOL_angle = 1e-5;
-	int differ[*dim-1];
+	std::vector<int> differ(*dim - 1);
 
 	// store the values of points_coord in tempArr
 	for (ind = 0; ind < *dim; ind++)
