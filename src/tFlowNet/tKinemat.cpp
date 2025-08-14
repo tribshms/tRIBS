@@ -143,7 +143,7 @@ tKinemat::tKinemat(SimulationControl *sPtr, tMesh<tCNode> *gridRef, tInputFile &
     }
     OutletNode->allocDataStack();
 
-    /******* Edits by JECR 2015 Start ******/
+    /******* Edits by JECR 2015 Start ******/  
     optres = 0;
     tempVariable = 0.0;
     resTimeStep = 0.0;
@@ -151,7 +151,6 @@ tKinemat::tKinemat(SimulationControl *sPtr, tMesh<tCNode> *gridRef, tInputFile &
     optres = ResReadItem.IterReadItem(infile, tempVariable, "OPTRESERVOIR");
     resTimeStep = ResReadItem.IterReadItem(infile, tempVariable, "TIMESTEP");
     resRunTime = ResReadItem.IterReadItem(infile, tempVariable, "RUNTIME");
-    cout << "OptRES = " << optres << endl;
     if (optres == 1) {
         initialize_values(infile, resTimeStep);
     } else {
