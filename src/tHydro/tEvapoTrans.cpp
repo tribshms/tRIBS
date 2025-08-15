@@ -4192,7 +4192,7 @@ void tEvapoTrans::initialLUGridAssignment()
   for (int ct=0;ct<nParmLU;ct++) {
     
     if (strcmp(LUgridParamNames[ct],"AL")==0) {
-      if ( (timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid]) && numALfiles >1) ) {
+      if ( (timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid])) && numALfiles >1) {
 	while ( (timer->getCurrentTime())>(double(ALgridhours[NowTillWhichALgrid])) ) {
 	  NowTillWhichALgrid++;}
 	LandUseAlbGrid->updateLUVarOfBothGrids("AL", ALgridFileNames[NowTillWhichALgrid]);
@@ -4279,9 +4279,9 @@ void tEvapoTrans::initialLUGridAssignment()
 	CanStorParamGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[NowTillWhichCSgrid-1]);
       }
       else {
-        VegFractGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[1]);
+        CanStorParamGrid->updateLUVarOfPrevGrid("CS", CSgridFileNames[1]);
         if (luInterpOption == 1) {
-            VegFractGrid->updateLUVarOfBothGrids("CS", CSgridFileNames[1]);
+            CanStorParamGrid->updateLUVarOfBothGrids("CS", CSgridFileNames[1]);
         }
       }
     }
