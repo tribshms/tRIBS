@@ -7,7 +7,7 @@ All notable changes to this project are documented in this file.
 * Remove extraneous cout statment that prints out `OptRES` during initialization.
 * Removed hardcoded version number from the top of all source code files to conform to modern standards and simplify future model updates.
 * Replaced non-standard Variable Length Arrays (VLAs) with std::vector in tResample.cpp to resolve compiler warnings and improve code portability.
-* Improve numerical stability of raster resampling in tResample.cpp. This changes fixes a bug with speicifc voronoi polygon geomtery that would results in a NaN values for gridded parameters.
+* Improve numerical stability of raster resampling in tResample.cpp. This change fixes a bug with speicifc voronoi polygon geomtery that would results in a NaN values for gridded parameters.
 ### 8/11/2025
 * Added new optional input for the gridded land use parameters. These parameters are the soil mositure stress thresholds for soil evaporation and plant transpiration, denoted by `SE` and `ST` in the gridded data file (.gdf), respectively.
 * Resolved a bug that could cause incorrect model behavior when using dynamic land use grids with the interpolation option turned off (`luInterpOption = 0`).
