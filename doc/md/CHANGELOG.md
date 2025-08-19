@@ -3,23 +3,23 @@
 All notable changes to this project are documented in this file.
 
 ## Version 5.3.0
-### 8/161/2025
-* Remove extraneous cout statment that prints out `OptRES` during initialization.
+### 8/16/2025
+* Remove extraneous cout statement that prints out `OptRES` during initialization.
 * Removed hardcoded version number from the top of all source code files to conform to modern standards and simplify future model updates.
 * Replaced non-standard Variable Length Arrays (VLAs) with std::vector in tResample.cpp to resolve compiler warnings and improve code portability.
-* Improve numerical stability of raster resampling in tResample.cpp. This change fixes a bug with speicifc voronoi polygon geomtery that would results in a NaN values for gridded parameters.
+* Improve numerical stability of raster resampling in tResample.cpp. This change fixes a bug with specific voronoi polygon geometry that would result in a NaN values for gridded parameters.
 ### 8/11/2025
-* Added new optional input for the gridded land use parameters. These parameters are the soil mositure stress thresholds for soil evaporation and plant transpiration, denoted by `SE` and `ST` in the gridded data file (.gdf), respectively.
+* Added new optional input for the gridded land use parameters. These parameters are the soil moisture stress thresholds for soil evaporation and plant transpiration, denoted by `SE` and `ST` in the gridded data file (.gdf), respectively.
 * Resolved a bug that could cause incorrect model behavior when using dynamic land use grids with the interpolation option turned off (`luInterpOption = 0`).
 Resolved a bug that would cause gridded land use parameters to revert back to the table values after the final interpolation interval. Now the model will hold the final grid's value until the end of the simulation.
-* Added a fatal error check for when the interpolation option turned off (`luInterpOption = 1`) but the user only supplied a single raster. Previosuly, the model would crash without warning.
-### 7/28/2025
+* Added a fatal error check for when the interpolation option turned off (`luInterpOption = 1`) but the user only supplied a single raster. Previously, the model would crash without warning.
+### 8/3/2025
 * Updated copyright notices to the current year.
 * Added new optional input file parameters for specifying the depth that defines surface soil and root zone soil moisture. These can be specified with `SURFACESOILDEPTH` and `ROOTZONEDEPTH` in mm. If not specified, these values default to their original hardcoded values of 100mm and 1,000mm, respectively, ensuring backward compatibility.
-* Updated how surface soil mositure is calculated in tEvapoTrans. Now the calculated potential evaporation is partioned first to the wet canopy, then transpiration, and lastly soil evaporation.
+* Updated how surface soil moisture is calculated in tEvapoTrans. Now the calculated potential evaporation is partitioned first to the wet canopy, then transpiration, and lastly soil evaporation.
 ### 7/28/2025
 * Refactored snow albedo decay function in tSnowPack to have descriptive variable names and set a minimum albedo threshold for which albedo cannot go below.
-* Refactor the calculation of latent and sensible heat flux for the ground snowpack in tSnowPack to prevent the snowpack temperture to be less than zero when there is liquid water present.
+* Refactor the calculation of latent and sensible heat flux for the ground snowpack in tSnowPack to prevent the snowpack temperature to be less than zero when there is liquid water present.
 * Incorporate a stability correction factor based on the Bulk Richardson Number for the calculation of aerodynamic resistance in tSnowPack.
 ### 7/25/2025
 * Refactor the function InterceptRutter to now calculate evaporation from the wet canopy rather than in tEvapoTrans. This change corrects a small error in the canopy water balance.
@@ -37,7 +37,7 @@ Resolved a bug that would cause gridded land use parameters to revert back to th
 * Corrected nodeHour misalignment issues in tEvapoTrans.cpp.
 * Updated julianDay() and SetSunVariables() to use consistent time source from tRunTimer.
 * Fixed declaration scope of RadGlobClr to clarify its limited usage within conditional blocks.
-* Fixed multiple small bugs that were not meeting C17 compatability standards.
+* Fixed multiple small bugs that were not meeting C17 compatibility standards.
 
 
 ## Version 5.2.1
