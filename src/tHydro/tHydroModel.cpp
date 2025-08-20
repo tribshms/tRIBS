@@ -1,9 +1,8 @@
 /*******************************************************************************
  * TIN-based Real-time Integrated Basin Simulator (tRIBS)
  * Distributed Hydrologic Model
- * VERSION 5.2
  *
- * Copyright (c) 2024. tRIBS Developers
+ * Copyright (c) 2025. tRIBS Developers
  *
  * See LICENSE file in the project root for full license information.
  ******************************************************************************/
@@ -111,6 +110,18 @@ void tHydroModel::SetHydroMVariables(tInputFile &infile,
 		cout<<"Your option is "<<BRoption<<"\tAssumed UNIFORM case..."<<endl;
 		DtoBedrock = infile.ReadItem(DtoBedrock, "DEPTHTOBEDROCK");
 		DtoBedrock = DtoBedrock*1000.0; //convert to mm
+	}
+	
+	// Read the soil depths. If not in the file, use the original defaults.
+	if (infile.IsItemIn( "SURFACESOILDEPTH" )) {
+		surfaceSoilDepth = infile.ReadItem(surfaceSoilDepth, "SURFACESOILDEPTH");
+	} else {
+		surfaceSoilDepth = 100.0; // Default to 100mm
+	}
+	if (infile.IsItemIn( "ROOTZONEDEPTH" )) {
+		rootZoneDepth = infile.ReadItem(rootZoneDepth, "ROOTZONEDEPTH");
+	} else {
+		rootZoneDepth = 1000.0; // Default to 1000mm
 	}
 
 	// If a decision made to keep the state vars don't change anything,
@@ -477,14 +488,14 @@ void tHydroModel::InitSet(tResample *resamp)
 		cn->setQstrm(0.0);
 		cn->setFlowVelocity(0.0);
 
-		cn->setSoilMoisture(ComputeSurfSoilMoist(100.0));
-		cn->setRootMoisture(ComputeSurfSoilMoist(1000.0));
+		cn->setSoilMoisture(ComputeSurfSoilMoist(surfaceSoilDepth));
+		cn->setRootMoisture(ComputeSurfSoilMoist(rootZoneDepth));
 		cn->setSoilMoistureSC(cn->getSoilMoisture()/Ths);
 		cn->setRootMoistureSC(cn->getRootMoisture()/Ths);
 
         // beta debug, set soil and root cutoff// TODO replace 100.0 and 1000.0 w/ variables for root zone and bedrock
-        cn->setSoilCutoff(get_Upper_Moist(100.0,bedRock)/100.0); // volumetric soil moisture content of soil zone if water table reaches bedrock
-        cn->setRootCutoff(get_Upper_Moist(1000.0,bedRock)/1000.0);// volumetric soil moisture content of root zone if water table reaches bedrock
+        cn->setSoilCutoff(get_Upper_Moist(surfaceSoilDepth,bedRock)/surfaceSoilDepth); // volumetric soil moisture content of soil zone if water table reaches bedrock
+        cn->setRootCutoff(get_Upper_Moist(rootZoneDepth,bedRock)/rootZoneDepth);// volumetric soil moisture content of root zone if water table reaches bedrock
 
 
 
@@ -2020,7 +2031,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 		cn->setesrf(esrf*dt);
 
 		// Soil moisture in the top 10 cm
-		ThSurf = ComputeSurfSoilMoist(100.0);
+		ThSurf = ComputeSurfSoilMoist(surfaceSoilDepth);
 		cn->setSoilMoisture( ThSurf );
 		cn->setSoilMoistureSC( ThSurf/Ths );
 
@@ -2040,7 +2051,7 @@ void tHydroModel::UnSaturatedZone(double dt)
 		cn->setAvSoilMoisture(floor((BB*AA + ThSurf/Ths)/(AA+1)*1.0E+4));
 
 		// Estimate average root soil moisture
-		ThSurf = ComputeSurfSoilMoist(1000.0);
+		ThSurf = ComputeSurfSoilMoist(rootZoneDepth);
 		cn->setRootMoisture( ThSurf );
 		cn->setRootMoistureSC( ThSurf/Ths );
 		cn->addAvSoilMoisture((Mdelt*AA + ThSurf/Ths)/(AA+1.0)*1.0E-1);
@@ -3462,7 +3473,7 @@ void tHydroModel::SaturatedZone(double dtGW)
 		cn->RechDisch=cn->RechDisch+((NwtOld-NwtNew)+satsrf*dtGW*Cos/Ths)*1.0E-3;
 
 		// Soil moisture in the top 10 cm
-		ThSurf = ComputeSurfSoilMoist(100.0);
+		ThSurf = ComputeSurfSoilMoist(surfaceSoilDepth);
 		cn->setSoilMoisture( ThSurf );
 		cn->setSoilMoistureSC( ThSurf/Ths );
 
@@ -3484,7 +3495,7 @@ void tHydroModel::SaturatedZone(double dtGW)
 		cn->setAvSoilMoisture(floor((BB*AA + ThSurf/Ths)/(AA+1)*1.0E+4));
 
 		// Estimate average root soil moisture
-		ThSurf = ComputeSurfSoilMoist(1000.0);
+		ThSurf = ComputeSurfSoilMoist(rootZoneDepth);
 		cn->setRootMoisture( ThSurf );
 		cn->setRootMoistureSC( ThSurf/Ths );
 		cn->addAvSoilMoisture((Mdelt*AA + ThSurf/Ths)/(AA+1.0)*1.0E-1);

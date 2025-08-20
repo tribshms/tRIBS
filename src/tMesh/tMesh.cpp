@@ -1,9 +1,8 @@
 /*******************************************************************************
  * TIN-based Real-time Integrated Basin Simulator (tRIBS)
  * Distributed Hydrologic Model
- * VERSION 5.2
  *
- * Copyright (c) 2024. tRIBS Developers
+ * Copyright (c) 2025. tRIBS Developers
  *
  * See LICENSE file in the project root for full license information.
  ******************************************************************************/
@@ -207,7 +206,7 @@ tMesh<tSubNode>::tMesh( tMesh *originalMesh )
 	seed = originalMesh->seed;
 	// layerflag = originalMesh->layerflag; (Layering off in tRIBS)
 	miNextNodeID = originalMesh->miNextNodeID;
-	miNextEdgID = originalMesh->miEdgNodeID;
+	miNextEdgID = originalMesh->miNextEdgID;
 	miNextTriID = originalMesh->miNextTriID;   
 	mSearchOriginTriPtr=0;
 }
