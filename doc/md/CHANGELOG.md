@@ -13,7 +13,7 @@ All notable changes to this project are documented in this file.
 * Resolved a bug that could cause incorrect model behavior when using dynamic land use grids with the interpolation option turned off (`luInterpOption = 0`).
 Resolved a bug that would cause gridded land use parameters to revert back to the table values after the final interpolation interval. Now the model will hold the final grid's value until the end of the simulation.
 * Added a fatal error check for when the interpolation option turned off (`luInterpOption = 1`) but the user only supplied a single raster. Previously, the model would crash without warning.
-### 8/3/2025
+### 8/3/2025 
 * Updated copyright notices to the current year.
 * Added new optional input file parameters for specifying the depth that defines surface soil and root zone soil moisture. These can be specified with `SURFACESOILDEPTH` and `ROOTZONEDEPTH` in mm. If not specified, these values default to their original hardcoded values of 100mm and 1,000mm, respectively, ensuring backward compatibility.
 * Updated how surface soil moisture is calculated in tEvapoTrans. Now the calculated potential evaporation is partitioned first to the wet canopy, then transpiration, and lastly soil evaporation.
