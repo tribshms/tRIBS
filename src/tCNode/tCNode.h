@@ -404,6 +404,7 @@ public:
   void setPorosity(double);
   void setVolHeatCond(double);
   void setSoilHeatCap(double);
+  
   void setTTime(double);               //Routing Members
   void setHillPath(double);   
   void setStreamPath(double); 
