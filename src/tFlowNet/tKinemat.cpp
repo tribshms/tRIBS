@@ -739,29 +739,21 @@ void tKinemat::FreeMemory() {
 *****************************************************************************/
 void tKinemat::SurfaceFlow() {
     int check, it;
-    int hour, minute;
-    char extension[20];
-
-    it = 0;
-    Pchannel = TotChanLength = ParallelPerc = 0.0; // ASM 2/10/2017
-    RunRoutingModel(it, &check, timer->getTimeStep() * 3600.); //ASM added "get current time" variable
+    it = 0; 
+    Pchannel = TotChanLength = ParallelPerc = 0.0;
+    RunRoutingModel(it, &check, timer->getTimeStep() * 3600.);
 
     tFlowNet::SurfaceFlow();
-
-    hour = (int) floor(timer->getCurrentTime());
-    minute = (int) ((timer->getCurrentTime() - hour) * 100);
-    snprintf(extension,sizeof(extension),"%04d.%04d", hour, minute);//WR--09192023: 'sprintf' is deprecated: This function is provided for compatibility reasons only.
+    double currentTime = timer->getCurrentTime();
 
 #ifdef PARALLEL_TRIBS
-                                                                                                                            // If running in parallel, only partition with last reach writes
-   if (tGraph::hasLastReach())
+    // If running in parallel, only partition with last reach writes
+    if (tGraph::hasLastReach())
 #endif
-
-    //theOFStream<<TimeSteps<<"\t"<<Qout<<"\t"<<OutletNode->getHlevel()<<"\n";
-    theOFStream << extension << "\t" << Qout << "\t" << OutletNode->getHlevel() << "\n";
-
+    // CJC2025: Use stream manipulators for proper floating point formatting
+    theOFStream << std::fixed << std::setprecision(4) << currentTime
+                << "\t" << Qout << "\t" << OutletNode->getHlevel() << "\n";
     return;
-
 }
 
 /*****************************************************************************
