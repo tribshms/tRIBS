@@ -2,18 +2,28 @@
 # Changelog 
 All notable changes to this project are documented in this file.
 
-## Version 5.2.2
-### 7/28/2025
+## Version 5.3.0
+### 8/16/2025
+* Remove extraneous cout statement that prints out `OptRES` during initialization.
+* Removed hardcoded version number from the top of all source code files to conform to modern standards and simplify future model updates.
+* Replaced non-standard Variable Length Arrays (VLAs) with std::vector in tResample.cpp to resolve compiler warnings and improve code portability.
+* Improve numerical stability of raster resampling in tResample.cpp. This change fixes a bug with specific voronoi polygon geometry that would result in a NaN values for gridded parameters.
+### 8/11/2025
+* Added new optional input for the gridded land use parameters. These parameters are the soil moisture stress thresholds for soil evaporation and plant transpiration, denoted by `SE` and `ST` in the gridded data file (.gdf), respectively.
+* Resolved a bug that could cause incorrect model behavior when using dynamic land use grids with the interpolation option turned off (`luInterpOption = 0`).
+Resolved a bug that would cause gridded land use parameters to revert back to the table values after the final interpolation interval. Now the model will hold the final grid's value until the end of the simulation.
+* Added a fatal error check for when the interpolation option turned off (`luInterpOption = 1`) but the user only supplied a single raster. Previously, the model would crash without warning.
+### 8/3/2025 
 * Updated copyright notices to the current year.
 * Added new optional input file parameters for specifying the depth that defines surface soil and root zone soil moisture. These can be specified with `SURFACESOILDEPTH` and `ROOTZONEDEPTH` in mm. If not specified, these values default to their original hardcoded values of 100mm and 1,000mm, respectively, ensuring backward compatibility.
-* Updated how surface soil mositure is calculated in tEvapoTrans. Now the calculated potential evaporation is partioned first to the wet canopy, then transpiration, and lastly soil evaporation.
+* Updated how surface soil moisture is calculated in tEvapoTrans. Now the calculated potential evaporation is partitioned first to the wet canopy, then transpiration, and lastly soil evaporation.
 ### 7/28/2025
 * Refactored snow albedo decay function in tSnowPack to have descriptive variable names and set a minimum albedo threshold for which albedo cannot go below.
-* Refactor the calculation of latent and sensible heat flux for the ground snowpack in tSnowPack to prevent the snowpack temperture to be less than zero when there is liquid water present.
+* Refactor the calculation of latent and sensible heat flux for the ground snowpack in tSnowPack to prevent the snowpack temperature to be less than zero when there is liquid water present.
 * Incorporate a stability correction factor based on the Bulk Richardson Number for the calculation of aerodynamic resistance in tSnowPack.
 ### 7/25/2025
 * Refactor the function InterceptRutter to now calculate evaporation from the wet canopy rather than in tEvapoTrans. This change corrects a small error in the canopy water balance.
-* Modify the function ComputeETComponents to handle the changes in tIntercept.cpp
+* Modify the function ComputeETComponents to handle the changes in tIntercept.cpp.
 * Fix vegetation fraction scaling in snow interception scheme. Intercepted SWE now represents the actual state of the canopy rather than scaled by the vegetation fraction.
 * Fix ComputeVoronoiArea function in meshElements.cpp that was setting the incorrect voronoi area value for the node connected to the outlet node in the mesh.
 * Modify writing of soil water state variables to pixel, dynamic, and mrf outputs files to convert from sloped state variables to vertical depths.
@@ -22,12 +32,12 @@ All notable changes to this project are documented in this file.
 * Refactored solar radiation handling for clarity and consistency:
 * Centralized all slope, albedo, and vegetation corrections into inShortWave(), reducing redundancy in energyBalance().
 * Reorganized computation of direct and diffuse radiation components using observed and computed values where applicable.
-* Introduced new node variable shortRadSlope to store terrain-corrected incoming shortwave radiation:
+* Introduced new pixel file variable shortRadSlope to store terrain-corrected incoming shortwave radiation.
 * Added setShortRadSlope() and getShortRadSlope() to the tCNode class.
 * Corrected nodeHour misalignment issues in tEvapoTrans.cpp.
 * Updated julianDay() and SetSunVariables() to use consistent time source from tRunTimer.
 * Fixed declaration scope of RadGlobClr to clarify its limited usage within conditional blocks.
-* Fixed multiple small bugs that were not meeting C17 compatability standards.
+* Fixed multiple small bugs that were not meeting C17 compatibility standards.
 
 
 ## Version 5.2.1

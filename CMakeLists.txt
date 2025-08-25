@@ -27,7 +27,7 @@ if(parallel)
     set(exe "tRIBSpar")
     project(${exe}
             DESCRIPTION "Parallel Distribution of the TIN-based Real-time Integrated Basin Simulator Distributed Hydrological Model"
-            VERSION 5.2.2
+            VERSION 5.3.0
     )
     add_executable(${exe} src/main.cpp)
 
@@ -156,7 +156,7 @@ else()
     set(exe "tRIBS")
     project(${exe}
             DESCRIPTION "Serial Distribution of the TIN-based Real-time Integrated Basin Simulator Distributed Hydrological Model"
-            VERSION 5.2.2)
+            VERSION 5.3.0)
     add_executable(${exe} src/main.cpp)
     message(WARNING "Compiling serial version of tRIBS")
 
@@ -284,7 +284,7 @@ if (packaging)
 
     set(CPACK_VERBOSE ON)
     set(CPACK_PACKAGE_NAME "TIN-based Real-time Integrated Basin Simulator")
-    set(CPACK_PACKAGE_FILE_NAME "TIN-based Real-time Integrated Basin Simulator-5.2.2")
+    set(CPACK_PACKAGE_FILE_NAME "TIN-based Real-time Integrated Basin Simulator-5.3.0")
     set(CPACK_PACKAGE_VENDOR "tRIBS developers")
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_LIST_DIR}/LICENSE.txt")
     # Set the custom script for the STGZ generator

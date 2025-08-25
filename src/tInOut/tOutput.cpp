@@ -1,7 +1,6 @@
 /*******************************************************************************
  * TIN-based Real-time Integrated Basin Simulator (tRIBS)
  * Distributed Hydrologic Model
- * VERSION 5.2
  *
  * Copyright (c) 2025. tRIBS Developers
  *
@@ -1948,23 +1947,16 @@ template< class tSubNode >
 void tCOutput<tSubNode>::WriteOutletInfo( double time )
 {
 	if (numOutlets > 0) {
-		int hour, minute;
-		char extension[20];
-		
-		hour   = (int)floor(time); 
-		minute = (int)((time-hour)*100);
-		snprintf(extension, sizeof(extension),"%04d.%02d", hour, minute);
-		
 		for (int i = 0; i < numOutlets; i++) {
 #ifdef PARALLEL_TRIBS
-      // Node ID does not have to be less than the active size
-      if ( (Outlets[i] != NULL) && (OutletList[i] > 0) ) {
+			if ( (Outlets[i] != NULL) && (OutletList[i] > 0) ) {
 #else
 			if ( Outlets[i] && OutletList[i] < this->g->getNodeList()->getActiveSize()) {
 #endif
-				outletinfo[i]<<extension<<"\t"
-				<<setw(10)<<Outlets[i]->getQstrm()<<"\t"
-				<<setw(6) <<Outlets[i]->getHlevel()<<"\n";
+				// CJC2025: Use fixed format with 4 decimal places for time
+				outletinfo[i] << std::fixed << std::setprecision(4) << time << "\t"
+				              << setw(10) << Outlets[i]->getQstrm() << "\t"
+				              << setw(6)  << Outlets[i]->getHlevel() << "\n";
 			}
 		}
 	}
