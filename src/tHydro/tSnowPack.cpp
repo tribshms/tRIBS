@@ -1271,16 +1271,16 @@ double tSnowPack::snowFracCalc() {
         snowfrac = 1/f1;
     }
 
-/*  Updated as outlined above to reflect influence of RH on snow fall partitioning -WR 11272023
-//    double TMin(0), TMax(4.4); //indices (Wigmosta et al. 1994)—updated for CJC thesis (see table 11)
+//  Updated as outlined above to reflect influence of RH on snow fall partitioning -WR 11272023
+    // double TMin(0), TMax(2.8); //indices (Wigmosta et al. 1994)—updated for CJC thesis (see table 11)
+    //
+    // if (airTemp <= TMin)
+    //     snowfrac = 1; // all ice
+    // if (airTemp >= TMax)
+    //     snowfrac = 0; // all liquid
+    // if ((airTemp >= TMin) && (airTemp <= TMax))
+    //     snowfrac = (TMax - airTemp) / (TMax - TMin); //mixture
 //
-//    if (airTemp <= TMin)
-//        snowfrac = 1; // all ice
-//    if (airTemp >= TMax)
-//        snowfrac = 0; // all liquid
-//    if ((airTemp >= TMin) && (airTemp <= TMax))
-//        snowfrac = (TMax - airTemp) / (TMax - TMin); //mixture
-*/
 
     return snowfrac;
 }

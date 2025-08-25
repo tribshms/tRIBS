@@ -1519,21 +1519,54 @@ double tEvapoTrans::aeroResist() {
 ** coefficient rsRatio. Depends on having set currentTime.
 **
 ***************************************************************************/
+// double tEvapoTrans::stomResist()
+// {
+// 	double rs;
+// 	int currenthour;
+// 	double rsRatio[24] = {3.837, 3.589, 3.21, 2.43, 1.617, 1.196, 1.067, 1.014,
+// 		0.995, 0.976, 0.976, 1.0, 1.053, 1.167, 1.354, 1.637,
+// 		2.043, 2.66, 3.215, 3.507, 3.689, 3.818, 3.923, 4.024};
+//
+// 	currenthour = currentTime[3];
+// 	rs = coeffRs*rsRatio[currenthour];
+//
+// 	// A simple way to constrain transpiration during hours
+// 	// when there is no incoming solar radiation
+// 	if (alphaD < 0.0)
+// 		rs *= 1000.0;
+//
+// 	return rs;
+// }
+
 double tEvapoTrans::stomResist()
 {
 	double rs;
 	int currenthour;
-	double rsRatio[24] = {3.837, 3.589, 3.21, 2.43, 1.617, 1.196, 1.067, 1.014,
-		0.995, 0.976, 0.976, 1.0, 1.053, 1.167, 1.354, 1.637,
-		2.043, 2.66, 3.215, 3.507, 3.689, 3.818, 3.923, 4.024};
+	int currentmonth;
 
 	currenthour = currentTime[3];
-	rs = coeffRs*rsRatio[currenthour];
+	currentmonth = currentTime[1];
+
+	// Use input file rs parameters if available, JB2025 @ ASU
+	if (optRsParam == 1) {
+		rs = coeffRs * rsRatio[currenthour] * rsMonthlyFactor[currentmonth-1];
+	}
+	else {
+		// Default rsRatio for 24 hours
+		double rsRatioDefault[24] = {
+			3.837, 3.589, 3.21, 2.43, 1.617, 1.196, 1.067, 1.014,
+			0.995, 0.976, 0.976, 1.0, 1.053, 1.167, 1.354, 1.637,
+			2.043, 2.66, 3.215, 3.507, 3.689, 3.818, 3.923, 4.024
+		};
+
+		rs = coeffRs * rsRatioDefault[currenthour];
+	}
+
 
 	// A simple way to constrain transpiration during hours
 	// when there is no incoming solar radiation
 	if (alphaD < 0.0)
-		rs *= 1000.0;
+		rs *= 1000;
 
 	return rs;
 }
@@ -3035,6 +3068,15 @@ void tEvapoTrans::betaFuncT(tCNode* cNode)
 
     if(Th<=rootzone_cutoff)
         beta = 0.0;
+
+	// Get current stomatal resistance  JB2025
+	double rs = stomResist();
+
+	// If stomatal resistance is extremely high (winter shutdown), set betaT to zero
+	if (rs > 10000.0) {
+		betaT = 0.0;
+		return;
+	}
 
 	betaT = beta;
 }
