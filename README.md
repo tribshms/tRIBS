@@ -25,3 +25,14 @@ We provide three options for accessing the tRIBS model:
 
 ## Release/Version Notes
 tRIBS uses semantic versioning. We record updates of major, minor, and patch versions [here](./doc/md/CHANGELOG.md).
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/tribshms/tRIBS)
+
+> **Important Disclaimer**
+>
+> The following link points to an unofficial, third-party AI assistant that is not maintained or endorsed by the tRIBS development team.
+>
+> Answers provided by the AI may be **inaccurate, or incomplete.** For all scientific and technical applications, the official [tRIBS Documentation](https://tribshms.readthedocs.io/en/latest/) and the source code itself must be considered the **only source of truth**.
+>
+> Use this tool at your own risk.
+chore: Update readme with additional documentation
