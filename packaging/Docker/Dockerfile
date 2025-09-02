@@ -28,6 +28,9 @@ RUN apk update && \
         bash \
         openmpi \
         zlib \
+        openssh-client \
+        libstdc++ \
+        libgcc \
     && rm -rf /var/cache/apk/*
 
 # Create a dedicated group first.
